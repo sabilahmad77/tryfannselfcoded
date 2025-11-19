@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { motion } from "motion/react";
 import {
-  Mail,
-  Lock,
-  Sparkles,
   ArrowRight,
   ChevronLeft,
-  Shield,
-  Zap,
   Globe,
+  Lock,
+  Mail,
+  Shield,
+  Sparkles,
   TrendingUp,
+  Zap,
 } from "lucide-react";
+import { motion } from "motion/react";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { InputField, PasswordField } from "./ui/custom-form-elements";
 
