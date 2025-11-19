@@ -1,0 +1,191 @@
+import { useState } from 'react';
+import { motion } from 'motion/react';
+import { Menu, X } from 'lucide-react';
+import { Button } from './ui/button';
+import { LanguageToggle } from './LanguageToggle';
+import fannLogo from 'figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png';
+
+interface NavigationProps {
+  language: 'en' | 'ar';
+  onLanguageToggle: (lang: 'en' | 'ar') => void;
+  onNavigateToSignIn?: () => void;
+}
+
+const content = {
+  en: {
+    nav: [
+      { label: "How It Works", href: "#how" },
+      { label: "Rewards", href: "#rewards" },
+      { label: "Leaderboard", href: "#leaderboard" },
+      { label: "Referrals", href: "#referrals" },
+      { label: "FAQ", href: "#faq" }
+    ],
+    login: "Sign In",
+    signup: "Get Started"
+  },
+  ar: {
+    nav: [
+      { label: "كيف يعمل", href: "#how" },
+      { label: "المكافآت", href: "#rewards" },
+      { label: "لوحة المتصدرين", href: "#leaderboard" },
+      { label: "الإحالات", href: "#referrals" },
+      { label: "الأسئلة الشائعة", href: "#faq" }
+    ],
+    login: "ربط المحفظة",
+    signup: "تشغيل التطبيق"
+  }
+};
+
+export function Navigation({ language, onLanguageToggle, onNavigateToSignIn }: NavigationProps) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const t = content[language];
+  const isRTL = language === 'ar';
+
+  return (
+    <motion.nav
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo */}
+          <motion.div 
+            className="flex items-center gap-3"
+            whileHover={{ scale: 1.05 }}
+          >
+            <motion.img 
+              src={fannLogo}
+              alt="FANN"
+              className="h-8 w-auto"
+              animate={{
+                filter: [
+                  'drop-shadow(0 0 8px rgba(234, 179, 8, 0.5))',
+                  'drop-shadow(0 0 16px rgba(234, 179, 8, 0.8))',
+                  'drop-shadow(0 0 8px rgba(234, 179, 8, 0.5))',
+                ]
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </motion.div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-8">
+            {t.nav.map((item, index) => (
+              <motion.a
+                key={index}
+                href={item.href}
+                whileHover={{ scale: 1.05, y: -2 }}
+                className="text-white/70 hover:text-white transition-colors relative group"
+              >
+                {item.label}
+                <motion.div
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 to-yellow-500 origin-left"
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.a>
+            ))}
+          </div>
+
+          {/* Right Actions */}
+          <div className="flex items-center gap-4">
+            <LanguageToggle language={language} onToggle={onLanguageToggle} />
+            
+            <div className="hidden md:flex items-center gap-3">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button 
+                  variant="ghost" 
+                  className="relative px-4 py-2 text-white/70 hover:text-white glass border border-amber-500/30 hover:border-amber-400/60 hover:bg-amber-500/10 transition-all duration-300 overflow-hidden group"
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/10 to-amber-500/0"
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: '100%' }}
+                    transition={{ duration: 0.6 }}
+                  />
+                  <span className="relative z-10">{t.login}</span>
+                </Button>
+              </motion.div>
+              
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button 
+                  onClick={onNavigateToSignIn}
+                  className="relative px-5 py-2 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black border-0 overflow-hidden group shadow-lg shadow-amber-500/30 hover:shadow-amber-500/60 transition-all duration-300"
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500"
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: '100%' }}
+                    transition={{ duration: 0.5 }}
+                  />
+                  <span className="relative z-10">{t.signup}</span>
+                </Button>
+              </motion.div>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden text-white p-2 glass rounded-lg"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </motion.button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          className="lg:hidden border-t border-white/10 glass"
+        >
+          <div className="container mx-auto px-4 sm:px-6 py-6">
+            <div className="flex flex-col gap-4">
+              {t.nav.map((item, index) => (
+                <motion.a
+                  key={index}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  whileHover={{ x: 10 }}
+                  className="text-white/70 hover:text-white transition-colors py-2"
+                >
+                  {item.label}
+                </motion.a>
+              ))}
+              <div className="flex flex-col gap-3 pt-4 border-t border-white/10">
+                <Button 
+                  variant="ghost" 
+                  className="relative text-white/70 hover:text-white glass border border-amber-500/30 hover:border-amber-400/60 hover:bg-amber-500/10 w-full transition-all duration-300 overflow-hidden group"
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/10 to-amber-500/0"
+                    animate={{ x: ['-100%', '100%'] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  />
+                  <span className="relative z-10">{t.login}</span>
+                </Button>
+                <Button 
+                  onClick={onNavigateToSignIn}
+                  className="relative bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black w-full border-0 shadow-lg shadow-amber-500/30 overflow-hidden group"
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  />
+                  <span className="relative z-10">{t.signup}</span>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </motion.nav>
+  );
+}
