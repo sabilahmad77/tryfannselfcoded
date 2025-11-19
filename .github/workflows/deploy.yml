@@ -44,7 +44,11 @@ jobs:
               git clone https://x-access-token:${{ secrets.GH_PAT }}@github.com/AspireX24/tryfann.git .
             else
               git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/AspireX24/tryfann.git
-              git pull origin main
+              # Stash any local changes (like package-lock.json) before pulling
+              git stash
+              # Fetch and reset to match remote exactly
+              git fetch origin main
+              git reset --hard origin/main
             fi
 
             # Install dependencies & build on server
