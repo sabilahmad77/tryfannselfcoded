@@ -1,4 +1,4 @@
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/contexts/useLanguage';
 import { SignIn } from '@/components/SignIn';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/routes/paths';

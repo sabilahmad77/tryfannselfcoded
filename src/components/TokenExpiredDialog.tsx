@@ -10,7 +10,7 @@ import {
   AlertDialogFooter,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
 import { LogIn, AlertCircle } from "lucide-react";
 import { motion } from "motion/react";

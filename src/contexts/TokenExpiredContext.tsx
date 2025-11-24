@@ -1,21 +1,10 @@
-import {
-  createContext,
-  useContext,
+import React, {
   useState,
   ReactNode,
   useCallback,
   useEffect,
 } from "react";
-
-interface TokenExpiredContextType {
-  showDialog: () => void;
-  hideDialog: () => void;
-  isDialogOpen: boolean;
-}
-
-const TokenExpiredContext = createContext<TokenExpiredContextType | undefined>(
-  undefined
-);
+import { TokenExpiredContext } from "./token-expired-context";
 
 export function TokenExpiredProvider({ children }: { children: ReactNode }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -56,14 +45,4 @@ export function TokenExpiredProvider({ children }: { children: ReactNode }) {
       {children}
     </TokenExpiredContext.Provider>
   );
-}
-
-export function useTokenExpired() {
-  const context = useContext(TokenExpiredContext);
-  if (context === undefined) {
-    throw new Error(
-      "useTokenExpired must be used within a TokenExpiredProvider"
-    );
-  }
-  return context;
 }

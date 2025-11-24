@@ -4,7 +4,7 @@ import { LanguageProvider } from '@/contexts/LanguageContext';
 import { TokenExpiredProvider } from '@/contexts/TokenExpiredContext';
 import { TokenExpiredDialog } from '@/components/TokenExpiredDialog';
 import { AppRoutes } from '@/routes';
-import { useTokenExpired } from '@/contexts/TokenExpiredContext';
+import { useTokenExpired } from '@/contexts/useTokenExpired';
 
 // Component to render the dialog inside the providers
 function AppContent() {

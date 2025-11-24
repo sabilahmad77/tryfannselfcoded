@@ -1,5 +1,5 @@
 import { SignUp } from "@/components/SignUp";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
 import { resetOnboarding } from "@/store/onboardingSlice";
 import { useDispatch } from "react-redux";

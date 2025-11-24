@@ -1,5 +1,5 @@
 import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
