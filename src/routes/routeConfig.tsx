@@ -71,6 +71,36 @@ export const routes: RouteConfig[] = [
     title: "Onboarding",
     description: "User onboarding flow - requires token (private route)",
   },
+  {
+    path: ROUTES.DASHBOARD,
+    component: () =>
+      import("@/pages/DashboardPage").then((module) => ({
+        default: module.DashboardPage,
+      })),
+    type: "private",
+    title: "Dashboard",
+    description: "Main dashboard page - requires token (private route)",
+  },
+  {
+    path: ROUTES.PROFILE,
+    component: () =>
+      import("@/pages/ProfilePage").then((module) => ({
+        default: module.ProfilePage,
+      })),
+    type: "private",
+    title: "Profile",
+    description: "User profile page - requires token (private route)",
+  },
+  {
+    path: ROUTES.SETTINGS,
+    component: () =>
+      import("@/pages/SettingsPage").then((module) => ({
+        default: module.SettingsPage,
+      })),
+    type: "private",
+    title: "Settings",
+    description: "User settings page - requires token (private route)",
+  },
 ];
 
 // Helper function to get route by path

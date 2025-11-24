@@ -15,6 +15,9 @@ export const ROUTES = {
   SIGN_IN: '/signin',
   SIGN_UP: '/signup',
   ONBOARDING: '/onboarding',
+  DASHBOARD: '/dashboard',
+  PROFILE: '/profile',
+  SETTINGS: '/settings',
 } as const;
 
 /**

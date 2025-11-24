@@ -1,7 +1,5 @@
 import { useLoginMutation } from "@/services/api/authApi";
-import { setTokens, setAccessToken } from "@/store/authSlice";
-import { extractErrorMessage } from "@/utils/errorMessages";
-import { useDispatch } from "react-redux";
+import { setAccessToken, setTokens } from "@/store/authSlice";
 import {
   ArrowRight,
   ChevronLeft,
@@ -16,6 +14,7 @@ import {
 import { motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { Oval } from "react-loader-spinner";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { InputField, PasswordField } from "./ui/custom-form-elements";
@@ -41,7 +40,6 @@ export function SignIn({
     register,
     handleSubmit: handleFormSubmit,
     formState: { errors },
-    setError: setFormError,
   } = useForm<SignInFormData>({
     defaultValues: {
       email: "",
@@ -166,7 +164,7 @@ export function SignIn({
         result.access ||
         (result as { data?: { token?: string } })?.data?.token ||
         (result as { data?: { access?: string } })?.data?.access;
-      
+
       const refreshToken =
         result.refresh ||
         (result as { data?: { refresh?: string } })?.data?.refresh;
@@ -197,15 +195,9 @@ export function SignIn({
 
       // Navigate to home
       onNavigateToHome();
-    } catch (err: unknown) {
-      // Use generic error handler
-      const errorMessage = extractErrorMessage(err, language);
-
-      // Set form-level error (toast is already shown by baseApi interceptor)
-      setFormError("root", {
-        type: "manual",
-        message: errorMessage,
-      });
+    } catch {
+      // Error toast is already shown by baseApi interceptor
+      // No need to show duplicate toast here
     }
   };
 

@@ -2,8 +2,9 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { baseApi } from '@/services/api/baseApi';
-// Import onboardingApi to ensure it's initialized and hooks are available
+// Import API services to ensure they're initialized and hooks are available
 import '@/services/api/onboardingApi';
+import '@/services/api/dashboardApi';
 import authReducer from './authSlice';
 import onboardingReducer from './onboardingSlice';
 
