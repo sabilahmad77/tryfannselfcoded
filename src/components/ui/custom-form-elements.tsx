@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { LucideIcon, Eye, EyeOff } from 'lucide-react';
+import { LucideIcon, Eye, EyeOff, X, Upload, FileText } from 'lucide-react';
 import { Input } from './input';
 import { Label } from './label';
+import { Textarea } from './textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 import { cn } from './utils';
 
@@ -20,7 +21,7 @@ export interface BaseFieldProps {
   helperText?: string;
   /** Whether the field is required */
   required?: boolean;
-  /** RTL support */
+  /** RTL support - if true, shows Arabic optional text */
   isRTL?: boolean;
   /** Custom className for the wrapper */
   className?: string;
@@ -83,6 +84,12 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     const effectiveIconPosition = iconPosition || (isRTL ? 'right' : 'left');
     const hasIcon = !!Icon;
     const hasError = !!error;
+    
+    // Determine optional text based on isRTL
+    const optionalText = isRTL ? '(اختياري)' : '(Optional)';
+
+    // Extract ref from inputProps if it comes from react-hook-form register
+    const { ref: registerRef, ...restInputProps } = inputProps as { ref?: React.Ref<HTMLInputElement> } & typeof inputProps;
 
     return (
       <div className={cn('space-y-2', className)}>
@@ -96,7 +103,11 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             )}
           >
             {label}
-            {required && <span className="text-red-500">*</span>}
+            {required ? (
+              <span className="text-red-500">*</span>
+            ) : (
+              <span className="opacity-50 text-xs ml-1">{optionalText}</span>
+            )}
           </Label>
         )}
 
@@ -112,7 +123,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           )}
 
           <Input
-            ref={ref}
+            ref={registerRef || ref}
             id={fieldId}
             className={cn(
               'bg-[#fef3c7]/5 border-[#d4af37]/20 text-[#fef3c7] placeholder:text-[#fef3c7]/30 h-11',
@@ -127,7 +138,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
               error ? `${fieldId}-error` : helperText ? `${fieldId}-helper` : undefined
             }
             required={required}
-            {...inputProps}
+            {...restInputProps}
           />
 
           {hasIcon && effectiveIconPosition === (isRTL ? 'left' : 'right') && (
@@ -234,6 +245,12 @@ export const PasswordField = React.forwardRef<HTMLInputElement, PasswordFieldPro
     const hasIcon = !!Icon;
     const hasError = !!error;
     const effectiveIconPosition = iconPosition || (isRTL ? 'right' : 'left');
+    
+    // Determine optional text based on isRTL
+    const optionalText = isRTL ? '(اختياري)' : '(Optional)';
+
+    // Extract ref from inputProps if it comes from react-hook-form register
+    const { ref: registerRef, ...restInputProps } = inputProps as { ref?: React.Ref<HTMLInputElement> } & typeof inputProps;
 
     const handleTogglePassword = () => {
       const newValue = !showPassword;
@@ -256,7 +273,11 @@ export const PasswordField = React.forwardRef<HTMLInputElement, PasswordFieldPro
             )}
           >
             {label}
-            {required && <span className="text-red-500">*</span>}
+            {required ? (
+              <span className="text-red-500">*</span>
+            ) : (
+              <span className="opacity-50 text-xs ml-1">{optionalText}</span>
+            )}
           </Label>
         )}
 
@@ -272,7 +293,7 @@ export const PasswordField = React.forwardRef<HTMLInputElement, PasswordFieldPro
           )}
 
           <Input
-            ref={ref}
+            ref={registerRef || ref}
             id={fieldId}
             type={showPassword ? 'text' : 'password'}
             className={cn(
@@ -290,7 +311,7 @@ export const PasswordField = React.forwardRef<HTMLInputElement, PasswordFieldPro
               error ? `${fieldId}-error` : helperText ? `${fieldId}-helper` : undefined
             }
             required={required}
-            {...inputProps}
+            {...restInputProps}
           />
 
           {showToggle && (
@@ -432,6 +453,9 @@ export const SelectField = React.forwardRef<
     const hasIcon = !!Icon;
     const hasError = !!error;
     const effectiveIconPosition = iconPosition || (isRTL ? 'right' : 'left');
+    
+    // Determine optional text based on isRTL
+    const optionalText = isRTL ? '(اختياري)' : '(Optional)';
 
     return (
       <div className={cn('space-y-2', className)}>
@@ -445,7 +469,11 @@ export const SelectField = React.forwardRef<
             )}
           >
             {label}
-            {required && <span className="text-red-500">*</span>}
+            {required ? (
+              <span className="text-red-500">*</span>
+            ) : (
+              <span className="opacity-50 text-xs ml-1">{optionalText}</span>
+            )}
           </Label>
         )}
 
@@ -477,6 +505,7 @@ export const SelectField = React.forwardRef<
                 '[&_[data-slot=select-value][data-placeholder]]:text-[#fef3c7]/30',
                 hasError && 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20',
                 hasIcon && effectiveIconPosition === (isRTL ? 'right' : 'left') && (isRTL ? 'pr-10' : 'pl-10'),
+                value && (isRTL ? 'pl-10' : 'pr-10'), // Add padding for clear button when value exists
                 triggerClassName,
                 inputClassName
               )}
@@ -504,11 +533,31 @@ export const SelectField = React.forwardRef<
             </SelectContent>
           </Select>
 
+          {/* Clear button - shows when value exists */}
+          {value && onValueChange && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onValueChange('');
+              }}
+              className={cn(
+                'absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#fef3c7]/40 hover:text-[#fef3c7]/60 transition-colors z-10 cursor-pointer',
+                'flex items-center justify-center rounded-full hover:bg-[#fef3c7]/10',
+                isRTL ? 'left-3' : 'right-3'
+              )}
+              aria-label={isRTL ? 'مسح' : 'Clear'}
+              tabIndex={0}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+
           {hasIcon && effectiveIconPosition === (isRTL ? 'left' : 'right') && (
             <Icon
               className={cn(
                 'absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#fef3c7]/40 z-10 pointer-events-none',
-                isRTL ? 'left-3' : 'right-3',
+                value ? (isRTL ? 'right-10' : 'left-10') : (isRTL ? 'left-3' : 'right-3'), // Adjust position if clear button exists
                 iconClassName
               )}
             />
@@ -539,4 +588,395 @@ export const SelectField = React.forwardRef<
 );
 
 SelectField.displayName = 'SelectField';
+
+// ============================================================================
+// Textarea Field Component
+// ============================================================================
+
+export interface TextareaFieldProps extends Omit<React.ComponentProps<'textarea'>, 'className'>, BaseFieldProps {
+  /** Optional icon to display on the left (LTR) or right (RTL) */
+  icon?: LucideIcon;
+  /** Icon position - 'left' for LTR, 'right' for RTL (auto-adjusted based on isRTL) */
+  iconPosition?: 'left' | 'right';
+  /** Custom icon className */
+  iconClassName?: string;
+}
+
+/**
+ * Reusable Textarea Field component with icon support and RTL compatibility
+ * 
+ * @example
+ * ```tsx
+ * <TextareaField
+ *   label="Bio"
+ *   placeholder="Tell us about yourself..."
+ *   icon={FileText}
+ *   isRTL={false}
+ *   required
+ * />
+ * ```
+ */
+export const TextareaField = React.forwardRef<HTMLTextAreaElement, TextareaFieldProps>(
+  (
+    {
+      label,
+      htmlFor,
+      error,
+      helperText,
+      required,
+      isRTL = false,
+      icon: Icon,
+      iconPosition,
+      className,
+      labelClassName,
+      inputClassName,
+      iconClassName,
+      id,
+      ...textareaProps
+    },
+    ref
+  ) => {
+    const generatedId = React.useId();
+    const fieldId = id || htmlFor || generatedId;
+    const effectiveIconPosition = iconPosition || (isRTL ? 'right' : 'left');
+    const hasIcon = !!Icon;
+    const hasError = !!error;
+    
+    // Determine optional text based on isRTL
+    const optionalText = isRTL ? '(اختياري)' : '(Optional)';
+
+    // Extract ref from textareaProps if it comes from react-hook-form register
+    // react-hook-form's register returns { ref, onChange, onBlur, name }
+    const { ref: registerRef, ...restTextareaProps } = textareaProps as {
+      ref?: React.Ref<HTMLTextAreaElement>;
+      onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+      onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+      name?: string;
+    } & typeof textareaProps;
+
+    return (
+      <div className={cn('space-y-2', className)}>
+        {label && (
+          <Label
+            htmlFor={fieldId}
+            className={cn(
+              'text-[#fef3c7]/80',
+              hasError && 'text-destructive',
+              labelClassName
+            )}
+          >
+            {label}
+            {required ? (
+              <span className="text-red-500">*</span>
+            ) : (
+              <span className="opacity-50 text-xs ml-1">{optionalText}</span>
+            )}
+          </Label>
+        )}
+
+        <div className="relative">
+          {hasIcon && effectiveIconPosition === (isRTL ? 'right' : 'left') && (
+            <Icon
+              className={cn(
+                'absolute top-3 w-5 h-5 text-[#fef3c7]/40 pointer-events-none',
+                isRTL ? 'right-3' : 'left-3',
+                iconClassName
+              )}
+            />
+          )}
+
+          <Textarea
+            ref={registerRef || ref}
+            id={fieldId}
+            className={cn(
+              'bg-[#fef3c7]/5 border-[#d4af37]/20 text-[#fef3c7] placeholder:text-[#fef3c7]/30 min-h-32',
+              'focus:border-[#d4af37]/50 focus:ring-[#d4af37]/20 resize-none',
+              hasError && 'border-destructive focus:border-destructive focus:ring-destructive/20',
+              hasIcon && effectiveIconPosition === (isRTL ? 'right' : 'left') && (isRTL ? 'pr-10' : 'pl-10'),
+              inputClassName
+            )}
+            aria-invalid={hasError}
+            aria-describedby={
+              error ? `${fieldId}-error` : helperText ? `${fieldId}-helper` : undefined
+            }
+            required={required}
+            {...restTextareaProps}
+          />
+
+          {hasIcon && effectiveIconPosition === (isRTL ? 'left' : 'right') && (
+            <Icon
+              className={cn(
+                'absolute top-3 w-5 h-5 text-[#fef3c7]/40 pointer-events-none',
+                isRTL ? 'left-3' : 'right-3',
+                iconClassName
+              )}
+            />
+          )}
+        </div>
+
+        {error && (
+          <p
+            id={`${fieldId}-error`}
+            className="text-sm text-destructive"
+            role="alert"
+          >
+            {error}
+          </p>
+        )}
+
+        {helperText && !error && (
+          <p
+            id={`${fieldId}-helper`}
+            className="text-sm text-[#fef3c7]/60"
+          >
+            {helperText}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
+
+TextareaField.displayName = 'TextareaField';
+
+// ============================================================================
+// File Upload Field Component
+// ============================================================================
+
+export interface FileUploadFieldProps extends Omit<React.ComponentProps<'input'>, 'type' | 'className' | 'value' | 'onChange'>, BaseFieldProps {
+  /** Optional icon to display */
+  icon?: LucideIcon;
+  /** Accepted file types (e.g., "image/*", ".pdf,.png,.jpg") */
+  accept?: string;
+  /** Maximum file size in bytes */
+  maxSize?: number;
+  /** Callback when file is selected */
+  onFileChange?: (file: File | null) => void;
+  /** Currently selected file */
+  value?: File | null;
+  /** Custom className for upload button */
+  buttonClassName?: string;
+  /** Upload button text */
+  buttonText?: string;
+  /** Helper text showing accepted formats */
+  formatText?: string;
+}
+
+/**
+ * Reusable File Upload Field component with preview and RTL compatibility
+ * 
+ * @example
+ * ```tsx
+ * <FileUploadField
+ *   label="Profile Photo"
+ *   accept="image/*"
+ *   maxSize={5 * 1024 * 1024} // 5MB
+ *   onFileChange={(file) => setFile(file)}
+ *   isRTL={false}
+ * />
+ * ```
+ */
+export const FileUploadField = React.forwardRef<HTMLInputElement, FileUploadFieldProps>(
+  (
+    {
+      label,
+      htmlFor,
+      error,
+      helperText,
+      required,
+      isRTL = false,
+      icon: Icon = Upload,
+      className,
+      labelClassName,
+      buttonClassName,
+      buttonText,
+      formatText,
+      accept,
+      maxSize,
+      onFileChange,
+      value,
+      id,
+      ...inputProps
+    },
+    ref
+  ) => {
+    const generatedId = React.useId();
+    const fieldId = id || htmlFor || generatedId;
+    const [selectedFile, setSelectedFile] = React.useState<File | null>(value || null);
+    const [fileError, setFileError] = React.useState<string>('');
+    const hasError = !!error || !!fileError;
+    
+    // Determine optional text based on isRTL
+    const optionalText = isRTL ? '(اختياري)' : '(Optional)';
+
+    // Default button text based on language
+    const defaultButtonText = buttonText || (isRTL ? 'انقر للتحميل' : 'Click to upload');
+
+    // Default format text
+    const defaultFormatText = formatText || (isRTL ? 'PDF، PNG، JPG حتى 10 ميجابايت' : 'PDF, PNG, JPG up to 10MB');
+
+    React.useEffect(() => {
+      if (value !== undefined) {
+        setSelectedFile(value);
+      }
+    }, [value]);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0] || null;
+      setFileError('');
+
+      if (file) {
+        // Validate file size
+        if (maxSize && file.size > maxSize) {
+          const maxSizeMB = (maxSize / (1024 * 1024)).toFixed(0);
+          const errorMsg = isRTL
+            ? `حجم الملف كبير جداً. الحد الأقصى ${maxSizeMB} ميجابايت`
+            : `File size too large. Maximum size is ${maxSizeMB}MB`;
+          setFileError(errorMsg);
+          e.target.value = ''; // Reset input
+          return;
+        }
+
+        // Validate file type
+        if (accept && !accept.split(',').some(pattern => {
+          const trimmed = pattern.trim();
+          if (trimmed.startsWith('.')) {
+            return file.name.toLowerCase().endsWith(trimmed.toLowerCase());
+          }
+          if (trimmed.includes('/*')) {
+            const baseType = trimmed.split('/')[0];
+            return file.type.startsWith(baseType);
+          }
+          return file.type === trimmed;
+        })) {
+          const errorMsg = isRTL
+            ? 'نوع الملف غير مدعوم'
+            : 'File type not supported';
+          setFileError(errorMsg);
+          e.target.value = ''; // Reset input
+          return;
+        }
+      }
+
+      setSelectedFile(file);
+      onFileChange?.(file);
+    };
+
+    const handleRemoveFile = () => {
+      setSelectedFile(null);
+      setFileError('');
+      onFileChange?.(null);
+      // Reset the input element
+      const input = document.getElementById(fieldId) as HTMLInputElement;
+      if (input) {
+        input.value = '';
+      }
+    };
+
+    return (
+      <div className={cn('space-y-2', className)}>
+        {label && (
+          <Label
+            htmlFor={fieldId}
+            className={cn(
+              'text-[#fef3c7]/80',
+              hasError && 'text-destructive',
+              labelClassName
+            )}
+          >
+            {label}
+            {required ? (
+              <span className="text-red-500">*</span>
+            ) : (
+              <span className="opacity-50 text-xs ml-1">{optionalText}</span>
+            )}
+          </Label>
+        )}
+
+        <div className="space-y-2">
+          {/* Upload Button Area */}
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <input
+                ref={ref}
+                id={fieldId}
+                type="file"
+                accept={accept}
+                onChange={handleFileChange}
+                className="hidden"
+                {...(hasError && { "aria-invalid": "true" })}
+                aria-describedby={
+                  error || fileError ? `${fieldId}-error` : helperText ? `${fieldId}-helper` : undefined
+                }
+                required={required && !selectedFile}
+                {...inputProps}
+              />
+              <label
+                htmlFor={fieldId}
+                className={cn(
+                  'flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer transition-all',
+                  'bg-white/5 border-white/10 hover:border-amber-500/50 hover:bg-amber-500/10',
+                  'text-white/70 hover:text-white',
+                  hasError && 'border-destructive',
+                  required && !selectedFile && 'cursor-not-allowed opacity-50',
+                  buttonClassName
+                )}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="text-sm">{defaultButtonText}</span>
+              </label>
+            </div>
+            {formatText && (
+              <span className="text-xs text-white/40">{defaultFormatText}</span>
+            )}
+          </div>
+
+          {/* Selected File Preview */}
+          {selectedFile && (
+            <div className="p-3 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <FileText className="w-4 h-4 text-white/60 shrink-0" />
+                <span className="text-sm text-white/80 truncate" title={selectedFile.name}>
+                  {selectedFile.name}
+                </span>
+                <span className="text-xs text-white/40 shrink-0">
+                  ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={handleRemoveFile}
+                className="text-white/40 hover:text-white/70 transition-colors shrink-0 cursor-pointer"
+                aria-label={isRTL ? 'إزالة الملف' : 'Remove file'}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {(error || fileError) && (
+          <p
+            id={`${fieldId}-error`}
+            className="text-sm text-destructive"
+            role="alert"
+          >
+            {error || fileError}
+          </p>
+        )}
+
+        {helperText && !error && !fileError && (
+          <p
+            id={`${fieldId}-helper`}
+            className="text-sm text-[#fef3c7]/60"
+          >
+            {helperText}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
+
+FileUploadField.displayName = 'FileUploadField';
 

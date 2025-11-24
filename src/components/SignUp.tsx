@@ -1,33 +1,42 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useSignUpMutation } from "@/services/api/authApi";
+// import { useGetRegionsQuery } from "@/services/api/regionApi";
+import { setTokens } from "@/store/authSlice";
+import { extractErrorMessage } from "@/utils/errorMessages";
 import {
-  Mail,
-  Lock,
-  User,
-  Sparkles,
   ArrowRight,
-  ChevronLeft,
-  Palette,
-  Building2,
-  Gem,
-  Users,
-  TrendingUp,
-  Check,
-  Gift,
-  MapPin,
-  Shield,
-  Zap,
-  Globe,
   Award,
+  Building2,
+  Check,
+  ChevronLeft,
+  Gem,
+  Gift,
+  Globe,
+  Lock,
+  Mail,
+  MapPin,
+  Palette,
+  Shield,
+  Sparkles,
+  TrendingUp,
+  User,
+  Users,
+  Zap,
 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Oval } from "react-loader-spinner";
+import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
-import { Label } from "./ui/label";
 import {
   InputField,
   PasswordField,
   SelectField,
 } from "./ui/custom-form-elements";
+import { Label } from "./ui/label";
+import { cn } from "./ui/utils";
 
 interface SignUpProps {
   language: "en" | "ar";
@@ -36,22 +45,61 @@ interface SignUpProps {
   onSignUpComplete: (persona: string) => void;
 }
 
+interface SignUpFormData {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  region: string;
+  referralCode: string;
+}
+
 export function SignUp({
   language,
   onNavigateToSignIn,
   onNavigateToHome,
   onSignUpComplete,
 }: SignUpProps) {
+  const dispatch = useDispatch();
   const [step, setStep] = useState<1 | 2>(1);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<string | null>(
     "artist"
   );
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [referralCode, setReferralCode] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState<string>("");
+
+  // React Hook Form setup
+  const {
+    register,
+    handleSubmit: handleFormSubmit,
+    formState: { errors },
+    watch,
+    setValue,
+  } = useForm<SignUpFormData>({
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      region: "",
+      referralCode: "",
+    },
+  });
+
+  // API hooks
+  const [signUp, { isLoading }] = useSignUpMutation();
+  // const { data: regionsData } = useGetRegionsQuery();
+
+  // Watch password and confirmPassword for real-time matching validation
+  const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
+
+  // Check if passwords match (only when both have values)
+  const passwordsMatch =
+    password && confirmPassword && password === confirmPassword;
+  const passwordsMismatch =
+    password && confirmPassword && password !== confirmPassword;
 
   const t = {
     en: {
@@ -311,21 +359,253 @@ export function SignUp({
     },
   ];
 
+  // Map persona ID to API role format
+  const getRoleFromPersona = (personaId: string | null): string => {
+    const roleMap: Record<string, string> = {
+      artist: "Artist",
+      gallery: "Gallery",
+      collector: "Collector",
+      curator: "Curator",
+      investor: "Investor",
+    };
+    return roleMap[personaId || "artist"] || "Artist";
+  };
+
+  // Map persona to points
+  const getPointsFromPersona = (personaId: string | null): string => {
+    const pointsMap: Record<string, string> = {
+      artist: "500",
+      gallery: "750",
+      collector: "500",
+      curator: "600",
+      investor: "1000",
+    };
+    return pointsMap[personaId || "artist"] || "500";
+  };
+
+  // Map region name to region ID (optional - returns 0 if not provided)
+  const getRegionId = (regionName: string): number => {
+    if (!regionName || regionName.trim() === "") {
+      return 0; // Optional field, return 0 if not provided
+    }
+
+    // Commented out: Using fallback mapping instead of API data
+    // if (!regionsData || regionsData.length === 0) {
+    //   // Fallback: create a simple mapping if API fails
+    //   const regionMap: Record<string, number> = {
+    //     UAE: 1,
+    //     "Saudi Arabia": 2,
+    //     Qatar: 3,
+    //     Kuwait: 4,
+    //     Bahrain: 5,
+    //     Oman: 6,
+    //     Egypt: 7,
+    //     Lebanon: 8,
+    //     Jordan: 9,
+    //     Other: 10,
+    //     // Arabic mappings
+    //     الإمارات: 1,
+    //     السعودية: 2,
+    //     قطر: 3,
+    //     الكويت: 4,
+    //     البحرين: 5,
+    //     عُمان: 6,
+    //     مصر: 7,
+    //     لبنان: 8,
+    //     الأردن: 9,
+    //     أخرى: 10,
+    //   };
+    //   return regionMap[regionName] || 0;
+    // }
+
+    // Find region by name in API data
+    // const region = regionsData.find(
+    //   (r) =>
+    //     r.name === regionName ||
+    //     r.name.toLowerCase() === regionName.toLowerCase()
+    // );
+    // return region?.id || 0;
+
+    // Fallback: create a simple mapping (using fallback directly now)
+    const regionMap: Record<string, number> = {
+      UAE: 1,
+      "Saudi Arabia": 2,
+      Qatar: 3,
+      Kuwait: 4,
+      Bahrain: 5,
+      Oman: 6,
+      Egypt: 7,
+      Lebanon: 8,
+      Jordan: 9,
+      Other: 10,
+      // Arabic mappings
+      الإمارات: 1,
+      السعودية: 2,
+      قطر: 3,
+      الكويت: 4,
+      البحرين: 5,
+      عُمان: 6,
+      مصر: 7,
+      لبنان: 8,
+      الأردن: 9,
+      أخرى: 10,
+    };
+    return regionMap[regionName] || 0;
+  };
+
   const handleContinueToStep2 = () => {
     if (selectedPersona) {
       setStep(2);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!acceptedTerms || !selectedPersona) return;
+  const onSubmit = async (data: SignUpFormData) => {
+    if (!acceptedTerms || !selectedPersona) {
+      toast.error(
+        language === "en"
+          ? "Please accept the terms and conditions"
+          : "يرجى الموافقة على الشروط والأحكام"
+      );
+      return;
+    }
 
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsLoading(false);
+    try {
+      // Split full name into first and last name
+      const nameParts = data.fullName.trim().split(/\s+/);
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || firstName;
 
-    onSignUpComplete(selectedPersona);
+      // Prepare signup data
+      const regionId = data.region ? getRegionId(data.region) : undefined;
+      const signUpData = {
+        role: getRoleFromPersona(selectedPersona),
+        points: getPointsFromPersona(selectedPersona),
+        first_name: firstName,
+        last_name: lastName,
+        email: data.email.trim(),
+        password: data.password,
+        confirm_password: data.confirmPassword,
+        ...(regionId && regionId > 0 && { region: regionId }),
+        referral_code: data.referralCode.trim() || "",
+      };
+
+      const result = await signUp(signUpData).unwrap();
+
+      // Debug: Log the response to help troubleshoot
+      console.log("SignUp API Response:", result);
+      console.log("Response type:", typeof result);
+      console.log("Is result an object?", result && typeof result === "object");
+
+      // Handle API response structure: { success, status_code, message, data }
+      // RTK Query's unwrap() returns the response body directly
+      // New API response: { success: true, status_code: 200, message: {}, data: { access: "...", refresh: "...", ... } }
+      const apiResponse = result as {
+        success?: boolean;
+        status_code?: number;
+        message?: string | Record<string, unknown>;
+        data?: {
+          access?: string;
+          refresh?: string;
+          [key: string]: unknown;
+        };
+        [key: string]: unknown;
+      };
+
+      // Debug: Log the parsed response
+      console.log("Parsed API Response:", apiResponse);
+      console.log("Success value:", apiResponse.success);
+      console.log("Status code:", apiResponse.status_code);
+      console.log("Response data:", apiResponse.data);
+
+      // Check for success - API returns { success: true, status_code: 200, ... }
+      const isSuccess =
+        apiResponse.success === true || apiResponse.status_code === 200;
+
+      console.log("Is success?", isSuccess);
+
+      if (isSuccess) {
+        // Extract tokens from response.data
+        // New API response structure: { success: true, status_code: 200, message: {}, data: { access: "...", refresh: "...", ... } }
+        let accessToken: string | null = null;
+        let refreshToken: string | null = null;
+
+        if (apiResponse.data && typeof apiResponse.data === "object") {
+          accessToken = apiResponse.data.access || null;
+          refreshToken = apiResponse.data.refresh || null;
+
+          console.log("Extracted tokens:", {
+            hasAccessToken: !!accessToken,
+            hasRefreshToken: !!refreshToken,
+          });
+        }
+
+        // If tokens are found, store them in Redux store along with persona
+        const persona = selectedPersona || "artist";
+        if (accessToken && refreshToken) {
+          dispatch(setTokens({ accessToken, refreshToken, persona }));
+          console.log("Tokens and persona stored in Redux store");
+        } else {
+          console.warn("No tokens found in API response");
+        }
+
+        // Extract success message
+        let successMessage = "";
+        if (apiResponse.message) {
+          if (
+            typeof apiResponse.message === "string" &&
+            apiResponse.message.trim()
+          ) {
+            successMessage = apiResponse.message;
+          } else if (
+            typeof apiResponse.message === "object" &&
+            apiResponse.message !== null &&
+            Object.keys(apiResponse.message).length > 0
+          ) {
+            // If message is an object with content, try to extract a message from it
+            const messageObj = apiResponse.message as Record<string, unknown>;
+            if (messageObj.message) {
+              successMessage = String(messageObj.message);
+            } else if (messageObj.success) {
+              successMessage = String(messageObj.success);
+            }
+          }
+        }
+
+        // Default success message if none provided
+        if (!successMessage) {
+          successMessage =
+            language === "en"
+              ? "Account created successfully!"
+              : "تم إنشاء الحساب بنجاح!";
+        }
+
+        // Show success toast
+        toast.success(successMessage);
+
+        // Navigate to onboarding page after storing tokens
+        console.log("Navigating to onboarding with persona:", persona);
+
+        // Call the navigation callback
+        onSignUpComplete(persona);
+
+        console.log("Navigation callback completed");
+      } else {
+        // Handle failure case (success is false or undefined)
+        console.warn(
+          "SignUp failed - success is not true:",
+          apiResponse.success
+        );
+        const errorMessage =
+          language === "en"
+            ? "Account creation failed. Please try again."
+            : "فشل إنشاء الحساب. يرجى المحاولة مرة أخرى.";
+        toast.error(errorMessage);
+      }
+    } catch (err: unknown) {
+      // Error toast is already shown by baseApi interceptor
+      const errorMessage = extractErrorMessage(err, language);
+      console.error("Sign up error:", errorMessage);
+    }
   };
 
   const selectedPersonaData = personas.find((p) => p.id === selectedPersona);
@@ -354,7 +634,7 @@ export function SignUp({
             <motion.button
               onClick={onNavigateToHome}
               whileHover={{ scale: 1.02 }}
-              className="flex items-center gap-2 text-[#fef3c7]/70 hover:text-[#d4af37] transition-colors group mb-8"
+              className="flex items-center gap-2 text-[#fef3c7]/70 hover:text-[#d4af37] transition-colors group mb-8 cursor-pointer"
             >
               <ChevronLeft
                 className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${
@@ -571,7 +851,7 @@ export function SignUp({
                             onClick={() => setSelectedPersona(persona.id)}
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
-                            className={`w-full p-5 rounded-xl border transition-all text-left relative overflow-hidden group ${
+                            className={`w-full p-5 rounded-xl border transition-all text-left relative overflow-hidden group cursor-pointer ${
                               isSelected
                                 ? "bg-gradient-to-br from-[#d4af37]/20 to-[#14b8a6]/20 border-[#d4af37]/50 shadow-lg shadow-[#d4af37]/20"
                                 : "glass border-[#d4af37]/20 hover:border-[#d4af37]/40"
@@ -625,36 +905,24 @@ export function SignUp({
                       })}
                     </div>
 
-                    <div className="flex gap-3">
-                      <Button
-                        type="button"
-                        onClick={() => setStep(1)}
-                        disabled={true}
-                        className="h-12 px-6 bg-[#fef3c7]/5 border border-[#d4af37]/20 text-[#fef3c7] hover:bg-[#fef3c7]/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                      >
-                        <span className="flex items-center gap-2">
-                          <ChevronLeft
-                            className={`w-4 h-4 ${isRTL ? "rotate-180" : ""}`}
-                          />
-                          {content.back}
-                        </span>
-                      </Button>
-
-                      <Button
-                        onClick={handleContinueToStep2}
-                        disabled={!selectedPersona}
-                        className="flex-1 h-12 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/30 transition-all group disabled:opacity-50"
-                      >
-                        <span className="flex items-center justify-center gap-2">
-                          {content.continue}
-                          <ArrowRight
-                            className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
-                              isRTL ? "rotate-180" : ""
-                            }`}
-                          />
-                        </span>
-                      </Button>
-                    </div>
+                    <Button
+                      onClick={handleContinueToStep2}
+                      disabled={!selectedPersona}
+                      className={`w-full h-12 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/30 transition-all group ${
+                        !selectedPersona
+                          ? "disabled:opacity-50 disabled:cursor-not-allowed"
+                          : "cursor-pointer"
+                      }`}
+                    >
+                      <span className="flex items-center justify-center gap-2">
+                        {content.continue}
+                        <ArrowRight
+                          className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
+                            isRTL ? "rotate-180" : ""
+                          }`}
+                        />
+                      </span>
+                    </Button>
 
                     <div className="text-center pt-6">
                       <span className="text-white/60 text-sm">
@@ -663,7 +931,7 @@ export function SignUp({
                       <button
                         type="button"
                         onClick={onNavigateToSignIn}
-                        className="text-amber-400 hover:text-amber-300 transition-colors text-sm"
+                        className="text-amber-400 hover:text-amber-300 transition-colors text-sm cursor-pointer"
                       >
                         {content.signIn}
                       </button>
@@ -678,27 +946,58 @@ export function SignUp({
                     exit={{ opacity: 0, x: isRTL ? 30 : -30 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    <form
+                      onSubmit={handleFormSubmit(onSubmit)}
+                      className="space-y-5"
+                    >
                       {/* Full Name */}
                       <InputField
+                        {...register("fullName", {
+                          required:
+                            language === "en"
+                              ? "Full name is required"
+                              : "الاسم الكامل مطلوب",
+                          minLength: {
+                            value: 2,
+                            message:
+                              language === "en"
+                                ? "Name must be at least 2 characters"
+                                : "يجب أن يكون الاسم حرفين على الأقل",
+                          },
+                        })}
                         label={content.fullName}
                         type="text"
                         placeholder={content.fullNamePlaceholder}
                         icon={User}
                         isRTL={isRTL}
                         required
+                        error={errors.fullName?.message}
                         inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
                         labelClassName="text-white/80 text-sm"
                       />
 
                       {/* Email */}
                       <InputField
+                        {...register("email", {
+                          required:
+                            language === "en"
+                              ? "Email is required"
+                              : "البريد الإلكتروني مطلوب",
+                          pattern: {
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message:
+                              language === "en"
+                                ? "Invalid email address"
+                                : "عنوان بريد إلكتروني غير صالح",
+                          },
+                        })}
                         label={content.email}
                         type="email"
                         placeholder={content.emailPlaceholder}
                         icon={Mail}
                         isRTL={isRTL}
                         required
+                        error={errors.email?.message}
                         inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
                         labelClassName="text-white/80 text-sm"
                       />
@@ -706,6 +1005,19 @@ export function SignUp({
                       {/* Password Fields */}
                       <div className="grid sm:grid-cols-2 gap-5">
                         <PasswordField
+                          {...register("password", {
+                            required:
+                              language === "en"
+                                ? "Password is required"
+                                : "كلمة المرور مطلوبة",
+                            minLength: {
+                              value: 6,
+                              message:
+                                language === "en"
+                                  ? "Password must be at least 6 characters"
+                                  : "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+                            },
+                          })}
                           label={content.password}
                           placeholder={content.passwordPlaceholder}
                           icon={Lock}
@@ -714,58 +1026,100 @@ export function SignUp({
                           showPassword={showPassword}
                           onShowPasswordChange={setShowPassword}
                           required
+                          error={errors.password?.message}
                           inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
                           labelClassName="text-white/80 text-sm"
                         />
 
-                        <PasswordField
-                          label={content.confirmPassword}
-                          placeholder={content.confirmPasswordPlaceholder}
-                          icon={Lock}
-                          isRTL={isRTL}
-                          showToggle
-                          showPassword={showConfirmPassword}
-                          onShowPasswordChange={setShowConfirmPassword}
-                          required
-                          inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                          labelClassName="text-white/80 text-sm"
-                        />
+                        <div className="relative">
+                          <PasswordField
+                            {...register("confirmPassword", {
+                              required:
+                                language === "en"
+                                  ? "Please confirm your password"
+                                  : "يرجى تأكيد كلمة المرور",
+                              validate: (value) =>
+                                value === password ||
+                                (language === "en"
+                                  ? "Passwords do not match"
+                                  : "كلمات المرور غير متطابقة"),
+                            })}
+                            label={content.confirmPassword}
+                            placeholder={content.confirmPasswordPlaceholder}
+                            icon={Lock}
+                            isRTL={isRTL}
+                            showToggle
+                            showPassword={showConfirmPassword}
+                            onShowPasswordChange={setShowConfirmPassword}
+                            required
+                            error={errors.confirmPassword?.message}
+                            inputClassName={cn(
+                              "bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20",
+                              passwordsMatch &&
+                                !errors.confirmPassword &&
+                                "border-green-500/50 focus:border-green-500/50",
+                              passwordsMismatch &&
+                                "border-red-500/50 focus:border-red-500/50"
+                            )}
+                            labelClassName="text-white/80 text-sm"
+                          />
+                          {/* Password match indicator */}
+                          {confirmPassword && (
+                            <div className="absolute -bottom-5 left-0 right-0 flex items-center gap-1 mt-1">
+                              {passwordsMatch ? (
+                                <div className="flex items-center gap-1 text-green-400 text-xs">
+                                  <Check className="w-3 h-3" />
+                                  <span>
+                                    {language === "en"
+                                      ? "Passwords match"
+                                      : "كلمات المرور متطابقة"}
+                                  </span>
+                                </div>
+                              ) : passwordsMismatch ? (
+                                <div className="flex items-center gap-1 text-red-400 text-xs">
+                                  <span>
+                                    {language === "en"
+                                      ? "Passwords do not match"
+                                      : "كلمات المرور غير متطابقة"}
+                                  </span>
+                                </div>
+                              ) : null}
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       {/* Region & Referral */}
                       <div className="grid sm:grid-cols-2 gap-5">
-                        <SelectField
-                          label={content.region}
-                          placeholder={content.regionPlaceholder}
-                          icon={MapPin}
-                          options={regionOptions}
-                          value={selectedRegion}
-                          onValueChange={setSelectedRegion}
-                          isRTL={isRTL}
-                          required
-                          inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
-                          labelClassName="text-white/80 text-sm"
-                          contentClassName="bg-[#1a1a24] border-white/10"
-                          itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
-                        />
+                        <div>
+                          <SelectField
+                            label={content.region}
+                            placeholder={content.regionPlaceholder}
+                            icon={MapPin}
+                            options={regionOptions}
+                            value={watch("region")}
+                            onValueChange={(value) => {
+                              setValue("region", value, {
+                                shouldValidate: true,
+                              });
+                            }}
+                            isRTL={isRTL}
+                            inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
+                            labelClassName="text-white/80 text-sm"
+                            contentClassName="bg-[#1a1a24] border-white/10"
+                            itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
+                          />
+                        </div>
 
                         <InputField
-                          label={
-                            <>
-                              {content.referral}{" "}
-                              <span className="text-white/40">
-                                {content.referralOptional}
-                              </span>
-                            </>
-                          }
+                          {...register("referralCode", {
+                            setValueAs: (value) => value.toUpperCase(),
+                          })}
+                          label={content.referral}
                           type="text"
                           placeholder={content.referralPlaceholder}
                           icon={Gift}
                           isRTL={isRTL}
-                          value={referralCode}
-                          onChange={(e) =>
-                            setReferralCode(e.target.value.toUpperCase())
-                          }
                           inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
                           labelClassName="text-white/80 text-sm"
                         />
@@ -773,7 +1127,7 @@ export function SignUp({
 
                       {/* Referral Success Message */}
                       <AnimatePresence>
-                        {referralCode && (
+                        {watch("referralCode") && (
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
@@ -821,7 +1175,11 @@ export function SignUp({
                           type="button"
                           onClick={() => setStep(1)}
                           disabled={isLoading}
-                          className="h-12 px-6 bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                          className={`h-12 px-6 bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all ${
+                            isLoading
+                              ? "disabled:opacity-30 disabled:cursor-not-allowed"
+                              : "cursor-pointer"
+                          }`}
                         >
                           <span className="flex items-center gap-2">
                             <ChevronLeft
@@ -834,18 +1192,33 @@ export function SignUp({
                         <Button
                           type="submit"
                           disabled={isLoading || !acceptedTerms}
-                          className="flex-1 h-12 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/30 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+                          className={`flex-1 h-12 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/30 transition-all group ${
+                            isLoading || !acceptedTerms
+                              ? "disabled:opacity-50 disabled:cursor-not-allowed"
+                              : "cursor-pointer"
+                          }`}
                         >
                           <span className="flex items-center justify-center gap-2">
-                            {isLoading
-                              ? content.signingUp
-                              : content.signUpButton}
-                            {!isLoading && (
-                              <ArrowRight
-                                className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
-                                  isRTL ? "rotate-180" : ""
-                                }`}
-                              />
+                            {isLoading ? (
+                              <>
+                                <Oval
+                                  height={20}
+                                  width={20}
+                                  color="#0f172a"
+                                  ariaLabel="loading"
+                                  visible={true}
+                                />
+                                {content.signingUp}
+                              </>
+                            ) : (
+                              <>
+                                {content.signUpButton}
+                                <ArrowRight
+                                  className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
+                                    isRTL ? "rotate-180" : ""
+                                  }`}
+                                />
+                              </>
                             )}
                           </span>
                         </Button>

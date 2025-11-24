@@ -1,15 +1,23 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Check } from 'lucide-react';
-import { WelcomeStep } from './WelcomeStep';
-import { PersonaDetailsStep } from './PersonaDetailsStep';
-import { InterestsStep } from './InterestsStep';
-import { KYCStep } from './KYCStep';
-import { GamificationStep } from './GamificationStep';
-import { CompletionStep } from './CompletionStep';
+import {
+  initializeOnboarding,
+  selectCurrentStep,
+  selectOnboardingData,
+  setCurrentStep,
+  updateStepData,
+} from "@/store/onboardingSlice";
+import { Check } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { CompletionStep } from "./CompletionStep";
+import { GamificationStep } from "./GamificationStep";
+import { InterestsStep } from "./InterestsStep";
+import { KYCStep } from "./KYCStep";
+import { PersonaDetailsStep } from "./PersonaDetailsStep";
+import { WelcomeStep } from "./WelcomeStep";
 
 interface OnboardingFlowProps {
-  language: 'en' | 'ar';
+  language: "en" | "ar";
   selectedPersona: string;
   onComplete: () => void;
 }
@@ -22,77 +30,89 @@ export interface OnboardingData {
   gamification: Record<string, unknown>;
 }
 
-export function OnboardingFlow({ language, selectedPersona, onComplete }: OnboardingFlowProps) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [onboardingData, setOnboardingData] = useState<OnboardingData>({
-    persona: selectedPersona,
-    personaDetails: {},
-    interests: {},
-    kyc: {},
-    gamification: {},
-  });
+export function OnboardingFlow({
+  language,
+  selectedPersona,
+  onComplete,
+}: OnboardingFlowProps) {
+  const dispatch = useDispatch();
+  const currentStep = useSelector(selectCurrentStep);
+  const onboardingData = useSelector(selectOnboardingData);
 
-  const isRTL = language === 'ar';
+  // Initialize onboarding with persona if not already set
+  useEffect(() => {
+    if (!onboardingData.persona || onboardingData.persona !== selectedPersona) {
+      dispatch(initializeOnboarding({ persona: selectedPersona }));
+    }
+  }, [selectedPersona, onboardingData.persona, dispatch]);
+
+  const isRTL = language === "ar";
 
   const t = {
     en: {
       steps: [
-        'Welcome',
-        'Profile Setup',
-        'Interests',
-        'Verification',
-        'Rewards',
-        'Complete'
+        "Welcome",
+        "Profile Setup",
+        "Interests",
+        "Verification",
+        "Rewards",
+        "Complete",
       ],
-      stepOf: 'Step {current} of {total}',
+      stepOf: "Step {current} of {total}",
     },
     ar: {
       steps: [
-        'مرحباً',
-        'إعداد الملف',
-        'الاهتمامات',
-        'التحقق',
-        'المكافآت',
-        'اكتمال'
+        "مرحباً",
+        "إعداد الملف",
+        "الاهتمامات",
+        "التحقق",
+        "المكافآت",
+        "اكتمال",
       ],
-      stepOf: 'الخطوة {current} من {total}',
-    }
+      stepOf: "الخطوة {current} من {total}",
+    },
   };
 
   const content = t[language];
 
   const steps = [
-    { component: WelcomeStep, key: 'welcome' },
-    { component: PersonaDetailsStep, key: 'personaDetails' },
-    { component: InterestsStep, key: 'interests' },
-    { component: KYCStep, key: 'kyc' },
-    { component: GamificationStep, key: 'gamification' },
-    { component: CompletionStep, key: 'completion' },
+    { component: WelcomeStep, key: "welcome" },
+    { component: PersonaDetailsStep, key: "personaDetails" },
+    { component: InterestsStep, key: "interests" },
+    { component: KYCStep, key: "kyc" },
+    { component: GamificationStep, key: "gamification" },
+    { component: CompletionStep, key: "completion" },
   ];
 
   const handleNext = (stepData: Record<string, unknown>) => {
-    setOnboardingData(prev => ({
-      ...prev,
-      [steps[currentStep].key]: stepData,
-    }));
+    // Update Redux state with step data
+    const stepKey = steps[currentStep].key as
+      | "personaDetails"
+      | "interests"
+      | "kyc"
+      | "gamification";
+    dispatch(updateStepData({ stepKey, data: stepData }));
 
     if (currentStep === steps.length - 1) {
       onComplete();
     } else {
-      setCurrentStep(prev => prev + 1);
+      dispatch(setCurrentStep(currentStep + 1));
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
-      setCurrentStep(prev => prev - 1);
+      dispatch(setCurrentStep(currentStep - 1));
     }
   };
 
   const CurrentStepComponent = steps[currentStep].component;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] relative overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className="min-h-screen bg-[#0a0a0f] relative overflow-hidden"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
@@ -114,8 +134,8 @@ export function OnboardingFlow({ language, selectedPersona, onComplete }: Onboar
             <div className="text-center mb-6">
               <p className="text-white/60 text-sm">
                 {content.stepOf
-                  .replace('{current}', (currentStep + 1).toString())
-                  .replace('{total}', steps.length.toString())}
+                  .replace("{current}", (currentStep + 1).toString())
+                  .replace("{total}", steps.length.toString())}
               </p>
             </div>
 
@@ -133,29 +153,29 @@ export function OnboardingFlow({ language, selectedPersona, onComplete }: Onboar
                         animate={{
                           scale: isCurrent ? 1.1 : 1,
                           backgroundColor: isCompleted
-                            ? 'rgb(245, 158, 11)'
+                            ? "rgb(245, 158, 11)"
                             : isCurrent
-                            ? 'rgb(251, 191, 36)'
-                            : 'rgba(255, 255, 255, 0.1)',
+                            ? "rgb(251, 191, 36)"
+                            : "rgba(255, 255, 255, 0.1)",
                         }}
                         className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${
                           isCompleted || isCurrent
-                            ? 'border-amber-500'
-                            : 'border-white/20'
+                            ? "border-amber-500"
+                            : "border-white/20"
                         } relative z-10 bg-[#0a0a0f]`}
                       >
                         {isCompleted ? (
                           <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
-                            transition={{ type: 'spring' }}
+                            transition={{ type: "spring" }}
                           >
                             <Check className="w-6 h-6 text-black" />
                           </motion.div>
                         ) : (
                           <span
                             className={`text-sm ${
-                              isCurrent ? 'text-black' : 'text-white/60'
+                              isCurrent ? "text-black" : "text-white/60"
                             }`}
                           >
                             {index + 1}
@@ -175,7 +195,7 @@ export function OnboardingFlow({ language, selectedPersona, onComplete }: Onboar
                       {/* Step Label */}
                       <p
                         className={`text-xs mt-2 text-center absolute top-14 whitespace-nowrap ${
-                          isCurrent ? 'text-amber-400' : 'text-white/60'
+                          isCurrent ? "text-amber-400" : "text-white/60"
                         }`}
                       >
                         {step}
@@ -193,7 +213,7 @@ export function OnboardingFlow({ language, selectedPersona, onComplete }: Onboar
                             scaleX: isCompleted ? 1 : 0,
                           }}
                           style={{
-                            transformOrigin: isRTL ? 'right' : 'left',
+                            transformOrigin: isRTL ? "right" : "left",
                           }}
                           transition={{ duration: 0.5 }}
                         />

@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Sparkles, Trophy, Users, Gift, ArrowRight } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import type { OnboardingData } from './OnboardingFlow';
 
 interface WelcomeStepProps {
@@ -182,7 +182,7 @@ export function WelcomeStep({ language, onNext, data }: WelcomeStepProps) {
         >
           <Button
             onClick={() => onNext({})}
-            className="w-full h-14 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/50 transition-all group relative overflow-hidden text-lg"
+            className="w-full h-14 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/50 transition-all group relative overflow-hidden text-lg cursor-pointer"
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
               {content.cta}

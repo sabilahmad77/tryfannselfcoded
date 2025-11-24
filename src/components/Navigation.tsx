@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Menu, X } from 'lucide-react';
-import { Button } from './ui/button';
-import { LanguageToggle } from './LanguageToggle';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { LanguageToggle } from '@/components/LanguageToggle';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { ROUTES } from '@/routes/paths';
 import fannLogo from 'figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png';
 
 interface NavigationProps {
-  language: 'en' | 'ar';
-  onLanguageToggle: (lang: 'en' | 'ar') => void;
   onNavigateToSignIn?: () => void;
 }
 
@@ -36,10 +37,20 @@ const content = {
   }
 };
 
-export function Navigation({ language, onLanguageToggle, onNavigateToSignIn }: NavigationProps) {
+export function Navigation({ onNavigateToSignIn }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { language, setLanguage } = useLanguage();
+  const navigate = useNavigate();
   const t = content[language];
   const isRTL = language === 'ar';
+
+  const handleNavigateToSignIn = () => {
+    if (onNavigateToSignIn) {
+      onNavigateToSignIn();
+    } else {
+      navigate(ROUTES.SIGN_IN);
+    }
+  };
 
   return (
     <motion.nav
@@ -52,24 +63,26 @@ export function Navigation({ language, onLanguageToggle, onNavigateToSignIn }: N
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <motion.div 
-            className="flex items-center gap-3"
-            whileHover={{ scale: 1.05 }}
-          >
-            <motion.img 
-              src={fannLogo}
-              alt="FANN"
-              className="h-8 w-auto"
-              animate={{
-                filter: [
-                  'drop-shadow(0 0 8px rgba(234, 179, 8, 0.5))',
-                  'drop-shadow(0 0 16px rgba(234, 179, 8, 0.8))',
-                  'drop-shadow(0 0 8px rgba(234, 179, 8, 0.5))',
-                ]
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </motion.div>
+          <Link to={ROUTES.HOME}>
+            <motion.div 
+              className="flex items-center gap-3 cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.img 
+                src={fannLogo}
+                alt="FANN"
+                className="h-8 w-auto"
+                animate={{
+                  filter: [
+                    'drop-shadow(0 0 8px rgba(234, 179, 8, 0.5))',
+                    'drop-shadow(0 0 16px rgba(234, 179, 8, 0.8))',
+                    'drop-shadow(0 0 8px rgba(234, 179, 8, 0.5))',
+                  ]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            </motion.div>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
@@ -93,11 +106,12 @@ export function Navigation({ language, onLanguageToggle, onNavigateToSignIn }: N
 
           {/* Right Actions */}
           <div className="flex items-center gap-4">
-            <LanguageToggle language={language} onToggle={onLanguageToggle} />
+            <LanguageToggle language={language} onToggle={setLanguage} />
             
             <div className="hidden md:flex items-center gap-3">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
+                  onClick={() => navigate(ROUTES.SIGN_IN)}
                   variant="ghost" 
                   className="relative px-4 py-2 text-white/70 hover:text-white glass border border-amber-500/30 hover:border-amber-400/60 hover:bg-amber-500/10 transition-all duration-300 overflow-hidden group"
                 >
@@ -113,7 +127,7 @@ export function Navigation({ language, onLanguageToggle, onNavigateToSignIn }: N
               
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
-                  onClick={onNavigateToSignIn}
+                  onClick={handleNavigateToSignIn}
                   className="relative px-5 py-2 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black border-0 overflow-hidden group shadow-lg shadow-amber-500/30 hover:shadow-amber-500/60 transition-all duration-300"
                 >
                   <motion.div
@@ -162,6 +176,7 @@ export function Navigation({ language, onLanguageToggle, onNavigateToSignIn }: N
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-white/10">
                 <Button 
+                  onClick={() => navigate(ROUTES.SIGN_IN)}
                   variant="ghost" 
                   className="relative text-white/70 hover:text-white glass border border-amber-500/30 hover:border-amber-400/60 hover:bg-amber-500/10 w-full transition-all duration-300 overflow-hidden group"
                 >
@@ -173,7 +188,7 @@ export function Navigation({ language, onLanguageToggle, onNavigateToSignIn }: N
                   <span className="relative z-10">{t.login}</span>
                 </Button>
                 <Button 
-                  onClick={onNavigateToSignIn}
+                  onClick={handleNavigateToSignIn}
                   className="relative bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black w-full border-0 shadow-lg shadow-amber-500/30 overflow-hidden group"
                 >
                   <motion.div

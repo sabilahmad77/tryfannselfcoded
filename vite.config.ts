@@ -2,9 +2,20 @@
   import { defineConfig } from 'vite';
   import react from '@vitejs/plugin-react-swc';
   import path from 'path';
+  import eslint from 'vite-plugin-eslint';
 
   export default defineConfig({
-    plugins: [react()],
+    plugins: [
+      react(),
+      eslint({
+        include: ['src/**/*.{ts,tsx}'],
+        exclude: ['node_modules', 'dist', 'build'],
+        failOnError: false,
+        failOnWarning: false,
+        emitError: true,
+        emitWarning: true,
+      }),
+    ],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
@@ -55,7 +66,7 @@
     },
     build: {
       target: 'esnext',
-      outDir: 'build',
+      outDir: 'dist',
     },
     server: {
       port: 3000,

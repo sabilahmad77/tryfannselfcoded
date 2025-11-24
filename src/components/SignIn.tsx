@@ -1,3 +1,7 @@
+import { useLoginMutation } from "@/services/api/authApi";
+import { setTokens, setAccessToken } from "@/store/authSlice";
+import { extractErrorMessage } from "@/utils/errorMessages";
+import { useDispatch } from "react-redux";
 import {
   ArrowRight,
   ChevronLeft,
@@ -10,7 +14,9 @@ import {
   Zap,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Oval } from "react-loader-spinner";
+import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { InputField, PasswordField } from "./ui/custom-form-elements";
 
@@ -20,12 +26,30 @@ interface SignInProps {
   onNavigateToHome: () => void;
 }
 
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
 export function SignIn({
   language,
   onNavigateToSignUp,
   onNavigateToHome,
 }: SignInProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const {
+    register,
+    handleSubmit: handleFormSubmit,
+    formState: { errors },
+    setError: setFormError,
+  } = useForm<SignInFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const [login, { isLoading }] = useLoginMutation();
 
   const t = {
     en: {
@@ -127,12 +151,62 @@ export function SignIn({
   const content = t[language];
   const isRTL = language === "ar";
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsLoading(false);
+  const onSubmit = async (data: SignInFormData) => {
+    try {
+      const result = await login({
+        email: data.email.trim(),
+        password: data.password.trim(),
+      }).unwrap();
+
+      // Store token - handle different response structures
+      // Django REST Framework typically returns: { "token": "...", "user": {...} }
+      // or JWT: { "access": "...", "refresh": "...", "user": {...} }
+      const accessToken =
+        result.token ||
+        result.access ||
+        (result as { data?: { token?: string } })?.data?.token ||
+        (result as { data?: { access?: string } })?.data?.access;
+      
+      const refreshToken =
+        result.refresh ||
+        (result as { data?: { refresh?: string } })?.data?.refresh;
+
+      if (accessToken) {
+        // Store tokens in Redux (persisted via redux-persist)
+        if (refreshToken) {
+          dispatch(setTokens({ accessToken, refreshToken }));
+        } else {
+          dispatch(setAccessToken(accessToken));
+        }
+      } else {
+        console.warn("No token received from API response:", result);
+        // Still proceed if user data is present (some APIs return user without explicit token)
+        if (!result.user) {
+          throw new Error("Invalid response from server");
+        }
+      }
+
+      // Show success message
+      const successMessage =
+        (result as { message?: string })?.message ||
+        (language === "en"
+          ? "Successfully signed in!"
+          : "تم تسجيل الدخول بنجاح!");
+
+      toast.success(successMessage);
+
+      // Navigate to home
+      onNavigateToHome();
+    } catch (err: unknown) {
+      // Use generic error handler
+      const errorMessage = extractErrorMessage(err, language);
+
+      // Set form-level error (toast is already shown by baseApi interceptor)
+      setFormError("root", {
+        type: "manual",
+        message: errorMessage,
+      });
+    }
   };
 
   const statsData = [
@@ -177,7 +251,7 @@ export function SignIn({
             <motion.button
               onClick={onNavigateToHome}
               whileHover={{ scale: 1.02 }}
-              className="flex items-center gap-2 text-cream/70 hover:text-[#d4af37] transition-colors group mb-8"
+              className="flex items-center gap-2 text-cream/70 hover:text-[#d4af37] transition-colors group mb-8 cursor-pointer"
             >
               <ChevronLeft
                 className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${
@@ -286,25 +360,53 @@ export function SignIn({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="space-y-5">
                   {/* Email */}
                   <InputField
+                    {...register("email", {
+                      required:
+                        language === "en"
+                          ? "Email is required"
+                          : "البريد الإلكتروني مطلوب",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message:
+                          language === "en"
+                            ? "Invalid email address"
+                            : "عنوان بريد إلكتروني غير صالح",
+                      },
+                    })}
                     label={content.email}
                     type="email"
                     placeholder={content.emailPlaceholder}
                     icon={Mail}
                     isRTL={isRTL}
                     required
+                    error={errors.email?.message}
                   />
 
                   {/* Password */}
                   <PasswordField
+                    {...register("password", {
+                      required:
+                        language === "en"
+                          ? "Password is required"
+                          : "كلمة المرور مطلوبة",
+                      minLength: {
+                        value: 6,
+                        message:
+                          language === "en"
+                            ? "Password must be at least 6 characters"
+                            : "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+                      },
+                    })}
                     label={content.password}
                     placeholder={content.passwordPlaceholder}
                     icon={Lock}
                     isRTL={isRTL}
                     showToggle
                     required
+                    error={errors.password?.message}
                   />
 
                   {/* Forgot Password */}
@@ -315,7 +417,7 @@ export function SignIn({
                   >
                     <button
                       type="button"
-                      className="text-sm text-[#d4af37] hover:text-[#fbbf24] transition-colors"
+                      className="text-sm text-[#d4af37] hover:text-[#fbbf24] transition-colors cursor-pointer"
                     >
                       {content.forgotPassword}
                     </button>
@@ -324,23 +426,41 @@ export function SignIn({
                   {/* Submit Button */}
                   <div className="pt-2">
                     <Button
-                      type="submit"
+                      type="button"
+                      onClick={handleFormSubmit(onSubmit)}
                       disabled={isLoading}
-                      className="w-full h-12 bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-[#d4af37] hover:from-[#fbbf24] hover:via-[#d4af37] hover:to-[#fbbf24] text-[#0f172a] shadow-lg shadow-[#d4af37]/30 transition-all group disabled:opacity-50 disabled:cursor-not-allowed glow-gold btn-glow"
+                      className={`w-full h-12 bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-[#d4af37] hover:from-[#fbbf24] hover:via-[#d4af37] hover:to-[#fbbf24] text-[#0f172a] shadow-lg shadow-[#d4af37]/30 transition-all group glow-gold btn-glow ${
+                        isLoading
+                          ? "cursor-not-allowed opacity-50"
+                          : "cursor-pointer"
+                      }`}
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
-                        {isLoading ? content.signingIn : content.signInButton}
-                        {!isLoading && (
-                          <ArrowRight
-                            className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
-                              isRTL ? "rotate-180" : ""
-                            }`}
-                          />
+                        {isLoading ? (
+                          <>
+                            <Oval
+                              height={20}
+                              width={20}
+                              color="#0f172a"
+                              ariaLabel="loading"
+                              visible={true}
+                            />
+                            {content.signingIn}
+                          </>
+                        ) : (
+                          <>
+                            {content.signInButton}
+                            <ArrowRight
+                              className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
+                                isRTL ? "rotate-180" : ""
+                              }`}
+                            />
+                          </>
                         )}
                       </span>
                     </Button>
                   </div>
-                </form>
+                </div>
 
                 {/* Divider */}
                 <div className="my-6 flex items-center gap-4">
@@ -354,7 +474,7 @@ export function SignIn({
                 {/* SSO / Social Login */}
                 <Button
                   variant="outline"
-                  className="w-full h-11 border-[#14b8a6]/30 hover:border-[#14b8a6]/60 hover:bg-[#14b8a6]/10 text-[#fef3c7]/70 hover:text-[#fef3c7] transition-all group"
+                  className="w-full h-11 border-[#14b8a6]/30 hover:border-[#14b8a6]/60 hover:bg-[#14b8a6]/10 text-[#fef3c7]/70 hover:text-[#fef3c7] transition-all group cursor-pointer"
                 >
                   <Sparkles
                     className={`w-5 h-5 text-[#14b8a6] ${
@@ -372,7 +492,7 @@ export function SignIn({
                   <button
                     type="button"
                     onClick={onNavigateToSignUp}
-                    className="text-[#d4af37] hover:text-[#fbbf24] transition-colors text-sm"
+                    className="text-[#d4af37] hover:text-[#fbbf24] transition-colors text-sm cursor-pointer"
                   >
                     {content.signUp}
                   </button>
