@@ -3,34 +3,50 @@
 :root {
   --font-size: 16px;
   /* Midnight Blue, Gold, Cream, Teal Palette */
-  --background: #0f172a; /* Midnight Blue */
-  --foreground: #fef3c7; /* Cream */
-  --card: #1e293b; /* Darker Midnight Blue */
-  --card-foreground: #fef3c7; /* Cream */
+  --background: #0f172a;
+  /* Midnight Blue */
+  --foreground: #fef3c7;
+  /* Cream */
+  --card: #1e293b;
+  /* Darker Midnight Blue */
+  --card-foreground: #fef3c7;
+  /* Cream */
   --popover: #1e293b;
   --popover-foreground: #fef3c7;
-  --primary: #d4af37; /* Gold */
-  --primary-foreground: #0f172a; /* Midnight Blue */
-  --secondary: #14b8a6; /* Teal */
+  --primary: #d4af37;
+  /* Gold */
+  --primary-foreground: #0f172a;
+  /* Midnight Blue */
+  --secondary: #14b8a6;
+  /* Teal */
   --secondary-foreground: #0f172a;
   --muted: #334155;
   --muted-foreground: #cbd5e1;
-  --accent: #14b8a6; /* Teal */
+  --accent: #14b8a6;
+  /* Teal */
   --accent-foreground: #0f172a;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: rgba(212, 175, 55, 0.2); /* Gold with opacity */
+  --border: rgba(212, 175, 55, 0.2);
+  /* Gold with opacity */
   --input: transparent;
-  --input-background: rgba(254, 243, 199, 0.05); /* Cream with opacity */
+  --input-background: rgba(254, 243, 199, 0.05);
+  /* Cream with opacity */
   --switch-background: #cbd5e1;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #d4af37; /* Gold */
-  --chart-1: #d4af37; /* Gold */
-  --chart-2: #14b8a6; /* Teal */
-  --chart-3: #0ea5e9; /* Sky Blue */
-  --chart-4: #fbbf24; /* Amber */
-  --chart-5: #10b981; /* Emerald */
+  --ring: #d4af37;
+  /* Gold */
+  --chart-1: #d4af37;
+  /* Gold */
+  --chart-2: #14b8a6;
+  /* Teal */
+  --chart-3: #0ea5e9;
+  /* Sky Blue */
+  --chart-4: #fbbf24;
+  /* Amber */
+  --chart-5: #10b981;
+  /* Emerald */
   --radius: 0.625rem;
   --sidebar: #1e293b;
   --sidebar-foreground: #fef3c7;
@@ -43,19 +59,27 @@
 }
 
 .dark {
-  --background: #0f172a; /* Midnight Blue */
-  --foreground: #fef3c7; /* Cream */
-  --card: #1e293b; /* Darker Midnight Blue */
-  --card-foreground: #fef3c7; /* Cream */
+  --background: #0f172a;
+  /* Midnight Blue */
+  --foreground: #fef3c7;
+  /* Cream */
+  --card: #1e293b;
+  /* Darker Midnight Blue */
+  --card-foreground: #fef3c7;
+  /* Cream */
   --popover: #1e293b;
   --popover-foreground: #fef3c7;
-  --primary: #d4af37; /* Gold */
-  --primary-foreground: #0f172a; /* Midnight Blue */
-  --secondary: #14b8a6; /* Teal */
+  --primary: #d4af37;
+  /* Gold */
+  --primary-foreground: #0f172a;
+  /* Midnight Blue */
+  --secondary: #14b8a6;
+  /* Teal */
   --secondary-foreground: #0f172a;
   --muted: #334155;
   --muted-foreground: #cbd5e1;
-  --accent: #14b8a6; /* Teal */
+  --accent: #14b8a6;
+  /* Teal */
   --accent-foreground: #0f172a;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
@@ -64,11 +88,16 @@
   --ring: #d4af37;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: #d4af37; /* Gold */
-  --chart-2: #14b8a6; /* Teal */
-  --chart-3: #0ea5e9; /* Sky Blue */
-  --chart-4: #fbbf24; /* Amber */
-  --chart-5: #10b981; /* Emerald */
+  --chart-1: #d4af37;
+  /* Gold */
+  --chart-2: #14b8a6;
+  /* Teal */
+  --chart-3: #0ea5e9;
+  /* Sky Blue */
+  --chart-4: #fbbf24;
+  /* Amber */
+  --chart-5: #10b981;
+  /* Emerald */
   --sidebar: #1e293b;
   --sidebar-foreground: #fef3c7;
   --sidebar-primary: #d4af37;
@@ -195,6 +224,7 @@ html {
   0%, 100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-20px);
   }
@@ -204,6 +234,7 @@ html {
   0%, 100% {
     box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
   }
+
   50% {
     box-shadow: 0 0 40px rgba(212, 175, 55, 0.8);
   }
@@ -213,9 +244,11 @@ html {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -226,6 +259,7 @@ html {
     opacity: 0.5;
     transform: translateY(0) scale(1);
   }
+
   50% {
     opacity: 1;
     transform: translateY(-10px) scale(1.05);
@@ -305,4 +339,31 @@ html {
 .btn-glow:hover::before {
   width: 300px;
   height: 300px;
+}
+
+/* Custom Scrollbar Styles - Matching Homepage Theme */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.4);
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.6);
+}
+
+/* Firefox scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 175, 55, 0.4) rgba(15, 23, 42, 0.5);
 }

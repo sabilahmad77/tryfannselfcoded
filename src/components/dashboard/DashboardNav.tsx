@@ -11,7 +11,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
@@ -19,6 +19,7 @@ import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
 import { clearAuth } from "@/store/authSlice";
 import { persistor } from "@/store/store";
+import type { RootState } from "@/store/store";
 import fannLogo from "figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png";
 
 interface DashboardNavProps {
@@ -36,6 +37,12 @@ const content = {
     logout: "Logout",
     collapse: "Collapse",
     expand: "Expand",
+    tiers: {
+      explorer: "Explorer",
+      curator: "Curator",
+      ambassador: "Ambassador",
+      patron: "Founding Patron",
+    },
   },
   ar: {
     dashboard: "لوحة التحكم",
@@ -44,6 +51,12 @@ const content = {
     logout: "تسجيل الخروج",
     collapse: "طي",
     expand: "توسيع",
+    tiers: {
+      explorer: "مستكشف",
+      curator: "منسق",
+      ambassador: "سفير",
+      patron: "راعي مؤسس",
+    },
   },
 };
 
@@ -57,10 +70,41 @@ export function DashboardNav({
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const storedUser = useSelector((state: RootState) => state.auth.user);
   const t = content[language];
   const isRTL = language === "ar";
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Get user display data
+  const userName = storedUser
+    ? `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim() ||
+      storedUser.title ||
+      storedUser.email ||
+      "User"
+    : "User";
+
+  const userInitials = storedUser
+    ? `${storedUser.first_name || ""} ${storedUser.last_name || ""}`
+        .trim()
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2) ||
+      storedUser.email?.[0]?.toUpperCase() ||
+      "U"
+    : "U";
+
+  // Map points to tier (you can adjust this logic based on your tier system)
+  const getUserTier = () => {
+    if (!storedUser) return t.tiers.explorer;
+    const points = parseInt(storedUser.points || "0", 10);
+    if (points >= 10000) return t.tiers.patron;
+    if (points >= 5000) return t.tiers.ambassador;
+    if (points >= 1000) return t.tiers.curator;
+    return t.tiers.explorer;
+  };
 
   // Use controlled state if provided, otherwise use internal state
   const isCollapsed =
@@ -261,9 +305,12 @@ export function DashboardNav({
               className="w-12 h-12 border-2 border-[#d4af37] cursor-pointer shrink-0 hover:scale-105 transition-transform"
               onClick={() => navigate(ROUTES.PROFILE)}
             >
-              <AvatarImage src="" alt="User" />
+              <AvatarImage
+                src={storedUser?.profile_image || ""}
+                alt={userName}
+              />
               <AvatarFallback className="bg-gradient-to-br from-[#d4af37] to-[#14b8a6] text-[#0f172a]">
-                AE
+                {userInitials}
               </AvatarFallback>
             </Avatar>
             {!isCollapsed && (
@@ -273,10 +320,10 @@ export function DashboardNav({
                 exit={{ opacity: 0 }}
                 className="flex flex-col overflow-hidden"
               >
-                <span className="text-[#fef3c7] truncate">
-                  Sarah Al-Mansouri
+                <span className="text-[#fef3c7] truncate">{userName}</span>
+                <span className="text-[#cbd5e1]/60 text-sm">
+                  {getUserTier()}
                 </span>
-                <span className="text-[#cbd5e1]/60 text-sm">Explorer</span>
               </motion.div>
             )}
           </motion.div>

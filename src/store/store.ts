@@ -1,30 +1,45 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import { baseApi } from '@/services/api/baseApi';
+import { configureStore } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { baseApi } from "@/services/api/baseApi";
 // Import API services to ensure they're initialized and hooks are available
-import '@/services/api/onboardingApi';
-import '@/services/api/dashboardApi';
-import authReducer from './authSlice';
-import onboardingReducer from './onboardingSlice';
+import "@/services/api/onboardingApi";
+import "@/services/api/dashboardApi";
+import authReducer from "./authSlice";
+import onboardingReducer from "./onboardingSlice";
 
 // Redux persist configuration for auth slice
 const authPersistConfig = {
-  key: 'auth',
+  key: "auth",
   storage,
-  whitelist: ['accessToken', 'refreshToken', 'isAuthenticated', 'persona'], // Persist these fields
+  whitelist: [
+    "accessToken",
+    "refreshToken",
+    "isAuthenticated",
+    "persona",
+    "profileCompleted",
+    "user",
+  ], // Persist these fields
 };
 
 // Redux persist configuration for onboarding slice
 const onboardingPersistConfig = {
-  key: 'onboarding',
+  key: "onboarding",
   storage,
-  whitelist: ['currentStep', 'onboardingData', 'submittedSteps', 'submittedData'], // Persist all onboarding state
+  whitelist: [
+    "currentStep",
+    "onboardingData",
+    "submittedSteps",
+    "submittedData",
+  ], // Persist all onboarding state
 };
 
 // Create persisted reducers
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
-const persistedOnboardingReducer = persistReducer(onboardingPersistConfig, onboardingReducer);
+const persistedOnboardingReducer = persistReducer(
+  onboardingPersistConfig,
+  onboardingReducer
+);
 
 export const store = configureStore({
   reducer: {
@@ -41,7 +56,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore redux-persist actions
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
       },
     }).concat(baseApi.middleware),
   devTools: import.meta.env.DEV,
@@ -53,4 +68,3 @@ export const persistor = persistStore(store);
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-

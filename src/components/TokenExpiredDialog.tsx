@@ -11,6 +11,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { useLanguage } from "@/contexts/useLanguage";
+import { useTokenExpired } from "@/contexts/useTokenExpired";
 import { ROUTES } from "@/routes/paths";
 import { LogIn, AlertCircle } from "lucide-react";
 import { motion } from "motion/react";
@@ -43,12 +44,18 @@ export function TokenExpiredDialog({ open, onClose }: TokenExpiredDialogProps) {
   const navigate = useNavigate();
   const isRTL = language === "ar";
   const t = content[language];
+  const { setHandlingTokenExpiration } = useTokenExpired();
 
   const handleSignIn = () => {
     // Clear any stored page path before navigating
     if (typeof window !== "undefined") {
       localStorage.removeItem("tryfann_expired_last_visit_page");
+      // Clear the window flag so PrivateRoute can redirect if needed
+      window.__tryfann_handling_token_expiration__ = false;
     }
+    // Reset the flag before navigating so PrivateRoute can handle the redirect
+    setHandlingTokenExpiration(false);
+    // Navigate to sign in page
     navigate(ROUTES.SIGN_IN);
     onClose();
   };
@@ -117,7 +124,7 @@ export function TokenExpiredDialog({ open, onClose }: TokenExpiredDialogProps) {
           >
             <AlertDialogAction
               onClick={handleSignIn}
-              className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium shadow-lg shadow-amber-500/25 transition-all duration-200 flex items-center justify-center"
+              className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium shadow-lg shadow-amber-500/25 transition-all duration-200 flex items-center justify-center cursor-pointer"
             >
               <LogIn className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
               {t.action}

@@ -1,11 +1,12 @@
-import { useState } from "react";
 import { motion } from "motion/react";
+import { useSelector } from "react-redux";
 import { PointWallet } from "@/components/dashboard/PointWallet";
 import { URLEncoder } from "@/components/dashboard/URLEncoder";
 import { RedemptionCodes } from "@/components/dashboard/RedemptionCodes";
 import { WatchVideos } from "@/components/dashboard/WatchVideos";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { useLanguage } from "@/contexts/useLanguage";
+import type { RootState } from "@/store/store";
 
 const content = {
   en: {
@@ -22,7 +23,15 @@ export function DashboardPage() {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === "ar";
-  const [userName] = useState("Art Enthusiast");
+  const storedUser = useSelector((state: RootState) => state.auth.user);
+
+  // Get user name from stored data
+  const userName = storedUser
+    ? `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim() ||
+      storedUser.title ||
+      storedUser.email ||
+      "User"
+    : "User";
 
   return (
     <DashboardLayout currentPage="dashboard">

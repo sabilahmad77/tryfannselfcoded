@@ -78,8 +78,8 @@ export function URLEncoder() {
   const referralLink = statsData?.data?.referral_link || "";
   const stats = {
     clicks: statsData?.data?.total_referral_clicks || 0,
-    conversions: 0, // Not available in API response
-    pending: 0, // Not available in API response
+    conversions: statsData?.data?.conversation || 0,
+    pending: statsData?.data?.pending || 0,
   };
 
   // Handle generate new referral code

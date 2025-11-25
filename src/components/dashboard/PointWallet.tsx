@@ -68,13 +68,36 @@ export function PointWallet() {
 
   // Use API data or fallback to default values
   const totalPoints = statsData?.data?.total_points || 0;
-  const influencePoints = Math.floor(totalPoints * 0.6); // Estimate based on total
-  const provenancePoints = Math.floor(totalPoints * 0.4); // Estimate based on total
+  const influencePoints = statsData?.data?.influence_points || 0;
+  const provenancePoints = statsData?.data?.provenance_points || 0;
   const currentTier = t.tiers.explorer;
   const nextTier = t.tiers.curator;
   const nextTierPoints = 500;
   const progress = totalPoints > 0 ? (totalPoints / nextTierPoints) * 100 : 0;
   const pointsNeeded = Math.max(0, nextTierPoints - totalPoints);
+
+  // Build activities from API data
+  const activities = [
+    {
+      action: language === "en" ? "Profile Completed" : "إكمال الملف الشخصي",
+      points: `+${statsData?.data?.profile_completed || 0}`,
+      type: "provenance" as const,
+    },
+    {
+      action: language === "en" ? "Referral Joined" : "انضمام إحالة",
+      points: `+${statsData?.data?.referral_joined || 0}`,
+      type: "influence" as const,
+    },
+    {
+      action: language === "en" ? "First Login" : "تسجيل الدخول الأول",
+      points: `+${statsData?.data?.first_login || 0}`,
+      type: "provenance" as const,
+    },
+  ].filter((activity) => {
+    // Only show activities with points > 0
+    const points = parseInt(activity.points.replace("+", ""));
+    return points > 0;
+  });
 
   // Show loading state
   if (isLoading) {
@@ -222,41 +245,53 @@ export function PointWallet() {
           {t.recentActivity}
         </h3>
         <div className="space-y-2">
-          {t.activities.map((activity, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className={`flex items-center justify-between p-3 bg-[#1e293b]/50 rounded-lg border border-[#334155] hover:border-[#d4af37]/30 transition-all ${
-                isRTL ? "flex-row-reverse" : ""
-              }`}
-            >
-              <div
-                className={`flex items-center gap-3 ${
+          {activities.length > 0 ? (
+            activities.map((activity, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className={`flex items-center justify-between p-3 bg-[#1e293b]/50 rounded-lg border border-[#334155] hover:border-[#d4af37]/30 transition-all ${
                   isRTL ? "flex-row-reverse" : ""
                 }`}
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    activity.type === "influence"
-                      ? "bg-[#8b5cf6]/20 text-[#8b5cf6]"
-                      : "bg-[#0ea5e9]/20 text-[#0ea5e9]"
+                  className={`flex items-center gap-3 ${
+                    isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  {activity.type === "influence" ? (
-                    <Flame className="w-4 h-4" />
-                  ) : (
-                    <Shield className="w-4 h-4" />
-                  )}
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      activity.type === "influence"
+                        ? "bg-[#8b5cf6]/20 text-[#8b5cf6]"
+                        : "bg-[#0ea5e9]/20 text-[#0ea5e9]"
+                    }`}
+                  >
+                    {activity.type === "influence" ? (
+                      <Flame className="w-4 h-4" />
+                    ) : (
+                      <Shield className="w-4 h-4" />
+                    )}
+                  </div>
+                  <span className="text-sm text-[#fef3c7]">
+                    {activity.action}
+                  </span>
                 </div>
-                <span className="text-sm text-[#fef3c7]">
-                  {activity.action}
+                <span className="text-sm text-[#14b8a6]">
+                  {activity.points}
                 </span>
-              </div>
-              <span className="text-sm text-[#14b8a6]">{activity.points}</span>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))
+          ) : (
+            <p
+              className={`text-sm text-[#cbd5e1] text-center py-4 ${
+                isRTL ? "text-right" : "text-left"
+              }`}
+            >
+              {language === "en" ? "No recent activity" : "لا يوجد نشاط حديث"}
+            </p>
+          )}
         </div>
       </div>
     </div>

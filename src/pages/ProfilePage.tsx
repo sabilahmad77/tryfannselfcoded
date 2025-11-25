@@ -23,6 +23,10 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { useLanguage } from "@/contexts/useLanguage";
+import { EditProfile } from "@/components/profile/EditProfile";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
 
 const content = {
   en: {
@@ -181,29 +185,96 @@ export function ProfilePage() {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === "ar";
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const persona = useSelector((state: RootState) => state.auth.persona) as
+    | string
+    | null;
+  const storedUser = useSelector((state: RootState) => state.auth.user);
 
-  // Mock user data
-  const userData = {
-    name: "Sarah Al-Mansouri",
-    username: "@sarahart",
-    email: "sarah@example.com",
-    phone: "+971 50 123 4567",
-    location: "Dubai, UAE",
-    website: "artbysarah.com",
-    role: language === "en" ? "Art Collector" : "جامع أعمال فنية",
-    bio:
-      language === "en"
-        ? "Passionate about contemporary Middle Eastern art. Building a collection that celebrates regional artists and their unique perspectives."
-        : "شغوفة بالفن المعاصر في الشرق الأوسط. أبني مجموعة تحتفي بالفنانين الإقليميين ووجهات نظرهم الفريدة.",
-    memberSince: "November 2024",
-    tier: t.tiers.explorer,
-    totalPoints: 175,
-    influencePoints: 100,
-    provenancePoints: 75,
-    referrals: 12,
-    artworksSaved: 24,
-    collections: 3,
+  // Format date helper
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return "";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString(language === "en" ? "en-US" : "ar-SA", {
+        month: "long",
+        year: "numeric",
+      });
+    } catch {
+      return dateString;
+    }
   };
+
+  // Get website URL - handle both string and array formats
+  const getWebsite = (website: string[] | string | null | undefined) => {
+    if (!website) return "";
+    if (Array.isArray(website)) {
+      return website.length > 0 ? website[0] : "";
+    }
+    return website;
+  };
+
+  // Use stored user data or fallback to mock data
+  const userData = storedUser
+    ? {
+        name:
+          `${storedUser.first_name || ""} ${
+            storedUser.last_name || ""
+          }`.trim() ||
+          storedUser.title ||
+          storedUser.email,
+        username: storedUser.email.split("@")[0] || "",
+        email: storedUser.email,
+        phone: storedUser.phone_number || "",
+        location: storedUser.location || "",
+        website: getWebsite(storedUser.website),
+        role: storedUser.role || "",
+        bio: storedUser.bio || "",
+        memberSince: formatDate(storedUser.date_joined),
+        tier: t.tiers.explorer, // You can map points to tier if needed
+        totalPoints: parseInt(storedUser.points || "0", 10),
+        influencePoints: Math.floor(
+          parseInt(storedUser.points || "0", 10) * 0.6
+        ), // Mock calculation
+        provenancePoints: Math.floor(
+          parseInt(storedUser.points || "0", 10) * 0.4
+        ), // Mock calculation
+        referrals: storedUser.total_referral_clicks || 0,
+        artworksSaved: 0, // Not in API response, can be fetched separately
+        collections: 0, // Not in API response, can be fetched separately
+        // Additional fields for edit profile
+        title: storedUser.title || "",
+        focus: storedUser.focus || "",
+        years_of_experience: storedUser.years_of_experience
+          ? String(storedUser.years_of_experience)
+          : "",
+        instagram_handle: storedUser.instagram_handle || "",
+        profile_image: storedUser.profile_image,
+      }
+    : {
+        // Fallback mock data if user is not loaded
+        name: "User",
+        username: "@user",
+        email: "",
+        phone: "",
+        location: "",
+        website: "",
+        role: "",
+        bio: "",
+        memberSince: "",
+        tier: t.tiers.explorer,
+        totalPoints: 0,
+        influencePoints: 0,
+        provenancePoints: 0,
+        referrals: 0,
+        artworksSaved: 0,
+        collections: 0,
+        title: "",
+        focus: "",
+        years_of_experience: "",
+        instagram_handle: "",
+        profile_image: null,
+      };
 
   const nextTierPoints = 500;
   const progress = (userData.totalPoints / nextTierPoints) * 100;
@@ -225,9 +296,17 @@ export function ProfilePage() {
           {/* Avatar */}
           <div className="relative">
             <Avatar className="w-32 h-32 border-4 border-[#d4af37]">
-              <AvatarImage src="" alt={userData.name} />
+              <AvatarImage
+                src={userData.profile_image || ""}
+                alt={userData.name}
+              />
               <AvatarFallback className="bg-gradient-to-br from-[#d4af37] to-[#14b8a6] text-[#0f172a] text-3xl">
-                SA
+                {userData.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .toUpperCase()
+                  .slice(0, 2) || "U"}
               </AvatarFallback>
             </Avatar>
             <button
@@ -253,7 +332,9 @@ export function ProfilePage() {
                 <h1 className="text-3xl text-[#fef3c7] mb-1">
                   {userData.name}
                 </h1>
-                <p className="text-[#cbd5e1] mb-3">{userData.username}</p>
+                <p className="text-[#cbd5e1] mb-3">
+                  {userData.username ? `@${userData.username}` : userData.email}
+                </p>
                 <Badge className="bg-gradient-to-r from-[#d4af37] to-[#fbbf24] text-[#0f172a] border-0">
                   <Crown className="w-3 h-3 mr-1" />
                   {userData.tier}
@@ -262,7 +343,8 @@ export function ProfilePage() {
               <div className={`flex gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
                 <Button
                   variant="outline"
-                  className="border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37]/10"
+                  className="border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37]/10 hover:text-white cursor-pointer"
+                  onClick={() => setIsEditProfileOpen(true)}
                 >
                   <Edit2 className="w-4 h-4 mr-2" />
                   {t.editProfile}
@@ -665,6 +747,26 @@ export function ProfilePage() {
           </motion.div>
         </TabsContent>
       </Tabs>
+
+      {/* Edit Profile Dialog */}
+      <EditProfile
+        open={isEditProfileOpen}
+        onClose={() => setIsEditProfileOpen(false)}
+        language={language}
+        initialData={{
+          title: userData.title,
+          bio: userData.bio,
+          website:
+            userData.website && !userData.website.startsWith("http")
+              ? `https://${userData.website}`
+              : userData.website,
+          instagram_handle: userData.instagram_handle,
+          focus: userData.focus,
+          years_of_experience: userData.years_of_experience,
+          profile_image: userData.profile_image || null,
+          persona: persona || storedUser?.role?.toLowerCase() || "collector",
+        }}
+      />
     </DashboardLayout>
   );
 }

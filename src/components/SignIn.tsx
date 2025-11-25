@@ -1,5 +1,10 @@
 import { useLoginMutation } from "@/services/api/authApi";
-import { setAccessToken, setTokens } from "@/store/authSlice";
+import {
+  setAccessToken,
+  setTokens,
+  setPersona,
+  type UserProfileData,
+} from "@/store/authSlice";
 import {
   ArrowRight,
   ChevronLeft,
@@ -15,7 +20,9 @@ import { motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { Oval } from "react-loader-spinner";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { ROUTES } from "@/routes/paths";
 import { Button } from "./ui/button";
 import { InputField, PasswordField } from "./ui/custom-form-elements";
 
@@ -30,12 +37,32 @@ interface SignInFormData {
   password: string;
 }
 
+interface LoginResponseData {
+  access?: string;
+  refresh?: string;
+  profile_completed?: boolean;
+  role?: string;
+  [key: string]: unknown;
+}
+
+interface LoginResponse {
+  success?: boolean;
+  status_code?: number;
+  message?: string | Record<string, unknown>;
+  data?: LoginResponseData;
+  access?: string;
+  refresh?: string;
+  token?: string;
+  user?: unknown;
+}
+
 export function SignIn({
   language,
   onNavigateToSignUp,
   onNavigateToHome,
 }: SignInProps) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit: handleFormSubmit,
@@ -156,45 +183,90 @@ export function SignIn({
         password: data.password.trim(),
       }).unwrap();
 
-      // Store token - handle different response structures
-      // Django REST Framework typically returns: { "token": "...", "user": {...} }
-      // or JWT: { "access": "...", "refresh": "...", "user": {...} }
+      // Extract tokens from the nested data structure
+      // API response: { success: true, data: { access: "...", refresh: "...", profile_completed: ... } }
+      const loginResult = result as LoginResponse;
+      const responseData = loginResult.data || loginResult;
+
       const accessToken =
-        result.token ||
-        result.access ||
-        (result as { data?: { token?: string } })?.data?.token ||
-        (result as { data?: { access?: string } })?.data?.access;
+        (responseData as LoginResponseData).access ||
+        loginResult.access ||
+        loginResult.token;
 
       const refreshToken =
-        result.refresh ||
-        (result as { data?: { refresh?: string } })?.data?.refresh;
+        (responseData as LoginResponseData).refresh || loginResult.refresh;
+
+      // Get profile completion status and role (persona)
+      const profileCompleted =
+        (responseData as LoginResponseData)?.profile_completed ?? false;
+      const role = (responseData as LoginResponseData)?.role;
+      // Convert role to lowercase persona (e.g., "Artist" -> "artist")
+      const persona = role ? role.toLowerCase() : undefined;
+
+      // Extract user profile data from response
+      // The API returns user data in the data field when profile_completed is true
+      const userData =
+        profileCompleted && loginResult.data
+          ? (loginResult.data as unknown as UserProfileData)
+          : undefined;
 
       if (accessToken) {
         // Store tokens in Redux (persisted via redux-persist)
         if (refreshToken) {
-          dispatch(setTokens({ accessToken, refreshToken }));
+          dispatch(
+            setTokens({
+              accessToken,
+              refreshToken,
+              profileCompleted,
+              persona,
+              user: userData,
+            })
+          );
         } else {
-          dispatch(setAccessToken(accessToken));
+          dispatch(
+            setAccessToken({
+              token: accessToken,
+              profileCompleted,
+              user: userData,
+            })
+          );
+          // If persona exists, set it separately when only access token is available
+          if (persona) {
+            dispatch(setPersona(persona));
+          }
         }
       } else {
         console.warn("No token received from API response:", result);
         // Still proceed if user data is present (some APIs return user without explicit token)
-        if (!result.user) {
+        const hasUserData = loginResult.data || loginResult.user;
+        if (!hasUserData) {
           throw new Error("Invalid response from server");
         }
       }
 
       // Show success message
       const successMessage =
-        (result as { message?: string })?.message ||
+        (typeof loginResult.message === "string"
+          ? loginResult.message
+          : null) ||
         (language === "en"
           ? "Successfully signed in!"
           : "تم تسجيل الدخول بنجاح!");
 
       toast.success(successMessage);
 
-      // Navigate to home
-      onNavigateToHome();
+      // Navigation will be handled by PublicRoute based on profile_completed status
+      // If profile is completed, navigate to dashboard, otherwise onboarding
+      if (profileCompleted) {
+        // Navigate to dashboard if profile is completed
+        navigate(ROUTES.DASHBOARD);
+      } else {
+        // Navigate to onboarding if profile is not completed
+        const onboardingPath = persona
+          ? `${ROUTES.ONBOARDING}?persona=${encodeURIComponent(persona)}`
+          : ROUTES.DASHBOARD;
+        navigate(onboardingPath, { replace: true });
+      }
     } catch {
       // Error toast is already shown by baseApi interceptor
       // No need to show duplicate toast here

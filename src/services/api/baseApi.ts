@@ -135,13 +135,13 @@ const handleTokenExpiration = async (
   isHandlingTokenExpiration = true;
 
   try {
-    // Clear tokens from Redux store using api.dispatch
-    // Dynamically import to avoid circular dependencies
-    const { clearAuth } = await import("@/store/authSlice");
-    api.dispatch(clearAuth());
-
-    // Store the current page before redirecting (optional)
+    // Set flag in window to prevent PrivateRoute from redirecting immediately
+    // This flag will be checked by PrivateRoute before redirecting
     if (typeof window !== "undefined") {
+      // Set flag BEFORE clearing auth to prevent immediate redirect
+      window.__tryfann_handling_token_expiration__ = true;
+
+      // Store the current page before redirecting (optional)
       localStorage.setItem(
         "tryfann_expired_last_visit_page",
         JSON.stringify(window.location.pathname)
@@ -150,21 +150,30 @@ const handleTokenExpiration = async (
       // Trigger token expired dialog using custom event
       // This avoids circular dependencies and allows the dialog to be shown
       // even when API calls fail outside of component context
-      // Use a small delay to ensure state is cleared before showing dialog
+      // Dispatch event immediately so dialog can show before any navigation
+      const event = new CustomEvent("token-expired");
+      window.dispatchEvent(event);
+    }
+
+    // Clear tokens from Redux store using api.dispatch AFTER setting flag
+    // Dynamically import to avoid circular dependencies
+    const { clearAuth } = await import("@/store/authSlice");
+    api.dispatch(clearAuth());
+
+    // Reset flag after a short delay to allow for future token expiration handling
+    if (typeof window !== "undefined") {
       setTimeout(() => {
-        const event = new CustomEvent("token-expired");
-        window.dispatchEvent(event);
-        // Reset flag after a short delay to allow for future token expiration handling
-        setTimeout(() => {
-          isHandlingTokenExpiration = false;
-        }, 1000);
-      }, 100);
+        isHandlingTokenExpiration = false;
+      }, 1000);
     } else {
       isHandlingTokenExpiration = false;
     }
   } catch (error) {
     console.error("Error handling token expiration:", error);
     isHandlingTokenExpiration = false;
+    if (typeof window !== "undefined") {
+      window.__tryfann_handling_token_expiration__ = false;
+    }
   }
 };
 

@@ -30,6 +30,7 @@ import {
   selectIsStepSubmitted,
   selectSubmittedData,
 } from "@/store/onboardingSlice";
+import { setUser, type UserProfileData } from "@/store/authSlice";
 import type { OnboardingData } from "./OnboardingFlow";
 
 interface PersonaDetailsStepProps {
@@ -112,7 +113,7 @@ export function PersonaDetailsStep({
       instagram_handle: (savedData.instagram_handle as string) || "",
       focus: (savedData.focus as string) || "",
       years_of_experience: (savedData.years_of_experience as string) || "",
-      profile_image: savedProfileImage as File | null || null,
+      profile_image: (savedProfileImage as File | null) || null,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.personaDetails]);
@@ -371,6 +372,22 @@ export function PersonaDetailsStep({
         }
 
         toast.success(successMessage);
+
+        // Extract and store user profile data from API response if available
+        if (apiResponse.data) {
+          try {
+            const userData = apiResponse.data as unknown as UserProfileData;
+            // Check if the data has user profile structure (has id, email, etc.)
+            if (userData && typeof userData === "object" && "id" in userData) {
+              dispatch(setUser(userData));
+            }
+          } catch (error) {
+            console.warn(
+              "Failed to parse user data from profile setup response:",
+              error
+            );
+          }
+        }
 
         // Mark step as submitted in Redux
         const stepData = { ...formData, profile_image: profileImage };

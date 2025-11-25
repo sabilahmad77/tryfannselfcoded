@@ -1,4 +1,4 @@
-import { baseApi } from './baseApi';
+import { baseApi } from "./baseApi";
 
 // API Response Types
 export interface ReferralCodeGenerateResponse {
@@ -26,6 +26,13 @@ export interface DashboardStatsResponse {
     total_referral_clicks: number;
     total_points: number;
     referral_link: string;
+    influence_points: number;
+    provenance_points: number;
+    profile_completed: number;
+    referral_joined: number;
+    first_login: number;
+    conversation: number;
+    pending: number;
   };
 }
 
@@ -34,27 +41,27 @@ export const dashboardApi = baseApi.injectEndpoints({
     // Generate Referral Code - GET /api/market_final/referral_code_generate
     generateReferralCode: builder.query<ReferralCodeGenerateResponse, void>({
       query: () => ({
-        url: '/market_final/referral_code_generate',
-        method: 'GET',
+        url: "/market_final/referral_code_generate",
+        method: "GET",
       }),
-      providesTags: ['User'],
+      providesTags: ["User"],
     }),
 
     // Validate Referral Code - GET /api/market_final/ref/{code}
     validateReferralCode: builder.query<ReferralCodeValidateResponse, string>({
       query: (code) => ({
         url: `/market_final/ref/${code}`,
-        method: 'GET',
+        method: "GET",
       }),
     }),
 
     // Get Dashboard Stats - GET /api/market_final/dashboard_stats
     getDashboardStats: builder.query<DashboardStatsResponse, void>({
       query: () => ({
-        url: '/market_final/dashboard_stats',
-        method: 'GET',
+        url: "/market_final/dashboard_stats",
+        method: "GET",
       }),
-      providesTags: ['User'],
+      providesTags: ["User"],
     }),
   }),
 });
@@ -67,4 +74,3 @@ export const {
   useLazyValidateReferralCodeQuery,
   useGetDashboardStatsQuery,
 } = dashboardApi;
-
