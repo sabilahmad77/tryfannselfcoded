@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "motion/react";
-import { Gift, Sparkles, Check, AlertCircle } from "lucide-react";
+import { Gift, Sparkles, Check, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/useLanguage";
+import {
+  useGetRedemptionsQuery,
+  useUserRedemptionMutation,
+  type Redemption,
+} from "@/services/api/dashboardApi";
 
 const content = {
   en: {
@@ -93,7 +98,64 @@ export function RedemptionCodes() {
   const t = content[language];
   const isRTL = language === "ar";
   const [code, setCode] = useState("");
-  const [isRedeeming, setIsRedeeming] = useState(false);
+
+  // Fetch available redemptions from API
+  const {
+    data: redemptionsData,
+    isLoading: isLoadingRedemptions,
+    isError: isRedemptionsError,
+  } = useGetRedemptionsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  // User redemption mutation
+  const [userRedemption, { isLoading: isRedeeming }] =
+    useUserRedemptionMutation();
+
+  // Parse redemptions from API response
+  const allRedemptions = useMemo(() => {
+    if (!redemptionsData?.data) return [];
+
+    // Handle both array and single object responses
+    const data = redemptionsData.data;
+    if (Array.isArray(data)) {
+      return data;
+    }
+    // If single object, wrap in array
+    return [data as Redemption];
+  }, [redemptionsData]);
+
+  // Filter available redemptions (is_completed === false)
+  const availableRedemptions = useMemo(() => {
+    return allRedemptions.filter(
+      (r) => r.is_completed === false || r.is_completed === undefined
+    );
+  }, [allRedemptions]);
+
+  // Filter redeemed codes (is_completed === true)
+  const redeemedCodes = useMemo(() => {
+    return allRedemptions.filter((r) => r.is_completed === true);
+  }, [allRedemptions]);
+
+  // Handle clicking on available reward to populate code field
+  const handleRewardClick = (redemptionCode: string) => {
+    setCode(redemptionCode.toUpperCase());
+  };
+
+  // Format date for display
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString(language === "en" ? "en-US" : "ar-SA", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    } catch {
+      return dateString;
+    }
+  };
 
   const handleRedeem = async () => {
     if (!code.trim()) {
@@ -101,23 +163,59 @@ export function RedemptionCodes() {
       return;
     }
 
-    setIsRedeeming(true);
+    try {
+      // Find redemption by code (case-insensitive) - check all redemptions
+      const redemption = allRedemptions.find(
+        (r) => r.code?.toUpperCase() === code.toUpperCase()
+      );
 
-    // Simulate API call
-    setTimeout(() => {
-      const validCodes = ["FANN2024", "EARLYBIRD", "ARTLOVER"];
+      if (!redemption) {
+        toast.error(t.messages.invalid);
+        return;
+      }
 
-      if (validCodes.includes(code.toUpperCase())) {
+      // Check if already redeemed
+      if (redemption.is_completed === true) {
+        toast.error(t.messages.alreadyUsed);
+        return;
+      }
+
+      // Call API to redeem
+      const result = await userRedemption({
+        redeem_id: redemption.id,
+      }).unwrap();
+
+      if (result.success) {
         toast.success(t.messages.success);
         setCode("");
-      } else if (t.codes.some((c) => c.code === code.toUpperCase())) {
-        toast.error(t.messages.alreadyUsed);
+        // Redemptions will be automatically refetched via RTK Query tag invalidation
+        // Dashboard stats will also be updated via User tag invalidation
+      } else {
+        // Handle API error messages
+        const errorMessage =
+          typeof result.message === "string"
+            ? result.message
+            : t.messages.invalid;
+        toast.error(errorMessage);
+      }
+    } catch (error: unknown) {
+      console.error("Error redeeming code:", error);
+      // Handle different error types
+      if (error && typeof error === "object" && "data" in error) {
+        const errorData = error.data as {
+          message?: string;
+          detail?: string;
+          [key: string]: unknown;
+        };
+        const errorMessage =
+          errorData?.message ||
+          errorData?.detail ||
+          (typeof errorData === "string" ? errorData : t.messages.invalid);
+        toast.error(errorMessage);
       } else {
         toast.error(t.messages.invalid);
       }
-
-      setIsRedeeming(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -156,10 +254,20 @@ export function RedemptionCodes() {
           />
           <Button
             onClick={handleRedeem}
-            disabled={isRedeeming || !code.trim()}
-            className="bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:from-[#ec4899] hover:to-[#8b5cf6] text-white transition-all disabled:opacity-50"
+            disabled={isRedeeming || !code.trim() || isLoadingRedemptions}
+            className={`bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:from-[#ec4899] hover:to-[#8b5cf6] text-white transition-all disabled:opacity-50 ${
+              isRedeeming || !code.trim() || isLoadingRedemptions
+                ? "cursor-not-allowed"
+                : "cursor-pointer"
+            }`}
           >
-            <Sparkles className="w-4 h-4 mr-2" />
+            {isRedeeming ? (
+              <Loader2
+                className={`w-4 h-4 animate-spin ${isRTL ? "ml-2" : "mr-2"}`}
+              />
+            ) : (
+              <Sparkles className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+            )}
             {t.redeem}
           </Button>
         </div>
@@ -174,37 +282,64 @@ export function RedemptionCodes() {
         >
           {t.availableRewards}
         </h3>
-        <div className="space-y-2">
-          {t.rewards.map((reward, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-              className={`flex items-center justify-between p-3 bg-gradient-to-r from-[#1e293b]/50 to-[#8b5cf6]/10 rounded-lg border border-[#8b5cf6]/30 ${
-                isRTL ? "flex-row-reverse" : ""
-              }`}
-            >
-              <div
-                className={`flex items-center gap-3 ${
+        {isLoadingRedemptions ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 text-[#8b5cf6] animate-spin" />
+          </div>
+        ) : isRedemptionsError ? (
+          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
+            <AlertCircle className="w-12 h-12 mb-2 text-[#ef4444]" />
+            <p className="text-sm">
+              {language === "en"
+                ? "Failed to load available rewards"
+                : "فشل تحميل المكافآت المتاحة"}
+            </p>
+          </div>
+        ) : availableRedemptions.length > 0 ? (
+          <div className="space-y-2">
+            {availableRedemptions.map((redemption, index) => (
+              <motion.div
+                key={redemption.id || index}
+                initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                onClick={() => handleRewardClick(redemption.code || "")}
+                className={`flex items-center justify-between p-3 bg-gradient-to-r from-[#1e293b]/50 to-[#8b5cf6]/10 rounded-lg border border-[#8b5cf6]/30 cursor-pointer hover:border-[#8b5cf6]/60 transition-colors ${
                   isRTL ? "flex-row-reverse" : ""
                 }`}
               >
-                <div className="w-8 h-8 bg-[#8b5cf6]/20 rounded-full flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-[#8b5cf6]" />
+                <div
+                  className={`flex items-center gap-3 ${
+                    isRTL ? "flex-row-reverse" : ""
+                  }`}
+                >
+                  <div className="w-8 h-8 bg-[#8b5cf6]/20 rounded-full flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-[#8b5cf6]" />
+                  </div>
+                  <span className="text-sm text-[#fef3c7]">
+                    {redemption.title || redemption.code}
+                  </span>
                 </div>
-                <span className="text-sm text-[#fef3c7]">{reward.name}</span>
-              </div>
-              <Badge
-                variant="outline"
-                className="border-[#d4af37] text-[#d4af37]"
-              >
-                {reward.points} {t.points}
-              </Badge>
-            </motion.div>
-          ))}
-        </div>
+                <Badge
+                  variant="outline"
+                  className="border-[#d4af37] text-[#d4af37]"
+                >
+                  {redemption.points} {t.points}
+                </Badge>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
+            <AlertCircle className="w-12 h-12 mb-2" />
+            <p className="text-sm">
+              {language === "en"
+                ? "No available rewards"
+                : "لا توجد مكافآت متاحة"}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Redeemed Codes History */}
@@ -216,11 +351,15 @@ export function RedemptionCodes() {
         >
           {t.redeemedCodes}
         </h3>
-        {t.codes.length > 0 ? (
+        {isLoadingRedemptions ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 text-[#8b5cf6] animate-spin" />
+          </div>
+        ) : redeemedCodes.length > 0 ? (
           <div className="space-y-2">
-            {t.codes.map((item, index) => (
+            {redeemedCodes.map((redemption, index) => (
               <motion.div
-                key={index}
+                key={redemption.id || index}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -237,11 +376,19 @@ export function RedemptionCodes() {
                     <Check className="w-4 h-4 text-[#14b8a6]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
-                    <p className="text-sm text-[#fef3c7]">{item.code}</p>
-                    <p className="text-xs text-[#cbd5e1]">{item.date}</p>
+                    <p className="text-sm text-[#fef3c7]">
+                      {redemption.code || redemption.title}
+                    </p>
+                    <p className="text-xs text-[#cbd5e1]">
+                      {formatDate(
+                        redemption.updated_at || redemption.created_at
+                      )}
+                    </p>
                   </div>
                 </div>
-                <span className="text-sm text-[#14b8a6]">{item.reward}</span>
+                <span className="text-sm text-[#14b8a6]">
+                  +{redemption.points} {t.points}
+                </span>
               </motion.div>
             ))}
           </div>

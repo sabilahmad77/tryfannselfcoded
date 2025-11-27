@@ -145,7 +145,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden text-white p-2 glass rounded-lg"
+              className="lg:hidden text-white p-2 glass rounded-lg cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </motion.button>

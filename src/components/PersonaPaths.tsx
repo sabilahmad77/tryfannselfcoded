@@ -310,7 +310,7 @@ export function PersonaPaths({ language, onNavigateToSignUp }: PersonaPathsProps
                         onClick={onNavigateToSignUp}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="relative w-full group/btn overflow-hidden rounded-lg sm:rounded-xl"
+                        className="relative w-full group/btn overflow-hidden rounded-lg sm:rounded-xl cursor-pointer"
                       >
                         {/* Button Background */}
                         <div className={`absolute inset-0 bg-gradient-to-r ${persona.gradient} opacity-100 group-hover/btn:opacity-100 transition-opacity`} />

@@ -1,10 +1,10 @@
-import { motion } from 'motion/react';
-import { Check, Star, Gem, Trophy, Sparkles, ChevronRight } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import bgImage from 'figma:asset/3fa9b9de7e4b1421a708a7c88cd0672cee3504e2.png';
+import { motion } from "motion/react";
+import { Check, Star, Gem, Trophy, Sparkles, ChevronRight } from "lucide-react";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import bgImage from "figma:asset/3fa9b9de7e4b1421a708a7c88cd0672cee3504e2.png";
 
 interface RewardsTiersProps {
-  language: 'en' | 'ar';
+  language: "en" | "ar";
   onNavigateToSignUp?: () => void;
 }
 
@@ -25,8 +25,8 @@ const content = {
           "Platform early access",
           "Community badge",
           "Basic referral rewards",
-          "Newsletter updates"
-        ]
+          "Newsletter updates",
+        ],
       },
       {
         name: "Curator",
@@ -40,8 +40,8 @@ const content = {
           "Exclusive webinars",
           "Enhanced referral bonuses",
           "Priority support",
-          "Curator badge"
-        ]
+          "Curator badge",
+        ],
       },
       {
         name: "Ambassador",
@@ -56,8 +56,8 @@ const content = {
           "VIP event invitations",
           "Premium referral tier",
           "Beta feature access",
-          "Personalized onboarding"
-        ]
+          "Personalized onboarding",
+        ],
       },
       {
         name: "Founding Patron",
@@ -73,10 +73,10 @@ const content = {
           "Direct team connection",
           "Co-creation opportunities",
           "Exclusive physical rewards",
-          "Revenue share opportunities"
-        ]
-      }
-    ]
+          "Revenue share opportunities",
+        ],
+      },
+    ],
   },
   ar: {
     title: { white: "نظام التقدم", gold: " الخاص بك" },
@@ -94,8 +94,8 @@ const content = {
           "الوصول المبكر للمنصة",
           "شارة المجتمع",
           "مكافآت الإحالة الأساسية",
-          "تحديثات النشرة الإخبارية"
-        ]
+          "تحديثات النشرة الإخبارية",
+        ],
       },
       {
         name: "منسق",
@@ -109,8 +109,8 @@ const content = {
           "ندوات حصرية عبر الإنترنت",
           "مكافآت إحالة محسنة",
           "دعم ذو أولوية",
-          "شارة المنسق"
-        ]
+          "شارة المنسق",
+        ],
       },
       {
         name: "سفير",
@@ -125,8 +125,8 @@ const content = {
           "دعوات لأحداث VIP",
           "مستوى إحالة مميز",
           "الوصول لميزات تجريبية",
-          "تأهيل مخصص"
-        ]
+          "تأهيل مخصص",
+        ],
       },
       {
         name: "راعي مؤسس",
@@ -142,26 +142,32 @@ const content = {
           "اتصال مباشر بالفريق",
           "فرص المشاركة في الإنشاء",
           "مكافآت مادية حصرية",
-          "فرص حصة الإيرادات"
-        ]
-      }
-    ]
-  }
+          "فرص حصة الإيرادات",
+        ],
+      },
+    ],
+  },
 };
 
-export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps) {
+export function RewardsTiers({
+  language,
+  onNavigateToSignUp,
+}: RewardsTiersProps) {
   const t = content[language];
-  const isRTL = language === 'ar';
+  const isRTL = language === "ar";
 
   return (
-    <section className="relative py-32 overflow-hidden bg-[#0a0612]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section
+      className="relative py-32 overflow-hidden bg-[#0a0612]"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
           src={bgImage}
           alt="Abstract Art Pattern"
           className="w-full h-full object-cover opacity-70"
-          style={{ transform: 'scale(1.15)' }}
+          style={{ transform: "scale(1.15)" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a0612] via-[#0a0612]/95 to-[#0a0612]" />
       </div>
@@ -196,12 +202,12 @@ export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps
           <div className="relative mb-32">
             {/* Background Track */}
             <div className="absolute top-20 left-0 right-0 h-1 bg-white/10" />
-            
+
             {/* Animated Progress Line */}
             <motion.div
               className="absolute top-20 left-0 h-1 bg-gradient-to-r from-blue-400 via-purple-400 via-orange-400 to-[#d4af37]"
-              initial={{ width: '0%' }}
-              whileInView={{ width: '100%' }}
+              initial={{ width: "0%" }}
+              whileInView={{ width: "100%" }}
               viewport={{ once: true }}
               transition={{ duration: 2, ease: "easeOut" }}
             />
@@ -225,7 +231,11 @@ export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps
                       initial={{ scale: 0 }}
                       whileInView={{ scale: 1 }}
                       viewport={{ once: true }}
-                      transition={{ delay: 0.5 + index * 0.15, type: "spring", stiffness: 200 }}
+                      transition={{
+                        delay: 0.5 + index * 0.15,
+                        type: "spring",
+                        stiffness: 200,
+                      }}
                     />
 
                     {/* Card */}
@@ -234,18 +244,24 @@ export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps
                       className="relative group"
                     >
                       {/* Glow Effect */}
-                      <div className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500`} />
+                      <div
+                        className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500`}
+                      />
 
                       {/* Main Card */}
                       <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
                         {/* Top Gradient Bar */}
-                        <div className={`h-1.5 bg-gradient-to-r ${tier.color}`} />
+                        <div
+                          className={`h-1.5 bg-gradient-to-r ${tier.color}`}
+                        />
 
                         {/* Card Content */}
                         <div className="p-6">
                           {/* Icon */}
                           <div className="mb-4 flex justify-center">
-                            <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center shadow-lg`}>
+                            <div
+                              className={`w-16 h-16 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center shadow-lg`}
+                            >
                               <Icon className="w-8 h-8 text-white" />
                             </div>
                           </div>
@@ -256,7 +272,8 @@ export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps
                           </h3>
 
                           {/* Points */}
-                          <div className={`text-center mb-6 text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
+                          <div
+                            className={`text-center mb-6 text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
                             style={{
                               fontWeight: 600,
                             }}
@@ -267,7 +284,10 @@ export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps
                           {/* Rewards */}
                           <ul className="space-y-2.5">
                             {tier.rewards.slice(0, 4).map((reward, idx) => (
-                              <li key={idx} className="flex items-start gap-2 text-white/60 text-xs">
+                              <li
+                                key={idx}
+                                className="flex items-start gap-2 text-white/60 text-xs"
+                              >
                                 <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#14b8a6]" />
                                 <span className="leading-tight">{reward}</span>
                               </li>
@@ -311,8 +331,8 @@ export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-white/10" />
             <motion.div
               className="absolute left-8 top-0 w-0.5 bg-gradient-to-b from-blue-400 via-purple-400 via-orange-400 to-[#d4af37]"
-              initial={{ height: '0%' }}
-              whileInView={{ height: '100%' }}
+              initial={{ height: "0%" }}
+              whileInView={{ height: "100%" }}
               viewport={{ once: true }}
               transition={{ duration: 2, ease: "easeOut" }}
             />
@@ -342,7 +362,9 @@ export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps
                     {/* Card */}
                     <div className="flex-1 pb-4">
                       {/* Glow Effect */}
-                      <div className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-20 blur-lg`} />
+                      <div
+                        className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-20 blur-lg`}
+                      />
 
                       {/* Main Card */}
                       <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
@@ -353,7 +375,9 @@ export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps
                         <div className="p-6">
                           <div className="flex items-start gap-4 mb-4">
                             {/* Icon */}
-                            <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center shadow-lg shrink-0`}>
+                            <div
+                              className={`w-14 h-14 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center shadow-lg shrink-0`}
+                            >
                               <Icon className="w-7 h-7 text-white" />
                             </div>
 
@@ -364,7 +388,8 @@ export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps
                               </h3>
 
                               {/* Points */}
-                              <div className={`text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
+                              <div
+                                className={`text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
                                 style={{
                                   fontWeight: 600,
                                 }}
@@ -377,7 +402,10 @@ export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps
                           {/* Rewards */}
                           <ul className="space-y-2">
                             {tier.rewards.map((reward, idx) => (
-                              <li key={idx} className="flex items-start gap-2 text-white/60 text-sm">
+                              <li
+                                key={idx}
+                                className="flex items-start gap-2 text-white/60 text-sm"
+                              >
                                 <Check className="w-4 h-4 shrink-0 mt-0.5 text-[#14b8a6]" />
                                 <span>{reward}</span>
                               </li>
@@ -405,7 +433,7 @@ export function RewardsTiers({ language, onNavigateToSignUp }: RewardsTiersProps
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
             onClick={onNavigateToSignUp}
-            className="px-10 py-4 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#fbbf24] text-[#0f172a] shadow-xl shadow-[#d4af37]/30 hover:shadow-2xl hover:shadow-[#d4af37]/50 transition-all duration-300 inline-flex items-center gap-2"
+            className="px-10 py-4 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#fbbf24] text-[#0f172a] shadow-xl shadow-[#d4af37]/30 hover:shadow-2xl hover:shadow-[#d4af37]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer"
           >
             <span>Start Your Journey</span>
             <ChevronRight className="w-5 h-5" />

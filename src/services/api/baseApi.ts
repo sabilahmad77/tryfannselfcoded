@@ -6,7 +6,7 @@ import type {
 } from "@reduxjs/toolkit/query";
 import type { RootState } from "@/store/store";
 import { toast } from "sonner";
-import { getAuthToken } from "@/utils/auth";
+import { getAuthToken, getRefreshToken } from "@/utils/auth";
 import { extractErrorMessage } from "@/utils/errorMessages";
 
 // Get base URL from environment variable or use default
@@ -54,6 +54,9 @@ const baseQueryConfig = fetchBaseQuery({
 
 // Flag to prevent multiple token expiration handlers from running simultaneously
 let isHandlingTokenExpiration = false;
+
+// Shared refresh promise to avoid multiple parallel refresh calls
+let refreshPromise: Promise<string | null> | null = null;
 
 /**
  * Check if the error response indicates token expiration
@@ -177,22 +180,149 @@ const handleTokenExpiration = async (
   }
 };
 
+/**
+ * Try to refresh the access token using the stored refresh token.
+ *
+ * Uses a shared promise so that multiple failing requests don't trigger
+ * parallel refresh calls. Returns the new access token on success, or null
+ * if refresh fails for any reason.
+ */
+const refreshAccessToken = async (
+  api: Parameters<
+    BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>
+  >[1]
+): Promise<string | null> => {
+  if (refreshPromise) {
+    return refreshPromise;
+  }
+
+  refreshPromise = (async () => {
+    try {
+      const refreshToken = getRefreshToken(api.getState as () => RootState);
+      if (!refreshToken) {
+        return null;
+      }
+
+      // Call backend refresh endpoint directly to avoid RTK circular deps
+      const response = await fetch(`${BASE_URL}/market_final/token/refresh`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      });
+
+      if (!response.ok) {
+        return null;
+      }
+
+      const responseData = (await response.json()) as {
+        success?: boolean;
+        status_code?: number;
+        message?: unknown;
+        data?: {
+          access_token?: string;
+          refresh_token?: string;
+          access?: string;
+          token?: string;
+          refresh?: string;
+          [key: string]: unknown;
+        };
+        // Fallback for different response formats
+        access?: string;
+        token?: string;
+        refresh?: string;
+        [key: string]: unknown;
+      };
+
+      // Extract access token from nested data structure
+      // Response format: { success: true, status_code: 200, data: { access_token: "..." } }
+      const newAccessToken =
+        responseData.data?.access_token ||
+        responseData.data?.access ||
+        responseData.data?.token ||
+        responseData.access ||
+        responseData.token;
+
+      if (!newAccessToken || typeof newAccessToken !== "string") {
+        return null;
+      }
+
+      // Update access token in Redux store
+      const { setAccessToken } = await import("@/store/authSlice");
+      api.dispatch(
+        setAccessToken({
+          token: newAccessToken,
+        })
+      );
+
+      // If backend returns a new refresh token, store it as well
+      const newRefreshToken =
+        responseData.data?.refresh_token ||
+        responseData.data?.refresh ||
+        responseData.refresh;
+
+      if (newRefreshToken && typeof newRefreshToken === "string") {
+        const { setRefreshTokenAction } = await import("@/store/authSlice");
+        api.dispatch(setRefreshTokenAction(newRefreshToken));
+      }
+
+      return newAccessToken;
+    } catch (error) {
+      console.error("Error refreshing access token:", error);
+      return null;
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
+};
+
 // Intercept base query with error handling and token management
 const interceptBaseQuery: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  const response = await baseQueryConfig(args, api, extraOptions);
+  // First attempt with current access token
+  let response = await baseQueryConfig(args, api, extraOptions);
 
   // Get error data from response
   // Check both error.data and response.data (RTK Query may put error in either location)
-  const errorData = response.error?.data || (response.data as unknown);
+  let errorData = response.error?.data || (response.data as unknown);
 
   // Handle token expiration - ONLY check for specific error response format
   // No status code check - only rely on the error response structure
   if (isTokenExpiredError(errorData)) {
-    await handleTokenExpiration(api);
+    // Avoid trying to refresh when we are already calling the refresh endpoint
+    const requestUrl =
+      typeof args === "string" ? args : (args as FetchArgs)?.url ?? "";
+
+    const isRefreshRequest =
+      typeof requestUrl === "string" && requestUrl.includes("token/refresh");
+
+    if (!isRefreshRequest) {
+      // Try to refresh the access token once
+      const newAccessToken = await refreshAccessToken(api);
+
+      if (newAccessToken) {
+        // Retry the original request with the new token
+        response = await baseQueryConfig(args, api, extraOptions);
+        errorData = response.error?.data || (response.data as unknown);
+
+        // If retry still indicates token issues, fall back to expiration handling
+        if (isTokenExpiredError(errorData)) {
+          await handleTokenExpiration(api);
+        }
+      } else {
+        // Refresh failed - clear auth and show dialog
+        await handleTokenExpiration(api);
+      }
+    } else {
+      // If the refresh request itself fails with token error, clear auth
+      await handleTokenExpiration(api);
+    }
   }
 
   // Handle errors and show toast notifications
@@ -219,6 +349,15 @@ const interceptBaseQuery: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: interceptBaseQuery,
-  tagTypes: ["User", "Auth", "Artwork", "Gallery", "Collection", "Region"],
+  tagTypes: [
+    "User",
+    "Auth",
+    "Artwork",
+    "Gallery",
+    "Collection",
+    "Region",
+    "Redemption",
+    "WatchEarn",
+  ],
   endpoints: () => ({}),
 });

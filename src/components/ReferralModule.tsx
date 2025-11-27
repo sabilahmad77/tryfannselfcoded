@@ -212,7 +212,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                     onClick={handleCopy}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#d4af37]/20 to-[#14b8a6]/20 border-2 border-[#d4af37]/40 hover:border-[#d4af37]/80 flex items-center justify-center transition-all shadow-md"
+                    className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#d4af37]/20 to-[#14b8a6]/20 border-2 border-[#d4af37]/40 hover:border-[#d4af37]/80 flex items-center justify-center transition-all shadow-md cursor-pointer"
                   >
                     {copied ? (
                       <Check className="w-5 h-5 text-green-400" />
@@ -236,7 +236,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleShare(social.platform)}
-                        className="px-4 py-2 rounded-lg backdrop-blur-md bg-gradient-to-br from-[#1e1b4b]/40 to-[#0f172a]/40 border border-[#d4af37]/30 hover:border-[#d4af37]/70 flex items-center gap-2 transition-all text-sm text-white/60 hover:text-white shadow-md hover:shadow-[#d4af37]/20"
+                        className="px-4 py-2 rounded-lg backdrop-blur-md bg-gradient-to-br from-[#1e1b4b]/40 to-[#0f172a]/40 border border-[#d4af37]/30 hover:border-[#d4af37]/70 flex items-center gap-2 transition-all text-sm text-white/60 hover:text-white shadow-md hover:shadow-[#d4af37]/20 cursor-pointer"
                       >
                         <Icon className="w-4 h-4" />
                         <span className="hidden sm:inline">{social.label}</span>

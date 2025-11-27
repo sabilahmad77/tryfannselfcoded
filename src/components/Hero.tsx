@@ -175,7 +175,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
               <Button
                 size="lg"
                 onClick={onNavigateToSignUp}
-                className="relative px-8 py-6 bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-[#d4af37] text-[#0f172a] border-0 overflow-hidden group shadow-lg shadow-[#d4af37]/30 hover:shadow-2xl hover:shadow-[#d4af37]/60 transition-all duration-500 glow-gold btn-glow"
+                className="relative px-8 py-6 bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-[#d4af37] text-[#0f172a] border-0 overflow-hidden group shadow-lg shadow-[#d4af37]/30 hover:shadow-2xl hover:shadow-[#d4af37]/60 transition-all duration-500 glow-gold btn-glow cursor-pointer"
               >
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-[#fbbf24] via-[#d4af37] to-[#fbbf24]"
