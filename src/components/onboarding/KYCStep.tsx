@@ -6,7 +6,10 @@ import {
   SelectField,
 } from "@/components/ui/custom-form-elements";
 import { Label } from "@/components/ui/label";
-import { useKycVerificationMutation } from "@/services/api/onboardingApi";
+import {
+  useKycVerificationMutation,
+  type KYCVerificationRequest,
+} from "@/services/api/onboardingApi";
 import {
   markStepAsSubmitted,
   selectIsStepSubmitted,
@@ -162,10 +165,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       nationality: (savedData.nationality as string) || "",
       city: (savedData.city as string) || "",
       postal_code: (savedData.postal_code as string) || "",
-      gov_issued_id:
-        savedIdDoc instanceof File ? savedIdDoc : null,
-      proof_address:
-        savedProof instanceof File ? savedProof : null,
+      gov_issued_id: savedIdDoc instanceof File ? savedIdDoc : null,
+      proof_address: savedProof instanceof File ? savedProof : null,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.kyc]);
@@ -174,7 +175,9 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
   const hasChanges = () => {
     if (!isStepSubmitted || !submittedData) return true;
 
-    const submitted = submittedData as Partial<KYCFormData & { acceptedCompliance?: boolean }>;
+    const submitted = submittedData as Partial<
+      KYCFormData & { acceptedCompliance?: boolean }
+    >;
 
     // Compare text fields
     const textFieldsMatch =
@@ -379,25 +382,22 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       return;
     }
 
-    if (!idDocument || !proofOfAddress) {
-      toast.error(
-        language === "en"
-          ? "Please upload both required documents"
-          : "يرجى تحميل كلا المستندين المطلوبين"
-      );
-      return;
-    }
-
     try {
-      const kycData = {
+      const kycData: KYCVerificationRequest = {
         id_number: formData.id_number.trim(),
         dob: formData.dob, // Format: YYYY-MM-DD (from date input)
         nationality: formData.nationality.trim(),
         city: formData.city.trim(),
         postal_code: formData.postal_code.trim(),
-        gov_issued_id: idDocument,
-        proof_address: proofOfAddress,
       };
+
+      // Only include document fields if files are attached
+      if (idDocument) {
+        kycData.gov_issued_id = idDocument;
+      }
+      if (proofOfAddress) {
+        kycData.proof_address = proofOfAddress;
+      }
 
       const result = await kycVerification(kycData).unwrap();
 
@@ -666,7 +666,6 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                   setValue("gov_issued_id", file || null);
                 }}
                 isRTL={isRTL}
-                required
                 formatText={content.documents.formats}
                 buttonText={content.documents.uploadButton}
                 buttonClassName="border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
@@ -687,7 +686,6 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                   setValue("proof_address", file || null);
                 }}
                 isRTL={isRTL}
-                required
                 formatText={content.documents.formats}
                 buttonText={content.documents.uploadButton}
                 buttonClassName="border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
@@ -772,12 +770,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
               <Button
                 type="button"
                 onClick={handleSubmit(onSubmit)}
-                disabled={
-                  isLoading ||
-                  !acceptedCompliance ||
-                  !idDocument ||
-                  !proofOfAddress
-                }
+                disabled={isLoading || !acceptedCompliance}
                 className="flex-1 h-12 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">

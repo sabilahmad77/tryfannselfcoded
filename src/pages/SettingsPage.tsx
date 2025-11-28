@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import {
   Settings as SettingsIcon,
@@ -14,23 +14,28 @@ import {
   Languages,
   ChevronRight,
   Check,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  PasswordField,
+  SelectField,
+  SwitchField,
+} from "@/components/ui/custom-form-elements";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/useLanguage";
+import { useDispatch } from "react-redux";
+import { updateUser } from "@/store/authSlice";
+import {
+  useGetUserSettingsQuery,
+  useSaveUserSettingsMutation,
+  useChangePasswordMutation,
+  type UserSettingsRequest,
+} from "@/services/api/settingsApi";
+import { extractErrorMessage } from "@/utils/errorMessages";
 
 const content = {
   en: {
@@ -157,12 +162,24 @@ export function SettingsPage() {
   const { language, setLanguage } = useLanguage();
   const t = content[language];
   const isRTL = language === "ar";
+  const dispatch = useDispatch();
 
-  // State for form fields
-  const [fullName, setFullName] = useState("Sarah Al-Mansouri");
-  const [email, setEmail] = useState("sarah@example.com");
-  const [phone, setPhone] = useState("+971 50 123 4567");
-  const [username, setUsername] = useState("@sarahart");
+  // API hooks
+  const {
+    data: settingsData,
+    isLoading: isLoadingSettings,
+    isError: isSettingsError,
+    refetch: refetchSettings,
+  } = useGetUserSettingsQuery();
+  const [saveSettings, { isLoading: isSavingSettings }] =
+    useSaveUserSettingsMutation();
+  const [changePassword, { isLoading: isChangingPassword }] =
+    useChangePasswordMutation();
+
+  // State for password fields
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   // State for toggles
   const [emailNotifs, setEmailNotifs] = useState(true);
@@ -177,18 +194,244 @@ export function SettingsPage() {
   const [showLocation, setShowLocation] = useState(true);
   const [twoFactor, setTwoFactor] = useState(false);
 
-  const handleSaveAccount = () => {
-    toast.success(t.saveSuccess);
+  // State for preferences
+  const [theme, setTheme] = useState("dark");
+  const [timezone, setTimezone] = useState("dubai");
+  const [currency, setCurrency] = useState("aed");
+  const [localLanguage, setLocalLanguage] = useState<"en" | "ar">(language);
+
+  // Load settings from API
+  useEffect(() => {
+    if (settingsData?.data) {
+      const settings = settingsData.data;
+      setEmailNotifs(settings.email_notification ?? true);
+      setPushNotifs(settings.push_notification ?? true);
+      setNotifyReferrals(settings.referral_update ?? true);
+      setNotifyRewards(settings.reward_milestone ?? true);
+      setNotifyArtwork(settings.artwork_alert ?? false);
+      setNotifyMessages(settings.msg_comment ?? true);
+      setProfilePublic(settings.profile_visibility ?? true);
+      setShowEmail(settings.show_email ?? false);
+      setShowPhone(settings.show_phone ?? false);
+      setShowLocation(settings.show_location ?? true);
+      setTheme(settings.theme || "dark");
+      setTimezone(settings.profile_timezone || "dubai");
+      setCurrency(settings.preferred_currency || "aed");
+
+      // Update Redux store with privacy settings
+      dispatch(
+        updateUser({
+          profile_visibility: settings.profile_visibility ?? true,
+          show_email: settings.show_email ?? false,
+          show_phone: settings.show_phone ?? false,
+          show_location: settings.show_location ?? true,
+        })
+      );
+
+      // Update local language state from API only on initial load
+      // If API returns null, use current system language as default
+      if (settings.language) {
+        if (settings.language === "en" || settings.language === "ar") {
+          setLocalLanguage(settings.language);
+        }
+      } else {
+        // If API returns null, default to current system language
+        setLocalLanguage(language);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settingsData]);
+
+  // Handle switch changes - call API immediately
+  const handleSwitchChange = async (field: string, value: boolean) => {
+    try {
+      const updateData: Record<string, boolean> = {
+        [field]: value,
+      };
+      await saveSettings(updateData as UserSettingsRequest).unwrap();
+      // Update local state
+      switch (field) {
+        case "email_notification":
+          setEmailNotifs(value);
+          break;
+        case "push_notification":
+          setPushNotifs(value);
+          break;
+        case "referral_update":
+          setNotifyReferrals(value);
+          break;
+        case "reward_milestone":
+          setNotifyRewards(value);
+          break;
+        case "artwork_alert":
+          setNotifyArtwork(value);
+          break;
+        case "msg_comment":
+          setNotifyMessages(value);
+          break;
+        case "profile_visibility":
+          setProfilePublic(value);
+          // Update Redux store
+          dispatch(updateUser({ profile_visibility: value }));
+          break;
+        case "show_email":
+          setShowEmail(value);
+          // Update Redux store
+          dispatch(updateUser({ show_email: value }));
+          break;
+        case "show_phone":
+          setShowPhone(value);
+          // Update Redux store
+          dispatch(updateUser({ show_phone: value }));
+          break;
+        case "show_location":
+          setShowLocation(value);
+          // Update Redux store
+          dispatch(updateUser({ show_location: value }));
+          break;
+      }
+      // Show success toast
+      toast.success(t.saveSuccess);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error, language);
+      toast.error(errorMessage || t.error);
+      // Revert the switch on error
+      switch (field) {
+        case "email_notification":
+          setEmailNotifs(!value);
+          break;
+        case "push_notification":
+          setPushNotifs(!value);
+          break;
+        case "referral_update":
+          setNotifyReferrals(!value);
+          break;
+        case "reward_milestone":
+          setNotifyRewards(!value);
+          break;
+        case "artwork_alert":
+          setNotifyArtwork(!value);
+          break;
+        case "msg_comment":
+          setNotifyMessages(!value);
+          break;
+        case "profile_visibility":
+          setProfilePublic(!value);
+          break;
+        case "show_email":
+          setShowEmail(!value);
+          break;
+        case "show_phone":
+          setShowPhone(!value);
+          break;
+        case "show_location":
+          setShowLocation(!value);
+          break;
+      }
+    }
   };
 
-  const handleChangePassword = () => {
-    toast.success(t.passwordChanged);
+  const handleChangePassword = async () => {
+    // Validation
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      toast.error(
+        language === "en"
+          ? "Please fill in all password fields"
+          : "يرجى ملء جميع حقول كلمة المرور"
+      );
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error(
+        language === "en"
+          ? "New password and confirm password do not match"
+          : "كلمة المرور الجديدة وتأكيد كلمة المرور غير متطابقين"
+      );
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      toast.error(
+        language === "en"
+          ? "Password must be at least 8 characters long"
+          : "يجب أن تكون كلمة المرور 8 أحرف على الأقل"
+      );
+      return;
+    }
+
+    try {
+      await changePassword({
+        current_password: currentPassword,
+        new_password: newPassword,
+        confirm_password: confirmPassword,
+      }).unwrap();
+      toast.success(t.passwordChanged);
+      // Clear password fields
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error, language);
+      toast.error(errorMessage || t.error);
+    }
   };
 
-  const handleLanguageChange = (newLanguage: "en" | "ar") => {
-    setLanguage(newLanguage);
-    toast.success(t.saveSuccess);
+  const handleLanguageChange = (newLanguage: string) => {
+    // Only update local state, don't change system language until save
+    if (newLanguage === "en" || newLanguage === "ar") {
+      setLocalLanguage(newLanguage as "en" | "ar");
+    }
   };
+
+  const handleSavePreferences = async () => {
+    try {
+      await saveSettings({
+        language: localLanguage,
+        theme: theme,
+        profile_timezone: timezone,
+        preferred_currency: currency,
+      }).unwrap();
+      // Update system language only after successful save
+      setLanguage(localLanguage);
+      toast.success(t.saveSuccess);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error, language);
+      toast.error(errorMessage || t.error);
+    }
+  };
+
+  // Show loading state
+  if (isLoadingSettings) {
+    return (
+      <DashboardLayout currentPage="settings">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="w-8 h-8 animate-spin text-[#d4af37]" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Show error state
+  if (isSettingsError) {
+    return (
+      <DashboardLayout currentPage="settings">
+        <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+          <p className="text-[#cbd5e1]">
+            {language === "en"
+              ? "Failed to load settings. Please try again."
+              : "فشل تحميل الإعدادات. يرجى المحاولة مرة أخرى."}
+          </p>
+          <Button
+            onClick={() => refetchSettings()}
+            className="bg-gradient-to-r from-[#d4af37] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#d4af37] text-[#0f172a]"
+          >
+            {language === "en" ? "Retry" : "إعادة المحاولة"}
+          </Button>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout currentPage="settings">
@@ -247,76 +490,6 @@ export function SettingsPage() {
             animate={{ opacity: 1, y: 0 }}
             className="glass rounded-2xl p-6"
           >
-            <h2
-              className={`text-2xl text-[#fef3c7] mb-6 ${
-                isRTL ? "text-right" : "text-left"
-              }`}
-            >
-              {t.accountInfo}
-            </h2>
-
-            <div className="space-y-6 mb-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <Label htmlFor="fullName" className="text-[#cbd5e1]">
-                    {t.fullName}
-                  </Label>
-                  <Input
-                    id="fullName"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="mt-2 bg-[#1e293b] border-[#334155] text-[#fef3c7] focus:border-[#d4af37]"
-                  />
-                </div>
-
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <Label htmlFor="username" className="text-[#cbd5e1]">
-                    {t.username}
-                  </Label>
-                  <Input
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="mt-2 bg-[#1e293b] border-[#334155] text-[#fef3c7] focus:border-[#d4af37]"
-                  />
-                </div>
-
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <Label htmlFor="email" className="text-[#cbd5e1]">
-                    {t.email}
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="mt-2 bg-[#1e293b] border-[#334155] text-[#fef3c7] focus:border-[#d4af37]"
-                  />
-                </div>
-
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <Label htmlFor="phone" className="text-[#cbd5e1]">
-                    {t.phone}
-                  </Label>
-                  <Input
-                    id="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="mt-2 bg-[#1e293b] border-[#334155] text-[#fef3c7] focus:border-[#d4af37]"
-                  />
-                </div>
-              </div>
-
-              <Button
-                onClick={handleSaveAccount}
-                className="bg-gradient-to-r from-[#d4af37] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#d4af37] text-[#0f172a]"
-              >
-                {t.updateAccount}
-              </Button>
-            </div>
-
-            <Separator className="my-8 bg-[#334155]" />
-
             {/* Change Password Section */}
             <h3
               className={`text-xl text-[#fef3c7] mb-6 ${
@@ -327,47 +500,52 @@ export function SettingsPage() {
             </h3>
 
             <div className="space-y-4 mb-6">
-              <div className={isRTL ? "text-right" : "text-left"}>
-                <Label htmlFor="currentPassword" className="text-[#cbd5e1]">
-                  {t.currentPassword}
-                </Label>
-                <Input
-                  id="currentPassword"
-                  type="password"
-                  className="mt-2 bg-[#1e293b] border-[#334155] text-[#fef3c7] focus:border-[#d4af37]"
-                />
-              </div>
+              <PasswordField
+                label={t.currentPassword}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                disabled={isChangingPassword}
+                isRTL={isRTL}
+                showToggle
+                required
+              />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <Label htmlFor="newPassword" className="text-[#cbd5e1]">
-                    {t.newPassword}
-                  </Label>
-                  <Input
-                    id="newPassword"
-                    type="password"
-                    className="mt-2 bg-[#1e293b] border-[#334155] text-[#fef3c7] focus:border-[#d4af37]"
-                  />
-                </div>
+                <PasswordField
+                  label={t.newPassword}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  disabled={isChangingPassword}
+                  isRTL={isRTL}
+                  showToggle
+                  required
+                />
 
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <Label htmlFor="confirmPassword" className="text-[#cbd5e1]">
-                    {t.confirmPassword}
-                  </Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    className="mt-2 bg-[#1e293b] border-[#334155] text-[#fef3c7] focus:border-[#d4af37]"
-                  />
-                </div>
+                <PasswordField
+                  label={t.confirmPassword}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  disabled={isChangingPassword}
+                  isRTL={isRTL}
+                  showToggle
+                  required
+                />
               </div>
 
               <Button
                 onClick={handleChangePassword}
+                disabled={isChangingPassword}
                 variant="outline"
-                className="border-[#14b8a6] text-[#14b8a6] hover:bg-[#14b8a6]/10"
+                className="border-[#14b8a6] text-[#14b8a6] hover:bg-[#14b8a6]/10 disabled:opacity-50"
               >
-                {t.changePassword}
+                {isChangingPassword ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {language === "en" ? "Changing..." : "جاري التغيير..."}
+                  </>
+                ) : (
+                  t.changePassword
+                )}
               </Button>
             </div>
 
@@ -396,117 +574,90 @@ export function SettingsPage() {
             className="glass rounded-2xl p-6"
           >
             <div className="space-y-6">
-              {/* Email Notifications */}
-              <div
-                className={`flex items-center justify-between p-4 bg-[#1e293b]/50 rounded-xl ${
-                  isRTL ? "flex-row-reverse" : ""
+              <h2
+                className={`text-2xl text-[#fef3c7] mb-6 ${
+                  isRTL ? "text-right" : "text-left"
                 }`}
               >
-                <div
-                  className={`flex items-center gap-3 ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
-                >
-                  <Mail className="w-5 h-5 text-[#d4af37]" />
-                  <div className={isRTL ? "text-right" : "text-left"}>
-                    <p className="text-[#fef3c7]">{t.emailNotifications}</p>
-                  </div>
-                </div>
-                <Switch
-                  checked={emailNotifs}
-                  onCheckedChange={setEmailNotifs}
-                />
-              </div>
+                {t.notifications}
+              </h2>
+
+              {/* Email Notifications */}
+              <SwitchField
+                label={t.emailNotifications}
+                icon={Mail}
+                checked={emailNotifs}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange("email_notification", checked)
+                }
+                disabled={isSavingSettings}
+                isRTL={isRTL}
+                switchWrapperClassName="bg-[#1e293b]/50"
+              />
 
               {/* Push Notifications */}
-              <div
-                className={`flex items-center justify-between p-4 bg-[#1e293b]/50 rounded-xl ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div
-                  className={`flex items-center gap-3 ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
-                >
-                  <Smartphone className="w-5 h-5 text-[#14b8a6]" />
-                  <div className={isRTL ? "text-right" : "text-left"}>
-                    <p className="text-[#fef3c7]">{t.pushNotifications}</p>
-                  </div>
-                </div>
-                <Switch checked={pushNotifs} onCheckedChange={setPushNotifs} />
-              </div>
+              <SwitchField
+                label={t.pushNotifications}
+                icon={Smartphone}
+                checked={pushNotifs}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange("push_notification", checked)
+                }
+                disabled={isSavingSettings}
+                isRTL={isRTL}
+                switchWrapperClassName="bg-[#1e293b]/50"
+              />
 
               <Separator className="bg-[#334155]" />
 
               {/* Specific Notification Settings */}
-              <div
-                className={`flex items-center justify-between p-4 bg-[#1e293b]/30 rounded-xl ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-[#fef3c7]">{t.notifyReferrals}</p>
-                  <p className="text-sm text-[#cbd5e1]">
-                    {t.notifyReferralsDesc}
-                  </p>
-                </div>
-                <Switch
-                  checked={notifyReferrals}
-                  onCheckedChange={setNotifyReferrals}
-                />
-              </div>
+              <SwitchField
+                label={t.notifyReferrals}
+                description={t.notifyReferralsDesc}
+                checked={notifyReferrals}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange("referral_update", checked)
+                }
+                disabled={isSavingSettings}
+                isRTL={isRTL}
+                switchWrapperClassName="bg-[#1e293b]/30"
+              />
 
-              <div
-                className={`flex items-center justify-between p-4 bg-[#1e293b]/30 rounded-xl ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-[#fef3c7]">{t.notifyRewards}</p>
-                  <p className="text-sm text-[#cbd5e1]">
-                    {t.notifyRewardsDesc}
-                  </p>
-                </div>
-                <Switch
-                  checked={notifyRewards}
-                  onCheckedChange={setNotifyRewards}
-                />
-              </div>
+              <SwitchField
+                label={t.notifyRewards}
+                description={t.notifyRewardsDesc}
+                checked={notifyRewards}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange("reward_milestone", checked)
+                }
+                disabled={isSavingSettings}
+                isRTL={isRTL}
+                switchWrapperClassName="bg-[#1e293b]/30"
+              />
 
-              <div
-                className={`flex items-center justify-between p-4 bg-[#1e293b]/30 rounded-xl ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-[#fef3c7]">{t.notifyArtwork}</p>
-                  <p className="text-sm text-[#cbd5e1]">
-                    {t.notifyArtworkDesc}
-                  </p>
-                </div>
-                <Switch
-                  checked={notifyArtwork}
-                  onCheckedChange={setNotifyArtwork}
-                />
-              </div>
+              <SwitchField
+                label={t.notifyArtwork}
+                description={t.notifyArtworkDesc}
+                checked={notifyArtwork}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange("artwork_alert", checked)
+                }
+                disabled={isSavingSettings}
+                isRTL={isRTL}
+                switchWrapperClassName="bg-[#1e293b]/30"
+              />
 
-              <div
-                className={`flex items-center justify-between p-4 bg-[#1e293b]/30 rounded-xl ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-[#fef3c7]">{t.notifyMessages}</p>
-                  <p className="text-sm text-[#cbd5e1]">
-                    {t.notifyMessagesDesc}
-                  </p>
-                </div>
-                <Switch
-                  checked={notifyMessages}
-                  onCheckedChange={setNotifyMessages}
-                />
-              </div>
+              <SwitchField
+                label={t.notifyMessages}
+                description={t.notifyMessagesDesc}
+                checked={notifyMessages}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange("msg_comment", checked)
+                }
+                disabled={isSavingSettings}
+                isRTL={isRTL}
+                switchWrapperClassName="bg-[#1e293b]/30"
+              />
             </div>
           </motion.div>
         </TabsContent>
@@ -528,68 +679,54 @@ export function SettingsPage() {
 
             <div className="space-y-6">
               {/* Profile Visibility */}
-              <div
-                className={`flex items-center justify-between p-4 bg-[#1e293b]/50 rounded-xl ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div
-                  className={`flex items-center gap-3 ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
-                >
-                  <Eye className="w-5 h-5 text-[#d4af37]" />
-                  <div className={isRTL ? "text-right" : "text-left"}>
-                    <p className="text-[#fef3c7]">{t.profileVisibility}</p>
-                    <p className="text-sm text-[#cbd5e1]">
-                      {profilePublic ? t.publicProfile : t.privateProfile}
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={profilePublic}
-                  onCheckedChange={setProfilePublic}
-                />
-              </div>
+              <SwitchField
+                label={t.profileVisibility}
+                description={profilePublic ? t.publicProfile : t.privateProfile}
+                icon={Eye}
+                checked={profilePublic}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange("profile_visibility", checked)
+                }
+                disabled={isSavingSettings}
+                isRTL={isRTL}
+                switchWrapperClassName="bg-[#1e293b]/50"
+              />
 
               <Separator className="bg-[#334155]" />
 
               {/* Privacy Toggles */}
-              <div
-                className={`flex items-center justify-between p-4 bg-[#1e293b]/30 rounded-xl ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-[#fef3c7]">{t.showEmail}</p>
-                </div>
-                <Switch checked={showEmail} onCheckedChange={setShowEmail} />
-              </div>
+              <SwitchField
+                label={t.showEmail}
+                checked={showEmail}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange("show_email", checked)
+                }
+                disabled={isSavingSettings}
+                isRTL={isRTL}
+                switchWrapperClassName="bg-[#1e293b]/30"
+              />
 
-              <div
-                className={`flex items-center justify-between p-4 bg-[#1e293b]/30 rounded-xl ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-[#fef3c7]">{t.showPhone}</p>
-                </div>
-                <Switch checked={showPhone} onCheckedChange={setShowPhone} />
-              </div>
+              <SwitchField
+                label={t.showPhone}
+                checked={showPhone}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange("show_phone", checked)
+                }
+                disabled={isSavingSettings}
+                isRTL={isRTL}
+                switchWrapperClassName="bg-[#1e293b]/30"
+              />
 
-              <div
-                className={`flex items-center justify-between p-4 bg-[#1e293b]/30 rounded-xl ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-[#fef3c7]">{t.showLocation}</p>
-                </div>
-                <Switch
-                  checked={showLocation}
-                  onCheckedChange={setShowLocation}
-                />
-              </div>
+              <SwitchField
+                label={t.showLocation}
+                checked={showLocation}
+                onCheckedChange={(checked) =>
+                  handleSwitchChange("show_location", checked)
+                }
+                disabled={isSavingSettings}
+                isRTL={isRTL}
+                switchWrapperClassName="bg-[#1e293b]/30"
+              />
 
               <Separator className="bg-[#334155]" />
 
@@ -659,83 +796,77 @@ export function SettingsPage() {
           >
             <div className="space-y-6">
               {/* Language */}
-              <div className={isRTL ? "text-right" : "text-left"}>
-                <Label className="text-[#cbd5e1] mb-2 flex items-center gap-2">
-                  <Languages className="w-5 h-5 text-[#d4af37]" />
-                  {t.language}
-                </Label>
-                <Select value={language} onValueChange={handleLanguageChange}>
-                  <SelectTrigger className="bg-[#1e293b] border-[#334155] text-[#fef3c7]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="en">{t.english}</SelectItem>
-                    <SelectItem value="ar">{t.arabic}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <SelectField
+                label={t.language}
+                icon={Languages}
+                value={localLanguage}
+                onValueChange={handleLanguageChange}
+                options={[
+                  { value: "en", label: "English" },
+                  { value: "ar", label: "العربية" },
+                ]}
+                isRTL={isRTL}
+                disableClear
+              />
 
               {/* Theme */}
-              <div className={isRTL ? "text-right" : "text-left"}>
-                <Label className="text-[#cbd5e1] mb-2 flex items-center gap-2">
-                  <Moon className="w-5 h-5 text-[#14b8a6]" />
-                  {t.theme}
-                </Label>
-                <Select defaultValue="dark">
-                  <SelectTrigger className="bg-[#1e293b] border-[#334155] text-[#fef3c7]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="light">{t.light}</SelectItem>
-                    <SelectItem value="dark">{t.dark}</SelectItem>
-                    <SelectItem value="auto">{t.auto}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <SelectField
+                label={t.theme}
+                icon={Moon}
+                value={theme}
+                onValueChange={setTheme}
+                options={[
+                  { value: "light", label: t.light },
+                  { value: "dark", label: t.dark },
+                  { value: "auto", label: t.auto },
+                ]}
+                isRTL={isRTL}
+              />
 
               {/* Timezone */}
-              <div className={isRTL ? "text-right" : "text-left"}>
-                <Label className="text-[#cbd5e1] mb-2 flex items-center gap-2">
-                  <Globe className="w-5 h-5 text-[#8b5cf6]" />
-                  {t.timezone}
-                </Label>
-                <Select defaultValue="dubai">
-                  <SelectTrigger className="bg-[#1e293b] border-[#334155] text-[#fef3c7]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="dubai">Dubai (UTC+4)</SelectItem>
-                    <SelectItem value="riyadh">Riyadh (UTC+3)</SelectItem>
-                    <SelectItem value="cairo">Cairo (UTC+2)</SelectItem>
-                    <SelectItem value="london">London (UTC+0)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <SelectField
+                label={t.timezone}
+                icon={Globe}
+                value={timezone}
+                onValueChange={setTimezone}
+                options={[
+                  { value: "dubai", label: "Dubai (UTC+4)" },
+                  { value: "riyadh", label: "Riyadh (UTC+3)" },
+                  { value: "cairo", label: "Cairo (UTC+2)" },
+                  { value: "london", label: "London (UTC+0)" },
+                ]}
+                isRTL={isRTL}
+              />
 
               {/* Currency */}
-              <div className={isRTL ? "text-right" : "text-left"}>
-                <Label className="text-[#cbd5e1] mb-2 flex items-center gap-2">
-                  <span className="text-[#0ea5e9]">💰</span>
-                  {t.currency}
-                </Label>
-                <Select defaultValue="aed">
-                  <SelectTrigger className="bg-[#1e293b] border-[#334155] text-[#fef3c7]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="aed">AED (د.إ)</SelectItem>
-                    <SelectItem value="sar">SAR (ر.س)</SelectItem>
-                    <SelectItem value="usd">USD ($)</SelectItem>
-                    <SelectItem value="eur">EUR (€)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <SelectField
+                label={t.currency}
+                value={currency}
+                onValueChange={setCurrency}
+                options={[
+                  { value: "aed", label: "AED (د.إ)" },
+                  { value: "sar", label: "SAR (ر.س)" },
+                  { value: "usd", label: "USD ($)" },
+                  { value: "eur", label: "EUR (€)" },
+                ]}
+                isRTL={isRTL}
+              />
 
               <Button
-                onClick={() => toast.success(t.saveSuccess)}
-                className="bg-gradient-to-r from-[#d4af37] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#d4af37] text-[#0f172a] w-full md:w-auto"
+                onClick={handleSavePreferences}
+                disabled={isSavingSettings}
+                className="bg-gradient-to-r from-[#d4af37] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#d4af37] text-[#0f172a] w-full md:w-auto disabled:opacity-50"
               >
-                {language === "en" ? "Save Preferences" : "حفظ التفضيلات"}
+                {isSavingSettings ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {language === "en" ? "Saving..." : "جاري الحفظ..."}
+                  </>
+                ) : language === "en" ? (
+                  "Save Preferences"
+                ) : (
+                  "حفظ التفضيلات"
+                )}
               </Button>
             </div>
           </motion.div>

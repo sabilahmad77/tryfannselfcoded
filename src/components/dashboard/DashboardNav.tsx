@@ -20,6 +20,7 @@ import { ROUTES } from "@/routes/paths";
 import { clearAuth } from "@/store/authSlice";
 import { persistor } from "@/store/store";
 import type { RootState } from "@/store/store";
+import { getCurrentTier } from "@/utils/tierSystem";
 import fannLogo from "figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png";
 
 interface DashboardNavProps {
@@ -96,14 +97,12 @@ export function DashboardNav({
       "U"
     : "U";
 
-  // Map points to tier (you can adjust this logic based on your tier system)
+  // Get user tier using shared tier system utility
   const getUserTier = () => {
     if (!storedUser) return t.tiers.explorer;
     const points = parseInt(storedUser.points || "0", 10);
-    if (points >= 10000) return t.tiers.patron;
-    if (points >= 5000) return t.tiers.ambassador;
-    if (points >= 1000) return t.tiers.curator;
-    return t.tiers.explorer;
+    const tierKey = getCurrentTier(points);
+    return t.tiers[tierKey];
   };
 
   // Use controlled state if provided, otherwise use internal state
@@ -128,6 +127,9 @@ export function DashboardNav({
       ? "settings"
       : "dashboard");
 
+  // Check profile visibility from user settings
+  const profileVisibility = storedUser?.profile_visibility ?? true;
+
   const navItems = [
     {
       id: "dashboard",
@@ -141,7 +143,7 @@ export function DashboardNav({
       label: t.profile,
       icon: User,
       onClick: () => navigate(ROUTES.PROFILE),
-      show: true,
+      show: profileVisibility, // Hide profile menu if profile visibility is false
     },
     {
       id: "settings",

@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import { useProfileSetupMutation } from "@/services/api/onboardingApi";
 import type { RootState } from "@/store/store";
-import { updateUser } from "@/store/authSlice";
+import { updateUser, setUser } from "@/store/authSlice";
+import type { UserProfileData } from "@/store/authSlice";
 import { extractErrorMessage } from "@/utils/errorMessages";
 import {
   ArrowRight,
@@ -20,7 +21,9 @@ import {
   Gem,
   Globe,
   Instagram,
+  MapPin,
   Palette,
+  Phone,
   TrendingUp,
   User,
   Users as UsersIcon,
@@ -45,6 +48,8 @@ interface EditProfileProps {
     years_of_experience?: string;
     profile_image?: File | string | null;
     persona?: string;
+    location?: string;
+    phone_number?: string;
   };
 }
 
@@ -56,6 +61,8 @@ interface EditProfileFormData {
   focus: string;
   years_of_experience: string;
   profile_image: File | null;
+  location: string;
+  phone_number: string;
 }
 
 export function EditProfile({
@@ -71,7 +78,9 @@ export function EditProfile({
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+  const [profileImagePreview, setProfileImagePreview] = useState<string | null>(
+    null
+  );
   const [profileSetup, { isLoading }] = useProfileSetupMutation();
 
   const initialValues: EditProfileFormData = {
@@ -82,6 +91,8 @@ export function EditProfile({
     focus: initialData?.focus || "",
     years_of_experience: initialData?.years_of_experience || "",
     profile_image: null,
+    location: initialData?.location || "",
+    phone_number: initialData?.phone_number || "",
   };
 
   const {
@@ -105,6 +116,8 @@ export function EditProfile({
         focus: initialData.focus || "",
         years_of_experience: initialData.years_of_experience || "",
         profile_image: null,
+        location: initialData.location || "",
+        phone_number: initialData.phone_number || "",
       });
 
       // Handle profile image - could be a File, URL string, or null
@@ -112,20 +125,31 @@ export function EditProfile({
         if (initialData.profile_image instanceof File) {
           setProfileImage(initialData.profile_image);
           setValue("profile_image", initialData.profile_image);
-          setProfileImageUrl(null);
+          // Create preview URL for File
+          const previewUrl = URL.createObjectURL(initialData.profile_image);
+          setProfileImagePreview(previewUrl);
         } else if (typeof initialData.profile_image === "string") {
           // It's a URL, show it but don't set as File
-          setProfileImageUrl(initialData.profile_image);
+          setProfileImagePreview(initialData.profile_image);
           setProfileImage(null);
           setValue("profile_image", null);
         }
       } else {
         setProfileImage(null);
-        setProfileImageUrl(null);
+        setProfileImagePreview(null);
         setValue("profile_image", null);
       }
     }
   }, [open, initialData, reset, setValue]);
+
+  // Cleanup preview URL on unmount
+  useEffect(() => {
+    return () => {
+      if (profileImagePreview && profileImagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(profileImagePreview);
+      }
+    };
+  }, [profileImagePreview]);
 
   const isRTL = language === "ar";
 
@@ -191,6 +215,10 @@ export function EditProfile({
         websitePlaceholder: "https://yourwebsite.com",
         instagram: "Instagram Handle",
         instagramPlaceholder: "@yourusername or https://instagram.com/username",
+        location: "Location",
+        locationPlaceholder: "e.g., Dubai, UAE",
+        phone: "Phone Number",
+        phonePlaceholder: "e.g., +971 50 123 4567",
         uploadPhoto: "Upload Profile Photo",
         optional: "(Optional)",
         required: "Required fields",
@@ -261,6 +289,10 @@ export function EditProfile({
         websitePlaceholder: "https://yourwebsite.com",
         instagram: "حساب إنستغرام",
         instagramPlaceholder: "@yourusername أو https://instagram.com/username",
+        location: "الموقع",
+        locationPlaceholder: "مثلاً: دبي، الإمارات",
+        phone: "رقم الهاتف",
+        phonePlaceholder: "مثلاً: 971 50 123 4567+",
         uploadPhoto: "تحميل صورة الملف الشخصي",
         optional: "(اختياري)",
         required: "الحقول المطلوبة",
@@ -305,6 +337,8 @@ export function EditProfile({
           ? Number(formData.years_of_experience)
           : undefined,
         profile_image: profileImage || undefined,
+        location: formData.location?.trim() || undefined,
+        phone_number: formData.phone_number?.trim() || undefined,
       };
 
       const result = await profileSetup(profileData).unwrap();
@@ -350,7 +384,59 @@ export function EditProfile({
 
         toast.success(successMessage);
 
-        // Update Redux store with the new profile data
+        // Extract user data from API response
+        // API response structure: { success, status_code, message, data: { user: {...} } }
+        if (apiResponse.data && storedUser) {
+          try {
+            const responseData = apiResponse.data as { user?: UserProfileData };
+
+            // Check if data contains user object
+            if (
+              responseData.user &&
+              typeof responseData.user === "object" &&
+              "id" in responseData.user
+            ) {
+              const userData = responseData.user as UserProfileData;
+
+              // Merge API user data with form values to ensure form updates are preserved
+              const mergedUserData: UserProfileData = {
+                ...userData,
+                // Override with form values to ensure they're up to date
+                title: formData.title.trim() || userData.title || null,
+                bio: formData.bio.trim() || userData.bio || null,
+                website: formData.website?.trim()
+                  ? (formData.website.trim() as string | string[])
+                  : userData.website,
+                instagram_handle:
+                  formData.instagram_handle?.trim() ||
+                  userData.instagram_handle ||
+                  null,
+                focus: formData.focus?.trim() || userData.focus || null,
+                years_of_experience: formData.years_of_experience
+                  ? Number(formData.years_of_experience)
+                  : userData.years_of_experience || null,
+                location:
+                  formData.location?.trim() || userData.location || null,
+                phone_number:
+                  formData.phone_number?.trim() ||
+                  userData.phone_number ||
+                  null,
+                // profile_image is already included from userData spread above
+              };
+
+              dispatch(setUser(mergedUserData));
+              onClose();
+              return;
+            }
+          } catch (error) {
+            console.error(
+              "Failed to parse user data from profile update response:",
+              error
+            );
+          }
+        }
+
+        // Fallback: Update Redux store with form data if API response structure is unexpected
         if (storedUser) {
           dispatch(
             updateUser({
@@ -365,12 +451,14 @@ export function EditProfile({
               years_of_experience: formData.years_of_experience
                 ? Number(formData.years_of_experience)
                 : storedUser.years_of_experience || null,
-              // Note: profile_image URL will be updated by the API response
-              // If the API returns the updated image URL, we should use that
-              // For now, we keep the existing image URL if no new file was uploaded
-              profile_image: profileImage
-                ? null // Will be updated by API response
-                : storedUser.profile_image,
+              location:
+                formData.location?.trim() || storedUser.location || null,
+              phone_number:
+                formData.phone_number?.trim() ||
+                storedUser.phone_number ||
+                null,
+              // Keep existing profile_image if not in response
+              profile_image: storedUser.profile_image,
             })
           );
         }
@@ -392,7 +480,7 @@ export function EditProfile({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar glass border border-white/10 bg-[#0f172a]"
+        className="max-w-5xl max-h-[95vh] overflow-y-auto custom-scrollbar glass border border-white/10 bg-[#0f172a] p-8"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <DialogHeader>
@@ -430,9 +518,24 @@ export function EditProfile({
                   maxSize={5 * 1024 * 1024} // 5MB
                   value={profileImage}
                   onFileChange={(file) => {
+                    // Cleanup old preview URL if it was a blob URL
+                    if (
+                      profileImagePreview &&
+                      profileImagePreview.startsWith("blob:")
+                    ) {
+                      URL.revokeObjectURL(profileImagePreview);
+                    }
+
                     setProfileImage(file);
                     setValue("profile_image", file);
-                    setProfileImageUrl(null);
+
+                    // Create preview URL for new file
+                    if (file) {
+                      const previewUrl = URL.createObjectURL(file);
+                      setProfileImagePreview(previewUrl);
+                    } else {
+                      setProfileImagePreview(null);
+                    }
                   }}
                   isRTL={isRTL}
                   formatText={
@@ -443,12 +546,27 @@ export function EditProfile({
                   labelClassName="text-white/80 text-sm"
                   buttonClassName="border-white/20 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
                 />
-                {profileImageUrl && !profileImage && (
-                  <p className="text-xs text-white/60 mt-2">
-                    {language === "en"
-                      ? "Current profile image (upload new to replace)"
-                      : "صورة الملف الشخصي الحالية (قم بتحميل صورة جديدة للاستبدال)"}
-                  </p>
+                {/* Show current profile image preview if exists and no new file selected */}
+                {profileImagePreview && !profileImage && (
+                  <div className="mt-4 space-y-2">
+                    <p className="text-xs text-white/60">
+                      {language === "en"
+                        ? "Current profile image"
+                        : "صورة الملف الشخصي الحالية"}
+                    </p>
+                    <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                      <img
+                        src={profileImagePreview}
+                        alt="Current profile"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p className="text-xs text-white/40">
+                      {language === "en"
+                        ? "Upload new image to replace"
+                        : "قم بتحميل صورة جديدة للاستبدال"}
+                    </p>
+                  </div>
                 )}
               </motion.div>
 
@@ -607,11 +725,58 @@ export function EditProfile({
                 </motion.div>
               </div>
 
+              {/* Location and Phone */}
+              {(storedUser?.show_location === true ||
+                storedUser?.show_phone === true) && (
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Location - only show if show_location is true */}
+                  {storedUser?.show_location === true && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.8 }}
+                    >
+                      <InputField
+                        {...register("location")}
+                        label={content.common.location}
+                        placeholder={content.common.locationPlaceholder}
+                        icon={MapPin}
+                        isRTL={isRTL}
+                        error={errors.location?.message}
+                        inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                        labelClassName="text-white/80 text-sm"
+                      />
+                    </motion.div>
+                  )}
+
+                  {/* Phone Number - only show if show_phone is true */}
+                  {storedUser?.show_phone === true && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.9 }}
+                    >
+                      <InputField
+                        {...register("phone_number")}
+                        label={content.common.phone}
+                        type="tel"
+                        placeholder={content.common.phonePlaceholder}
+                        icon={Phone}
+                        isRTL={isRTL}
+                        error={errors.phone_number?.message}
+                        inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                        labelClassName="text-white/80 text-sm"
+                      />
+                    </motion.div>
+                  )}
+                </div>
+              )}
+
               {/* Action Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
+                transition={{ delay: 1.0 }}
                 className="flex gap-4 pt-6"
               >
                 <Button

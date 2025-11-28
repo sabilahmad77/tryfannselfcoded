@@ -5,6 +5,7 @@ import { baseApi } from "@/services/api/baseApi";
 // Import API services to ensure they're initialized and hooks are available
 import "@/services/api/onboardingApi";
 import "@/services/api/dashboardApi";
+import "@/services/api/settingsApi";
 import authReducer from "./authSlice";
 import onboardingReducer from "./onboardingSlice";
 

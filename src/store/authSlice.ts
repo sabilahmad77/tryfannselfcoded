@@ -43,6 +43,10 @@ export interface UserProfileData {
   region: unknown | null;
   groups: unknown[];
   user_permissions: unknown[];
+  profile_visibility?: boolean;
+  show_email?: boolean;
+  show_phone?: boolean;
+  show_location?: boolean;
 }
 
 interface AuthState {

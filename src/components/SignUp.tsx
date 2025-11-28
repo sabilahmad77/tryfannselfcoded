@@ -1,5 +1,5 @@
 import { useSignUpMutation } from "@/services/api/authApi";
-// import { useGetRegionsQuery } from "@/services/api/regionApi";
+import { useGetRegionsQuery } from "@/services/api/regionApi";
 import { setTokens } from "@/store/authSlice";
 import { extractErrorMessage } from "@/utils/errorMessages";
 import {
@@ -89,7 +89,7 @@ export function SignUp({
 
   // API hooks
   const [signUp, { isLoading }] = useSignUpMutation();
-  // const { data: regionsData } = useGetRegionsQuery();
+  const { data: regionsData } = useGetRegionsQuery();
 
   // Watch password and confirmPassword for real-time matching validation
   const password = watch("password");
@@ -321,10 +321,16 @@ export function SignUp({
   const isRTL = language === "ar";
 
   // Convert regions to SelectFieldOption format
-  const regionOptions = content.regions.map((region) => ({
-    value: region,
-    label: region,
-  }));
+  // Use API data if available, otherwise fallback to hardcoded regions
+  const regionOptions = regionsData && regionsData.length > 0
+    ? regionsData.map((region) => ({
+        value: region.name,
+        label: region.name,
+      }))
+    : content.regions.map((region) => ({
+        value: region,
+        label: region,
+      }));
 
   const personas = [
     {
@@ -389,44 +395,19 @@ export function SignUp({
       return 0; // Optional field, return 0 if not provided
     }
 
-    // Commented out: Using fallback mapping instead of API data
-    // if (!regionsData || regionsData.length === 0) {
-    //   // Fallback: create a simple mapping if API fails
-    //   const regionMap: Record<string, number> = {
-    //     UAE: 1,
-    //     "Saudi Arabia": 2,
-    //     Qatar: 3,
-    //     Kuwait: 4,
-    //     Bahrain: 5,
-    //     Oman: 6,
-    //     Egypt: 7,
-    //     Lebanon: 8,
-    //     Jordan: 9,
-    //     Other: 10,
-    //     // Arabic mappings
-    //     الإمارات: 1,
-    //     السعودية: 2,
-    //     قطر: 3,
-    //     الكويت: 4,
-    //     البحرين: 5,
-    //     عُمان: 6,
-    //     مصر: 7,
-    //     لبنان: 8,
-    //     الأردن: 9,
-    //     أخرى: 10,
-    //   };
-    //   return regionMap[regionName] || 0;
-    // }
+    // Use API data if available
+    if (regionsData && regionsData.length > 0) {
+      const region = regionsData.find(
+        (r) =>
+          r.name === regionName ||
+          r.name.toLowerCase() === regionName.toLowerCase()
+      );
+      if (region) {
+        return region.id;
+      }
+    }
 
-    // Find region by name in API data
-    // const region = regionsData.find(
-    //   (r) =>
-    //     r.name === regionName ||
-    //     r.name.toLowerCase() === regionName.toLowerCase()
-    // );
-    // return region?.id || 0;
-
-    // Fallback: create a simple mapping (using fallback directly now)
+    // Fallback: create a simple mapping if API data is not available
     const regionMap: Record<string, number> = {
       UAE: 1,
       "Saudi Arabia": 2,

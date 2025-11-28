@@ -4,6 +4,7 @@ import { Progress } from "../ui/progress";
 import { Badge } from "../ui/badge";
 import { useLanguage } from "@/contexts/useLanguage";
 import { useGetDashboardStatsQuery } from "@/services/api/dashboardApi";
+import { getCurrentTier, getNextTier, calculateTierProgress } from "@/utils/tierSystem";
 
 const content = {
   en: {
@@ -16,6 +17,7 @@ const content = {
     provenancePoints: "Provenance Points",
     recentActivity: "Recent Activity",
     pointsNeeded: "points needed",
+    maxTierReached: "Maximum tier reached!",
     activities: [
       { action: "Profile Completed", points: "+50", type: "provenance" },
       { action: "Referral Joined", points: "+100", type: "influence" },
@@ -38,6 +40,7 @@ const content = {
     provenancePoints: "نقاط المصداقية",
     recentActivity: "النشاط الأخير",
     pointsNeeded: "نقطة مطلوبة",
+    maxTierReached: "تم الوصول إلى أعلى مستوى!",
     activities: [
       { action: "إكمال الملف الشخصي", points: "+50", type: "provenance" },
       { action: "انضمام إحالة", points: "+100", type: "influence" },
@@ -70,11 +73,21 @@ export function PointWallet() {
   const totalPoints = statsData?.data?.total_points || 0;
   const influencePoints = statsData?.data?.influence_points || 0;
   const provenancePoints = statsData?.data?.provenance_points || 0;
-  const currentTier = t.tiers.explorer;
-  const nextTier = t.tiers.curator;
-  const nextTierPoints = 500;
-  const progress = totalPoints > 0 ? (totalPoints / nextTierPoints) * 100 : 0;
-  const pointsNeeded = Math.max(0, nextTierPoints - totalPoints);
+
+  // Calculate current tier based on total points
+  const currentTierKey = getCurrentTier(totalPoints);
+  const nextTierKey = getNextTier(currentTierKey);
+  const tierProgress = calculateTierProgress(
+    totalPoints,
+    currentTierKey,
+    nextTierKey
+  );
+
+  // Get tier display names
+  const currentTier = t.tiers[currentTierKey];
+  const nextTier = nextTierKey ? t.tiers[nextTierKey] : null;
+  const progress = tierProgress.progress;
+  const pointsNeeded = tierProgress.pointsNeeded;
 
   // Build activities from API data
   const activities = [
@@ -172,35 +185,60 @@ export function PointWallet() {
           <p className="text-5xl text-[#0f172a]">
             {totalPoints.toLocaleString()}
           </p>
-          <div
-            className={`flex items-center gap-2 mt-3 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
-          >
-            <TrendingUp className="w-4 h-4 text-[#0f172a]" />
-            <span className="text-sm text-[#0f172a]">
-              {pointsNeeded} {t.pointsNeeded}
-            </span>
-          </div>
+          {nextTier ? (
+            <div
+              className={`flex items-center gap-2 mt-3 ${
+                isRTL ? "flex-row-reverse" : ""
+              }`}
+            >
+              <TrendingUp className="w-4 h-4 text-[#0f172a]" />
+              <span className="text-sm text-[#0f172a]">
+                {pointsNeeded} {t.pointsNeeded}
+              </span>
+            </div>
+          ) : (
+            <div
+              className={`flex items-center gap-2 mt-3 ${
+                isRTL ? "flex-row-reverse" : ""
+              }`}
+            >
+              <TrendingUp className="w-4 h-4 text-[#0f172a]" />
+              <span className="text-sm text-[#0f172a]">{t.maxTierReached}</span>
+            </div>
+          )}
         </div>
       </motion.div>
 
       {/* Progress to Next Tier */}
-      <div className="mb-6">
-        <div
-          className={`flex items-center justify-between mb-3 ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
-        >
-          <span className="text-sm text-[#cbd5e1]">
-            {t.progress} {nextTier}
-          </span>
-          <span className="text-sm text-[#d4af37]">
-            {Math.round(progress)}%
-          </span>
+      {nextTier ? (
+        <div className="mb-6">
+          <div
+            className={`flex items-center justify-between mb-3 ${
+              isRTL ? "flex-row-reverse" : ""
+            }`}
+          >
+            <span className="text-sm text-[#cbd5e1]">
+              {t.progress} {nextTier}
+            </span>
+            <span className="text-sm text-[#d4af37]">
+              {Math.round(progress)}%
+            </span>
+          </div>
+          <Progress value={progress} className="h-2 bg-[#334155]" />
         </div>
-        <Progress value={progress} className="h-2 bg-[#334155]" />
-      </div>
+      ) : (
+        <div className="mb-6">
+          <div
+            className={`flex items-center justify-between mb-3 ${
+              isRTL ? "flex-row-reverse" : ""
+            }`}
+          >
+            <span className="text-sm text-[#cbd5e1]">{t.maxTierReached}</span>
+            <span className="text-sm text-[#d4af37]">100%</span>
+          </div>
+          <Progress value={100} className="h-2 bg-[#334155]" />
+        </div>
+      )}
 
       {/* Point Types */}
       <div className="grid grid-cols-2 gap-4 mb-6">

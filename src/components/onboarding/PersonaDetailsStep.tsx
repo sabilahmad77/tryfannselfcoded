@@ -63,8 +63,12 @@ export function PersonaDetailsStep({
   const submittedData = useSelector((state: RootState) =>
     selectSubmittedData(state, "personaDetails")
   );
+  const storedUser = useSelector((state: RootState) => state.auth.user);
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [profileImagePreview, setProfileImagePreview] = useState<string | null>(
+    null
+  );
   const [profileSetup, { isLoading }] = useProfileSetupMutation();
 
   // Load initial values from Redux
@@ -97,11 +101,24 @@ export function PersonaDetailsStep({
   // Load profile image and form values from saved data when component mounts or data changes
   useEffect(() => {
     const savedProfileImage = savedData.profile_image;
-    if (savedProfileImage && savedProfileImage instanceof File) {
-      setProfileImage(savedProfileImage);
-      setValue("profile_image", savedProfileImage);
+
+    // Handle profile image - could be a File, URL string, or null
+    if (savedProfileImage) {
+      if (savedProfileImage instanceof File) {
+        setProfileImage(savedProfileImage);
+        setValue("profile_image", savedProfileImage);
+        // Create preview URL for File
+        const previewUrl = URL.createObjectURL(savedProfileImage);
+        setProfileImagePreview(previewUrl);
+      } else if (typeof savedProfileImage === "string") {
+        // It's a URL, show it but don't set as File
+        setProfileImagePreview(savedProfileImage);
+        setProfileImage(null);
+        setValue("profile_image", null);
+      }
     } else {
       setProfileImage(null);
+      setProfileImagePreview(null);
       setValue("profile_image", null);
     }
 
@@ -113,10 +130,20 @@ export function PersonaDetailsStep({
       instagram_handle: (savedData.instagram_handle as string) || "",
       focus: (savedData.focus as string) || "",
       years_of_experience: (savedData.years_of_experience as string) || "",
-      profile_image: (savedProfileImage as File | null) || null,
+      profile_image:
+        (savedProfileImage instanceof File ? savedProfileImage : null) || null,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.personaDetails]);
+
+  // Cleanup preview URL on unmount
+  useEffect(() => {
+    return () => {
+      if (profileImagePreview && profileImagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(profileImagePreview);
+      }
+    };
+  }, [profileImagePreview]);
 
   // Compare current form values with submitted values
   const hasChanges = () => {
@@ -373,16 +400,77 @@ export function PersonaDetailsStep({
 
         toast.success(successMessage);
 
-        // Extract and store user profile data from API response if available
+        // Extract user data from API response
+        // API response structure: { success, status_code, message, data: { user: {...} } }
         if (apiResponse.data) {
           try {
-            const userData = apiResponse.data as unknown as UserProfileData;
-            // Check if the data has user profile structure (has id, email, etc.)
-            if (userData && typeof userData === "object" && "id" in userData) {
+            const responseData = apiResponse.data as { user?: UserProfileData };
+
+            // Check if data contains user object
+            if (
+              responseData.user &&
+              typeof responseData.user === "object" &&
+              "id" in responseData.user
+            ) {
+              const userData = responseData.user as UserProfileData;
+
+              // If storedUser exists, merge with form values; otherwise use API data directly
+              if (storedUser) {
+                // Merge API user data with form values to ensure form updates are preserved
+                const mergedUserData: UserProfileData = {
+                  ...userData,
+                  // Override with form values to ensure they're up to date
+                  title: formData.title.trim() || userData.title || null,
+                  bio: formData.bio.trim() || userData.bio || null,
+                  website: formData.website?.trim()
+                    ? (formData.website.trim() as string | string[])
+                    : userData.website,
+                  instagram_handle:
+                    formData.instagram_handle?.trim() ||
+                    userData.instagram_handle ||
+                    null,
+                  focus: formData.focus?.trim() || userData.focus || null,
+                  years_of_experience: formData.years_of_experience
+                    ? Number(formData.years_of_experience)
+                    : userData.years_of_experience || null,
+                  // profile_image is already included from userData spread above
+                };
+
+                dispatch(setUser(mergedUserData));
+              } else {
+                // No storedUser (e.g., during onboarding), merge form values with API data
+                const mergedUserData: UserProfileData = {
+                  ...userData,
+                  // Override with form values to ensure they're up to date
+                  title: formData.title.trim() || userData.title || null,
+                  bio: formData.bio.trim() || userData.bio || null,
+                  website: formData.website?.trim()
+                    ? (formData.website.trim() as string | string[])
+                    : userData.website,
+                  instagram_handle:
+                    formData.instagram_handle?.trim() ||
+                    userData.instagram_handle ||
+                    null,
+                  focus: formData.focus?.trim() || userData.focus || null,
+                  years_of_experience: formData.years_of_experience
+                    ? Number(formData.years_of_experience)
+                    : userData.years_of_experience || null,
+                  // profile_image is already included from userData spread above
+                };
+
+                dispatch(setUser(mergedUserData));
+              }
+            } else if (
+              apiResponse.data &&
+              typeof apiResponse.data === "object" &&
+              "id" in apiResponse.data
+            ) {
+              // Fallback: API response data might be the user object directly
+              const userData = apiResponse.data as unknown as UserProfileData;
               dispatch(setUser(userData));
             }
           } catch (error) {
-            console.warn(
+            console.error(
               "Failed to parse user data from profile setup response:",
               error
             );
@@ -443,8 +531,24 @@ export function PersonaDetailsStep({
               maxSize={5 * 1024 * 1024} // 5MB
               value={profileImage}
               onFileChange={(file) => {
+                // Cleanup old preview URL if it was a blob URL
+                if (
+                  profileImagePreview &&
+                  profileImagePreview.startsWith("blob:")
+                ) {
+                  URL.revokeObjectURL(profileImagePreview);
+                }
+
                 setProfileImage(file);
                 setValue("profile_image", file);
+
+                // Create preview URL for new file
+                if (file) {
+                  const previewUrl = URL.createObjectURL(file);
+                  setProfileImagePreview(previewUrl);
+                } else {
+                  setProfileImagePreview(null);
+                }
               }}
               isRTL={isRTL}
               formatText={
@@ -455,6 +559,28 @@ export function PersonaDetailsStep({
               labelClassName="text-white/80 text-sm"
               buttonClassName="border-white/20 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
             />
+            {/* Show current profile image preview if exists and no new file selected */}
+            {profileImagePreview && !profileImage && (
+              <div className="mt-4 space-y-2">
+                <p className="text-xs text-white/60">
+                  {language === "en"
+                    ? "Current profile image"
+                    : "صورة الملف الشخصي الحالية"}
+                </p>
+                <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                  <img
+                    src={profileImagePreview}
+                    alt="Current profile"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-xs text-white/40">
+                  {language === "en"
+                    ? "Upload new image to replace"
+                    : "قم بتحميل صورة جديدة للاستبدال"}
+                </p>
+              </div>
+            )}
           </motion.div>
 
           {/* Display Name / Title */}

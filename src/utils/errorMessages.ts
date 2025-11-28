@@ -117,15 +117,34 @@ export const extractErrorMessage = (
 
   // Try to extract error message from various possible structures
   if (rtkError.data) {
-    // Handle custom API response structure: { message: { error: ["message"] } }
+    // Handle custom API response structure: { message: { field_name: ["message"] } }
+    // Example: { message: { price_interset: ["This field may not be blank."] } }
     if (rtkError.data.message && typeof rtkError.data.message === 'object') {
-      const messageObj = rtkError.data.message as { error?: string | string[] };
+      const messageObj = rtkError.data.message as Record<string, unknown>;
+      
+      // First, check for the 'error' key (backward compatibility)
       if (messageObj.error) {
         if (Array.isArray(messageObj.error) && messageObj.error.length > 0) {
           return String(messageObj.error[0]);
         }
         if (typeof messageObj.error === 'string') {
           return messageObj.error;
+        }
+      }
+      
+      // Iterate through all keys in the message object to find field-specific errors
+      for (const key in messageObj) {
+        const value = messageObj[key];
+        // If the value is an array of strings, return the first error message
+        if (Array.isArray(value) && value.length > 0) {
+          const firstError = value[0];
+          if (typeof firstError === 'string' && firstError.trim()) {
+            return firstError;
+          }
+        }
+        // If the value is a string, return it directly
+        if (typeof value === 'string' && value.trim()) {
+          return value;
         }
       }
     }

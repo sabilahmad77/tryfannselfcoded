@@ -1,32 +1,35 @@
-import { motion } from "motion/react";
-import {
-  Mail,
-  MapPin,
-  Calendar,
-  Award,
-  TrendingUp,
-  Crown,
-  Edit2,
-  Camera,
-  Share2,
-  Flame,
-  Shield,
-  Star,
-  Briefcase,
-  Globe,
-  Phone,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { EditProfile } from "@/components/profile/EditProfile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { useLanguage } from "@/contexts/useLanguage";
-import { EditProfile } from "@/components/profile/EditProfile";
-import { useState } from "react";
-import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
+import { useGetDashboardStatsQuery } from "@/services/api/dashboardApi";
+import { getTierInfo } from "@/utils/tierSystem";
+import {
+  Award,
+  Briefcase,
+  Calendar,
+  Crown,
+  Edit2,
+  Flame,
+  Globe,
+  Mail,
+  MapPin,
+  Phone,
+  Share2,
+  Shield,
+  Star,
+  TrendingUp,
+} from "lucide-react";
+import { motion } from "motion/react";
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { ROUTES } from "@/routes/paths";
 
 const content = {
   en: {
@@ -191,6 +194,17 @@ export function ProfilePage() {
     | null;
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
+  // Fetch dashboard stats from API (must be called before any conditional returns)
+  const { data: dashboardStatsData } = useGetDashboardStatsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  // Redirect if profile visibility is disabled
+  // This prevents users from accessing the profile page even by manual URL navigation
+  if (storedUser?.profile_visibility === false) {
+    return <Navigate to={ROUTES.DASHBOARD} replace />;
+  }
+
   // Format date helper
   const formatDate = (dateString: string | null | undefined) => {
     if (!dateString) return "";
@@ -214,6 +228,38 @@ export function ProfilePage() {
     return website;
   };
 
+  // Get profile image URL - handle null, relative paths, and full URLs
+  const getProfileImageUrl = (
+    profileImage: string | null | undefined
+  ): string | undefined => {
+    // Return undefined if profile image is null/empty to trigger Avatar fallback
+    if (!profileImage || profileImage.trim() === "") {
+      return undefined;
+    }
+
+    // If it's already a full URL (starts with http:// or https://), return as is
+    if (
+      profileImage.startsWith("http://") ||
+      profileImage.startsWith("https://")
+    ) {
+      return profileImage;
+    }
+
+    // Get base URL and remove /api suffix if present
+    const BASE_URL =
+      import.meta.env.VITE_API_BASE_URL ||
+      "https://apifann.globaltechserivce.com/api";
+    const baseWithoutApi = BASE_URL.replace(/\/api$/, "");
+
+    // If it's a relative path (starts with /), prepend base URL without /api
+    if (profileImage.startsWith("/")) {
+      return `${baseWithoutApi}${profileImage}`;
+    }
+
+    // Otherwise, treat as relative path and prepend base URL with /
+    return `${baseWithoutApi}/${profileImage}`;
+  };
+
   // Use stored user data or fallback to mock data
   const userData = storedUser
     ? {
@@ -231,17 +277,21 @@ export function ProfilePage() {
         role: storedUser.role || "",
         bio: storedUser.bio || "",
         memberSince: formatDate(storedUser.date_joined),
-        tier: t.tiers.explorer, // You can map points to tier if needed
-        totalPoints: parseInt(storedUser.points || "0", 10),
-        influencePoints: Math.floor(
-          parseInt(storedUser.points || "0", 10) * 0.6
-        ), // Mock calculation
-        provenancePoints: Math.floor(
-          parseInt(storedUser.points || "0", 10) * 0.4
-        ), // Mock calculation
-        referrals: storedUser.total_referral_clicks || 0,
-        artworksSaved: 0, // Not in API response, can be fetched separately
-        collections: 0, // Not in API response, can be fetched separately
+        totalPoints:
+          dashboardStatsData?.data?.total_points ??
+          parseInt(storedUser.points || "0", 10),
+        influencePoints:
+          dashboardStatsData?.data?.influence_points ??
+          Math.floor(parseInt(storedUser.points || "0", 10) * 0.6),
+        provenancePoints:
+          dashboardStatsData?.data?.provenance_points ??
+          Math.floor(parseInt(storedUser.points || "0", 10) * 0.4),
+        referrals:
+          dashboardStatsData?.data?.referral_count ??
+          storedUser.total_referral_clicks ??
+          0,
+        artworksSaved: dashboardStatsData?.data?.artwork_count ?? 0,
+        collections: dashboardStatsData?.data?.collection_count ?? 0,
         // Additional fields for edit profile
         title: storedUser.title || "",
         focus: storedUser.focus || "",
@@ -262,7 +312,6 @@ export function ProfilePage() {
         role: "",
         bio: "",
         memberSince: "",
-        tier: t.tiers.explorer,
         totalPoints: 0,
         influencePoints: 0,
         provenancePoints: 0,
@@ -276,9 +325,14 @@ export function ProfilePage() {
         profile_image: null,
       };
 
-  const nextTierPoints = 500;
-  const progress = (userData.totalPoints / nextTierPoints) * 100;
-  const pointsNeeded = nextTierPoints - userData.totalPoints;
+  // Calculate tier information using shared utility
+  const tierInfo = getTierInfo(userData.totalPoints);
+  const currentTierName = t.tiers[tierInfo.currentTier];
+  const nextTierName = tierInfo.nextTier ? t.tiers[tierInfo.nextTier] : null;
+  const progress = tierInfo.progress;
+  const pointsNeeded = tierInfo.pointsNeeded;
+
+  console.log(userData);
 
   return (
     <DashboardLayout currentPage="profile">
@@ -297,7 +351,7 @@ export function ProfilePage() {
           <div className="relative">
             <Avatar className="w-32 h-32 border-4 border-[#d4af37]">
               <AvatarImage
-                src={userData.profile_image || ""}
+                src={getProfileImageUrl(userData.profile_image)}
                 alt={userData.name}
               />
               <AvatarFallback className="bg-gradient-to-br from-[#d4af37] to-[#14b8a6] text-[#0f172a] text-3xl">
@@ -309,16 +363,6 @@ export function ProfilePage() {
                   .slice(0, 2) || "U"}
               </AvatarFallback>
             </Avatar>
-            <button
-              className="absolute bottom-0 right-0 w-10 h-10 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-              aria-label={
-                language === "en"
-                  ? "Change profile picture"
-                  : "تغيير صورة الملف الشخصي"
-              }
-            >
-              <Camera className="w-5 h-5 text-[#0f172a]" />
-            </button>
           </div>
 
           {/* Profile Info */}
@@ -337,7 +381,7 @@ export function ProfilePage() {
                 </p>
                 <Badge className="bg-gradient-to-r from-[#d4af37] to-[#fbbf24] text-[#0f172a] border-0">
                   <Crown className="w-3 h-3 mr-1" />
-                  {userData.tier}
+                  {currentTierName}
                 </Badge>
               </div>
               <div className={`flex gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
@@ -394,19 +438,39 @@ export function ProfilePage() {
 
         {/* Progress Bar */}
         <div className="mt-6">
-          <div
-            className={`flex items-center justify-between mb-2 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
-          >
-            <span className="text-sm text-[#cbd5e1]">
-              {t.progressToNext} {t.tiers.curator}
-            </span>
-            <span className="text-sm text-[#d4af37]">
-              {pointsNeeded} {t.pointsNeeded}
-            </span>
-          </div>
-          <Progress value={progress} className="h-3 bg-[#334155]" />
+          {nextTierName ? (
+            <>
+              <div
+                className={`flex items-center justify-between mb-2 ${
+                  isRTL ? "flex-row-reverse" : ""
+                }`}
+              >
+                <span className="text-sm text-[#cbd5e1]">
+                  {t.progressToNext} {nextTierName}
+                </span>
+                <span className="text-sm text-[#d4af37]">
+                  {pointsNeeded} {t.pointsNeeded}
+                </span>
+              </div>
+              <Progress value={progress} className="h-3 bg-[#334155]" />
+            </>
+          ) : (
+            <>
+              <div
+                className={`flex items-center justify-between mb-2 ${
+                  isRTL ? "flex-row-reverse" : ""
+                }`}
+              >
+                <span className="text-sm text-[#cbd5e1]">
+                  {language === "en"
+                    ? "Maximum tier reached!"
+                    : "تم الوصول إلى أعلى مستوى!"}
+                </span>
+                <span className="text-sm text-[#d4af37]">100%</span>
+              </div>
+              <Progress value={100} className="h-3 bg-[#334155]" />
+            </>
+          )}
         </div>
       </motion.div>
 
@@ -427,47 +491,56 @@ export function ProfilePage() {
             className="glass rounded-2xl p-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div
-                className={`flex items-center gap-3 ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div className="w-12 h-12 bg-[#1e293b] rounded-xl flex items-center justify-center">
-                  <Mail className="w-6 h-6 text-[#d4af37]" />
+              {/* Email - only show if show_email is true */}
+              {storedUser?.show_email === true && (
+                <div
+                  className={`flex items-center gap-3 ${
+                    isRTL ? "flex-row-reverse" : ""
+                  }`}
+                >
+                  <div className="w-12 h-12 bg-[#1e293b] rounded-xl flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-[#d4af37]" />
+                  </div>
+                  <div className={isRTL ? "text-right" : "text-left"}>
+                    <p className="text-xs text-[#cbd5e1]">{t.email}</p>
+                    <p className="text-[#fef3c7]">{userData.email}</p>
+                  </div>
                 </div>
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-xs text-[#cbd5e1]">{t.email}</p>
-                  <p className="text-[#fef3c7]">{userData.email}</p>
-                </div>
-              </div>
+              )}
 
-              <div
-                className={`flex items-center gap-3 ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div className="w-12 h-12 bg-[#1e293b] rounded-xl flex items-center justify-center">
-                  <Phone className="w-6 h-6 text-[#14b8a6]" />
+              {/* Phone - only show if show_phone is true */}
+              {storedUser?.show_phone === true && (
+                <div
+                  className={`flex items-center gap-3 ${
+                    isRTL ? "flex-row-reverse" : ""
+                  }`}
+                >
+                  <div className="w-12 h-12 bg-[#1e293b] rounded-xl flex items-center justify-center">
+                    <Phone className="w-6 h-6 text-[#14b8a6]" />
+                  </div>
+                  <div className={isRTL ? "text-right" : "text-left"}>
+                    <p className="text-xs text-[#cbd5e1]">{t.phone}</p>
+                    <p className="text-[#fef3c7]">{userData.phone}</p>
+                  </div>
                 </div>
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-xs text-[#cbd5e1]">{t.phone}</p>
-                  <p className="text-[#fef3c7]">{userData.phone}</p>
-                </div>
-              </div>
+              )}
 
-              <div
-                className={`flex items-center gap-3 ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div className="w-12 h-12 bg-[#1e293b] rounded-xl flex items-center justify-center">
-                  <MapPin className="w-6 h-6 text-[#8b5cf6]" />
+              {/* Location - only show if show_location is true */}
+              {storedUser?.show_location === true && (
+                <div
+                  className={`flex items-center gap-3 ${
+                    isRTL ? "flex-row-reverse" : ""
+                  }`}
+                >
+                  <div className="w-12 h-12 bg-[#1e293b] rounded-xl flex items-center justify-center">
+                    <MapPin className="w-6 h-6 text-[#8b5cf6]" />
+                  </div>
+                  <div className={isRTL ? "text-right" : "text-left"}>
+                    <p className="text-xs text-[#cbd5e1]">{t.location}</p>
+                    <p className="text-[#fef3c7]">{userData.location}</p>
+                  </div>
                 </div>
-                <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-xs text-[#cbd5e1]">{t.location}</p>
-                  <p className="text-[#fef3c7]">{userData.location}</p>
-                </div>
-              </div>
+              )}
 
               <div
                 className={`flex items-center gap-3 ${
@@ -763,7 +836,11 @@ export function ProfilePage() {
           instagram_handle: userData.instagram_handle,
           focus: userData.focus,
           years_of_experience: userData.years_of_experience,
-          profile_image: userData.profile_image || null,
+          profile_image: userData.profile_image
+            ? getProfileImageUrl(userData.profile_image) || null
+            : null,
+          location: userData.location,
+          phone_number: userData.phone,
           persona: persona || storedUser?.role?.toLowerCase() || "collector",
         }}
       />

@@ -19,6 +19,7 @@ import {
   useGetDashboardStatsQuery,
   useLazyGenerateReferralCodeQuery,
 } from "@/services/api/dashboardApi";
+import QRCode from "react-qr-code";
 
 const content = {
   en: {
@@ -186,7 +187,7 @@ export function URLEncoder() {
             disabled={isGenerating}
             size="sm"
             variant="outline"
-            className="text-xs border-[#14b8a6] text-[#14b8a6] hover:bg-[#14b8a6]/10"
+            className="text-xs border-[#14b8a6] text-[#14b8a6] hover:bg-[#14b8a6] hover:text-white hover:border-[#14b8a6] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {isGenerating ? (
               <>
@@ -212,7 +213,7 @@ export function URLEncoder() {
           <Button
             onClick={handleCopy}
             disabled={!referralLink}
-            className="bg-gradient-to-r from-[#d4af37] to-[#fbbf24] hover:from-[#fbbf24] hover:to-[#d4af37] text-[#0f172a] transition-all disabled:opacity-50"
+            className="bg-gradient-to-r from-[#d4af37] to-[#fbbf24] hover:from-[#fbbf24] hover:to-[#d4af37] hover:shadow-lg hover:shadow-[#d4af37]/50 text-[#0f172a] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {copied ? (
               <>
@@ -262,7 +263,7 @@ export function URLEncoder() {
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => handleShare("facebook")}
-            className="w-12 h-12 bg-gradient-to-br from-[#1877f2] to-[#0c63d4] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1877f2]/50 transition-all"
+            className="w-12 h-12 bg-gradient-to-br from-[#1877f2] to-[#0c63d4] hover:from-[#0c63d4] hover:to-[#1877f2] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1877f2]/50 transition-all cursor-pointer"
           >
             <Facebook className="w-6 h-6 text-white" />
           </motion.button>
@@ -270,14 +271,25 @@ export function URLEncoder() {
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => handleShare("twitter")}
-            className="w-12 h-12 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1da1f2]/50 transition-all"
+            className="w-12 h-12 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] hover:from-[#0c85d0] hover:to-[#1da1f2] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1da1f2]/50 transition-all cursor-pointer"
           >
             <Twitter className="w-6 h-6 text-white" />
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
-            className="w-12 h-12 bg-gradient-to-br from-[#e4405f] to-[#c13584] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#e4405f]/50 transition-all"
+            onClick={() => {
+              // Instagram doesn't support direct URL sharing, so copy link instead
+              if (referralLink) {
+                navigator.clipboard.writeText(referralLink);
+                toast.success(
+                  language === "en"
+                    ? "Link copied! Paste it in your Instagram post."
+                    : "تم نسخ الرابط! الصقه في منشورك على إنستغرام."
+                );
+              }
+            }}
+            className="w-12 h-12 bg-gradient-to-br from-[#e4405f] to-[#c13584] hover:from-[#c13584] hover:to-[#e4405f] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#e4405f]/50 transition-all cursor-pointer"
           >
             <Instagram className="w-6 h-6 text-white" />
           </motion.button>
@@ -285,27 +297,46 @@ export function URLEncoder() {
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => handleShare("email")}
-            className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#d4af37]/50 transition-all"
+            className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#d4af37] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#d4af37]/50 transition-all cursor-pointer"
           >
             <Mail className="w-6 h-6 text-[#0f172a]" />
           </motion.button>
         </div>
       </div>
 
-      {/* QR Code Placeholder */}
-      <motion.div
-        whileHover={{ scale: 1.02 }}
-        className="mt-6 p-4 bg-white rounded-xl flex items-center justify-center"
-      >
-        <div className="w-32 h-32 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] rounded-lg flex items-center justify-center">
-          <Share2 className="w-16 h-16 text-white opacity-30" />
-        </div>
-      </motion.div>
-      <p className="text-xs text-[#cbd5e1] text-center mt-2">
-        {language === "en"
-          ? "QR Code for easy sharing"
-          : "رمز QR للمشاركة السهلة"}
-      </p>
+      {/* QR Code */}
+      {referralLink ? (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="mt-6 flex flex-col items-center"
+        >
+          <div className="p-4 bg-white rounded-xl shadow-lg">
+            <QRCode
+              value={referralLink}
+              size={128}
+              level="H"
+              fgColor="#0f172a"
+              bgColor="#ffffff"
+            />
+          </div>
+          <p className="text-xs text-[#cbd5e1] text-center mt-2">
+            {language === "en"
+              ? "Scan QR Code to share"
+              : "امسح رمز QR للمشاركة"}
+          </p>
+        </motion.div>
+      ) : (
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          className="mt-6 p-4 bg-white/5 rounded-xl flex items-center justify-center"
+        >
+          <div className="w-32 h-32 bg-gradient-to-br from-[#d4af37]/20 to-[#14b8a6]/20 rounded-lg flex items-center justify-center border-2 border-dashed border-[#334155]">
+            <Share2 className="w-16 h-16 text-[#cbd5e1] opacity-30" />
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }

@@ -33,6 +33,13 @@ export interface DashboardStatsResponse {
     first_login: number;
     conversation: number;
     pending: number;
+    curator_percentage: number;
+    watched_percentage: number;
+    total_watch_earn: number;
+    user_completed_watch: number;
+    referral_count: number;
+    artwork_count: number;
+    collection_count: number;
   };
 }
 

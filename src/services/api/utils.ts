@@ -55,14 +55,37 @@ export function extractErrorMessage(
       return err.data.non_field_errors[0];
     }
     
-    // Check for field errors (email, password, etc.)
+    // Handle nested message object with field-specific errors
+    // Example: { message: { price_interset: ["This field may not be blank."] } }
+    if (err.data.message && typeof err.data.message === 'object') {
+      const messageObj = err.data.message as Record<string, unknown>;
+      for (const key in messageObj) {
+        const value = messageObj[key];
+        // If the value is an array of strings, return the first error message
+        if (Array.isArray(value) && value.length > 0) {
+          const firstError = value[0];
+          if (typeof firstError === 'string' && firstError.trim()) {
+            return firstError;
+          }
+        }
+        // If the value is a string, return it directly
+        if (typeof value === 'string' && value.trim()) {
+          return value;
+        }
+      }
+    }
+    
+    // Check for field errors directly in data (email, password, etc.)
     for (const key in err.data) {
+      // Skip 'message' key as we already handled it above
+      if (key === 'message') continue;
       if (Array.isArray(err.data[key]) && (err.data[key] as unknown[]).length > 0) {
         return (err.data[key] as string[])[0];
       }
     }
 
-    if (err.data.message) return err.data.message;
+    // Handle message as string (fallback)
+    if (typeof err.data.message === 'string') return err.data.message;
     if (err.data.error) return err.data.error;
     if (err.data.detail) return err.data.detail;
   }
