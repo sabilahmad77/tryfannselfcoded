@@ -18,9 +18,11 @@ import {
   useCreateArtworkCollectionMutation,
   useUpdateArtworkCollectionMutation,
   useDeleteArtworkCollectionMutation,
+  useGetDashboardStatsQuery,
   type ArtworkCollection,
 } from "@/services/api/dashboardApi";
 import { formatDateForDisplay } from "@/utils/dateUtils";
+import { toast } from "sonner";
 
 const content = {
   en: {
@@ -66,6 +68,12 @@ const content = {
       traditional: "Traditional",
     },
     by: "by",
+    deleteSuccess: "Artwork deleted successfully",
+    deleteError: "Failed to delete artwork",
+    addSuccess: "Artwork added successfully",
+    editSuccess: "Artwork updated successfully",
+    addError: "Failed to add artwork",
+    editError: "Failed to update artwork",
   },
   ar: {
     title: "مجموعتي",
@@ -110,6 +118,12 @@ const content = {
       traditional: "تقليدي",
     },
     by: "بواسطة",
+    deleteSuccess: "تم حذف العمل الفني بنجاح",
+    deleteError: "فشل حذف العمل الفني",
+    addSuccess: "تم إضافة العمل الفني بنجاح",
+    editSuccess: "تم تحديث العمل الفني بنجاح",
+    addError: "فشل إضافة العمل الفني",
+    editError: "فشل تحديث العمل الفني",
   },
 };
 
@@ -133,6 +147,11 @@ export function MyCollection() {
     isLoading: isLoadingArtworks,
     error: artworksError,
   } = useGetArtworkCollectionQuery();
+
+  // Fetch dashboard stats from API
+  const { data: dashboardStatsData } = useGetDashboardStatsQuery(undefined, {
+    skip: false,
+  });
 
   const [createArtwork, { isLoading: isCreating }] =
     useCreateArtworkCollectionMutation();
@@ -188,9 +207,10 @@ export function MyCollection() {
         ? parseFloat(artwork.value) || 0
         : 0;
 
+      let response;
       if (artwork.id) {
         // Update existing artwork
-        await updateArtwork({
+        response = await updateArtwork({
           id: artwork.id,
           data: {
             title: artwork.title,
@@ -204,7 +224,7 @@ export function MyCollection() {
         }).unwrap();
       } else {
         // Create new artwork
-        await createArtwork({
+        response = await createArtwork({
           title: artwork.title,
           artist_name: artwork.artist,
           year: artwork.year,
@@ -214,6 +234,25 @@ export function MyCollection() {
           purchase_value: purchaseValue,
         }).unwrap();
       }
+
+      // Extract success message from API response
+      let successMessage = artwork.id ? t.editSuccess : t.addSuccess;
+      if (response?.message) {
+        if (typeof response.message === "string" && response.message.trim()) {
+          successMessage = response.message;
+        } else if (
+          typeof response.message === "object" &&
+          response.message !== null &&
+          Object.keys(response.message).length > 0
+        ) {
+          const messageObj = response.message as Record<string, unknown>;
+          if (messageObj.message) {
+            successMessage = String(messageObj.message);
+          }
+        }
+      }
+
+      toast.success(successMessage);
       setIsModalOpen(false);
       setEditingArtwork(null);
     } catch (error) {
@@ -221,6 +260,8 @@ export function MyCollection() {
         `Failed to ${artwork.id ? "update" : "create"} artwork:`,
         error
       );
+      const errorMessage = artwork.id ? t.editError : t.addError;
+      toast.error(errorMessage);
       setIsModalOpen(false);
       setEditingArtwork(null);
     }
@@ -241,11 +282,31 @@ export function MyCollection() {
 
     try {
       setDeletingArtworkId(artworkToDelete);
-      await deleteArtwork(artworkToDelete).unwrap();
+      const response = await deleteArtwork(artworkToDelete).unwrap();
+      
+      // Extract success message from API response
+      let successMessage = t.deleteSuccess;
+      if (response?.message) {
+        if (typeof response.message === "string" && response.message.trim()) {
+          successMessage = response.message;
+        } else if (
+          typeof response.message === "object" &&
+          response.message !== null &&
+          Object.keys(response.message).length > 0
+        ) {
+          const messageObj = response.message as Record<string, unknown>;
+          if (messageObj.message) {
+            successMessage = String(messageObj.message);
+          }
+        }
+      }
+      
+      toast.success(successMessage);
       setShowDeleteConfirm(false);
       setArtworkToDelete(null);
     } catch (error) {
       console.error("Failed to delete artwork:", error);
+      toast.error(t.deleteError);
     } finally {
       setDeletingArtworkId(null);
     }
@@ -305,7 +366,9 @@ export function MyCollection() {
             <Gem className="w-4 h-4 text-[#8b5cf6]" />
             <span className="text-xs text-[#cbd5e1]">{t.totalPieces}</span>
           </div>
-          <p className="text-2xl text-[#fef3c7]">{artworkList.length}</p>
+          <p className="text-2xl text-[#fef3c7]">
+            {dashboardStatsData?.data?.artwork_count ?? artworkList.length}
+          </p>
         </motion.div>
 
         <motion.div
@@ -320,7 +383,11 @@ export function MyCollection() {
             <TrendingUp className="w-4 h-4 text-[#14b8a6]" />
             <span className="text-xs text-[#cbd5e1]">{t.totalValue}</span>
           </div>
-          <p className="text-2xl text-[#fef3c7]">$35.5K</p>
+          <p className="text-2xl text-[#fef3c7]">
+            {dashboardStatsData?.data?.portfolio_value
+              ? `$${dashboardStatsData.data.portfolio_value.toFixed(1)}K`
+              : "$0K"}
+          </p>
         </motion.div>
 
         <motion.div
@@ -335,7 +402,11 @@ export function MyCollection() {
             <TrendingUp className="w-4 h-4 text-[#d4af37]" />
             <span className="text-xs text-[#cbd5e1]">{t.growth}</span>
           </div>
-          <p className="text-2xl text-emerald-400">+12.5%</p>
+          <p className="text-2xl text-emerald-400">
+            {dashboardStatsData?.data?.growth !== undefined
+              ? `+${dashboardStatsData.data.growth.toFixed(1)}%`
+              : "+0%"}
+          </p>
         </motion.div>
       </div>
 

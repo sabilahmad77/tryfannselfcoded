@@ -22,6 +22,7 @@ import { Card } from "../../ui/card";
 import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
 import { TierProgress } from "../shared/TierProgress";
+import { PuzzleModal } from "../shared/PuzzleModal";
 import { useLanguage } from "@/contexts/useLanguage";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -596,6 +597,18 @@ export function AmbassadorDashboard() {
           </motion.div>
         </div>
       </div>
+
+      {/* Puzzle Challenge - At the end */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="mt-8"
+      >
+        <div className="max-w-md mx-auto lg:mx-0">
+          <PuzzleModal difficulty="easy" pointsReward={50} />
+        </div>
+      </motion.div>
     </DashboardLayout>
   );
 }

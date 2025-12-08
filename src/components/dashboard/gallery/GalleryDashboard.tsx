@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { ArtistRoster } from "./ArtistRoster";
 import { TierProgress } from "../shared/TierProgress";
 import { PointWallet } from "../shared/PointWallet";
+import { PuzzleModal } from "../shared/PuzzleModal";
 import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
 import { useLanguage } from "@/contexts/useLanguage";
@@ -95,13 +96,21 @@ export function GalleryDashboard() {
           <ArtistRoster />
         </motion.div>
 
-        {/* Row 2: Tier Progress */}
+        {/* Row 2: Tier Progress + Puzzle Challenge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           <TierProgress />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <PuzzleModal difficulty="easy" pointsReward={50} />
         </motion.div>
       </div>
     </DashboardLayout>

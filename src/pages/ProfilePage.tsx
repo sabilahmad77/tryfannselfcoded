@@ -1,16 +1,21 @@
 import { DashboardLayout } from "@/components/dashboard/shared/DashboardLayout";
-import { EditProfile } from "@/components/profile/EditProfile";
 import { EditKYC } from "@/components/profile/EditKYC";
+import { EditProfile } from "@/components/profile/EditProfile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/contexts/useLanguage";
-import type { RootState } from "@/store/store";
-import { selectSubmittedData } from "@/store/onboardingSlice";
-import { useGetDashboardStatsQuery } from "@/services/api/dashboardApi";
+import { ROUTES } from "@/routes/paths";
 import { useGetUserDetailsQuery } from "@/services/api/authApi";
+import {
+  useGetDashboardStatsQuery,
+  useGetProgressionQuery,
+} from "@/services/api/dashboardApi";
+import { setUser, type UserProfileData } from "@/store/authSlice";
+import { selectSubmittedData } from "@/store/onboardingSlice";
+import type { RootState } from "@/store/store";
 import { getTierInfo } from "@/utils/tierSystem";
 import {
   Award,
@@ -31,11 +36,9 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, type UserProfileData } from "@/store/authSlice";
-import { ROUTES } from "@/routes/paths";
+import { Navigate } from "react-router-dom";
 
 const content = {
   en: {
@@ -346,6 +349,35 @@ export function ProfilePage() {
     refetchOnMountOrArgChange: true,
   });
 
+  // Fetch progression data for tier calculation
+  const { data: progressionData } = useGetProgressionQuery();
+
+  // Calculate progression tiers (must be before conditional returns)
+  const progressionTiers = useMemo(
+    () => progressionData?.data || [],
+    [progressionData?.data]
+  );
+
+  // Calculate total points for tier calculation (before conditional returns)
+  const totalPoints =
+    dashboardStatsData?.data?.total_points ??
+    parseInt(storedUser?.points || "0", 10) ??
+    0;
+
+  // Calculate tier information using shared utility (before conditional returns)
+  const tierInfo =
+    progressionTiers.length > 0
+      ? getTierInfo(totalPoints, progressionTiers)
+      : null;
+  const currentTierName = tierInfo
+    ? t.tiers[tierInfo.currentTier as keyof typeof t.tiers]
+    : t.tiers.explorer;
+  const nextTierName = tierInfo?.nextTier
+    ? t.tiers[tierInfo.nextTier as keyof typeof t.tiers]
+    : null;
+  const progress = tierInfo?.progress ?? 0;
+  const pointsNeeded = tierInfo?.pointsNeeded ?? 0;
+
   // Redirect if profile visibility is disabled
   // This prevents users from accessing the profile page even by manual URL navigation
   if (storedUser?.profile_visibility === false) {
@@ -424,9 +456,7 @@ export function ProfilePage() {
         role: storedUser.role || "",
         bio: storedUser.bio || "",
         memberSince: formatDate(storedUser.date_joined),
-        totalPoints:
-          dashboardStatsData?.data?.total_points ??
-          parseInt(storedUser.points || "0", 10),
+        totalPoints,
         influencePoints:
           dashboardStatsData?.data?.influence_points ??
           Math.floor(parseInt(storedUser.points || "0", 10) * 0.6),
@@ -473,13 +503,6 @@ export function ProfilePage() {
         instagram_handle: "",
         profile_image: null,
       };
-
-  // Calculate tier information using shared utility
-  const tierInfo = getTierInfo(userData.totalPoints);
-  const currentTierName = t.tiers[tierInfo.currentTier];
-  const nextTierName = tierInfo.nextTier ? t.tiers[tierInfo.nextTier] : null;
-  const progress = tierInfo.progress;
-  const pointsNeeded = tierInfo.pointsNeeded;
 
   return (
     <DashboardLayout currentPage="profile">
@@ -539,12 +562,6 @@ export function ProfilePage() {
                 >
                   <Edit2 className="w-4 h-4 mr-2" />
                   {t.editProfile}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-[#14b8a6] text-[#14b8a6] hover:bg-[#14b8a6]/10"
-                >
-                  <Share2 className="w-4 h-4" />
                 </Button>
               </div>
             </div>
