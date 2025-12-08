@@ -9,9 +9,9 @@ import {
   Loader2,
   AlertCircle,
 } from "lucide-react";
-import { Button } from "../ui/button";
-import { Progress } from "../ui/progress";
-import { Badge } from "../ui/badge";
+import { Button } from "../../ui/button";
+import { Progress } from "../../ui/progress";
+import { Badge } from "../../ui/badge";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/useLanguage";
 import {
@@ -301,7 +301,7 @@ export function WatchVideos() {
             <Button
               onClick={() => refetchVideos()}
               size="sm"
-              className="bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#0ea5e9] text-white cursor-pointer"
+              className="bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#0ea5e9] hover:shadow-lg hover:shadow-[#0ea5e9]/50 text-white transition-all duration-200 cursor-pointer"
             >
               {language === "en" ? "Retry" : "إعادة المحاولة"}
             </Button>
@@ -382,7 +382,7 @@ export function WatchVideos() {
                         onClick={() => handleWatchVideo(video)}
                         disabled={isWatching}
                         size="sm"
-                        className="mt-2 bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#0ea5e9] text-white transition-all self-start cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="mt-2 bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#0ea5e9] hover:shadow-lg hover:shadow-[#0ea5e9]/50 text-white transition-all duration-200 self-start cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
                       >
                         {isWatching ? (
                           <Loader2

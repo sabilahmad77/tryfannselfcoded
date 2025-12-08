@@ -40,7 +40,42 @@ export interface DashboardStatsResponse {
     referral_count: number;
     artwork_count: number;
     collection_count: number;
+    is_referral_code: boolean;
+    user_followers: number;
+    puzzle_completed?: boolean;
+    portfolio_value?: number;
+    growth?: number;
+    tier_name?: string;
+    tier_min_points?: number;
+    tier_max_points?: number;
+    tier_progress_percentage?: number;
   };
+}
+
+// Leaderboard Types
+export interface LeaderboardEntry {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  username: string | null;
+  profile_image: string | null;
+  points: string | null;
+  tier: string;
+  rank: number;
+  is_follow?: boolean; // Only in user leaderboard
+  created_at?: string;
+}
+
+// Public Leaderboard Response (market_final/leaderboard)
+export interface LeaderboardResponse {
+    all_page: number;
+    total_count: number;
+    next_page: string | null;
+    prev_page: string | null;
+    success: boolean;
+    data: LeaderboardEntry[];
+    last_page: boolean;
 }
 
 // Redemption Types
@@ -73,6 +108,20 @@ export interface UserRedemptionResponse {
   data?: Record<string, unknown>;
 }
 
+// Redeem Code Generate Types
+export interface RedeemCodeGenerateRequest {
+  title: string;
+  points: number | string;
+}
+
+export interface RedeemCodeGenerateResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data: Redemption;
+}
+
+
 // WatchEarn Types
 export interface WatchEarn {
   id: number;
@@ -104,14 +153,226 @@ export interface UserWatchEarnResponse {
   data?: Record<string, unknown>;
 }
 
+// Progression Types
+export interface ProgressionTier {
+  id: number;
+  name: string;
+  points: string;
+}
+
+export interface ProgressionResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data: ProgressionTier[];
+}
+
+// Artist Roaster Types
+export interface ArtistRoaster {
+  id?: number;
+  name: string;
+  email: string;
+  specialty: string;
+  status: string;
+  artwork_count?: number;
+  exhibition_count?: number;
+  created_at?: string;
+  updated_at?: string;
+  [key: string]: unknown;
+}
+
+export interface ArtistRoasterListResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data: ArtistRoaster[] | ArtistRoaster;
+}
+
+export interface ArtistRoasterCreateRequest {
+  name: string;
+  email: string;
+  specialty: string;
+  status: string;
+  artwork_count?: number;
+  exhibition_count?: number;
+}
+
+export interface ArtistRoasterUpdateRequest {
+  name?: string;
+  email?: string;
+  specialty?: string;
+  status?: string;
+  artwork_count?: number;
+  exhibition_count?: number;
+}
+
+export interface ArtistRoasterResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data: ArtistRoaster;
+}
+
+// Artwork Collection Types
+export interface ArtworkCollection {
+  id?: number;
+  title: string;
+  artist_name: string;
+  year: string;
+  medium: string;
+  category: string;
+  acquisition_date?: string;
+  purchase_value?: number;
+  created_at?: string;
+  updated_at?: string;
+  [key: string]: unknown;
+}
+
+export interface ArtworkCollectionListResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data: ArtworkCollection[] | ArtworkCollection;
+}
+
+export interface ArtworkCollectionCreateRequest {
+  title: string;
+  artist_name: string;
+  year: string;
+  medium: string;
+  category: string;
+  acquisition_date?: string;
+  purchase_value?: number;
+}
+
+export interface ArtworkCollectionUpdateRequest {
+  title?: string;
+  artist_name?: string;
+  year?: string;
+  medium?: string;
+  category?: string;
+  acquisition_date?: string;
+  purchase_value?: number;
+}
+
+export interface ArtworkCollectionResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data: ArtworkCollection;
+}
+
+// Dashboard Stats Gallery Types
+export interface DashboardStatsGalleryResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data: {
+    total_points?: number;
+    influence_points?: number;
+    provenance_points?: number;
+    fann_platform_follower?: number;
+    profile_completed?: number;
+    referral_joined?: number;
+    first_login?: number;
+    tier_name?: string;
+    tier_min_points?: number;
+    tier_max_points?: number;
+    tier_progress_percentage?: number;
+    [key: string]: unknown;
+  };
+}
+
+// Dashboard Stats Ambassador Types
+export interface SocialStats {
+  instagram_follower?: string | null;
+  instagram_engagement?: number;
+  instagram_post?: number;
+  tiktok_follower?: string | null;
+  tiktok_engagement?: number;
+  tiktok_post?: number;
+  youtube_subscriber?: string | null;
+  youtube_engagement?: number;
+  youtube_post?: number;
+  twitter_follower?: string | null;
+  twitter_engagement?: number;
+  twitter_post?: number;
+}
+
+export interface DashboardStatsAmbassadorResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data: {
+    your_rank?: number;
+    rank_out_of?: number;
+    total_reach?: number;
+    engagement_rate?: number;
+    total_referral_clicks?: number;
+    total_points?: number;
+    referral_link?: string;
+    influence_points?: number;
+    provenance_points?: number;
+    profile_completed?: number;
+    referral_joined?: number;
+    first_login?: number;
+    conversation?: number; // This is conversions
+    pending?: number;
+    curator_percentage?: number;
+    watched_percentage?: number;
+    total_watch_earn?: number;
+    user_completed_watch?: number;
+    referral_count?: number;
+    artwork_count?: number;
+    collection_count?: number;
+    is_referral_code?: boolean;
+    rewards_point?: number; // Note: singular "point" in API
+    active_referral_count?: number;
+    fann_platform_follower?: number;
+    social_stats?: SocialStats;
+    [key: string]: unknown;
+  };
+}
+
+// User Leaderboard Response (market_final/user_leaderboard)
+export interface UserLeaderboardResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data: {
+    all_page: number;
+    total_count: number;
+    next_page: string | null;
+    prev_page: string | null;
+    success: boolean;
+    data: LeaderboardEntry[];
+    last_page: boolean;
+    your_rank: number | null;
+    total_users: number;
+    total_founding_patron: number;
+    average_points: number;
+  };
+}
+
+// Leaderboard Query Parameters
+export interface LeaderboardQueryParams {
+  filter?: "week" | "month" | "allTime";
+  page?: number;
+  page_size?: number;
+  role?: "Artist" | "Gallery" | "Collector" | "Ambassador";
+}
+
 export const dashboardApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Generate Referral Code - GET /api/market_final/referral_code_generate
     generateReferralCode: builder.query<ReferralCodeGenerateResponse, void>({
-      query: () => ({
-        url: "/market_final/referral_code_generate",
-        method: "GET",
-      }),
+      query: () => {
+        const currentUrl = typeof window !== "undefined" ? window.location.origin : "";
+        return {
+          url: `/market_final/referral_code_generate${currentUrl ? `?url=${encodeURIComponent(currentUrl)}` : ""}`,
+          method: "GET",
+        };
+      },
       providesTags: ["User"],
     }),
 
@@ -125,11 +386,40 @@ export const dashboardApi = baseApi.injectEndpoints({
 
     // Get Dashboard Stats - GET /api/market_final/dashboard_stats
     getDashboardStats: builder.query<DashboardStatsResponse, void>({
-      query: () => ({
-        url: "/market_final/dashboard_stats",
-        method: "GET",
-      }),
+      query: () => {
+        const currentUrl = typeof window !== "undefined" ? window.location.origin : "";
+        return {
+          url: `/market_final/dashboard_stats${currentUrl ? `?url=${encodeURIComponent(currentUrl)}` : ""}`,
+          method: "GET",
+        };
+      },
       providesTags: ["User"],
+    }),
+
+    // Get Leaderboard - GET /api/market_final/leaderboard (public, before login)
+    getLeaderboard: builder.query<LeaderboardResponse, LeaderboardQueryParams | undefined>({
+      query: (params) => {
+        const queryParams = new URLSearchParams();
+        if (params?.filter && params.filter !== "allTime") {
+          // Filter is already mapped to "week" or "month" from UI
+          queryParams.append("filter", params.filter);
+        }
+        if (params?.role) {
+          queryParams.append("role", params.role);
+        }
+        if (params?.page) {
+          queryParams.append("page", params.page.toString());
+        }
+        if (params?.page_size) {
+          queryParams.append("page_size", params.page_size.toString());
+        }
+        const queryString = queryParams.toString();
+        return {
+          url: `/market_final/leaderboard${queryString ? `?${queryString}` : ""}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Leaderboard"],
     }),
 
     // Get Redemption List - GET /api/market_final/redemption
@@ -163,6 +453,14 @@ export const dashboardApi = baseApi.injectEndpoints({
       providesTags: ["WatchEarn"],
     }),
 
+    // Get Progression - GET /api/market_final/progression
+    getProgression: builder.query<ProgressionResponse, void>({
+      query: () => ({
+        url: "/market_final/progression",
+        method: "GET",
+      }),
+    }),
+
     // User WatchEarn - POST /api/market_final/user_watch_earn
     userWatchEarn: builder.mutation<
       UserWatchEarnResponse,
@@ -175,6 +473,222 @@ export const dashboardApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["WatchEarn", "User"], // Only invalidate WatchEarn and User (for dashboard stats)
     }),
+
+    // Generate Redeem Code - POST /api/market_final/redeem_code_generate
+    generateRedeemCode: builder.mutation<
+      RedeemCodeGenerateResponse,
+      RedeemCodeGenerateRequest
+    >({
+      query: (body) => ({
+        url: "/market_final/redeem_code_generate",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Redemption"],
+    }),
+
+    // Get Dashboard Stats Gallery - GET /api/market_final/dashboard_stats_gallery
+    getDashboardStatsGallery: builder.query<DashboardStatsGalleryResponse, void>({
+      query: () => ({
+        url: "/market_final/dashboard_stats_gallery",
+        method: "GET",
+      }),
+      providesTags: ["User", "Gallery"],
+    }),
+
+    // Get Dashboard Stats Ambassador - GET /api/market_final/dashboard_stats_ambassador
+    getDashboardStatsAmbassador: builder.query<DashboardStatsAmbassadorResponse, void>({
+      query: () => ({
+        url: "/market_final/dashboard_stats_ambassador",
+        method: "GET",
+      }),
+      providesTags: ["User"],
+    }),
+
+    // Get User Leaderboard - GET /api/market_final/user_leaderboard (authenticated, after login)
+    getUserLeaderboard: builder.query<UserLeaderboardResponse, LeaderboardQueryParams | undefined>({
+      query: (params) => {
+        const queryParams = new URLSearchParams();
+        if (params?.filter && params.filter !== "allTime") {
+          // Filter is already mapped to "week" or "month" from UI
+          queryParams.append("filter", params.filter);
+        }
+        if (params?.role) {
+          queryParams.append("role", params.role);
+        }
+        if (params?.page) {
+          queryParams.append("page", params.page.toString());
+        }
+        if (params?.page_size) {
+          queryParams.append("page_size", params.page_size.toString());
+        }
+        const queryString = queryParams.toString();
+        return {
+          url: `/market_final/user_leaderboard${queryString ? `?${queryString}` : ""}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["User", "Leaderboard"],
+    }),
+
+    // Artist Roaster APIs
+    // Get Artist Roaster List - GET /api/market_final/artist_roaster
+    getArtistRoaster: builder.query<ArtistRoasterListResponse, void>({
+      query: () => ({
+        url: "/market_final/artist_roaster",
+        method: "GET",
+      }),
+      providesTags: ["Gallery"],
+    }),
+
+    // Get Single Artist Roaster - GET /api/market_final/artist_roaster/{id}
+    getArtistRoasterById: builder.query<ArtistRoasterResponse, number>({
+      query: (id) => ({
+        url: `/market_final/artist_roaster/${id}/`,
+        method: "GET",
+      }),
+      providesTags: (_result, _error, id) => [{ type: "Gallery", id }],
+    }),
+
+    // Create Artist Roaster - POST /api/market_final/artist_roaster/
+    createArtistRoaster: builder.mutation<
+      ArtistRoasterResponse,
+      ArtistRoasterCreateRequest
+    >({
+      query: (body) => ({
+        url: "/market_final/artist_roaster/",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Gallery"],
+    }),
+
+    // Update Artist Roaster - PUT /api/market_final/artist_roaster/{id}
+    updateArtistRoaster: builder.mutation<
+      ArtistRoasterResponse,
+      { id: number; data: ArtistRoasterUpdateRequest }
+    >({
+      query: ({ id, data }) => ({
+        url: `/market_final/artist_roaster/${id}/`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Gallery", id },
+        "Gallery",
+      ],
+    }),
+
+    // Delete Artist Roaster - DELETE /api/market_final/artist_roaster/{id}
+    deleteArtistRoaster: builder.mutation<
+      { success: boolean; status_code: number; message: string },
+      number
+    >({
+      query: (id) => ({
+        url: `/market_final/artist_roaster/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Gallery"],
+    }),
+
+    // Artwork Collection APIs
+    // Get Artwork Collection List - GET /api/market_final/artwork_collection
+    getArtworkCollection: builder.query<ArtworkCollectionListResponse, void>({
+      query: () => ({
+        url: "/market_final/artwork_collection",
+        method: "GET",
+      }),
+      providesTags: ["Gallery"],
+    }),
+
+    // Get Single Artwork Collection - GET /api/market_final/artwork_collection/{id}
+    getArtworkCollectionById: builder.query<
+      ArtworkCollectionResponse,
+      number
+    >({
+      query: (id) => ({
+        url: `/market_final/artwork_collection/${id}/`,
+        method: "GET",
+      }),
+      providesTags: (_result, _error, id) => [{ type: "Gallery", id }],
+    }),
+
+    // Create Artwork Collection - POST /api/market_final/artwork_collection/
+    createArtworkCollection: builder.mutation<
+      ArtworkCollectionResponse,
+      ArtworkCollectionCreateRequest
+    >({
+      query: (body) => ({
+        url: "/market_final/artwork_collection/",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Gallery"],
+    }),
+
+    // Update Artwork Collection - PUT /api/market_final/artwork_collection/{id}
+    updateArtworkCollection: builder.mutation<
+      ArtworkCollectionResponse,
+      { id: number; data: ArtworkCollectionUpdateRequest }
+    >({
+      query: ({ id, data }) => ({
+        url: `/market_final/artwork_collection/${id}/`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Gallery", id },
+        "Gallery",
+      ],
+    }),
+
+    // Delete Artwork Collection - DELETE /api/market_final/artwork_collection/{id}
+    deleteArtworkCollection: builder.mutation<
+      { success: boolean; status_code: number; message: string },
+      number
+    >({
+      query: (id) => ({
+        url: `/market_final/artwork_collection/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Gallery"],
+    }),
+
+    // Follow User - POST /api/market_final/follow_user
+    followUser: builder.mutation<
+      {
+        success: boolean;
+        status_code: number;
+        message: Record<string, unknown> | string;
+        data?: Record<string, unknown>;
+      },
+      { follow_to: number }
+    >({
+      query: (body) => ({
+        url: "/market_final/follow_user",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User", "Leaderboard"],
+    }),
+
+    // User Puzzle Completion - POST /api/market_final/user_puzzle_completion
+    userPuzzleCompletion: builder.mutation<
+      {
+        success: boolean;
+        status_code: number;
+        message: Record<string, unknown> | string;
+        data?: Record<string, unknown>;
+      },
+      void
+    >({
+      query: () => ({
+        url: "/market_final/user_puzzle_completion",
+        method: "POST",
+      }),
+      invalidatesTags: ["User"], // Invalidate User tag to refresh dashboard stats
+    }),
+
   }),
 });
 
@@ -185,8 +699,26 @@ export const {
   useValidateReferralCodeQuery,
   useLazyValidateReferralCodeQuery,
   useGetDashboardStatsQuery,
+  useGetLeaderboardQuery,
   useGetRedemptionsQuery,
   useUserRedemptionMutation,
   useGetWatchEarnQuery,
   useUserWatchEarnMutation,
+  useGenerateRedeemCodeMutation,
+  useGetProgressionQuery,
+  useGetDashboardStatsGalleryQuery,
+  useGetDashboardStatsAmbassadorQuery,
+  useGetUserLeaderboardQuery,
+  useGetArtistRoasterQuery,
+  useGetArtistRoasterByIdQuery,
+  useCreateArtistRoasterMutation,
+  useUpdateArtistRoasterMutation,
+  useDeleteArtistRoasterMutation,
+  useGetArtworkCollectionQuery,
+  useGetArtworkCollectionByIdQuery,
+  useCreateArtworkCollectionMutation,
+  useUpdateArtworkCollectionMutation,
+  useDeleteArtworkCollectionMutation,
+  useFollowUserMutation,
+  useUserPuzzleCompletionMutation,
 } = dashboardApi;

@@ -1,11 +1,18 @@
-import { motion } from 'motion/react';
-import { Palette, Building2, Diamond, Briefcase, GraduationCap, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import bgImage from 'figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png';
+import { motion } from "motion/react";
+import {
+  Palette,
+  Building2,
+  Diamond,
+  Megaphone,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import bgImage from "figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png";
 
 interface PersonaPathsProps {
-  language: 'en' | 'ar';
-  onNavigateToSignUp?: () => void;
+  language: "en" | "ar";
+  onNavigateToSignUp?: (personaId?: string) => void;
 }
 
 const content = {
@@ -14,95 +21,127 @@ const content = {
     subtitle: "Tailored experiences for every art ecosystem participant",
     personas: [
       {
+        id: "artist",
         icon: Palette,
         name: "Artists",
         tagline: "Verified. Visible. Valued.",
-        benefits: ["Verified artist status", "AR gallery slots", "Global exposure", "Direct collector access"],
+        benefits: [
+          "Verified artist status",
+          "AR gallery slots",
+          "Global exposure",
+          "Direct collector access",
+        ],
         gradient: "from-amber-500 via-yellow-500 to-amber-600",
-        accentColor: "#f59e0b"
+        accentColor: "#f59e0b",
       },
       {
+        id: "gallery",
         icon: Building2,
         name: "Galleries & Museums",
         tagline: "Amplify Your Reach",
-        benefits: ["Bilingual visibility", "Digital cataloging", "Institutional prestige", "New audience access"],
+        benefits: [
+          "Bilingual visibility",
+          "Digital cataloging",
+          "Institutional prestige",
+          "New audience access",
+        ],
         gradient: "from-yellow-500 via-amber-500 to-yellow-600",
-        accentColor: "#eab308"
+        accentColor: "#eab308",
       },
       {
+        id: "collector",
         icon: Diamond,
         name: "Collectors",
         tagline: "Invest in Authenticity",
-        benefits: ["Certified authentication", "Exclusive previews", "Provenance tracking", "Portfolio management"],
+        benefits: [
+          "Certified authentication",
+          "Exclusive previews",
+          "Provenance tracking",
+          "Portfolio management",
+        ],
         gradient: "from-amber-600 via-yellow-600 to-amber-700",
-        accentColor: "#d97706"
+        accentColor: "#d97706",
       },
       {
-        icon: GraduationCap,
-        name: "Curators",
-        tagline: "Build Cultural Relevance",
-        benefits: ["Exclusive access", "Curation credits", "Early discovery", "Professional tools"],
-        gradient: "from-yellow-600 via-amber-600 to-yellow-700",
-        accentColor: "#ca8a04"
+        id: "ambassador",
+        icon: Megaphone,
+        name: "Ambassadors",
+        tagline: "Amplify Art. Earn Rewards.",
+        benefits: [
+          "Commission on referrals",
+          "Exclusive content access",
+          "Brand partnership perks",
+          "Community leadership",
+        ],
+        gradient: "from-teal-500 via-cyan-500 to-teal-600",
+        accentColor: "#14b8a6",
       },
-      {
-        icon: Briefcase,
-        name: "Institutional Partners",
-        tagline: "Lead the Future",
-        benefits: ["Brand positioning", "Data insights", "Regional leadership", "Social impact metrics"],
-        gradient: "from-amber-500 via-yellow-500 to-amber-600",
-        accentColor: "#f59e0b"
-      }
     ],
-    cta: "Get Started"
+    cta: "Get Started",
   },
   ar: {
     title: { white: "اختر", gold: " مسارك" },
     subtitle: "تجارب مخصصة لكل مشارك في نظام الفن",
     personas: [
       {
+        id: "artist",
         icon: Palette,
         name: "الفنانون",
         tagline: "موثق. مرئي. مُقدَّر.",
-        benefits: ["حالة فنان موثق", "مساحات معرض الواقع المعزز", "تعرض عالمي", "وصول مباشر للمقتنين"],
+        benefits: [
+          "حالة فنان موثق",
+          "مساحات معرض الواقع المعزز",
+          "تعرض عالمي",
+          "وصول مباشر للمقتنين",
+        ],
         gradient: "from-amber-500 via-yellow-500 to-amber-600",
-        accentColor: "#f59e0b"
+        accentColor: "#f59e0b",
       },
       {
+        id: "gallery",
         icon: Building2,
         name: "المعارض والمتاحف",
         tagline: "وسع نطاق وصولك",
-        benefits: ["رؤية ثنائية اللغة", "فهرسة رقمية", "هيبة مؤسسية", "وصول لجمهور جديد"],
+        benefits: [
+          "رؤية ثنائية اللغة",
+          "فهرسة رقمية",
+          "هيبة مؤسسية",
+          "وصول لجمهور جديد",
+        ],
         gradient: "from-yellow-500 via-amber-500 to-yellow-600",
-        accentColor: "#eab308"
+        accentColor: "#eab308",
       },
       {
+        id: "collector",
         icon: Diamond,
         name: "المقتنون",
         tagline: "استثمر في الأصالة",
-        benefits: ["مصادقة معتمدة", "معاينات حصرية", "تتبع الأصل", "إدارة المحفظة"],
+        benefits: [
+          "مصادقة معتمدة",
+          "معاينات حصرية",
+          "تتبع الأصل",
+          "إدارة المحفظة",
+        ],
         gradient: "from-amber-600 via-yellow-600 to-amber-700",
-        accentColor: "#d97706"
+        accentColor: "#d97706",
       },
       {
-        icon: GraduationCap,
-        name: "المنسقون",
-        tagline: "بناء ثقافي ذو صلة",
-        benefits: ["وصول حصري", "اعتمادات التنسيق", "اكتشاف مبكر", "أدوات احترافية"],
-        gradient: "from-yellow-600 via-amber-600 to-yellow-700",
-        accentColor: "#ca8a04"
+        id: "ambassador",
+        icon: Megaphone,
+        name: "السفراء",
+        tagline: "ضخم الفن. اكسب المكافآت.",
+        benefits: [
+          "عمولة على الإحالات",
+          "وصول حصري للمحتوى",
+          "امتيازات شراكة العلامة التجارية",
+          "قيادة المجتمع",
+        ],
+        gradient: "from-teal-500 via-cyan-500 to-teal-600",
+        accentColor: "#14b8a6",
       },
-      {
-        icon: Briefcase,
-        name: "الشركاء المؤسسيون",
-        tagline: "قيادة المستقبل",
-        benefits: ["تموضع العلامة التجارية", "رؤى البيانات", "قيادة إقليمية", "مقاييس التأثير الاجتماعي"],
-        gradient: "from-amber-500 via-yellow-500 to-amber-600",
-        accentColor: "#f59e0b"
-      }
     ],
-    cta: "ابدأ الآن"
-  }
+    cta: "ابدأ الآن",
+  },
 };
 
 const containerVariants = {
@@ -110,9 +149,9 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15
-    }
-  }
+      staggerChildren: 0.15,
+    },
+  },
 };
 
 const itemVariants = {
@@ -120,23 +159,29 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] as const }
-  }
+    transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] as const },
+  },
 };
 
-export function PersonaPaths({ language, onNavigateToSignUp }: PersonaPathsProps) {
+export function PersonaPaths({
+  language,
+  onNavigateToSignUp,
+}: PersonaPathsProps) {
   const t = content[language];
-  const isRTL = language === 'ar';
+  const isRTL = language === "ar";
 
   return (
-    <section className="relative py-16 sm:py-24 lg:py-32 overflow-hidden bg-[#0a0612]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section
+      className="relative py-16 sm:py-24 lg:py-32 overflow-hidden bg-[#0a0612]"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
           src={bgImage}
           alt="Abstract Art Pattern"
           className="w-full h-full object-cover opacity-80"
-          style={{ transform: 'scaleY(-1)' }}
+          style={{ transform: "scaleY(-1)" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/40 via-transparent to-[#0f172a]/40" />
       </div>
@@ -177,9 +222,9 @@ export function PersonaPaths({ language, onNavigateToSignUp }: PersonaPathsProps
               <motion.div
                 key={index}
                 variants={itemVariants}
-                whileHover={{ 
+                whileHover={{
                   y: -12,
-                  transition: { duration: 0.3, ease: "easeOut" }
+                  transition: { duration: 0.3, ease: "easeOut" },
                 }}
                 className="group relative"
               >
@@ -189,15 +234,15 @@ export function PersonaPaths({ language, onNavigateToSignUp }: PersonaPathsProps
                   <motion.div
                     className="absolute inset-0 rounded-3xl p-[2px]"
                     style={{
-                      background: `linear-gradient(135deg, ${persona.accentColor}40, transparent, ${persona.accentColor}40)`
+                      background: `linear-gradient(135deg, ${persona.accentColor}40, transparent, ${persona.accentColor}40)`,
                     }}
                     animate={{
-                      rotate: [0, 360]
+                      rotate: [0, 360],
                     }}
                     transition={{
                       duration: 8,
                       repeat: Infinity,
-                      ease: "linear"
+                      ease: "linear",
                     }}
                   >
                     <div className="w-full h-full rounded-3xl bg-[#0a0612]" />
@@ -207,22 +252,22 @@ export function PersonaPaths({ language, onNavigateToSignUp }: PersonaPathsProps
                   <div className="relative backdrop-blur-2xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 rounded-3xl overflow-hidden h-full">
                     {/* Glass Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent" />
-                    
+
                     {/* Scan Line Effect */}
                     <motion.div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100"
-                      initial={{ backgroundPosition: '0% 0%' }}
+                      initial={{ backgroundPosition: "0% 0%" }}
                       whileHover={{
-                        backgroundPosition: ['0% 0%', '0% 100%'],
+                        backgroundPosition: ["0% 0%", "0% 100%"],
                       }}
                       transition={{
                         duration: 2,
                         repeat: Infinity,
-                        ease: "linear"
+                        ease: "linear",
                       }}
                       style={{
                         background: `linear-gradient(180deg, transparent 0%, ${persona.accentColor}15 50%, transparent 100%)`,
-                        backgroundSize: '100% 50px'
+                        backgroundSize: "100% 50px",
                       }}
                     />
 
@@ -240,28 +285,30 @@ export function PersonaPaths({ language, onNavigateToSignUp }: PersonaPathsProps
                             className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${persona.gradient} blur-xl`}
                             animate={{
                               scale: [1, 1.2, 1],
-                              opacity: [0.5, 0.8, 0.5]
+                              opacity: [0.5, 0.8, 0.5],
                             }}
                             transition={{
                               duration: 3,
                               repeat: Infinity,
-                              ease: "easeInOut"
+                              ease: "easeInOut",
                             }}
                           />
-                          
+
                           {/* Icon Container */}
-                          <div className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br ${persona.gradient} flex items-center justify-center shadow-2xl border border-white/20`}>
+                          <div
+                            className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br ${persona.gradient} flex items-center justify-center shadow-2xl border border-white/20`}
+                          >
                             <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
-                            
+
                             {/* Inner Shimmer */}
                             <motion.div
                               className="absolute inset-0 bg-white rounded-xl sm:rounded-2xl"
                               animate={{
-                                opacity: [0, 0.3, 0]
+                                opacity: [0, 0.3, 0],
                               }}
                               transition={{
                                 duration: 2,
-                                repeat: Infinity
+                                repeat: Infinity,
                               }}
                             />
                           </div>
@@ -273,13 +320,17 @@ export function PersonaPaths({ language, onNavigateToSignUp }: PersonaPathsProps
                         <h3 className="text-white text-xl sm:text-2xl mb-1.5 sm:mb-2">
                           {persona.name}
                         </h3>
-                        <p className={`text-sm sm:text-base bg-gradient-to-r ${persona.gradient} bg-clip-text text-transparent`}>
+                        <p
+                          className={`text-sm sm:text-base bg-gradient-to-r ${persona.gradient} bg-clip-text text-transparent`}
+                        >
                           {persona.tagline}
                         </p>
                       </div>
 
                       {/* Divider */}
-                      <div className={`h-[1px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mb-5 sm:mb-6`} />
+                      <div
+                        className={`h-[1px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mb-5 sm:mb-6`}
+                      />
 
                       {/* Benefits List */}
                       <div className="flex-grow mb-5 sm:mb-6">
@@ -293,7 +344,7 @@ export function PersonaPaths({ language, onNavigateToSignUp }: PersonaPathsProps
                               transition={{ delay: idx * 0.1 }}
                               className="flex items-start gap-2.5 sm:gap-3"
                             >
-                              <CheckCircle2 
+                              <CheckCircle2
                                 className={`w-4 h-4 sm:w-5 sm:h-5 shrink-0 mt-0.5`}
                                 style={{ color: persona.accentColor }}
                               />
@@ -307,19 +358,21 @@ export function PersonaPaths({ language, onNavigateToSignUp }: PersonaPathsProps
 
                       {/* CTA Button */}
                       <motion.button
-                        onClick={onNavigateToSignUp}
+                        onClick={() => onNavigateToSignUp?.(persona.id)}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         className="relative w-full group/btn overflow-hidden rounded-lg sm:rounded-xl cursor-pointer"
                       >
                         {/* Button Background */}
-                        <div className={`absolute inset-0 bg-gradient-to-r ${persona.gradient} opacity-100 group-hover/btn:opacity-100 transition-opacity`} />
-                        
+                        <div
+                          className={`absolute inset-0 bg-gradient-to-r ${persona.gradient} opacity-100 group-hover/btn:opacity-100 transition-opacity`}
+                        />
+
                         {/* Shimmer Effect */}
                         <motion.div
                           className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                          initial={{ x: '-100%' }}
-                          whileHover={{ x: '100%' }}
+                          initial={{ x: "-100%" }}
+                          whileHover={{ x: "100%" }}
                           transition={{ duration: 0.6 }}
                         />
 
@@ -342,12 +395,12 @@ export function PersonaPaths({ language, onNavigateToSignUp }: PersonaPathsProps
                         className={`absolute -bottom-12 sm:-bottom-16 -right-12 sm:-right-16 w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br ${persona.gradient} opacity-15 blur-3xl`}
                         animate={{
                           scale: [1, 1.3, 1],
-                          rotate: [0, 90, 0]
+                          rotate: [0, 90, 0],
                         }}
                         transition={{
                           duration: 8,
                           repeat: Infinity,
-                          ease: "easeInOut"
+                          ease: "easeInOut",
                         }}
                       />
                     </div>

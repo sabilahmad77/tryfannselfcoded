@@ -11,8 +11,8 @@ import {
   Mail,
   Loader2,
 } from "lucide-react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/useLanguage";
 import {
@@ -77,6 +77,7 @@ export function URLEncoder() {
 
   // Use API data or fallback to empty
   const referralLink = statsData?.data?.referral_link || "";
+  const isReferralCode = statsData?.data?.is_referral_code || false;
   const stats = {
     clicks: statsData?.data?.total_referral_clicks || 0,
     conversions: statsData?.data?.conversation || 0,
@@ -184,10 +185,10 @@ export function URLEncoder() {
           </label>
           <Button
             onClick={handleGenerate}
-            disabled={isGenerating}
+            disabled={isGenerating || isReferralCode}
             size="sm"
             variant="outline"
-            className="text-xs border-[#14b8a6] text-[#14b8a6] hover:bg-[#14b8a6] hover:text-white hover:border-[#14b8a6] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="text-xs border-[#14b8a6] text-[#14b8a6] hover:bg-[#14b8a6] hover:text-white hover:border-[#0d9488] hover:shadow-lg hover:shadow-[#14b8a6]/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {isGenerating ? (
               <>

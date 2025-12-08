@@ -1,16 +1,18 @@
 import { useState, useMemo } from "react";
 import { motion } from "motion/react";
-import { Gift, Sparkles, Check, AlertCircle, Loader2 } from "lucide-react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Badge } from "../ui/badge";
+import { Gift, Sparkles, Check, AlertCircle, Loader2, Plus, Copy } from "lucide-react";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Badge } from "../../ui/badge";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/useLanguage";
 import {
   useGetRedemptionsQuery,
   useUserRedemptionMutation,
+  useGenerateRedeemCodeMutation,
   type Redemption,
 } from "@/services/api/dashboardApi";
+import { formatDateForDisplay } from "@/utils/dateUtils";
 
 const content = {
   en: {
@@ -30,7 +32,17 @@ const content = {
       success: "Code redeemed successfully!",
       invalid: "Invalid or expired code",
       alreadyUsed: "Code already used",
+      generateSuccess: "Code generated successfully!",
+      generateError: "Failed to generate code",
+      codeCopied: "Code copied to clipboard!",
     },
+    generateCode: "Generate Code",
+    generateTitle: "Generate Redemption Code",
+    generateDescription: "Create a new redemption code with points",
+    codeTitle: "Code Title",
+    codePoints: "Points",
+    generatedCode: "Generated Code",
+    copyCode: "Copy Code",
     noHistory: "No redemption history yet",
     codes: [
       {
@@ -69,7 +81,17 @@ const content = {
       success: "تم استبدال الكود بنجاح!",
       invalid: "كود غير صالح أو منتهي الصلاحية",
       alreadyUsed: "الكود مستخدم بالفعل",
+      generateSuccess: "تم إنشاء الكود بنجاح!",
+      generateError: "فشل إنشاء الكود",
+      codeCopied: "تم نسخ الكود إلى الحافظة!",
     },
+    generateCode: "إنشاء كود",
+    generateTitle: "إنشاء كود استرداد",
+    generateDescription: "قم بإنشاء كود استرداد جديد مع النقاط",
+    codeTitle: "عنوان الكود",
+    codePoints: "النقاط",
+    generatedCode: "الكود المُنشأ",
+    copyCode: "نسخ الكود",
     noHistory: "لا يوجد سجل استرداد حتى الآن",
     codes: [
       {
@@ -98,6 +120,10 @@ export function RedemptionCodes() {
   const t = content[language];
   const isRTL = language === "ar";
   const [code, setCode] = useState("");
+  const [showGenerateForm, setShowGenerateForm] = useState(false);
+  const [generateTitle, setGenerateTitle] = useState("");
+  const [generatePoints, setGeneratePoints] = useState("");
+  const [generatedCode, setGeneratedCode] = useState<Redemption | null>(null);
 
   // Fetch available redemptions from API
   const {
@@ -111,6 +137,10 @@ export function RedemptionCodes() {
   // User redemption mutation
   const [userRedemption, { isLoading: isRedeeming }] =
     useUserRedemptionMutation();
+
+  // Generate redeem code mutation
+  const [generateRedeemCode, { isLoading: isGenerating }] =
+    useGenerateRedeemCodeMutation();
 
   // Parse redemptions from API response
   const allRedemptions = useMemo(() => {
@@ -142,20 +172,6 @@ export function RedemptionCodes() {
     setCode(redemptionCode.toUpperCase());
   };
 
-  // Format date for display
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "";
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString(language === "en" ? "en-US" : "ar-SA", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-    } catch {
-      return dateString;
-    }
-  };
 
   const handleRedeem = async () => {
     if (!code.trim()) {
@@ -218,6 +234,80 @@ export function RedemptionCodes() {
     }
   };
 
+  const handleGenerateCode = async () => {
+    if (!generateTitle.trim()) {
+      toast.error(
+        language === "en"
+          ? "Please enter a code title"
+          : "يرجى إدخال عنوان الكود"
+      );
+      return;
+    }
+
+    const points = parseInt(generatePoints, 10);
+    if (!generatePoints.trim() || isNaN(points) || points <= 0) {
+      toast.error(
+        language === "en"
+          ? "Please enter valid points"
+          : "يرجى إدخال نقاط صالحة"
+      );
+      return;
+    }
+
+    try {
+      const result = await generateRedeemCode({
+        title: generateTitle.trim(),
+        points: points,
+      }).unwrap();
+
+      if (result.success && result.data) {
+        toast.success(t.messages.generateSuccess);
+        setGeneratedCode(result.data);
+        setGenerateTitle("");
+        setGeneratePoints("");
+        setShowGenerateForm(false);
+        // Auto-populate the code field with the generated code
+        if (result.data.code) {
+          setCode(result.data.code.toUpperCase());
+        }
+      } else {
+        const errorMessage =
+          typeof result.message === "string"
+            ? result.message
+            : t.messages.generateError;
+        toast.error(errorMessage);
+      }
+    } catch (error: unknown) {
+      console.error("Error generating code:", error);
+      if (error && typeof error === "object" && "data" in error) {
+        const errorData = error.data as {
+          message?: string;
+          detail?: string;
+          [key: string]: unknown;
+        };
+        const errorMessage =
+          errorData?.message ||
+          errorData?.detail ||
+          (typeof errorData === "string" ? errorData : t.messages.generateError);
+        toast.error(errorMessage);
+      } else {
+        toast.error(t.messages.generateError);
+      }
+    }
+  };
+
+  const handleCopyCode = async (codeToCopy: string) => {
+    try {
+      await navigator.clipboard.writeText(codeToCopy);
+      toast.success(t.messages.codeCopied);
+    } catch (error) {
+      console.error("Failed to copy code:", error);
+      toast.error(
+        language === "en" ? "Failed to copy code" : "فشل نسخ الكود"
+      );
+    }
+  };
+
   return (
     <div className="glass rounded-2xl p-6 h-full flex flex-col">
       {/* Header */}
@@ -255,7 +345,7 @@ export function RedemptionCodes() {
           <Button
             onClick={handleRedeem}
             disabled={isRedeeming || !code.trim() || isLoadingRedemptions}
-            className={`bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:from-[#ec4899] hover:to-[#8b5cf6] text-white transition-all disabled:opacity-50 ${
+            className={`bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:from-[#ec4899] hover:to-[#8b5cf6] hover:shadow-lg hover:shadow-[#8b5cf6]/50 text-white transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none ${
               isRedeeming || !code.trim() || isLoadingRedemptions
                 ? "cursor-not-allowed"
                 : "cursor-pointer"
@@ -271,6 +361,149 @@ export function RedemptionCodes() {
             {t.redeem}
           </Button>
         </div>
+      </div>
+
+      {/* Generate Code Section */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <h3
+            className={`text-sm text-[#cbd5e1] ${
+              isRTL ? "text-right" : "text-left"
+            }`}
+          >
+            {t.generateTitle}
+          </h3>
+          <Button
+            onClick={() => {
+              setShowGenerateForm(!showGenerateForm);
+              if (showGenerateForm) {
+                setGeneratedCode(null);
+              }
+            }}
+            variant="outline"
+            size="sm"
+            className={`border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/20 hover:border-[#7c3aed] hover:text-[#7c3aed] transition-all duration-200 cursor-pointer ${
+              isRTL ? "flex-row-reverse" : ""
+            }`}
+          >
+            <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+            {showGenerateForm
+              ? language === "en"
+                ? "Cancel"
+                : "إلغاء"
+              : t.generateCode}
+          </Button>
+        </div>
+
+        {showGenerateForm && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-[#1e293b]/50 rounded-lg p-4 border border-[#8b5cf6]/30 space-y-4"
+          >
+            <p className="text-xs text-[#cbd5e1] mb-3">
+              {t.generateDescription}
+            </p>
+            <div className="space-y-3">
+              <div>
+                <label
+                  className={`text-xs text-[#cbd5e1] mb-2 block ${
+                    isRTL ? "text-right" : "text-left"
+                  }`}
+                >
+                  {t.codeTitle}
+                </label>
+                <Input
+                  value={generateTitle}
+                  onChange={(e) => setGenerateTitle(e.target.value)}
+                  placeholder={
+                    language === "en"
+                      ? "Enter code title"
+                      : "أدخل عنوان الكود"
+                  }
+                  className="bg-[#1e293b] border-[#334155] text-[#fef3c7] placeholder:text-[#475569] focus:border-[#8b5cf6]"
+                />
+              </div>
+              <div>
+                <label
+                  className={`text-xs text-[#cbd5e1] mb-2 block ${
+                    isRTL ? "text-right" : "text-left"
+                  }`}
+                >
+                  {t.codePoints}
+                </label>
+                <Input
+                  type="number"
+                  value={generatePoints}
+                  onChange={(e) => setGeneratePoints(e.target.value)}
+                  placeholder={
+                    language === "en" ? "Enter points" : "أدخل النقاط"
+                  }
+                  className="bg-[#1e293b] border-[#334155] text-[#fef3c7] placeholder:text-[#475569] focus:border-[#8b5cf6]"
+                  min="1"
+                />
+              </div>
+              <Button
+                onClick={handleGenerateCode}
+                disabled={isGenerating || !generateTitle.trim() || !generatePoints.trim()}
+                className={`w-full bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:from-[#ec4899] hover:to-[#8b5cf6] hover:shadow-lg hover:shadow-[#8b5cf6]/50 text-white transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none ${
+                  isGenerating ||
+                  !generateTitle.trim() ||
+                  !generatePoints.trim()
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}
+              >
+                {isGenerating ? (
+                  <Loader2
+                    className={`w-4 h-4 animate-spin ${
+                      isRTL ? "ml-2" : "mr-2"
+                    }`}
+                  />
+                ) : (
+                  <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+                )}
+                {t.generateCode}
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Display Generated Code */}
+        {generatedCode && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 bg-gradient-to-r from-[#8b5cf6]/20 to-[#ec4899]/20 rounded-lg p-4 border border-[#8b5cf6]/50"
+          >
+            <div
+              className={`flex items-center justify-between ${
+                isRTL ? "flex-row-reverse" : ""
+              }`}
+            >
+              <div className={isRTL ? "text-right" : "text-left"}>
+                <p className="text-xs text-[#cbd5e1] mb-1">
+                  {t.generatedCode}
+                </p>
+                <p className="text-lg font-bold text-[#fef3c7]">
+                  {generatedCode.code}
+                </p>
+                <p className="text-sm text-[#cbd5e1] mt-1">
+                  {generatedCode.title} - {generatedCode.points} {t.points}
+                </p>
+              </div>
+              <Button
+                onClick={() => handleCopyCode(generatedCode.code || "")}
+                variant="outline"
+                size="sm"
+                className="border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/20 hover:border-[#7c3aed] hover:text-[#7c3aed] hover:scale-110 transition-all duration-200 cursor-pointer"
+              >
+                <Copy className="w-4 h-4" />
+              </Button>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Available Rewards */}
@@ -380,8 +613,9 @@ export function RedemptionCodes() {
                       {redemption.code || redemption.title}
                     </p>
                     <p className="text-xs text-[#cbd5e1]">
-                      {formatDate(
-                        redemption.updated_at || redemption.created_at
+                      {formatDateForDisplay(
+                        redemption.updated_at || redemption.created_at || "",
+                        language
                       )}
                     </p>
                   </div>

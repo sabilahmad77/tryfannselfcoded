@@ -1,30 +1,79 @@
 import { motion } from "motion/react";
 import { useSelector } from "react-redux";
-import { PointWallet } from "@/components/dashboard/PointWallet";
-import { URLEncoder } from "@/components/dashboard/URLEncoder";
-import { RedemptionCodes } from "@/components/dashboard/RedemptionCodes";
-import { WatchVideos } from "@/components/dashboard/WatchVideos";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { PointWallet } from "@/components/dashboard/shared/PointWallet";
+import { URLEncoder } from "@/components/dashboard/shared/URLEncoder";
+import { RedemptionCodes } from "@/components/dashboard/shared/RedemptionCodes";
+import { WatchVideos } from "@/components/dashboard/shared/WatchVideos";
+import { PuzzleModal } from "@/components/dashboard/shared/PuzzleModal";
+import { CollectorDashboard } from "@/components/dashboard/collector/CollectorDashboard";
+import { GalleryDashboard } from "@/components/dashboard/gallery/GalleryDashboard";
+import { AmbassadorDashboard } from "@/components/dashboard/ambassador/AmbassadorDashboard";
+import { DashboardLayout } from "@/components/dashboard/shared/DashboardLayout";
+import { DashboardWelcome } from "@/components/dashboard/shared/DashboardWelcome";
 import { useLanguage } from "@/contexts/useLanguage";
 import type { RootState } from "@/store/store";
 
 const content = {
   en: {
     welcome: "Welcome back",
-    subtitle: "Manage your art journey and track your progress",
+    subtitles: {
+      artist: "Manage your art journey and track your progress",
+      collector:
+        "Discover and acquire authenticated artwork for your collection",
+      gallery: "Manage your gallery and curate exceptional exhibitions",
+      ambassador: "Track your performance and grow your influence",
+    },
+    roles: {
+      artist: "Artist",
+      collector: "Collector",
+      gallery: "Gallery",
+      ambassador: "Ambassador",
+    },
   },
   ar: {
     welcome: "مرحباً بعودتك",
-    subtitle: "إدارة رحلتك الفنية وتتبع تقدمك",
+    subtitles: {
+      artist: "إدارة رحلتك الفنية وتتبع تقدمك",
+      collector: "اكتشف واقتن الأعمال الفنية الموثقة لمجموعتك",
+      gallery: "إدارة معرضك وتنسيق المعارض الاستثنائية",
+      ambassador: "تتبع أدائك وزد تأثيرك",
+    },
+    roles: {
+      artist: "فنان",
+      collector: "جامع",
+      gallery: "معرض",
+      ambassador: "سفير",
+    },
   },
 };
 
 export function DashboardPage() {
   const { language } = useLanguage();
   const t = content[language];
-  const isRTL = language === "ar";
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
+  // Get user role/persona - check role field first, then persona
+  const userRole = storedUser?.role?.toLowerCase() || null;
+  const persona = useSelector((state: RootState) => state.auth.persona);
+
+  // Determine which dashboard to show based on role
+  // Role can be: "artist", "gallery", "collector" (case-insensitive)
+  const role = userRole || persona?.toLowerCase() || "artist";
+
+  // Render role-based dashboard
+  if (role === "collector") {
+    return <CollectorDashboard />;
+  }
+
+  if (role === "gallery") {
+    return <GalleryDashboard />;
+  }
+
+  if (role === "ambassador") {
+    return <AmbassadorDashboard />;
+  }
+
+  // Default to Artist Dashboard (existing implementation)
   // Get user name from stored data
   const userName = storedUser
     ? `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim() ||
@@ -33,23 +82,39 @@ export function DashboardPage() {
       "User"
     : "User";
 
+  // Get user role for display - prioritize storedUser.role, then persona, then default
+  // Normalize role to match our content keys (lowercase)
+  const displayRoleRaw =
+    storedUser?.role?.toLowerCase() || persona?.toLowerCase() || "artist";
+
+  // Validate and map role to our supported roles
+  const validRoles: Array<"artist" | "collector" | "gallery" | "ambassador"> = [
+    "artist",
+    "collector",
+    "gallery",
+    "ambassador",
+  ];
+  const displayRole = validRoles.includes(
+    displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador"
+  )
+    ? (displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador")
+    : "artist";
+
+  // Map role to label - ensure it matches one of our defined roles
+  const roleLabel = t.roles[displayRole] || t.roles.artist;
+
+  // Get role-based subtitle
+  const subtitleKey = displayRole;
+  const subtitle = t.subtitles[subtitleKey] || t.subtitles.artist;
+
   return (
     <DashboardLayout currentPage="dashboard">
       {/* Welcome Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className={`mb-8 ${isRTL ? "text-right" : "text-left"}`}
-      >
-        <h1 className="text-4xl md:text-5xl mb-2">
-          <span className="text-[#fef3c7]">{t.welcome}, </span>
-          <span className="bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-[#d4af37] bg-clip-text text-transparent animate-gradient">
-            {userName}
-          </span>
-        </h1>
-        <p className="text-[#cbd5e1] text-lg">{t.subtitle}</p>
-      </motion.div>
+      <DashboardWelcome
+        userName={userName}
+        subtitle={subtitle}
+        roleLabel={roleLabel}
+      />
 
       {/* Widgets Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -88,23 +153,16 @@ export function DashboardPage() {
         >
           <WatchVideos />
         </motion.div>
-      </div>
 
-      {/* Placeholder for Additional Widgets */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.5 }}
-        className="glass rounded-2xl p-6 border-2 border-dashed border-[#d4af37]/30"
-      >
-        <div className="flex items-center justify-center h-32 text-[#cbd5e1]">
-          <p className={isRTL ? "text-right" : "text-left"}>
-            {language === "en"
-              ? "Space reserved for additional widgets"
-              : "مساحة محجوزة لإضافة ويدجت إضافية"}
-          </p>
-        </div>
-      </motion.div>
+        {/* Puzzle Challenge */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <PuzzleModal difficulty="easy" pointsReward={50} />
+        </motion.div>
+      </div>
     </DashboardLayout>
   );
 }

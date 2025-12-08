@@ -1,7 +1,15 @@
 import { motion } from "motion/react";
-import { Check, Star, Gem, Trophy, Sparkles, ChevronRight } from "lucide-react";
+import {
+  Check,
+  ChevronRight,
+  Loader2,
+  Compass,
+  Crown,
+  Award,
+} from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import bgImage from "figma:asset/3fa9b9de7e4b1421a708a7c88cd0672cee3504e2.png";
+import { useGetProgressionQuery } from "@/services/api/dashboardApi";
 
 interface RewardsTiersProps {
   language: "en" | "ar";
@@ -16,64 +24,38 @@ const content = {
     tiers: [
       {
         name: "Explorer",
-        icon: Star,
+        icon: Compass,
         points: "0-500",
-        color: "from-blue-400 to-cyan-500",
-        borderColor: "border-blue-400/50",
-        bgGlow: "bg-blue-400/10",
-        rewards: [
-          "Platform early access",
-          "Community badge",
-          "Basic referral rewards",
-          "Newsletter updates",
-        ],
-      },
-      {
-        name: "Curator",
-        icon: Gem,
-        points: "500-2K",
-        color: "from-purple-400 to-pink-500",
-        borderColor: "border-purple-400/50",
-        bgGlow: "bg-purple-400/10",
-        rewards: [
-          "Digital certificate of authenticity",
-          "Exclusive webinars",
-          "Enhanced referral bonuses",
-          "Priority support",
-          "Curator badge",
+        color: "from-gray-600 to-gray-500",
+        glowColor: "shadow-gray-500/50",
+        benefits: [
+          "Platform access at launch",
+          "Community membership",
+          "Basic features",
         ],
       },
       {
         name: "Ambassador",
-        icon: Trophy,
-        points: "2K-5K",
-        color: "from-orange-400 to-red-500",
-        borderColor: "border-orange-400/50",
-        bgGlow: "bg-orange-400/10",
-        rewards: [
-          "AR gallery slot reservation",
-          "Ambassador badge & recognition",
-          "VIP event invitations",
-          "Premium referral tier",
-          "Beta feature access",
-          "Personalized onboarding",
+        points: "500-2K",
+        icon: Crown,
+        color: "from-orange-600 to-amber-600",
+        glowColor: "shadow-orange-500/50",
+        benefits: [
+          "Enhanced referral bonuses",
+          "Priority support",
+          "Ambassador badge",
         ],
       },
       {
         name: "Founding Patron",
-        icon: Sparkles,
-        points: "5K+",
-        color: "from-[#d4af37] to-[#fbbf24]",
-        borderColor: "border-[#d4af37]/50",
-        bgGlow: "bg-[#d4af37]/10",
-        rewards: [
-          "Lifetime premium access",
-          "SaaS dashboard beta access",
-          "Founding Patron badge",
-          "Direct team connection",
-          "Co-creation opportunities",
-          "Exclusive physical rewards",
-          "Revenue share opportunities",
+        points: "2K+",
+        icon: Award,
+        color: "from-amber-600 to-yellow-600",
+        glowColor: "shadow-amber-500/50",
+        benefits: [
+          "Lifetime benefits",
+          "Executive access",
+          "Founding member NFT",
         ],
       },
     ],
@@ -85,65 +67,31 @@ const content = {
     tiers: [
       {
         name: "مستكشف",
-        icon: Star,
+        icon: Compass,
         points: "0-500",
-        color: "from-blue-400 to-cyan-500",
-        borderColor: "border-blue-400/50",
-        bgGlow: "bg-blue-400/10",
-        rewards: [
-          "الوصول المبكر للمنصة",
-          "شارة المجتمع",
-          "مكافآت الإحالة الأساسية",
-          "تحديثات النشرة الإخبارية",
-        ],
-      },
-      {
-        name: "منسق",
-        icon: Gem,
-        points: "500-2K",
-        color: "from-purple-400 to-pink-500",
-        borderColor: "border-purple-400/50",
-        bgGlow: "bg-purple-400/10",
-        rewards: [
-          "شهادة أصالة رقمية",
-          "ندوات حصرية عبر الإنترنت",
-          "مكافآت إحالة محسنة",
-          "دعم ذو أولوية",
-          "شارة المنسق",
+        color: "from-gray-600 to-gray-500",
+        glowColor: "shadow-gray-500/50",
+        benefits: [
+          "الوصول إلى المنصة عند إطلاقها",
+          "عضوية في المجتمع",
+          "الميزات الأساسية",
         ],
       },
       {
         name: "سفير",
-        icon: Trophy,
-        points: "2K-5K",
-        color: "from-orange-400 to-red-500",
-        borderColor: "border-orange-400/50",
-        bgGlow: "bg-orange-400/10",
-        rewards: [
-          "حجز مساحة معرض الواقع المعزز",
-          "شارة واعتراف بالسفير",
-          "دعوات لأحداث VIP",
-          "مستوى إحالة مميز",
-          "الوصول لميزات تجريبية",
-          "تأهيل مخصص",
-        ],
+        points: "500-2K",
+        icon: Crown,
+        color: "from-orange-600 to-amber-600",
+        glowColor: "shadow-orange-500/50",
+        benefits: ["مكافآت إحالة محسنة", "دعم ذو أولوية", "شارة المنسق"],
       },
       {
         name: "راعي مؤسس",
-        icon: Sparkles,
-        points: "5K+",
-        color: "from-[#d4af37] to-[#fbbf24]",
-        borderColor: "border-[#d4af37]/50",
-        bgGlow: "bg-[#d4af37]/10",
-        rewards: [
-          "وصول مميز مدى الحياة",
-          "الوصول التجريبي لوحة SaaS",
-          "شارة الراعي المؤسس",
-          "اتصال مباشر بالفريق",
-          "فرص المشاركة في الإنشاء",
-          "مكافآت مادية حصرية",
-          "فرص حصة الإيرادات",
-        ],
+        points: "2K+",
+        icon: Award,
+        color: "from-amber-600 to-yellow-600",
+        glowColor: "shadow-amber-500/50",
+        benefits: ["فوائد مدى الحياة", "وصول متميز", "NFT لعضو مؤسس"],
       },
     ],
   },
@@ -155,6 +103,100 @@ export function RewardsTiers({
 }: RewardsTiersProps) {
   const t = content[language];
   const isRTL = language === "ar";
+
+  // Fetch progression data from API
+  const {
+    data: progressionData,
+    isLoading,
+    isError,
+  } = useGetProgressionQuery();
+
+  // Tier visual configuration mapping (for icons, colors, benefits)
+  const tierConfigMap: Record<
+    string,
+    {
+      icon: typeof Compass;
+      color: string;
+      glowColor: string;
+      benefits: string[];
+    }
+  > = {
+    Explorer: {
+      icon: Compass,
+      color: "from-gray-600 to-gray-500",
+      glowColor: "shadow-gray-500/50",
+      benefits:
+        language === "en"
+          ? [
+              "Platform access at launch",
+              "Community membership",
+              "Basic features",
+            ]
+          : [
+              "الوصول إلى المنصة عند إطلاقها",
+              "عضوية في المجتمع",
+              "الميزات الأساسية",
+            ],
+    },
+    Ambassador: {
+      icon: Crown,
+      color: "from-orange-600 to-amber-600",
+      glowColor: "shadow-orange-500/50",
+      benefits:
+        language === "en"
+          ? [
+              "Enhanced referral bonuses",
+              "Priority support",
+              "Ambassador badge",
+            ]
+          : ["مكافآت إحالة محسنة", "دعم ذو أولوية", "شارة المنسق"],
+    },
+    "Founding Patron": {
+      icon: Award,
+      color: "from-amber-600 to-yellow-600",
+      glowColor: "shadow-amber-500/50",
+      benefits:
+        language === "en"
+          ? ["Lifetime benefits", "Executive access", "Founding member NFT"]
+          : ["فوائد مدى الحياة", "وصول متميز", "NFT لعضو مؤسس"],
+    },
+  };
+
+  // Map API data to display tiers (only show what API returns)
+  const apiTiers = progressionData?.data || [];
+  const orderedNames = ["Explorer", "Ambassador", "Founding Patron"];
+
+  // Sort API tiers by predefined order
+  const sortedApiTiers =
+    Array.isArray(apiTiers) && apiTiers.length
+      ? [...apiTiers].sort(
+          (a, b) =>
+            orderedNames.indexOf(a?.name ?? "") -
+            orderedNames.indexOf(b?.name ?? "")
+        )
+      : [];
+
+  // Build tiers from API data only
+  const tiers = sortedApiTiers
+    .map((apiTier) => {
+      const config = tierConfigMap[apiTier.name];
+      if (!config) return null; // Skip if tier name not found in config
+
+      // Parse points from API (e.g., "5K+ pts" -> "5K+", "2K-5K pts" -> "2K-5K")
+      const points = apiTier.points
+        ? apiTier.points.replace(/\s*pts$/i, "").trim()
+        : "";
+
+      return {
+        name: apiTier.name,
+        icon: config.icon,
+        points: points,
+        color: config.color,
+        glowColor: config.glowColor,
+        benefits: config.benefits,
+      };
+    })
+    .filter((tier): tier is NonNullable<typeof tier> => tier !== null);
 
   return (
     <section
@@ -179,6 +221,39 @@ export function RewardsTiers({
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex flex-col items-center justify-center py-24 gap-4">
+            <Loader2 className="w-10 h-10 text-[#d4af37] animate-spin" />
+            <p className="text-white/70 text-sm md:text-base">
+              {language === "en"
+                ? "Loading your progression tiers..."
+                : "جاري تحميل نظام التقدم الخاص بك..."}
+            </p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {!isLoading && isError && (
+          <div className="mb-6 text-center">
+            <p className="text-xs md:text-sm text-red-400">
+              {language === "en"
+                ? "Unable to fetch progression data."
+                : "تعذر جلب بيانات التقدم."}
+            </p>
+          </div>
+        )}
+
+        {/* Empty State - No tiers from API */}
+        {!isLoading && !isError && tiers.length === 0 && (
+          <div className="text-center py-24">
+            <p className="text-white/60 text-lg">
+              {language === "en"
+                ? "No progression tiers available."
+                : "لا توجد مراحل تقدم متاحة."}
+            </p>
+          </div>
+        )}
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -197,229 +272,240 @@ export function RewardsTiers({
         </motion.div>
 
         {/* Horizontal Timeline - Desktop */}
-        <div className="hidden lg:block max-w-7xl mx-auto">
-          {/* Progress Bar Container */}
-          <div className="relative mb-32">
-            {/* Background Track */}
-            <div className="absolute top-20 left-0 right-0 h-1 bg-white/10" />
+        {tiers.length > 0 && (
+          <div className="hidden lg:block max-w-7xl mx-auto">
+            {/* Progress Bar Container */}
+            <div className="relative mb-32">
+              {/* Background Track */}
+              <div className="absolute top-20 left-0 right-0 h-1 bg-white/10" />
 
-            {/* Animated Progress Line */}
-            <motion.div
-              className="absolute top-20 left-0 h-1 bg-gradient-to-r from-blue-400 via-purple-400 via-orange-400 to-[#d4af37]"
-              initial={{ width: "0%" }}
-              whileInView={{ width: "100%" }}
-              viewport={{ once: true }}
-              transition={{ duration: 2, ease: "easeOut" }}
-            />
+              {/* Animated Progress Line */}
+              <motion.div
+                className="absolute top-20 left-0 h-1 bg-gradient-to-r from-blue-400 via-purple-400 via-orange-400 to-[#d4af37]"
+                initial={{ width: "0%" }}
+                whileInView={{ width: "100%" }}
+                viewport={{ once: true }}
+                transition={{ duration: 2, ease: "easeOut" }}
+              />
 
-            {/* Tier Cards */}
-            <div className="grid grid-cols-4 gap-6">
-              {t.tiers.map((tier, index) => {
-                const Icon = tier.icon;
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.2 + index * 0.15 }}
-                    className="relative"
-                  >
-                    {/* Connector Dot */}
+              {/* Tier Cards */}
+              <div className="grid grid-cols-3 gap-8 max-w-5xl mx-auto">
+                {tiers.map((tier, index) => {
+                  const Icon = tier.icon;
+                  return (
                     <motion.div
-                      className={`absolute top-20 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br ${tier.color} border-4 border-[#0a0612] z-20`}
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
+                      key={index}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{
-                        delay: 0.5 + index * 0.15,
-                        type: "spring",
-                        stiffness: 200,
-                      }}
-                    />
-
-                    {/* Card */}
-                    <motion.div
-                      whileHover={{ y: -8 }}
-                      className="relative group"
+                      transition={{ duration: 0.5, delay: 0.2 + index * 0.15 }}
+                      className="relative"
                     >
-                      {/* Glow Effect */}
-                      <div
-                        className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500`}
+                      {/* Connector Dot */}
+                      <motion.div
+                        className={`absolute top-20 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br ${tier.color} border-4 border-[#0a0612] z-20`}
+                        initial={{ scale: 0 }}
+                        whileInView={{ scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{
+                          delay: 0.5 + index * 0.15,
+                          type: "spring",
+                          stiffness: 200,
+                        }}
                       />
 
-                      {/* Main Card */}
-                      <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
-                        {/* Top Gradient Bar */}
+                      {/* Card */}
+                      <motion.div
+                        whileHover={{ y: -8 }}
+                        className="relative group"
+                      >
+                        {/* Glow Effect */}
                         <div
-                          className={`h-1.5 bg-gradient-to-r ${tier.color}`}
+                          className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500`}
                         />
 
-                        {/* Card Content */}
-                        <div className="p-6">
-                          {/* Icon */}
-                          <div className="mb-4 flex justify-center">
-                            <div
-                              className={`w-16 h-16 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center shadow-lg`}
-                            >
-                              <Icon className="w-8 h-8 text-white" />
-                            </div>
-                          </div>
-
-                          {/* Tier Name */}
-                          <h3 className="text-white text-center text-xl mb-2">
-                            {tier.name}
-                          </h3>
-
-                          {/* Points */}
+                        {/* Main Card */}
+                        <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+                          {/* Top Gradient Bar */}
                           <div
-                            className={`text-center mb-6 text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
-                            style={{
-                              fontWeight: 600,
-                            }}
-                          >
-                            {tier.points} pts
-                          </div>
+                            className={`h-1.5 bg-gradient-to-r ${tier.color}`}
+                          />
 
-                          {/* Rewards */}
-                          <ul className="space-y-2.5">
-                            {tier.rewards.slice(0, 4).map((reward, idx) => (
-                              <li
-                                key={idx}
-                                className="flex items-start gap-2 text-white/60 text-xs"
+                          {/* Card Content */}
+                          <div className="p-6">
+                            {/* Icon */}
+                            <div className="mb-4 flex justify-center">
+                              <div
+                                className={`w-16 h-16 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center shadow-lg`}
                               >
-                                <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#14b8a6]" />
-                                <span className="leading-tight">{reward}</span>
-                              </li>
-                            ))}
-                          </ul>
+                                <Icon className="w-8 h-8 text-white" />
+                              </div>
+                            </div>
 
-                          {/* View More */}
-                          {tier.rewards.length > 4 && (
-                            <button className="mt-4 w-full text-xs text-white/40 hover:text-white/60 transition-colors flex items-center justify-center gap-1">
-                              +{tier.rewards.length - 4} more
-                              <ChevronRight className="w-3 h-3" />
-                            </button>
-                          )}
+                            {/* Tier Name */}
+                            <h3 className="text-white text-center text-xl mb-2">
+                              {tier.name}
+                            </h3>
+
+                            {/* Points */}
+                            <div
+                              className={`text-center mb-6 text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
+                              style={{
+                                fontWeight: 600,
+                              }}
+                            >
+                              {tier.points} pts
+                            </div>
+
+                            {/* Benefits */}
+                            <ul className="space-y-2.5">
+                              {tier.benefits.slice(0, 4).map((benefit, idx) => (
+                                <li
+                                  key={idx}
+                                  className="flex items-start gap-2 text-white/60 text-xs"
+                                >
+                                  <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#14b8a6]" />
+                                  <span className="leading-tight">
+                                    {benefit}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+
+                            {/* View More */}
+                            {tier.benefits.length > 4 && (
+                              <button className="mt-4 w-full text-xs text-white/40 hover:text-white/60 transition-colors flex items-center justify-center gap-1">
+                                +{tier.benefits.length - 4} more
+                                <ChevronRight className="w-3 h-3" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+
+                      {/* Arrow Connector (except last) */}
+                      {index < tiers.length - 1 && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: 0.8 + index * 0.15 }}
+                          className="absolute top-20 -right-3 z-10"
+                        >
+                          <ChevronRight className="w-6 h-6 text-white/20" />
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Vertical Timeline - Mobile/Tablet */}
+        {tiers.length > 0 && (
+          <div className="lg:hidden max-w-2xl mx-auto">
+            <div className="relative">
+              {/* Vertical Line */}
+              <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-white/10" />
+              <motion.div
+                className="absolute left-8 top-0 w-0.5 bg-gradient-to-b from-blue-400 via-purple-400 via-orange-400 to-[#d4af37]"
+                initial={{ height: "0%" }}
+                whileInView={{ height: "100%" }}
+                viewport={{ once: true }}
+                transition={{ duration: 2, ease: "easeOut" }}
+              />
+
+              {/* Tier Cards */}
+              <div className="space-y-8">
+                {tiers.map((tier, index) => {
+                  const Icon = tier.icon;
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="relative flex gap-6"
+                    >
+                      {/* Connector Dot */}
+                      <motion.div
+                        className={`w-4 h-4 rounded-full bg-gradient-to-br ${tier.color} border-4 border-[#0a0612] shrink-0 mt-8 z-10`}
+                        initial={{ scale: 0 }}
+                        whileInView={{ scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{
+                          delay: 0.3 + index * 0.1,
+                          type: "spring",
+                        }}
+                      />
+
+                      {/* Card */}
+                      <div className="flex-1 pb-4">
+                        {/* Glow Effect */}
+                        <div
+                          className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-20 blur-lg`}
+                        />
+
+                        {/* Main Card */}
+                        <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+                          {/* Top Gradient Bar */}
+                          <div
+                            className={`h-1 bg-gradient-to-r ${tier.color}`}
+                          />
+
+                          {/* Card Content */}
+                          <div className="p-6">
+                            <div className="flex items-start gap-4 mb-4">
+                              {/* Icon */}
+                              <div
+                                className={`w-14 h-14 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center shadow-lg shrink-0`}
+                              >
+                                <Icon className="w-7 h-7 text-white" />
+                              </div>
+
+                              <div className="flex-1">
+                                {/* Tier Name */}
+                                <h3 className="text-white text-xl mb-1">
+                                  {tier.name}
+                                </h3>
+
+                                {/* Points */}
+                                <div
+                                  className={`text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
+                                  style={{
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  {tier.points} pts
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Benefits */}
+                            <ul className="space-y-2">
+                              {tier.benefits.map((benefit, idx) => (
+                                <li
+                                  key={idx}
+                                  className="flex items-start gap-2 text-white/60 text-sm"
+                                >
+                                  <Check className="w-4 h-4 shrink-0 mt-0.5 text-[#14b8a6]" />
+                                  <span>{benefit}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
                       </div>
                     </motion.div>
-
-                    {/* Arrow Connector (except last) */}
-                    {index < t.tiers.length - 1 && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.8 + index * 0.15 }}
-                        className="absolute top-20 -right-3 z-10"
-                      >
-                        <ChevronRight className="w-6 h-6 text-white/20" />
-                      </motion.div>
-                    )}
-                  </motion.div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Vertical Timeline - Mobile/Tablet */}
-        <div className="lg:hidden max-w-2xl mx-auto">
-          <div className="relative">
-            {/* Vertical Line */}
-            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-white/10" />
-            <motion.div
-              className="absolute left-8 top-0 w-0.5 bg-gradient-to-b from-blue-400 via-purple-400 via-orange-400 to-[#d4af37]"
-              initial={{ height: "0%" }}
-              whileInView={{ height: "100%" }}
-              viewport={{ once: true }}
-              transition={{ duration: 2, ease: "easeOut" }}
-            />
-
-            {/* Tier Cards */}
-            <div className="space-y-8">
-              {t.tiers.map((tier, index) => {
-                const Icon = tier.icon;
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="relative flex gap-6"
-                  >
-                    {/* Connector Dot */}
-                    <motion.div
-                      className={`w-4 h-4 rounded-full bg-gradient-to-br ${tier.color} border-4 border-[#0a0612] shrink-0 mt-8 z-10`}
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.3 + index * 0.1, type: "spring" }}
-                    />
-
-                    {/* Card */}
-                    <div className="flex-1 pb-4">
-                      {/* Glow Effect */}
-                      <div
-                        className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-20 blur-lg`}
-                      />
-
-                      {/* Main Card */}
-                      <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
-                        {/* Top Gradient Bar */}
-                        <div className={`h-1 bg-gradient-to-r ${tier.color}`} />
-
-                        {/* Card Content */}
-                        <div className="p-6">
-                          <div className="flex items-start gap-4 mb-4">
-                            {/* Icon */}
-                            <div
-                              className={`w-14 h-14 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center shadow-lg shrink-0`}
-                            >
-                              <Icon className="w-7 h-7 text-white" />
-                            </div>
-
-                            <div className="flex-1">
-                              {/* Tier Name */}
-                              <h3 className="text-white text-xl mb-1">
-                                {tier.name}
-                              </h3>
-
-                              {/* Points */}
-                              <div
-                                className={`text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
-                                style={{
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {tier.points} pts
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Rewards */}
-                          <ul className="space-y-2">
-                            {tier.rewards.map((reward, idx) => (
-                              <li
-                                key={idx}
-                                className="flex items-start gap-2 text-white/60 text-sm"
-                              >
-                                <Check className="w-4 h-4 shrink-0 mt-0.5 text-[#14b8a6]" />
-                                <span>{reward}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+        )}
 
         {/* Bottom CTA */}
         <motion.div

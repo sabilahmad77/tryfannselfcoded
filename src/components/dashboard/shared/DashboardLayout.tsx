@@ -23,7 +23,7 @@ function useIsDesktop() {
 
 interface DashboardLayoutProps {
   children: ReactNode;
-  currentPage?: "dashboard" | "profile" | "settings";
+  currentPage?: "dashboard" | "profile" | "settings" | "leaderboard";
 }
 
 /**

@@ -10,8 +10,17 @@ export interface ProfileSetupRequest {
   website?: string;
   profile_image?: File;
   focus?: string;
+  content_niche?: string;
   years_of_experience?: number | string;
   instagram_handle?: string;
+  instagram_follower?: string;
+  tiktok_handle?: string;
+  tiktok_follower?: string;
+  youtube_handle?: string;
+  youtube_subscribers?: string;
+  twitter_handle?: string;
+  twitter_follower?: string;
+  primary_platform?: string;
   location?: string;
   phone_number?: string;
 }
@@ -79,6 +88,25 @@ export interface RewardsResponse {
 }
 
 // ============================================================================
+// Dropdown Options API Types
+// ============================================================================
+
+export interface DropdownOption {
+  id?: number;
+  name?: string;
+  value?: string;
+  label?: string;
+  [key: string]: unknown;
+}
+
+export interface DropdownOptionsResponse {
+  success: boolean;
+  status_code: number;
+  message: string | Record<string, unknown>;
+  data?: DropdownOption[] | DropdownOption | string[];
+}
+
+// ============================================================================
 // Onboarding API Endpoints
 // ============================================================================
 
@@ -101,6 +129,9 @@ export const onboardingApi = baseApi.injectEndpoints({
         if (formData.focus) {
           body.append("focus", formData.focus);
         }
+        if (formData.content_niche) {
+          body.append("content_niche", formData.content_niche);
+        }
         if (
           formData.years_of_experience !== undefined &&
           formData.years_of_experience !== null &&
@@ -113,6 +144,33 @@ export const onboardingApi = baseApi.injectEndpoints({
         }
         if (formData.instagram_handle) {
           body.append("instagram_handle", formData.instagram_handle);
+        }
+        if (formData.instagram_follower) {
+          body.append("instagram_follower", formData.instagram_follower);
+        }
+        if (formData.tiktok_handle) {
+          body.append("tiktok_handle", formData.tiktok_handle);
+        }
+        if (formData.tiktok_follower) {
+          body.append("tiktok_follower", formData.tiktok_follower);
+        }
+        if (formData.youtube_handle) {
+          body.append("youtube_handle", formData.youtube_handle);
+        }
+        if (formData.youtube_subscribers) {
+          body.append("youtube_subscribers", formData.youtube_subscribers);
+        }
+        if (formData.twitter_handle) {
+          body.append("twitter_handle", formData.twitter_handle);
+        }
+        if (formData.twitter_follower) {
+          body.append("twitter_follower", formData.twitter_follower);
+        }
+        if (formData.content_niche) {
+          body.append("content_niche", formData.content_niche);
+        }
+        if (formData.primary_platform) {
+          body.append("primary_platform", formData.primary_platform);
         }
         if (formData.location) {
           body.append("location", formData.location);
@@ -188,6 +246,38 @@ export const onboardingApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+
+    // Get Instagram Follower Options - matches Postman: GET /api/market_final/instagram_follower
+    getInstagramFollowerOptions: builder.query<DropdownOptionsResponse, void>({
+      query: () => ({
+        url: "/market_final/instagram_follower",
+        method: "GET",
+      }),
+    }),
+
+    // Get Twitter Follower Options - matches Postman: GET /api/market_final/twitter_follower
+    getTwitterFollowerOptions: builder.query<DropdownOptionsResponse, void>({
+      query: () => ({
+        url: "/market_final/twitter_follower",
+        method: "GET",
+      }),
+    }),
+
+    // Get YouTube Subscriber Options - matches Postman: GET /api/market_final/youtube_subscriber
+    getYoutubeSubscriberOptions: builder.query<DropdownOptionsResponse, void>({
+      query: () => ({
+        url: "/market_final/youtube_subscriber",
+        method: "GET",
+      }),
+    }),
+
+    // Get Primary Platform Options - matches Postman: GET /api/market_final/primary_platform
+    getPrimaryPlatformOptions: builder.query<DropdownOptionsResponse, void>({
+      query: () => ({
+        url: "/market_final/primary_platform",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -197,4 +287,8 @@ export const {
   useUserInterestsMutation,
   useKycVerificationMutation,
   useRewardsMutation,
+  useGetInstagramFollowerOptionsQuery,
+  useGetTwitterFollowerOptionsQuery,
+  useGetYoutubeSubscriberOptionsQuery,
+  useGetPrimaryPlatformOptionsQuery,
 } = onboardingApi;

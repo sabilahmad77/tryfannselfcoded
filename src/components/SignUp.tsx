@@ -10,20 +10,19 @@ import {
   ChevronLeft,
   Gem,
   Gift,
-  Globe,
   Lock,
   Mail,
   MapPin,
   Palette,
   Shield,
   Sparkles,
-  TrendingUp,
   User,
   Users,
   Zap,
+  Globe,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Oval } from "react-loader-spinner";
 import { useDispatch } from "react-redux";
@@ -43,6 +42,8 @@ interface SignUpProps {
   onNavigateToSignIn: () => void;
   onNavigateToHome: () => void;
   onSignUpComplete: (persona: string) => void;
+  initialPersona?: string;
+  initialReferralCode?: string;
 }
 
 interface SignUpFormData {
@@ -59,15 +60,25 @@ export function SignUp({
   onNavigateToSignIn,
   onNavigateToHome,
   onSignUpComplete,
+  initialPersona,
+  initialReferralCode,
 }: SignUpProps) {
   const dispatch = useDispatch();
   const [step, setStep] = useState<1 | 2>(1);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<string | null>(
-    "artist"
+    initialPersona || "artist"
   );
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+
+  // Auto-select persona and move to step 2 if initialPersona is provided
+  useEffect(() => {
+    if (initialPersona) {
+      setSelectedPersona(initialPersona);
+      setStep(2);
+    }
+  }, [initialPersona]);
 
   // React Hook Form setup
   const {
@@ -83,9 +94,16 @@ export function SignUp({
       password: "",
       confirmPassword: "",
       region: "",
-      referralCode: "",
+      referralCode: initialReferralCode || "",
     },
   });
+
+  // Set referral code when initialReferralCode changes
+  useEffect(() => {
+    if (initialReferralCode) {
+      setValue("referralCode", initialReferralCode.toUpperCase());
+    }
+  }, [initialReferralCode, setValue]);
 
   // API hooks
   const [signUp, { isLoading }] = useSignUpMutation();
@@ -150,15 +168,20 @@ export function SignUp({
           desc: "Discover and acquire authenticated art",
           points: "+500 pts",
         },
-        curator: {
-          name: "Curator / Critic",
-          desc: "Build exhibitions and narratives",
+        // curator: {
+        //   name: "Curator / Critic",
+        //   desc: "Build exhibitions and narratives",
+        //   points: "+600 pts",
+        // },
+        // investor: {
+        //   name: "Investor / Patron",
+        //   desc: "Support and invest in emerging art",
+        //   points: "+1000 pts",
+        // },
+        ambassador: {
+          name: "Ambassador",
+          desc: "Promote art and earn rewards through social influence",
           points: "+600 pts",
-        },
-        investor: {
-          name: "Investor / Patron",
-          desc: "Support and invest in emerging art",
-          points: "+1000 pts",
         },
       },
       leftPanel: {
@@ -256,15 +279,20 @@ export function SignUp({
           desc: "اكتشف واقتنِ الفن الموثق",
           points: "+500 نقطة",
         },
-        curator: {
-          name: "منسق / ناقد",
-          desc: "ابنِ المعارض والروايات",
+        // curator: {
+        //   name: "منسق / ناقد",
+        //   desc: "ابنِ المعارض والروايات",
+        //   points: "+600 نقطة",
+        // },
+        // investor: {
+        //   name: "مستثمر / راعي",
+        //   desc: "ادعم واستثمر في الفن الناشئ",
+        //   points: "+1000 نقطة",
+        // },
+        ambassador: {
+          name: "سفير",
+          desc: "قم بترويج الفن وكسب مكافآت من خلال تأثيرك الاجتماعي",
           points: "+600 نقطة",
-        },
-        investor: {
-          name: "مستثمر / راعي",
-          desc: "ادعم واستثمر في الفن الناشئ",
-          points: "+1000 نقطة",
         },
       },
       leftPanel: {
@@ -322,15 +350,16 @@ export function SignUp({
 
   // Convert regions to SelectFieldOption format
   // Use API data if available, otherwise fallback to hardcoded regions
-  const regionOptions = regionsData && regionsData.length > 0
-    ? regionsData.map((region) => ({
-        value: region.name,
-        label: region.name,
-      }))
-    : content.regions.map((region) => ({
-        value: region,
-        label: region,
-      }));
+  const regionOptions =
+    regionsData && regionsData.length > 0
+      ? regionsData.map((region) => ({
+          value: region.name,
+          label: region.name,
+        }))
+      : content.regions.map((region) => ({
+          value: region,
+          label: region,
+        }));
 
   const personas = [
     {
@@ -351,17 +380,23 @@ export function SignUp({
       gradient: "from-orange-500 to-amber-600",
       ...content.personas.collector,
     },
+    // {
+    //   id: "curator",
+    //   icon: Users,
+    //   gradient: "from-amber-400 to-yellow-500",
+    //   ...content.personas.curator,
+    // },
+    // {
+    //   id: "investor",
+    //   icon: TrendingUp,
+    //   gradient: "from-yellow-600 to-orange-600",
+    //   ...content.personas.investor,
+    // },
     {
-      id: "curator",
+      id: "ambassador",
       icon: Users,
-      gradient: "from-amber-400 to-yellow-500",
-      ...content.personas.curator,
-    },
-    {
-      id: "investor",
-      icon: TrendingUp,
-      gradient: "from-yellow-600 to-orange-600",
-      ...content.personas.investor,
+      gradient: "from-amber-500 to-amber-600",
+      ...content.personas.ambassador,
     },
   ];
 
@@ -371,8 +406,9 @@ export function SignUp({
       artist: "Artist",
       gallery: "Gallery",
       collector: "Collector",
-      curator: "Curator",
-      investor: "Investor",
+      // curator: "Curator",
+      // investor: "Investor",
+      ambassador: "Ambassador",
     };
     return roleMap[personaId || "artist"] || "Artist";
   };
@@ -383,8 +419,9 @@ export function SignUp({
       artist: "500",
       gallery: "750",
       collector: "500",
-      curator: "600",
-      investor: "1000",
+      // curator: "600",
+      // investor: "1000",
+      ambassador: "600",
     };
     return pointsMap[personaId || "artist"] || "500";
   };
@@ -1101,7 +1138,12 @@ export function SignUp({
                           placeholder={content.referralPlaceholder}
                           icon={Gift}
                           isRTL={isRTL}
-                          inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                          disabled={!!initialReferralCode}
+                          inputClassName={
+                            initialReferralCode
+                              ? "bg-white/5 border-white/10 text-white/60 placeholder:text-white/30 cursor-not-allowed opacity-60"
+                              : "bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                          }
                           labelClassName="text-white/80 text-sm"
                         />
                       </div>

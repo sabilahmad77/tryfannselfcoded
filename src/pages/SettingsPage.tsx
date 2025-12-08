@@ -1,41 +1,38 @@
-import { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import {
-  Settings as SettingsIcon,
-  User,
-  Bell,
-  Lock,
-  Globe,
-  Eye,
-  Shield,
-  Smartphone,
-  Mail,
-  Moon,
-  Languages,
-  ChevronRight,
-  Check,
-  Loader2,
-} from "lucide-react";
+import { DashboardLayout } from "@/components/dashboard/shared/DashboardLayout";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   PasswordField,
   SelectField,
   SwitchField,
 } from "@/components/ui/custom-form-elements";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
-import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/contexts/useLanguage";
-import { useDispatch } from "react-redux";
-import { updateUser } from "@/store/authSlice";
 import {
+  useChangePasswordMutation,
   useGetUserSettingsQuery,
   useSaveUserSettingsMutation,
-  useChangePasswordMutation,
   type UserSettingsRequest,
 } from "@/services/api/settingsApi";
+import { updateUser } from "@/store/authSlice";
 import { extractErrorMessage } from "@/utils/errorMessages";
+import {
+  Bell,
+  Eye,
+  Globe,
+  Languages,
+  Loader2,
+  Lock,
+  Mail,
+  Moon,
+  Settings as SettingsIcon,
+  Smartphone,
+  User
+} from "lucide-react";
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 
 const content = {
   en: {
@@ -192,7 +189,7 @@ export function SettingsPage() {
   const [showEmail, setShowEmail] = useState(false);
   const [showPhone, setShowPhone] = useState(false);
   const [showLocation, setShowLocation] = useState(true);
-  const [twoFactor, setTwoFactor] = useState(false);
+  // const [twoFactor, setTwoFactor] = useState(false);
 
   // State for preferences
   const [theme, setTheme] = useState("dark");
@@ -549,10 +546,10 @@ export function SettingsPage() {
               </Button>
             </div>
 
-            <Separator className="my-8 bg-[#334155]" />
+            {/* <Separator className="my-8 bg-[#334155]" /> */}
 
             {/* Delete Account */}
-            <div
+            {/* <div
               className={`p-4 bg-destructive/10 border border-destructive/30 rounded-xl ${
                 isRTL ? "text-right" : "text-left"
               }`}
@@ -562,7 +559,7 @@ export function SettingsPage() {
               <Button variant="destructive" size="sm">
                 {t.deleteAccount}
               </Button>
-            </div>
+            </div> */}
           </motion.div>
         </TabsContent>
 
@@ -728,10 +725,10 @@ export function SettingsPage() {
                 switchWrapperClassName="bg-[#1e293b]/30"
               />
 
-              <Separator className="bg-[#334155]" />
+              {/* <Separator className="bg-[#334155]" /> */}
 
               {/* Two-Factor Authentication */}
-              <div
+              {/* <div
                 className={`p-4 bg-gradient-to-br from-[#14b8a6]/20 to-[#0ea5e9]/20 border border-[#14b8a6]/30 rounded-xl ${
                   isRTL ? "text-right" : "text-left"
                 }`}
@@ -761,10 +758,10 @@ export function SettingsPage() {
                     <>{t.enable2FA}</>
                   )}
                 </Button>
-              </div>
+              </div> */}
 
               {/* Active Sessions */}
-              <div
+              {/* <div
                 className={`p-4 bg-[#1e293b]/50 rounded-xl ${
                   isRTL ? "text-right" : "text-left"
                 }`}
@@ -782,7 +779,7 @@ export function SettingsPage() {
                   {t.viewSessions}
                   <ChevronRight className="w-4 h-4 ml-2" />
                 </Button>
-              </div>
+              </div> */}
             </div>
           </motion.div>
         </TabsContent>

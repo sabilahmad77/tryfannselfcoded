@@ -15,6 +15,7 @@ import { InterestsStep } from "./InterestsStep";
 import { KYCStep } from "./KYCStep";
 import { PersonaDetailsStep } from "./PersonaDetailsStep";
 import { WelcomeStep } from "./WelcomeStep";
+import { AmbassadorInfoStep } from "./AmbassadorInfoStep";
 
 interface OnboardingFlowProps {
   language: "en" | "ar";
@@ -50,39 +51,55 @@ export function OnboardingFlow({
 
   const t = {
     en: {
-      steps: [
-        "Welcome",
-        "Profile Setup",
-        "Interests",
-        "Verification",
-        "Rewards",
-        "Complete",
-      ],
+      steps:
+        selectedPersona === "ambassador"
+          ? ["Welcome", "Social Media", "Verification", "Rewards", "Complete"]
+          : [
+              "Welcome",
+              "Profile Setup",
+              "Interests",
+              "Verification",
+              "Rewards",
+              "Complete",
+            ],
       stepOf: "Step {current} of {total}",
     },
     ar: {
-      steps: [
-        "مرحباً",
-        "إعداد الملف",
-        "الاهتمامات",
-        "التحقق",
-        "المكافآت",
-        "اكتمال",
-      ],
+      steps:
+        selectedPersona === "ambassador"
+          ? ["مرحباً", "وسائل التواصل", "التحقق", "المكافآت", "اكتمال"]
+          : [
+              "مرحباً",
+              "إعداد الملف",
+              "الاهتمامات",
+              "التحقق",
+              "المكافآت",
+              "اكتمال",
+            ],
       stepOf: "الخطوة {current} من {total}",
     },
   };
 
   const content = t[language];
 
-  const steps = [
-    { component: WelcomeStep, key: "welcome" },
-    { component: PersonaDetailsStep, key: "personaDetails" },
-    { component: InterestsStep, key: "interests" },
-    { component: KYCStep, key: "kyc" },
-    { component: GamificationStep, key: "gamification" },
-    { component: CompletionStep, key: "completion" },
-  ];
+  // For ambassadors, skip PersonaDetailsStep and InterestsStep, use AmbassadorInfoStep
+  const steps =
+    selectedPersona === "ambassador"
+      ? [
+          { component: WelcomeStep, key: "welcome" },
+          { component: AmbassadorInfoStep, key: "personaDetails" }, // Includes profile setup + social media
+          { component: KYCStep, key: "kyc" },
+          { component: GamificationStep, key: "gamification" },
+          { component: CompletionStep, key: "completion" },
+        ]
+      : [
+          { component: WelcomeStep, key: "welcome" },
+          { component: PersonaDetailsStep, key: "personaDetails" },
+          { component: InterestsStep, key: "interests" },
+          { component: KYCStep, key: "kyc" },
+          { component: GamificationStep, key: "gamification" },
+          { component: CompletionStep, key: "completion" },
+        ];
 
   const handleNext = (stepData: Record<string, unknown>) => {
     // Update Redux state with step data
@@ -91,7 +108,11 @@ export function OnboardingFlow({
       | "interests"
       | "kyc"
       | "gamification";
-    dispatch(updateStepData({ stepKey, data: stepData }));
+    
+    // Only update step data if it's a valid step key (skip interests for ambassador)
+    if (stepKey !== "interests" || selectedPersona !== "ambassador") {
+      dispatch(updateStepData({ stepKey, data: stepData }));
+    }
 
     if (currentStep === steps.length - 1) {
       onComplete();

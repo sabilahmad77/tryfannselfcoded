@@ -358,6 +358,7 @@ export const baseApi = createApi({
     "Region",
     "Redemption",
     "WatchEarn",
+    "Leaderboard",
   ],
   endpoints: () => ({}),
 });

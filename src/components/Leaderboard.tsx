@@ -1,13 +1,22 @@
-import { motion } from 'motion/react';
-import { Medal, Crown, Zap } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Badge } from './ui/badge';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import bgImage from 'figma:asset/c85d96c5ec679934a6c95c18a6db9da4a5b2bc2d.png';
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { motion } from "motion/react";
+import { Medal, Crown, Zap, Loader2, UserPlus, UserCheck } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import bgImage from "figma:asset/c85d96c5ec679934a6c95c18a6db9da4a5b2bc2d.png";
+import { useGetLeaderboardQuery } from "@/services/api/dashboardApi";
+import type { LeaderboardQueryParams } from "@/services/api/dashboardApi";
+import type { RootState } from "@/store/store";
+
+type TimeFilter = "allTime" | "thisMonth" | "thisWeek";
 
 interface LeaderboardProps {
-  language: 'en' | 'ar';
+  language: "en" | "ar";
   onNavigateToSignUp?: () => void;
+  onViewFullLeaderboard?: () => void;
 }
 
 const content = {
@@ -25,7 +34,7 @@ const content = {
         username: "@sarahm",
         points: 8450,
         tier: "Founding Patron",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah"
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
       },
       {
         rank: 2,
@@ -33,7 +42,7 @@ const content = {
         username: "@mchen",
         points: 7230,
         tier: "Founding Patron",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael"
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael",
       },
       {
         rank: 3,
@@ -41,7 +50,7 @@ const content = {
         username: "@laylaart",
         points: 6890,
         tier: "Founding Patron",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Layla"
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Layla",
       },
       {
         rank: 4,
@@ -49,7 +58,7 @@ const content = {
         username: "@jrodriguez",
         points: 5420,
         tier: "Founding Patron",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=James"
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=James",
       },
       {
         rank: 5,
@@ -57,9 +66,9 @@ const content = {
         username: "@fatimak",
         points: 4980,
         tier: "Ambassador",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Fatima"
-      }
-    ]
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Fatima",
+      },
+    ],
   },
   ar: {
     title: { white: "لوحة المتصدرين", gold: " العالمية" },
@@ -75,7 +84,7 @@ const content = {
         username: "@sarahm",
         points: 8450,
         tier: "راعي مؤسس",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah"
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
       },
       {
         rank: 2,
@@ -83,7 +92,7 @@ const content = {
         username: "@mchen",
         points: 7230,
         tier: "راعي مؤسس",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael"
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael",
       },
       {
         rank: 3,
@@ -91,7 +100,7 @@ const content = {
         username: "@laylaart",
         points: 6890,
         tier: "راعي مؤسس",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Layla"
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Layla",
       },
       {
         rank: 4,
@@ -99,7 +108,7 @@ const content = {
         username: "@jrodriguez",
         points: 5420,
         tier: "راعي مؤسس",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=James"
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=James",
       },
       {
         rank: 5,
@@ -107,15 +116,104 @@ const content = {
         username: "@fatimak",
         points: 4980,
         tier: "سفير",
-        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Fatima"
-      }
-    ]
-  }
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Fatima",
+      },
+    ],
+  },
 };
 
-export function Leaderboard({ language }: LeaderboardProps) {
+export function Leaderboard({
+  language,
+  onViewFullLeaderboard,
+}: LeaderboardProps) {
   const t = content[language];
-  const isRTL = language === 'ar';
+  const isRTL = language === "ar";
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>("allTime");
+  const [follows, setFollows] = useState<Set<string>>(new Set());
+  
+  // Mock follower counts - will be replaced with API data after login
+  const followerCounts: Record<string, number> = {
+    "@sarahm": 245,
+    "@mchen": 189,
+    "@laylaart": 167,
+    "@jrodriguez": 142,
+    "@fatimak": 231,
+  };
+
+  const toggleFollow = (username: string) => {
+    setFollows((prev) => {
+      const newFollows = new Set(prev);
+      if (newFollows.has(username)) {
+        newFollows.delete(username);
+      } else {
+        newFollows.add(username);
+      }
+      return newFollows;
+    });
+  };
+
+  const isFollowing = (username: string) => follows.has(username);
+  const getFollowerCount = (username: string) => followerCounts[username] || 0;
+
+  // Check authentication status
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+
+  // Map UI filter to API filter
+  const mapTimeFilterToApi = (filter: TimeFilter): "week" | "month" | "allTime" => {
+    if (filter === "thisWeek") return "week";
+    if (filter === "thisMonth") return "month";
+    return "allTime";
+  };
+
+  // Prepare query parameters
+  const queryParams: LeaderboardQueryParams = {
+    filter: mapTimeFilterToApi(timeFilter),
+    page: 1,
+    page_size: 5, // Only show top 5
+  };
+
+  // Fetch leaderboard data from API with filter
+  const {
+    data: leaderboardData,
+    isLoading,
+    isError,
+  } = useGetLeaderboardQuery(queryParams);
+
+  // Map API data to component format
+  // Always show top 5 records
+  const mapApiDataToLeaders = (apiEntries: any[]) => {
+    return apiEntries.slice(0, 5).map((entry) => ({
+      rank: entry.rank || 0,
+      name:
+        `${entry.first_name || ""} ${entry.last_name || ""}`.trim() ||
+        entry.email ||
+        "Unknown",
+      username: entry.username || `@${entry.email?.split("@")[0] || "user"}`,
+      points: entry.points ? parseInt(entry.points, 10) : 0,
+      tier: entry.tier || "Explorer",
+      avatar:
+        entry.profile_image ||
+        `https://api.dicebear.com/7.x/avataaars/svg?seed=${
+          entry.first_name || entry.email || entry.id
+        }`,
+    }));
+  };
+
+  // Public leaderboard doesn't have your_rank field
+  // Only authenticated users can see their rank (via user_leaderboard endpoint)
+  const yourRank = null;
+  const yourPoints = null;
+
+  // Prefer API data; fall back to static content if API is unavailable or empty
+  // API response structure: { data: LeaderboardEntry[], ... }
+  const leaders =
+    leaderboardData?.data &&
+    Array.isArray(leaderboardData.data) &&
+    leaderboardData.data.length > 0
+      ? mapApiDataToLeaders(leaderboardData.data)
+      : t.leaders;
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -129,7 +227,7 @@ export function Leaderboard({ language }: LeaderboardProps) {
             transition={{
               duration: 3,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
           >
             <Crown className="w-6 h-6 text-amber-400" />
@@ -145,21 +243,27 @@ export function Leaderboard({ language }: LeaderboardProps) {
   };
 
   const getTierColor = (tier: string) => {
-    if (tier.includes('Founding') || tier.includes('مؤسس')) return 'border-amber-500/50 text-amber-400 bg-amber-500/10';
-    if (tier.includes('Ambassador') || tier.includes('سفير')) return 'border-orange-500/50 text-orange-400 bg-orange-500/10';
-    if (tier.includes('Curator') || tier.includes('منسق')) return 'border-yellow-500/50 text-yellow-400 bg-yellow-500/10';
-    return 'border-white/10 text-white/60 bg-white/5';
+    if (tier.includes("Founding") || tier.includes("مؤسس"))
+      return "border-amber-500/50 text-amber-400 bg-amber-500/10";
+    if (tier.includes("Ambassador") || tier.includes("سفير"))
+      return "border-orange-500/50 text-orange-400 bg-orange-500/10";
+    if (tier.includes("Curator") || tier.includes("منسق"))
+      return "border-yellow-500/50 text-yellow-400 bg-yellow-500/10";
+    return "border-white/10 text-white/60 bg-white/5";
   };
 
   return (
-    <section className="relative py-32 overflow-hidden bg-[#0a0612]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section
+      className="relative py-32 overflow-hidden bg-[#0a0612]"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
           src={bgImage}
           alt="Abstract Art Pattern"
           className="w-full h-full object-cover opacity-75"
-          style={{ transform: 'rotate(90deg) scale(1.1)' }}
+          style={{ transform: "rotate(90deg) scale(1.1)" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/50 via-transparent to-[#0f172a]/55" />
       </div>
@@ -196,23 +300,34 @@ export function Leaderboard({ language }: LeaderboardProps) {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex items-center justify-center gap-3 mb-10"
           >
-            {t.tabs.map((tab, index) => (
+            {t.tabs.map((tab, index) => {
+              const filterValue: TimeFilter =
+                index === 0
+                  ? "allTime"
+                  : index === 1
+                  ? "thisMonth"
+                  : "thisWeek";
+              const isActive = timeFilter === filterValue;
+              return (
               <motion.button
                 key={index}
+                  onClick={() => setTimeFilter(filterValue)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`px-8 py-3 rounded-full transition-all duration-300 ${
-                  index === 0
-                    ? 'bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black shadow-lg shadow-amber-500/50'
-                    : 'glass border border-white/10 text-white/60 hover:text-white hover:border-amber-500/50'
+                    isActive
+                      ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black shadow-lg shadow-amber-500/50"
+                      : "glass border border-white/10 text-white/60 hover:text-white hover:border-amber-500/50"
                 }`}
               >
                 {tab}
               </motion.button>
-            ))}
+              );
+            })}
           </motion.div>
 
-          {/* Your Rank Card */}
+          {/* Your Rank Card - Only show for authenticated users */}
+          {isAuthenticated && yourRank !== null && yourRank !== undefined && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -223,12 +338,12 @@ export function Leaderboard({ language }: LeaderboardProps) {
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-[#d4af37]/15 via-[#14b8a6]/15 to-[#d4af37]/15"
               animate={{
-                x: ['-100%', '100%'],
+                  x: ["-100%", "100%"],
               }}
               transition={{
                 duration: 3,
                 repeat: Infinity,
-                ease: "linear"
+                  ease: "linear",
               }}
             />
             <div className="relative z-10 flex items-center justify-between">
@@ -237,12 +352,29 @@ export function Leaderboard({ language }: LeaderboardProps) {
                 <span className="text-white text-lg">{t.yourRank}</span>
               </div>
               <div className="flex items-center gap-6">
-                <span className="text-orange-400 text-xl">#247</span>
-                <span className="text-white/60">•</span>
-                <span className="text-white text-lg">350 points</span>
+                {yourRank !== null && yourRank !== undefined ? (
+                  <>
+                      <span className="text-orange-400 text-xl">
+                        #{yourRank}
+                      </span>
+                    {yourPoints !== null && (
+                      <>
+                        <span className="text-white/60">•</span>
+                          <span className="text-white text-lg">
+                            {yourPoints.toLocaleString()} points
+                          </span>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <span className="text-white/60 text-lg">
+                    {language === "en" ? "Not ranked yet" : "غير مصنف بعد"}
+                  </span>
+                )}
               </div>
             </div>
           </motion.div>
+          )}
 
           {/* Leaderboard Table */}
           <motion.div
@@ -252,33 +384,79 @@ export function Leaderboard({ language }: LeaderboardProps) {
             transition={{ duration: 0.6, delay: 0.6 }}
             className="rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/75 via-[#1e293b]/65 to-[#0f172a]/75 border-2 border-[#d4af37]/40 overflow-hidden shadow-2xl shadow-[#d4af37]/20"
           >
+            {/* Loading & Error States */}
+            {isLoading && (
+              <div className="flex flex-col items-center justify-center py-20 gap-4">
+                <Loader2 className="w-8 h-8 text-[#d4af37] animate-spin" />
+                <span className="text-white/70">
+                  {language === "en"
+                    ? "Loading leaderboard..."
+                    : "جاري تحميل لوحة المتصدرين..."}
+                </span>
+              </div>
+            )}
+
+            {!isLoading && isError && (
+              <div className="flex items-center justify-center py-10">
+                <span className="text-red-400 text-sm">
+                  {language === "en"
+                    ? "Unable to load leaderboard. Showing sample data."
+                    : "تعذر تحميل لوحة المتصدرين. يتم عرض بيانات تجريبية."}
+                </span>
+              </div>
+            )}
+
+            {!isLoading && !leaders.length && (
+              <div className="flex items-center justify-center py-10">
+                <span className="text-white/60 text-sm">
+                  {language === "en"
+                    ? "No leaderboard data available yet."
+                    : "لا توجد بيانات للوحة المتصدرين حتى الآن."}
+                </span>
+              </div>
+            )}
+
             {/* Mobile View */}
-            <div className="block lg:hidden">
-              {t.leaders.map((leader, index) => (
+            {!isLoading && leaders.length > 0 && (
+              <div className="block lg:hidden">
+                {leaders.map((leader, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  whileHover={{ backgroundColor: 'rgba(212, 175, 55, 0.08)', scale: 1.01 }}
+                    whileHover={{
+                      backgroundColor: "rgba(212, 175, 55, 0.08)",
+                      scale: 1.01,
+                    }}
                   className="p-6 border-b border-[#d4af37]/10 last:border-0 transition-all duration-200"
                 >
                   <div className="flex items-center gap-4">
                     {/* Rank */}
                     <div className="flex items-center justify-center w-12 shrink-0">
-                      {getRankIcon(leader.rank)}
+                      {getRankIcon(leader.rank ?? index + 1)}
                     </div>
 
                     {/* Avatar & Info */}
-                    <Avatar className="w-14 h-14 border-2 border-orange-500/50">
-                      <AvatarImage src={leader.avatar} alt={leader.name} />
-                      <AvatarFallback>{leader.name.charAt(0)}</AvatarFallback>
+                      <Avatar className="w-14 h-14 border-2 border-orange-500/50">
+                        <AvatarImage src={leader.avatar} alt={leader.name} />
+                        <AvatarFallback>{leader.name.charAt(0)}</AvatarFallback>
                     </Avatar>
 
-                    <div className="flex-1 min-w-0">
-                      <div className="text-white truncate">{leader.name}</div>
-                      <div className="text-white/60 text-sm">{leader.username}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-white truncate">{leader.name}</div>
+                        <div className="text-white/60 text-sm flex items-center gap-2">
+                          {leader.username}
+                          {isAuthenticated && (
+                            <>
+                              <span className="text-white/40">•</span>
+                              <span className="text-white/60">
+                                {getFollowerCount(leader.username)} followers
+                              </span>
+                            </>
+                          )}
+                        </div>
                     </div>
 
                     {/* Points */}
@@ -288,84 +466,164 @@ export function Leaderboard({ language }: LeaderboardProps) {
                       </div>
                       <Badge
                         variant="outline"
-                        className={`text-xs mt-2 ${getTierColor(leader.tier)}`}
+                          className={`text-xs mt-2 ${getTierColor(
+                            leader.tier
+                          )}`}
                       >
                         {leader.tier}
                       </Badge>
                     </div>
+
+                      {/* Follow Button - Only show when authenticated */}
+                      {isAuthenticated && (
+                        <Button
+                          size="sm"
+                          onClick={() => toggleFollow(leader.username)}
+                          className={`shrink-0 ${
+                            isFollowing(leader.username)
+                              ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                              : "bg-gradient-to-r from-[#14b8a6] to-[#0ea5e9] hover:from-[#0d9488] hover:to-[#0284c7] text-white"
+                          }`}
+                        >
+                          {isFollowing(leader.username) ? (
+                            <>
+                              <UserCheck className="w-4 h-4 mr-1" />
+                              {language === "en" ? "Following" : "متابع"}
+                            </>
+                          ) : (
+                            <>
+                              <UserPlus className="w-4 h-4 mr-1" />
+                              {language === "en" ? "Follow" : "متابعة"}
+                            </>
+                          )}
+                        </Button>
+                      )}
                   </div>
                 </motion.div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             {/* Desktop View */}
-            <div className="hidden lg:block">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-white/10 bg-white/5">
-                    {t.columns.map((column, index) => (
-                      <th
-                        key={index}
-                        className="px-8 py-5 text-left text-white/60 text-sm"
-                      >
-                        {column}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {t.leaders.map((leader, index) => (
-                    <motion.tr
-                      key={index}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
-                      whileHover={{ backgroundColor: 'rgba(168, 85, 247, 0.05)' }}
-                      className="border-b border-white/10 last:border-0 transition-colors"
-                    >
-                      {/* Rank */}
-                      <td className="px-8 py-5">
-                        <div className="flex items-center justify-center w-12">
-                          {getRankIcon(leader.rank)}
-                        </div>
-                      </td>
-
-                      {/* User */}
-                      <td className="px-8 py-5">
-                        <div className="flex items-center gap-4">
-                          <Avatar className="w-12 h-12 border-2 border-orange-500/50">
-                            <AvatarImage src={leader.avatar} alt={leader.name} />
-                            <AvatarFallback>{leader.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="text-white">{leader.name}</div>
-                            <div className="text-white/60 text-sm">{leader.username}</div>
-                          </div>
-                        </div>
-                      </td>
-
-                      {/* Points */}
-                      <td className="px-8 py-5">
-                        <span className="text-transparent bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-lg">
-                          {leader.points.toLocaleString()}
-                        </span>
-                      </td>
-
-                      {/* Tier */}
-                      <td className="px-8 py-5">
-                        <Badge
-                          variant="outline"
-                          className={getTierColor(leader.tier)}
+            {!isLoading && leaders.length > 0 && (
+              <div className="hidden lg:block">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-white/10 bg-white/5">
+                      {t.columns.map((column, index) => (
+                        <th
+                          key={index}
+                          className="px-8 py-5 text-left text-white/60 text-sm"
                         >
-                          {leader.tier}
-                        </Badge>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                          {column}
+                        </th>
+                      ))}
+                      {isAuthenticated && (
+                        <th className="px-8 py-5 text-left text-white/60 text-sm">
+                          {/* Follow column header - empty for now */}
+                        </th>
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leaders.map((leader, index) => (
+                      <motion.tr
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                        whileHover={{
+                          backgroundColor: "rgba(168, 85, 247, 0.05)",
+                        }}
+                        className="border-b border-white/10 last:border-0 transition-colors"
+                      >
+                        {/* Rank */}
+                        <td className="px-8 py-5">
+                          <div className="flex items-center justify-center w-12">
+                            {getRankIcon(leader.rank ?? index + 1)}
+                          </div>
+                        </td>
+
+                        {/* User */}
+                        <td className="px-8 py-5">
+                          <div className="flex items-center gap-4">
+                            <Avatar className="w-12 h-12 border-2 border-orange-500/50">
+                              <AvatarImage
+                                src={leader.avatar}
+                                alt={leader.name}
+                              />
+                              <AvatarFallback>
+                                {leader.name.charAt(0)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="text-white">{leader.name}</div>
+                              <div className="text-white/60 text-sm flex items-center gap-2">
+                                {leader.username}
+                                {isAuthenticated && (
+                                  <>
+                                    <span className="text-white/40">•</span>
+                                    <span className="text-white/60">
+                                      {getFollowerCount(leader.username)}{" "}
+                                      followers
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Points */}
+                        <td className="px-8 py-5">
+                          <span className="text-transparent bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-lg">
+                            {leader.points.toLocaleString()}
+                          </span>
+                        </td>
+
+                        {/* Tier */}
+                        <td className="px-8 py-5">
+                          <Badge
+                            variant="outline"
+                            className={getTierColor(leader.tier)}
+                          >
+                            {leader.tier}
+                          </Badge>
+                        </td>
+
+                        {/* Follow Button - Only show when authenticated */}
+                        {isAuthenticated && (
+                          <td className="px-8 py-5">
+                            <Button
+                              size="sm"
+                              onClick={() => toggleFollow(leader.username)}
+                              className={`${
+                                isFollowing(leader.username)
+                                  ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                                  : "bg-gradient-to-r from-[#14b8a6] to-[#0ea5e9] hover:from-[#0d9488] hover:to-[#0284c7] text-white"
+                              }`}
+                            >
+                              {isFollowing(leader.username) ? (
+                                <>
+                                  <UserCheck className="w-4 h-4 mr-1" />
+                                  {language === "en" ? "Following" : "متابع"}
+                                </>
+                              ) : (
+                                <>
+                                  <UserPlus className="w-4 h-4 mr-1" />
+                                  {language === "en" ? "Follow" : "متابعة"}
+                                </>
+                              )}
+                            </Button>
+                          </td>
+                        )}
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </motion.div>
 
           {/* View All Button */}
@@ -379,7 +637,8 @@ export function Leaderboard({ language }: LeaderboardProps) {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="text-transparent bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text hover:from-orange-300 hover:to-amber-300 transition-all"
+              onClick={onViewFullLeaderboard}
+              className="text-transparent bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text hover:from-orange-300 hover:to-amber-300 transition-all cursor-pointer"
             >
               {t.viewAll} →
             </motion.button>

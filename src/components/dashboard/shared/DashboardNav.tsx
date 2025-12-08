@@ -9,22 +9,24 @@ import {
   Home,
   ChevronLeft,
   ChevronRight,
+  Trophy,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { Button } from "../../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { ImageWithFallback } from "../../figma/ImageWithFallback";
 import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
 import { clearAuth } from "@/store/authSlice";
 import { persistor } from "@/store/store";
 import type { RootState } from "@/store/store";
-import { getCurrentTier } from "@/utils/tierSystem";
+import { useGetProgressionQuery } from "@/services/api/dashboardApi";
+import { getCurrentTier, tierNameToKey, buildTierThresholds } from "@/utils/tierSystem";
 import fannLogo from "figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png";
 
 interface DashboardNavProps {
-  currentPage?: "dashboard" | "profile" | "settings";
+  currentPage?: "dashboard" | "profile" | "settings" | "leaderboard";
   onLogout?: () => void;
   isCollapsed?: boolean;
   onCollapseChange?: (collapsed: boolean) => void;
@@ -35,29 +37,21 @@ const content = {
     dashboard: "Dashboard",
     profile: "Profile",
     settings: "Settings",
+    leaderboard: "Leaderboard",
     logout: "Logout",
     collapse: "Collapse",
     expand: "Expand",
-    tiers: {
-      explorer: "Explorer",
-      curator: "Curator",
-      ambassador: "Ambassador",
-      patron: "Founding Patron",
-    },
+    // Tier names will be fetched from API
   },
   ar: {
     dashboard: "لوحة التحكم",
     profile: "الملف الشخصي",
     settings: "الإعدادات",
+    leaderboard: "لوحة المتصدرين",
     logout: "تسجيل الخروج",
     collapse: "طي",
     expand: "توسيع",
-    tiers: {
-      explorer: "مستكشف",
-      curator: "منسق",
-      ambassador: "سفير",
-      patron: "راعي مؤسس",
-    },
+    // Tier names will be fetched from API
   },
 };
 
@@ -97,12 +91,33 @@ export function DashboardNav({
       "U"
     : "U";
 
-  // Get user tier using shared tier system utility
+  // Fetch progression data for dynamic tier system
+  const { data: progressionData } = useGetProgressionQuery();
+
+  // Get user tier using dynamic tier system
   const getUserTier = () => {
-    if (!storedUser) return t.tiers.explorer;
+    if (!storedUser) {
+      // Fallback to first tier from API or default
+      const firstTier = progressionData?.data?.[0];
+      return firstTier?.name || "Explorer";
+    }
+    
     const points = parseInt(storedUser.points || "0", 10);
-    const tierKey = getCurrentTier(points);
-    return t.tiers[tierKey];
+    const progressionTiers = progressionData?.data || [];
+    
+    if (progressionTiers.length === 0) {
+      // Fallback to first tier from API or default
+      const firstTier = progressionData?.data?.[0];
+      return firstTier?.name || "Explorer";
+    }
+    
+    // Build tier thresholds and get current tier
+    const tierThresholds = buildTierThresholds(progressionTiers);
+    const tierKey = getCurrentTier(points, tierThresholds);
+    
+    // Find tier name from API data
+    const tier = progressionTiers.find(t => tierNameToKey(t.name) === tierKey);
+    return tier?.name || "Explorer";
   };
 
   // Use controlled state if provided, otherwise use internal state
@@ -125,6 +140,8 @@ export function DashboardNav({
       ? "profile"
       : location.pathname === ROUTES.SETTINGS
       ? "settings"
+      : location.pathname === ROUTES.LEADERBOARD
+      ? "leaderboard"
       : "dashboard");
 
   // Check profile visibility from user settings
@@ -136,6 +153,13 @@ export function DashboardNav({
       label: t.dashboard,
       icon: Home,
       onClick: () => navigate(ROUTES.DASHBOARD),
+      show: true,
+    },
+    {
+      id: "leaderboard",
+      label: t.leaderboard,
+      icon: Trophy,
+      onClick: () => navigate(ROUTES.LEADERBOARD),
       show: true,
     },
     {
@@ -227,10 +251,10 @@ export function DashboardNav({
                           item.onClick();
                           setMobileMenuOpen(false);
                         }}
-                        className={`justify-start gap-3 ${
+                        className={`justify-start gap-3 transition-all duration-200 cursor-pointer ${
                           isActive
                             ? "bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/30"
-                            : "text-[#cbd5e1] hover:text-[#d4af37] hover:bg-[#d4af37]/10"
+                            : "text-[#cbd5e1] hover:text-[#d4af37] hover:bg-[#d4af37]/20"
                         }`}
                       >
                         <Icon className="w-5 h-5" />
@@ -245,7 +269,7 @@ export function DashboardNav({
                     handleLogout();
                     setMobileMenuOpen(false);
                   }}
-                  className="justify-start gap-3 text-[#cbd5e1] hover:text-destructive hover:bg-destructive/10"
+                  className="justify-start gap-3 text-[#cbd5e1] hover:text-destructive hover:bg-destructive/20 transition-all duration-200 cursor-pointer"
                 >
                   <LogOut className="w-5 h-5" />
                   {t.logout}

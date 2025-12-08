@@ -62,6 +62,16 @@ export const routes: RouteConfig[] = [
     description: "User registration page - accessible without token",
   },
   {
+    path: ROUTES.REFERRAL,
+    component: () =>
+      import("@/pages/ReferralPage").then((module) => ({
+        default: module.ReferralPage,
+      })),
+    type: "public",
+    title: "Referral",
+    description: "Referral link handler - redirects to signup with referral code",
+  },
+  {
     path: ROUTES.ONBOARDING,
     component: () =>
       import("@/pages/OnboardingPage").then((module) => ({
@@ -100,6 +110,16 @@ export const routes: RouteConfig[] = [
     type: "private",
     title: "Settings",
     description: "User settings page - requires token (private route)",
+  },
+  {
+    path: ROUTES.LEADERBOARD,
+    component: () =>
+      import("@/pages/LeaderboardPage").then((module) => ({
+        default: module.LeaderboardPage,
+      })),
+    type: "public",
+    title: "Leaderboard",
+    description: "Global leaderboard page - accessible with or without token (public route)",
   },
 ];
 

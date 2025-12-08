@@ -30,6 +30,8 @@ export interface BaseFieldProps {
   required?: boolean;
   /** RTL support - if true, shows Arabic optional text */
   isRTL?: boolean;
+  /** Hide optional text even when field is not required */
+  hideOptional?: boolean;
   /** Custom className for the wrapper */
   className?: string;
   /** Custom className for the label */
@@ -77,6 +79,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       helperText,
       required,
       isRTL = false,
+      hideOptional = false,
       icon: Icon,
       iconPosition,
       className,
@@ -116,9 +119,9 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             {label}
             {required ? (
               <span className="text-red-500">*</span>
-            ) : (
+            ) : !hideOptional ? (
               <span className="opacity-50 text-xs ml-1">{optionalText}</span>
-            )}
+            ) : null}
           </Label>
         )}
 
@@ -244,6 +247,7 @@ export const PasswordField = React.forwardRef<
       helperText,
       required,
       isRTL = false,
+      hideOptional = false,
       icon: Icon,
       iconPosition,
       className,
@@ -302,9 +306,9 @@ export const PasswordField = React.forwardRef<
             {label}
             {required ? (
               <span className="text-red-500">*</span>
-            ) : (
+            ) : !hideOptional ? (
               <span className="opacity-50 text-xs ml-1">{optionalText}</span>
-            )}
+            ) : null}
           </Label>
         )}
 
@@ -471,6 +475,7 @@ export const SelectField = React.forwardRef<
       helperText,
       required,
       isRTL = false,
+      hideOptional = false,
       icon: Icon,
       iconPosition,
       className,
@@ -513,9 +518,9 @@ export const SelectField = React.forwardRef<
             {label}
             {required ? (
               <span className="text-red-500">*</span>
-            ) : (
+            ) : !hideOptional ? (
               <span className="opacity-50 text-xs ml-1">{optionalText}</span>
-            )}
+            ) : null}
           </Label>
         )}
 
@@ -684,6 +689,7 @@ export const TextareaField = React.forwardRef<
       helperText,
       required,
       isRTL = false,
+      hideOptional = false,
       icon: Icon,
       iconPosition,
       className,
@@ -727,9 +733,9 @@ export const TextareaField = React.forwardRef<
             {label}
             {required ? (
               <span className="text-red-500">*</span>
-            ) : (
+            ) : !hideOptional ? (
               <span className="opacity-50 text-xs ml-1">{optionalText}</span>
-            )}
+            ) : null}
           </Label>
         )}
 
@@ -856,6 +862,7 @@ export const FileUploadField = React.forwardRef<
       helperText,
       required,
       isRTL = false,
+      hideOptional = false,
       icon: Icon = Upload,
       className,
       labelClassName,
@@ -966,9 +973,9 @@ export const FileUploadField = React.forwardRef<
             {label}
             {required ? (
               <span className="text-red-500">*</span>
-            ) : (
+            ) : !hideOptional ? (
               <span className="opacity-50 text-xs ml-1">{optionalText}</span>
-            )}
+            ) : null}
           </Label>
         )}
 

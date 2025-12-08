@@ -23,25 +23,10 @@ export const authApi = baseApi.injectEndpoints({
       invalidatesTags: ["Auth", "User"],
     }),
 
-    // Get user details - matches Postman: GET /api/market_final/user_details
+    // Get user details - matches Postman: GET /api/market_final/get_user_details
     getUserDetails: builder.query<User, void>({
-      query: () => "/market_final/user_details",
+      query: () => "/market_final/get_user_details",
       providesTags: ["User"],
-    }),
-
-    // Get current user (alias for getUserDetails)
-    getCurrentUser: builder.query<User, void>({
-      query: () => "/market_final/user_details",
-      providesTags: ["User"],
-    }),
-
-    // Logout endpoint
-    logout: builder.mutation<void, void>({
-      query: () => ({
-        url: "/auth/logout",
-        method: "POST",
-      }),
-      invalidatesTags: ["Auth", "User"],
     }),
 
     /**
@@ -85,36 +70,6 @@ export const authApi = baseApi.injectEndpoints({
         body,
       }),
     }),
-
-    // Verify email
-    verifyEmail: builder.mutation<{ message: string }, { token: string }>({
-      query: (body) => ({
-        url: "/auth/verify-email",
-        method: "POST",
-        body,
-      }),
-    }),
-
-    // Forgot password
-    forgotPassword: builder.mutation<{ message: string }, { email: string }>({
-      query: (body) => ({
-        url: "/auth/forgot-password",
-        method: "POST",
-        body,
-      }),
-    }),
-
-    // Reset password
-    resetPassword: builder.mutation<
-      { message: string },
-      { token: string; password: string }
-    >({
-      query: (body) => ({
-        url: "/auth/reset-password",
-        method: "POST",
-        body,
-      }),
-    }),
   }),
 });
 
@@ -123,10 +78,5 @@ export const {
   useLoginMutation,
   useSignUpMutation,
   useGetUserDetailsQuery,
-  useGetCurrentUserQuery,
-  useLogoutMutation,
   useRefreshTokenMutation,
-  useVerifyEmailMutation,
-  useForgotPasswordMutation,
-  useResetPasswordMutation,
 } = authApi;

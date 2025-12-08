@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
 import { ROUTES } from "@/routes/paths";
@@ -18,8 +18,11 @@ interface PublicRouteProps {
  * Uses Redux store to check authentication status (persisted via redux-persist)
  *
  * Note: Onboarding requires persona parameter, so we include it if available in Redux state
+ * 
+ * Exception: Leaderboard route is accessible to both authenticated and unauthenticated users
  */
 export function PublicRoute({ children }: PublicRouteProps) {
+  const location = useLocation();
   // Get authentication status, persona, and profile completion from Redux store
   // This will be true if tokens exist (persisted via redux-persist)
   const isAuthenticated = useSelector(
@@ -29,6 +32,12 @@ export function PublicRoute({ children }: PublicRouteProps) {
   const profileCompleted = useSelector(
     (state: RootState) => state.auth.profileCompleted
   );
+
+  // Leaderboard is accessible to both authenticated and unauthenticated users
+  // Don't redirect authenticated users away from leaderboard
+  if (location.pathname === ROUTES.LEADERBOARD) {
+    return <>{children}</>;
+  }
 
   // If user is authenticated (token is set), redirect to appropriate private route
   // User must logout/clear token to access public routes again

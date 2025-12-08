@@ -36,7 +36,7 @@ export function HomePage() {
         
         <PersonaPaths 
           language={language}
-          onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
+          onNavigateToSignUp={(personaId) => navigate(ROUTES.SIGN_UP, { state: { personaId } })}
         />
         
         <div id="rewards">
@@ -50,6 +50,7 @@ export function HomePage() {
           <Leaderboard 
             language={language}
             onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
+            onViewFullLeaderboard={() => navigate(ROUTES.LEADERBOARD, { state: { fromHomepage: true } })}
           />
         </div>
         

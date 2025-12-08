@@ -3,17 +3,23 @@ import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
 import { resetOnboarding } from "@/store/onboardingSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export function SignUpPage() {
   const { language } = useLanguage();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const locationState = location.state as
+    | { personaId?: string; referralCode?: string }
+    | undefined;
+  const personaId = locationState?.personaId;
+  const referralCode = locationState?.referralCode;
 
   const handleSignUpComplete = (persona: string) => {
     // Reset onboarding state to ensure we always start from step 0 when coming from signup
     dispatch(resetOnboarding());
-    
+
     // Navigate to onboarding page with persona in URL params
     const onboardingPath = `${ROUTES.ONBOARDING}?persona=${encodeURIComponent(
       persona
@@ -27,6 +33,8 @@ export function SignUpPage() {
       onNavigateToSignIn={() => navigate(ROUTES.SIGN_IN)}
       onNavigateToHome={() => navigate(ROUTES.HOME)}
       onSignUpComplete={handleSignUpComplete}
+      initialPersona={personaId}
+      initialReferralCode={referralCode}
     />
   );
 }

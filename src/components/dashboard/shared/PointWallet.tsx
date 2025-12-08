@@ -1,10 +1,24 @@
 import { motion } from "motion/react";
-import { Wallet, TrendingUp, Flame, Shield, Loader2 } from "lucide-react";
-import { Progress } from "../ui/progress";
-import { Badge } from "../ui/badge";
+import {
+  Wallet,
+  TrendingUp,
+  Flame,
+  Shield,
+  Loader2,
+  Users,
+} from "lucide-react";
+import { Progress } from "../../ui/progress";
+import { Badge } from "../../ui/badge";
 import { useLanguage } from "@/contexts/useLanguage";
-import { useGetDashboardStatsQuery } from "@/services/api/dashboardApi";
-import { getCurrentTier, getNextTier, calculateTierProgress } from "@/utils/tierSystem";
+import { useGetDashboardStatsQuery, useGetProgressionQuery } from "@/services/api/dashboardApi";
+import {
+  getCurrentTier,
+  getNextTier,
+  calculateTierProgress,
+  tierNameToKey,
+  buildTierThresholds,
+  getTierOrder,
+} from "@/utils/tierSystem";
 
 const content = {
   en: {
@@ -15,6 +29,7 @@ const content = {
     progress: "Progress to",
     influencePoints: "Influence Points",
     provenancePoints: "Provenance Points",
+    followers: "Followers",
     recentActivity: "Recent Activity",
     pointsNeeded: "points needed",
     maxTierReached: "Maximum tier reached!",
@@ -23,12 +38,7 @@ const content = {
       { action: "Referral Joined", points: "+100", type: "influence" },
       { action: "First Login", points: "+25", type: "provenance" },
     ],
-    tiers: {
-      explorer: "Explorer",
-      curator: "Curator",
-      ambassador: "Ambassador",
-      patron: "Founding Patron",
-    },
+    // Tier names will be fetched from API
   },
   ar: {
     title: "محفظة النقاط",
@@ -38,6 +48,7 @@ const content = {
     progress: "التقدم إلى",
     influencePoints: "نقاط التأثير",
     provenancePoints: "نقاط المصداقية",
+    followers: "المتابعون",
     recentActivity: "النشاط الأخير",
     pointsNeeded: "نقطة مطلوبة",
     maxTierReached: "تم الوصول إلى أعلى مستوى!",
@@ -46,12 +57,7 @@ const content = {
       { action: "انضمام إحالة", points: "+100", type: "influence" },
       { action: "تسجيل الدخول الأول", points: "+25", type: "provenance" },
     ],
-    tiers: {
-      explorer: "مستكشف",
-      curator: "منسق",
-      ambassador: "سفير",
-      patron: "راعي مؤسس",
-    },
+    // Tier names will be fetched from API
   },
 };
 
@@ -60,32 +66,61 @@ export function PointWallet() {
   const t = content[language];
   const isRTL = language === "ar";
 
-  // Fetch dashboard stats from API
+  // Fetch dashboard stats and progression data from API
   const {
     data: statsData,
-    isLoading,
-    isError,
+    isLoading: isLoadingStats,
+    isError: isErrorStats,
   } = useGetDashboardStatsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
+
+  const {
+    data: progressionData,
+    isLoading: isLoadingProgression,
+    isError: isErrorProgression,
+  } = useGetProgressionQuery();
+
+  const isLoading = isLoadingStats || isLoadingProgression;
+  const isError = isErrorStats || isErrorProgression;
 
   // Use API data or fallback to default values
   const totalPoints = statsData?.data?.total_points || 0;
   const influencePoints = statsData?.data?.influence_points || 0;
   const provenancePoints = statsData?.data?.provenance_points || 0;
+  const followerCount = statsData?.data?.user_followers || 0;
 
-  // Calculate current tier based on total points
-  const currentTierKey = getCurrentTier(totalPoints);
-  const nextTierKey = getNextTier(currentTierKey);
-  const tierProgress = calculateTierProgress(
-    totalPoints,
-    currentTierKey,
-    nextTierKey
-  );
+  // Get tier information using dynamic tier system
+  const progressionTiers = progressionData?.data || [];
+  
+  // Get tier display names from API data
+  const getTierNameFromKey = (tierKey: string): string => {
+    const tier = progressionTiers.find(t => tierNameToKey(t.name) === tierKey);
+    return tier?.name || tierKey;
+  };
+
+  // Calculate current tier based on total points with dynamic thresholds
+  const tierThresholds = progressionTiers.length > 0
+    ? buildTierThresholds(progressionTiers)
+    : {};
+  const tierOrder = progressionTiers.length > 0
+    ? getTierOrder(progressionTiers)
+    : [];
+  
+  const currentTierKey = progressionTiers.length > 0
+    ? getCurrentTier(totalPoints, tierThresholds)
+    : "explorer";
+  const nextTierKey = progressionTiers.length > 0
+    ? getNextTier(currentTierKey, tierOrder)
+    : null;
+  
+  const tierProgress = progressionTiers.length > 0
+    ? calculateTierProgress(totalPoints, currentTierKey, nextTierKey, tierThresholds)
+    : { progress: 0, pointsNeeded: 0 };
 
   // Get tier display names
-  const currentTier = t.tiers[currentTierKey];
-  const nextTier = nextTierKey ? t.tiers[nextTierKey] : null;
+  const currentTier = getTierNameFromKey(currentTierKey);
+  const nextTier = nextTierKey ? getTierNameFromKey(nextTierKey) : null;
   const progress = tierProgress.progress;
   const pointsNeeded = tierProgress.pointsNeeded;
 
@@ -241,7 +276,7 @@ export function PointWallet() {
       )}
 
       {/* Point Types */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-3 gap-3 mb-6">
         <motion.div
           whileHover={{ scale: 1.05 }}
           className="bg-gradient-to-br from-[#8b5cf6]/20 to-[#8b5cf6]/5 rounded-xl p-4 border border-[#8b5cf6]/30"
@@ -270,6 +305,21 @@ export function PointWallet() {
             <span className="text-xs text-[#cbd5e1]">{t.provenancePoints}</span>
           </div>
           <p className="text-2xl text-[#fef3c7]">{provenancePoints}</p>
+        </motion.div>
+
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="bg-gradient-to-br from-[#ec4899]/20 to-[#ec4899]/5 rounded-xl p-4 border border-[#ec4899]/30"
+        >
+          <div
+            className={`flex items-center gap-2 mb-2 ${
+              isRTL ? "flex-row-reverse" : ""
+            }`}
+          >
+            <Users className="w-5 h-5 text-[#ec4899]" />
+            <span className="text-xs text-[#cbd5e1]">{t.followers}</span>
+          </div>
+          <p className="text-2xl text-[#fef3c7]">{followerCount}</p>
         </motion.div>
       </div>
 

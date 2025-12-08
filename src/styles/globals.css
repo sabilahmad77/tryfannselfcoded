@@ -344,7 +344,11 @@ html {
 /* Custom Scrollbar Styles - Matching Homepage Theme */
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
+  height: 0px; /* Hide horizontal scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar:horizontal {
+  display: none; /* Hide horizontal scrollbar */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -366,4 +370,5 @@ html {
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(212, 175, 55, 0.4) rgba(15, 23, 42, 0.5);
+  overflow-x: hidden; /* Hide horizontal scrollbar */
 }
