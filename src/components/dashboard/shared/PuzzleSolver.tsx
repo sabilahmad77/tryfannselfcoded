@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Puzzle, RotateCcw, Trophy, Clock, Move } from "lucide-react";
-import { Button } from "../../ui/button";
 import { useLanguage } from "@/contexts/useLanguage";
+import { Clock, Move, RotateCcw, Trophy } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useEffect, useState } from "react";
+import { Button } from "../../ui/button";
 
 export interface PuzzleSolverProps {
   difficulty?: "easy" | "medium";
@@ -142,7 +142,6 @@ export function PuzzleSolver({
   const isRTL = language === "ar";
 
   const size = difficulty === "easy" ? 3 : 4;
-  const totalTiles = size * size;
 
   const [grid, setGrid] = useState<number[]>(() => generatePuzzle(size));
   const [moves, setMoves] = useState(0);
@@ -207,7 +206,9 @@ export function PuzzleSolver({
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   // Get tile position for image background
@@ -218,7 +219,9 @@ export function PuzzleSolver({
       const col = (value - 1) % size;
       const xPercent = (col / (size - 1)) * 100;
       const yPercent = (row / (size - 1)) * 100;
-      return `url(${imageUrl}) ${xPercent}% ${yPercent}% / ${size * 100}% ${size * 100}% no-repeat`;
+      return `url(${imageUrl}) ${xPercent}% ${yPercent}% / ${size * 100}% ${
+        size * 100
+      }% no-repeat`;
     }
     // Default gradient backgrounds
     const gradients = [
@@ -252,7 +255,8 @@ export function PuzzleSolver({
           >
             <Move className="w-4 h-4 text-[#d4af37]" />
             <span className="text-sm text-[#cbd5e1]">
-              {t.moves}: <span className="text-[#fef3c7] font-semibold">{moves}</span>
+              {t.moves}:{" "}
+              <span className="text-[#fef3c7] font-semibold">{moves}</span>
             </span>
           </div>
           <div
@@ -262,7 +266,10 @@ export function PuzzleSolver({
           >
             <Clock className="w-4 h-4 text-[#14b8a6]" />
             <span className="text-sm text-[#cbd5e1]">
-              {t.time}: <span className="text-[#fef3c7] font-semibold">{formatTime(time)}</span>
+              {t.time}:{" "}
+              <span className="text-[#fef3c7] font-semibold">
+                {formatTime(time)}
+              </span>
             </span>
           </div>
         </div>
@@ -306,7 +313,11 @@ export function PuzzleSolver({
                 className={`
                   relative rounded-lg overflow-hidden
                   ${isEmpty ? "bg-transparent" : "bg-gradient-to-br"}
-                  ${isValidMove && !isEmpty ? "cursor-pointer hover:ring-2 hover:ring-[#d4af37]/50" : "cursor-not-allowed opacity-60"}
+                  ${
+                    isValidMove && !isEmpty
+                      ? "cursor-pointer hover:ring-2 hover:ring-[#d4af37]/50"
+                      : "cursor-not-allowed opacity-60"
+                  }
                   ${isCompleted ? "opacity-100" : ""}
                   transition-all duration-200
                   border border-[#334155]/50
@@ -315,7 +326,9 @@ export function PuzzleSolver({
                   background: getTileBackground(value),
                   backgroundSize: imageUrl ? `${size * 100}%` : "cover",
                   backgroundPosition: imageUrl
-                    ? `${((value - 1) % size) * (100 / (size - 1))}% ${Math.floor((value - 1) / size) * (100 / (size - 1))}%`
+                    ? `${((value - 1) % size) * (100 / (size - 1))}% ${
+                        Math.floor((value - 1) / size) * (100 / (size - 1))
+                      }%`
                     : "center",
                 }}
               >
@@ -368,7 +381,9 @@ export function PuzzleSolver({
                   }`}
                 >
                   <span className="text-sm text-[#cbd5e1]">{t.moves}</span>
-                  <span className="text-lg font-semibold text-[#d4af37]">{moves}</span>
+                  <span className="text-lg font-semibold text-[#d4af37]">
+                    {moves}
+                  </span>
                 </div>
                 <div
                   className={`flex items-center justify-between p-3 bg-[#1e293b]/50 rounded-lg ${
@@ -385,8 +400,12 @@ export function PuzzleSolver({
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <span className="text-sm text-[#cbd5e1]">{t.pointsEarned}</span>
-                  <span className="text-xl font-bold text-[#d4af37]">+{pointsReward}</span>
+                  <span className="text-sm text-[#cbd5e1]">
+                    {t.pointsEarned}
+                  </span>
+                  <span className="text-xl font-bold text-[#d4af37]">
+                    +{pointsReward}
+                  </span>
                 </div>
               </div>
             </motion.div>
@@ -396,4 +415,3 @@ export function PuzzleSolver({
     </div>
   );
 }
-
