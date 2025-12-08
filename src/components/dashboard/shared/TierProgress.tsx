@@ -114,7 +114,10 @@ export function TierProgress() {
     : statsData?.data?.total_points || 0;
 
   // Get tier information using dynamic tier system
-  const progressionTiers = progressionData?.data || [];
+  const progressionTiers = useMemo(
+    () => progressionData?.data || [],
+    [progressionData?.data]
+  );
   const tierInfo =
     progressionTiers.length > 0
       ? getTierInfo(userPoints, progressionTiers)

@@ -340,7 +340,7 @@ export function WatchVideos() {
                     className={`relative w-24 h-24 rounded-lg bg-gradient-to-br ${getThumbnailGradient(
                       video,
                       index
-                    )} flex items-center justify-center flex-shrink-0`}
+                    )} flex items-center justify-center shrink-0`}
                   >
                     {isCompleted ? (
                       <CheckCircle className="w-10 h-10 text-white" />

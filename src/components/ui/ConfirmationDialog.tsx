@@ -110,7 +110,7 @@ export function ConfirmationDialog({
           }`}
         >
           <div
-            className={`${styles.iconBg} rounded-full p-3 flex-shrink-0`}
+            className={`${styles.iconBg} rounded-full p-3 shrink-0`}
           >
             <AlertTriangle className={`w-6 h-6 ${styles.iconColor}`} />
           </div>

@@ -281,7 +281,7 @@ export function RewardsTiers({
 
               {/* Animated Progress Line */}
               <motion.div
-                className="absolute top-20 left-0 h-1 bg-gradient-to-r from-blue-400 via-purple-400 via-orange-400 to-[#d4af37]"
+                className="absolute top-20 left-0 h-1 bg-gradient-to-r from-blue-400 via-orange-400 to-[#d4af37]"
                 initial={{ width: "0%" }}
                 whileInView={{ width: "100%" }}
                 viewport={{ once: true }}
@@ -349,10 +349,7 @@ export function RewardsTiers({
 
                             {/* Points */}
                             <div
-                              className={`text-center mb-6 text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
-                              style={{
-                                fontWeight: 600,
-                              }}
+                              className={`text-center mb-6 text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent font-semibold`}
                             >
                               {tier.points} pts
                             </div>
@@ -410,7 +407,7 @@ export function RewardsTiers({
               {/* Vertical Line */}
               <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-white/10" />
               <motion.div
-                className="absolute left-8 top-0 w-0.5 bg-gradient-to-b from-blue-400 via-purple-400 via-orange-400 to-[#d4af37]"
+                className="absolute left-8 top-0 w-0.5 bg-gradient-to-b from-blue-400 via-orange-400 to-[#d4af37]"
                 initial={{ height: "0%" }}
                 whileInView={{ height: "100%" }}
                 viewport={{ once: true }}
@@ -474,10 +471,7 @@ export function RewardsTiers({
 
                                 {/* Points */}
                                 <div
-                                  className={`text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
-                                  style={{
-                                    fontWeight: 600,
-                                  }}
+                                  className={`text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent font-semibold`}
                                 >
                                   {tier.points} pts
                                 </div>

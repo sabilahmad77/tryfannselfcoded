@@ -237,7 +237,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                   {/* Card */}
                   <div className="relative h-full rounded-2xl overflow-hidden">
                     {/* Frosted glass background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.12] via-white/[0.08] to-white/[0.04] backdrop-blur-2xl" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/12 via-white/8 to-white/4 backdrop-blur-2xl" />
                     
                     {/* Gradient background - each card gets unique gradient */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-[0.08] group-hover:opacity-[0.15] transition-opacity duration-500`} />

@@ -83,7 +83,7 @@ export function DashboardLayout({
         }}
       >
         <div
-          className="container mx-auto px-4 pt-[80px] lg:pt-[48px] pb-[48px]"
+          className="container mx-auto px-4 pt-20 lg:pt-12 pb-12"
           dir={isRTL ? "rtl" : "ltr"}
         >
           {children}

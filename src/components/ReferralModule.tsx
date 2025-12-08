@@ -195,7 +195,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
         >
           <div className="p-8 md:p-12 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/80 via-[#1e293b]/70 to-[#0f172a]/80 border-2 border-[#d4af37]/50 relative overflow-hidden shadow-2xl shadow-[#d4af37]/30">
             {/* Gradient top accent */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent" />
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent" />
             
             {/* Holographic overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#d4af37]/10 via-transparent to-[#14b8a6]/10 opacity-50" />
@@ -247,7 +247,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
               </div>
 
               {/* Divider */}
-              <div className="h-[1px] bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-8" />
+              <div className="h-px bg-gradient-to-r from-transparent via-white/8 to-transparent mb-8" />
 
               {/* Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -306,7 +306,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                       whileHover={{ scale: 1.02, x: 4 }}
                       className="flex items-center gap-4 p-3 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#1e1b4b]/50 to-[#0f172a]/50 border border-[#d4af37]/20 hover:border-[#d4af37]/50 transition-all"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#d4af37]/40 to-[#14b8a6]/40 flex items-center justify-center flex-shrink-0 shadow-lg border border-[#d4af37]/30">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#d4af37]/40 to-[#14b8a6]/40 flex items-center justify-center shrink-0 shadow-lg border border-[#d4af37]/30">
                         <Icon className="w-5 h-5 text-[#d4af37]" />
                       </div>
                       <div>

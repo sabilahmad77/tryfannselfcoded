@@ -286,13 +286,10 @@ export function PuzzleSolver({
 
       {/* Puzzle Grid */}
       <div
-        className="relative w-full aspect-square rounded-xl overflow-hidden border-2 border-[#334155] bg-[#0f172a] mb-4"
+        className="relative w-full aspect-square rounded-xl overflow-hidden border-2 border-[#334155] bg-[#0f172a] mb-4 grid gap-0.5 p-0.5"
         style={{
-          display: "grid",
           gridTemplateColumns: `repeat(${size}, 1fr)`,
           gridTemplateRows: `repeat(${size}, 1fr)`,
-          gap: "2px",
-          padding: "2px",
         }}
       >
         <AnimatePresence>
@@ -312,7 +309,7 @@ export function PuzzleSolver({
                 disabled={isEmpty || !isValidMove || isCompleted}
                 className={`
                   relative rounded-lg overflow-hidden
-                  ${isEmpty ? "bg-transparent" : "bg-gradient-to-br"}
+                  ${isEmpty ? "bg-transparent" : ""}
                   ${
                     isValidMove && !isEmpty
                       ? "cursor-pointer hover:ring-2 hover:ring-[#d4af37]/50"

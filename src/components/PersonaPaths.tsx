@@ -232,7 +232,7 @@ export function PersonaPaths({
                 <div className="relative h-full rounded-3xl overflow-hidden">
                   {/* Animated Border Gradient */}
                   <motion.div
-                    className="absolute inset-0 rounded-3xl p-[2px]"
+                    className="absolute inset-0 rounded-3xl p-0.5"
                     style={{
                       background: `linear-gradient(135deg, ${persona.accentColor}40, transparent, ${persona.accentColor}40)`,
                     }}
@@ -251,7 +251,7 @@ export function PersonaPaths({
                   {/* Card Content */}
                   <div className="relative backdrop-blur-2xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 rounded-3xl overflow-hidden h-full">
                     {/* Glass Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-transparent to-transparent" />
 
                     {/* Scan Line Effect */}
                     <motion.div
@@ -329,11 +329,11 @@ export function PersonaPaths({
 
                       {/* Divider */}
                       <div
-                        className={`h-[1px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mb-5 sm:mb-6`}
+                        className={`h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mb-5 sm:mb-6`}
                       />
 
                       {/* Benefits List */}
-                      <div className="flex-grow mb-5 sm:mb-6">
+                      <div className="grow mb-5 sm:mb-6">
                         <ul className="space-y-2.5 sm:space-y-3">
                           {persona.benefits.map((benefit, idx) => (
                             <motion.li
