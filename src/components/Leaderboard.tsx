@@ -7,8 +7,11 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import bgImage from "figma:asset/c85d96c5ec679934a6c95c18a6db9da4a5b2bc2d.png";
-import { useGetLeaderboardQuery } from "@/services/api/dashboardApi";
-import type { LeaderboardQueryParams } from "@/services/api/dashboardApi";
+import {
+  useGetLeaderboardQuery,
+  type LeaderboardEntry,
+  type LeaderboardQueryParams,
+} from "@/services/api/dashboardApi";
 import type { RootState } from "@/store/store";
 
 type TimeFilter = "allTime" | "thisMonth" | "thisWeek";
@@ -130,7 +133,7 @@ export function Leaderboard({
   const isRTL = language === "ar";
   const [timeFilter, setTimeFilter] = useState<TimeFilter>("allTime");
   const [follows, setFollows] = useState<Set<string>>(new Set());
-  
+
   // Mock follower counts - will be replaced with API data after login
   const followerCounts: Record<string, number> = {
     "@sarahm": 245,
@@ -161,7 +164,9 @@ export function Leaderboard({
   );
 
   // Map UI filter to API filter
-  const mapTimeFilterToApi = (filter: TimeFilter): "week" | "month" | "allTime" => {
+  const mapTimeFilterToApi = (
+    filter: TimeFilter
+  ): "week" | "month" | "allTime" => {
     if (filter === "thisWeek") return "week";
     if (filter === "thisMonth") return "month";
     return "allTime";
@@ -183,7 +188,7 @@ export function Leaderboard({
 
   // Map API data to component format
   // Always show top 5 records
-  const mapApiDataToLeaders = (apiEntries: any[]) => {
+  const mapApiDataToLeaders = (apiEntries: LeaderboardEntry[]) => {
     return apiEntries.slice(0, 5).map((entry) => ({
       rank: entry.rank || 0,
       name:
@@ -203,8 +208,8 @@ export function Leaderboard({
 
   // Public leaderboard doesn't have your_rank field
   // Only authenticated users can see their rank (via user_leaderboard endpoint)
-  const yourRank = null;
-  const yourPoints = null;
+  const yourRank: number | null = null;
+  const yourPoints: number | null = null;
 
   // Prefer API data; fall back to static content if API is unavailable or empty
   // API response structure: { data: LeaderboardEntry[], ... }
@@ -309,71 +314,71 @@ export function Leaderboard({
                   : "thisWeek";
               const isActive = timeFilter === filterValue;
               return (
-              <motion.button
-                key={index}
+                <motion.button
+                  key={index}
                   onClick={() => setTimeFilter(filterValue)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`px-8 py-3 rounded-full transition-all duration-300 ${
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-8 py-3 rounded-full transition-all duration-300 ${
                     isActive
                       ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black shadow-lg shadow-amber-500/50"
                       : "glass border border-white/10 text-white/60 hover:text-white hover:border-amber-500/50"
-                }`}
-              >
-                {tab}
-              </motion.button>
+                  }`}
+                >
+                  {tab}
+                </motion.button>
               );
             })}
           </motion.div>
 
           {/* Your Rank Card - Only show for authenticated users */}
           {isAuthenticated && yourRank !== null && yourRank !== undefined && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/80 via-[#1e293b]/70 to-[#0f172a]/80 border-2 border-[#d4af37]/50 relative overflow-hidden shadow-xl shadow-[#d4af37]/20"
-          >
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-[#d4af37]/15 via-[#14b8a6]/15 to-[#d4af37]/15"
-              animate={{
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/80 via-[#1e293b]/70 to-[#0f172a]/80 border-2 border-[#d4af37]/50 relative overflow-hidden shadow-xl shadow-[#d4af37]/20"
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-[#d4af37]/15 via-[#14b8a6]/15 to-[#d4af37]/15"
+                animate={{
                   x: ["-100%", "100%"],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
                   ease: "linear",
-              }}
-            />
-            <div className="relative z-10 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Zap className="w-6 h-6 text-yellow-400" />
-                <span className="text-white text-lg">{t.yourRank}</span>
-              </div>
-              <div className="flex items-center gap-6">
-                {yourRank !== null && yourRank !== undefined ? (
-                  <>
+                }}
+              />
+              <div className="relative z-10 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Zap className="w-6 h-6 text-yellow-400" />
+                  <span className="text-white text-lg">{t.yourRank}</span>
+                </div>
+                <div className="flex items-center gap-6">
+                  {yourRank !== null && yourRank !== undefined ? (
+                    <>
                       <span className="text-orange-400 text-xl">
                         #{yourRank}
                       </span>
-                    {yourPoints !== null && (
-                      <>
-                        <span className="text-white/60">•</span>
+                      {yourPoints !== null && yourPoints !== undefined ? (
+                        <>
+                          <span className="text-white/60">•</span>
                           <span className="text-white text-lg">
-                            {yourPoints.toLocaleString()} points
+                            {(yourPoints as number).toLocaleString()} points
                           </span>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <span className="text-white/60 text-lg">
-                    {language === "en" ? "Not ranked yet" : "غير مصنف بعد"}
-                  </span>
-                )}
+                        </>
+                      ) : null}
+                    </>
+                  ) : (
+                    <span className="text-white/60 text-lg">
+                      {language === "en" ? "Not ranked yet" : "غير مصنف بعد"}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
           )}
 
           {/* Leaderboard Table */}
@@ -420,29 +425,29 @@ export function Leaderboard({
             {!isLoading && leaders.length > 0 && (
               <div className="block lg:hidden">
                 {leaders.map((leader, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
                     whileHover={{
                       backgroundColor: "rgba(212, 175, 55, 0.08)",
                       scale: 1.01,
                     }}
-                  className="p-6 border-b border-[#d4af37]/10 last:border-0 transition-all duration-200"
-                >
-                  <div className="flex items-center gap-4">
-                    {/* Rank */}
-                    <div className="flex items-center justify-center w-12 shrink-0">
-                      {getRankIcon(leader.rank ?? index + 1)}
-                    </div>
+                    className="p-6 border-b border-[#d4af37]/10 last:border-0 transition-all duration-200"
+                  >
+                    <div className="flex items-center gap-4">
+                      {/* Rank */}
+                      <div className="flex items-center justify-center w-12 shrink-0">
+                        {getRankIcon(leader.rank ?? index + 1)}
+                      </div>
 
-                    {/* Avatar & Info */}
+                      {/* Avatar & Info */}
                       <Avatar className="w-14 h-14 border-2 border-orange-500/50">
                         <AvatarImage src={leader.avatar} alt={leader.name} />
                         <AvatarFallback>{leader.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
+                      </Avatar>
 
                       <div className="flex-1 min-w-0">
                         <div className="text-white truncate">{leader.name}</div>
@@ -457,22 +462,22 @@ export function Leaderboard({
                             </>
                           )}
                         </div>
-                    </div>
-
-                    {/* Points */}
-                    <div className="text-right">
-                      <div className="text-transparent bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text">
-                        {leader.points.toLocaleString()}
                       </div>
-                      <Badge
-                        variant="outline"
+
+                      {/* Points */}
+                      <div className="text-right">
+                        <div className="text-transparent bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text">
+                          {leader.points.toLocaleString()}
+                        </div>
+                        <Badge
+                          variant="outline"
                           className={`text-xs mt-2 ${getTierColor(
                             leader.tier
                           )}`}
-                      >
-                        {leader.tier}
-                      </Badge>
-                    </div>
+                        >
+                          {leader.tier}
+                        </Badge>
+                      </div>
 
                       {/* Follow Button - Only show when authenticated */}
                       {isAuthenticated && (
@@ -498,8 +503,8 @@ export function Leaderboard({
                           )}
                         </Button>
                       )}
-                  </div>
-                </motion.div>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             )}
