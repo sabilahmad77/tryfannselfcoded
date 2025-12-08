@@ -30,7 +30,7 @@ import {
   Shield,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Oval } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
@@ -80,15 +80,18 @@ export function EditKYC({
   const [acceptedCompliance, setAcceptedCompliance] = useState(false);
   const [kycVerification, { isLoading }] = useKycVerificationMutation();
 
-  const initialValues: KYCFormData = {
-    id_number: initialData?.id_number || "",
-    dob: initialData?.dob || "",
-    nationality: initialData?.nationality || "",
-    city: initialData?.city || "",
-    postal_code: initialData?.postal_code || "",
-    gov_issued_id: null,
-    proof_address: null,
-  };
+  const initialValues: KYCFormData = useMemo(
+    () => ({
+      id_number: initialData?.id_number || "",
+      dob: initialData?.dob || "",
+      nationality: initialData?.nationality || "",
+      city: initialData?.city || "",
+      postal_code: initialData?.postal_code || "",
+      gov_issued_id: null,
+      proof_address: null,
+    }),
+    [initialData]
+  );
 
   const {
     register,
@@ -169,7 +172,7 @@ export function EditKYC({
       setProofOfAddressPreview(null);
       setAcceptedCompliance(false);
     }
-  }, [open, initialData, reset, setValue]);
+  }, [open, initialData, initialValues, reset, setValue]);
 
   // Cleanup preview URLs on unmount
   useEffect(() => {
