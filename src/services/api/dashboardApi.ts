@@ -121,6 +121,14 @@ export interface RedeemCodeGenerateResponse {
   data: Redemption;
 }
 
+// My Redeem List Types
+export interface MyRedeemListResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data: Redemption[] | Redemption;
+}
+
 
 // WatchEarn Types
 export interface WatchEarn {
@@ -431,6 +439,15 @@ export const dashboardApi = baseApi.injectEndpoints({
       providesTags: ["Redemption"],
     }),
 
+    // Get My Redeem List - GET /api/market_final/my_redeem_list
+    getMyRedeemList: builder.query<MyRedeemListResponse, void>({
+      query: () => ({
+        url: "/market_final/my_redeem_list",
+        method: "GET",
+      }),
+      providesTags: ["Redemption"],
+    }),
+
     // User Redemption - POST /api/market_final/user_redemption
     userRedemption: builder.mutation<
       UserRedemptionResponse,
@@ -701,6 +718,7 @@ export const {
   useGetDashboardStatsQuery,
   useGetLeaderboardQuery,
   useGetRedemptionsQuery,
+  useGetMyRedeemListQuery,
   useUserRedemptionMutation,
   useGetWatchEarnQuery,
   useUserWatchEarnMutation,

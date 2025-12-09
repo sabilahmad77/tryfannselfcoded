@@ -1,13 +1,21 @@
 import { useState, useMemo } from "react";
 import { motion } from "motion/react";
-import { Gift, Sparkles, Check, AlertCircle, Loader2, Plus, Copy } from "lucide-react";
+import {
+  Gift,
+  Sparkles,
+  Check,
+  AlertCircle,
+  Loader2,
+  Plus,
+  Copy,
+} from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
-import { Badge } from "../../ui/badge";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/useLanguage";
 import {
   useGetRedemptionsQuery,
+  useGetMyRedeemListQuery,
   useUserRedemptionMutation,
   useGenerateRedeemCodeMutation,
   type Redemption,
@@ -21,6 +29,7 @@ const content = {
     enterCode: "Enter Code",
     redeem: "Redeem",
     redeemedCodes: "Redeemed Codes",
+    myRedeemList: "My Redeem List",
     availableRewards: "Available Rewards",
     points: "Points",
     status: {
@@ -70,6 +79,7 @@ const content = {
     enterCode: "أدخل الكود",
     redeem: "استبدل",
     redeemedCodes: "الأكواد المستبدلة",
+    myRedeemList: "قائمة الاسترداد الخاصة بي",
     availableRewards: "المكافآت المتاحة",
     points: "نقاط",
     status: {
@@ -134,6 +144,15 @@ export function RedemptionCodes() {
     refetchOnMountOrArgChange: true,
   });
 
+  // Fetch my redeem list from API
+  const {
+    data: myRedeemListData,
+    isLoading: isLoadingMyRedeemList,
+    isError: isMyRedeemListError,
+  } = useGetMyRedeemListQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
   // User redemption mutation
   const [userRedemption, { isLoading: isRedeeming }] =
     useUserRedemptionMutation();
@@ -162,16 +181,41 @@ export function RedemptionCodes() {
     );
   }, [allRedemptions]);
 
+  // Filter available redemptions based on search code input
+  const filteredAvailableRedemptions = useMemo(() => {
+    if (!code.trim()) {
+      return availableRedemptions;
+    }
+    const searchTerm = code.trim().toUpperCase();
+    return availableRedemptions.filter(
+      (r) =>
+        r.code?.toUpperCase().includes(searchTerm) ||
+        r.title?.toUpperCase().includes(searchTerm)
+    );
+  }, [availableRedemptions, code]);
+
   // Filter redeemed codes (is_completed === true)
   const redeemedCodes = useMemo(() => {
     return allRedemptions.filter((r) => r.is_completed === true);
   }, [allRedemptions]);
 
+  // Parse my redeem list from API response
+  const myRedeemList = useMemo(() => {
+    if (!myRedeemListData?.data) return [];
+
+    // Handle both array and single object responses
+    const data = myRedeemListData.data;
+    if (Array.isArray(data)) {
+      return data;
+    }
+    // If single object, wrap in array
+    return [data as Redemption];
+  }, [myRedeemListData]);
+
   // Handle clicking on available reward to populate code field
   const handleRewardClick = (redemptionCode: string) => {
     setCode(redemptionCode.toUpperCase());
   };
-
 
   const handleRedeem = async () => {
     if (!code.trim()) {
@@ -288,7 +332,9 @@ export function RedemptionCodes() {
         const errorMessage =
           errorData?.message ||
           errorData?.detail ||
-          (typeof errorData === "string" ? errorData : t.messages.generateError);
+          (typeof errorData === "string"
+            ? errorData
+            : t.messages.generateError);
         toast.error(errorMessage);
       } else {
         toast.error(t.messages.generateError);
@@ -302,9 +348,7 @@ export function RedemptionCodes() {
       toast.success(t.messages.codeCopied);
     } catch (error) {
       console.error("Failed to copy code:", error);
-      toast.error(
-        language === "en" ? "Failed to copy code" : "فشل نسخ الكود"
-      );
+      toast.error(language === "en" ? "Failed to copy code" : "فشل نسخ الكود");
     }
   };
 
@@ -418,9 +462,7 @@ export function RedemptionCodes() {
                   value={generateTitle}
                   onChange={(e) => setGenerateTitle(e.target.value)}
                   placeholder={
-                    language === "en"
-                      ? "Enter code title"
-                      : "أدخل عنوان الكود"
+                    language === "en" ? "Enter code title" : "أدخل عنوان الكود"
                   }
                   className="bg-[#1e293b] border-[#334155] text-[#fef3c7] placeholder:text-[#475569] focus:border-[#8b5cf6]"
                 />
@@ -446,7 +488,11 @@ export function RedemptionCodes() {
               </div>
               <Button
                 onClick={handleGenerateCode}
-                disabled={isGenerating || !generateTitle.trim() || !generatePoints.trim()}
+                disabled={
+                  isGenerating ||
+                  !generateTitle.trim() ||
+                  !generatePoints.trim()
+                }
                 className={`w-full bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:from-[#ec4899] hover:to-[#8b5cf6] hover:shadow-lg hover:shadow-[#8b5cf6]/50 text-white transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none ${
                   isGenerating ||
                   !generateTitle.trim() ||
@@ -483,9 +529,7 @@ export function RedemptionCodes() {
               }`}
             >
               <div className={isRTL ? "text-right" : "text-left"}>
-                <p className="text-xs text-[#cbd5e1] mb-1">
-                  {t.generatedCode}
-                </p>
+                <p className="text-xs text-[#cbd5e1] mb-1">{t.generatedCode}</p>
                 <p className="text-lg font-bold text-[#fef3c7]">
                   {generatedCode.code}
                 </p>
@@ -506,15 +550,108 @@ export function RedemptionCodes() {
         )}
       </div>
 
-      {/* Available Rewards */}
+      {/* My Redeem List */}
       <div className="mb-6">
         <h3
           className={`text-sm text-[#cbd5e1] mb-3 ${
             isRTL ? "text-right" : "text-left"
           }`}
         >
-          {t.availableRewards}
+          {t.myRedeemList}
         </h3>
+        {isLoadingMyRedeemList ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 text-[#8b5cf6] animate-spin" />
+          </div>
+        ) : isMyRedeemListError ? (
+          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
+            <AlertCircle className="w-12 h-12 mb-2 text-[#ef4444]" />
+            <p className="text-sm">
+              {language === "en"
+                ? "Failed to load my redeem list"
+                : "فشل تحميل قائمة الاسترداد"}
+            </p>
+          </div>
+        ) : myRedeemList.length > 0 ? (
+          <div className="space-y-2">
+            {myRedeemList.map((redemption, index) => (
+              <motion.div
+                key={redemption.id || index}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-gradient-to-r from-[#8b5cf6]/20 to-[#ec4899]/20 rounded-lg p-4 border border-[#8b5cf6]/50"
+              >
+                <div
+                  className={`flex items-center justify-between ${
+                    isRTL ? "flex-row-reverse" : ""
+                  }`}
+                >
+                  <div className={isRTL ? "text-right" : "text-left"}>
+                    <p className="text-xs text-[#cbd5e1] mb-1">
+                      {redemption.title || redemption.code}
+                    </p>
+                    <p className="text-lg font-bold text-[#fef3c7]">
+                      {redemption.code}
+                    </p>
+                    <p className="text-sm text-[#cbd5e1] mt-1">
+                      {redemption.points} {t.points} •{" "}
+                      {formatDateForDisplay(
+                        redemption.updated_at || redemption.created_at || "",
+                        language
+                      )}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      onClick={() => handleCopyCode(redemption.code || "")}
+                      variant="outline"
+                      size="sm"
+                      className="border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/20 hover:border-[#7c3aed] hover:text-[#7c3aed] hover:scale-110 transition-all duration-200 cursor-pointer"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                    <div className="w-10 h-10 bg-[#14b8a6]/30 rounded-full flex items-center justify-center">
+                      <Check className="w-5 h-5 text-[#14b8a6]" />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
+            <AlertCircle className="w-12 h-12 mb-2" />
+            <p className="text-sm">
+              {language === "en"
+                ? "No redeemed codes yet"
+                : "لا توجد أكواد مستبدلة بعد"}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Available Rewards */}
+      <div className="mb-6">
+        <div
+          className={`flex items-center justify-between mb-3 ${
+            isRTL ? "flex-row-reverse" : ""
+          }`}
+        >
+          <h3
+            className={`text-sm text-[#cbd5e1] ${
+              isRTL ? "text-right" : "text-left"
+            }`}
+          >
+            {t.availableRewards}
+          </h3>
+          {code.trim() && (
+            <span className="text-xs text-[#8b5cf6]">
+              {filteredAvailableRedemptions.length}{" "}
+              {language === "en" ? "found" : "تم العثور عليها"}
+            </span>
+          )}
+        </div>
         {isLoadingRedemptions ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-6 h-6 text-[#8b5cf6] animate-spin" />
@@ -528,40 +665,57 @@ export function RedemptionCodes() {
                 : "فشل تحميل المكافآت المتاحة"}
             </p>
           </div>
-        ) : availableRedemptions.length > 0 ? (
+        ) : filteredAvailableRedemptions.length > 0 ? (
           <div className="space-y-2">
-            {availableRedemptions.map((redemption, index) => (
+            {filteredAvailableRedemptions.map((redemption, index) => (
               <motion.div
                 key={redemption.id || index}
-                initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.02 }}
                 onClick={() => handleRewardClick(redemption.code || "")}
-                className={`flex items-center justify-between p-3 bg-gradient-to-r from-[#1e293b]/50 to-[#8b5cf6]/10 rounded-lg border border-[#8b5cf6]/30 cursor-pointer hover:border-[#8b5cf6]/60 transition-colors ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
+                className="bg-gradient-to-r from-[#8b5cf6]/20 to-[#ec4899]/20 rounded-lg p-4 border border-[#8b5cf6]/50 cursor-pointer hover:border-[#8b5cf6]/80 hover:shadow-lg hover:shadow-[#8b5cf6]/30 transition-all duration-200"
               >
                 <div
-                  className={`flex items-center gap-3 ${
+                  className={`flex items-center justify-between ${
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <div className="w-8 h-8 bg-[#8b5cf6]/20 rounded-full flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-[#8b5cf6]" />
+                  <div className={isRTL ? "text-right" : "text-left"}>
+                    <p className="text-xs text-[#cbd5e1] mb-1">
+                      {redemption.title || redemption.code}
+                    </p>
+                    <p className="text-lg font-bold text-[#fef3c7]">
+                      {redemption.code}
+                    </p>
+                    <p className="text-sm text-[#cbd5e1] mt-1">
+                      {redemption.points} {t.points}
+                    </p>
                   </div>
-                  <span className="text-sm text-[#fef3c7]">
-                    {redemption.title || redemption.code}
-                  </span>
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCopyCode(redemption.code || "");
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/20 hover:border-[#7c3aed] hover:text-[#7c3aed] hover:scale-110 transition-all duration-200 cursor-pointer"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </Button>
                 </div>
-                <Badge
-                  variant="outline"
-                  className="border-[#d4af37] text-[#d4af37]"
-                >
-                  {redemption.points} {t.points}
-                </Badge>
               </motion.div>
             ))}
+          </div>
+        ) : code.trim() ? (
+          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
+            <AlertCircle className="w-12 h-12 mb-2" />
+            <p className="text-sm">
+              {language === "en"
+                ? "No rewards found matching your search"
+                : "لم يتم العثور على مكافآت تطابق البحث"}
+            </p>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
