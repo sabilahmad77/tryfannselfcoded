@@ -492,7 +492,7 @@ export function EditKYC({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-5xl max-h-[95vh] overflow-y-auto custom-scrollbar glass border border-white/10 bg-[#0f172a] p-8"
+        className="max-w-5xl max-h-[95vh] overflow-y-auto custom-scrollbar glass border border-white/10 bg-[#0F021C] p-8"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <DialogHeader>
@@ -611,7 +611,7 @@ export function EditKYC({
                     error={errors.nationality?.message}
                     inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
                     labelClassName="text-white/80 text-sm"
-                    contentClassName="bg-[#1a1a24] border-white/10"
+                    contentClassName="bg-[#1D112A] border-white/10"
                     itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
                   />
                 </motion.div>
@@ -718,9 +718,9 @@ export function EditKYC({
                           ? "Current document"
                           : "المستند الحالي"}
                       </p>
-                      <div className="flex items-center gap-2 p-3 bg-[#1e293b]/50 rounded-lg border border-white/10">
-                        <FileText className="w-5 h-5 text-[#14b8a6] shrink-0" />
-                        <span className="text-sm text-[#fef3c7] flex-1 truncate">
+                      <div className="flex items-center gap-2 p-3 bg-[#1D112A]/50 rounded-lg border border-white/10">
+                        <FileText className="w-5 h-5 text-[#45e3d3] shrink-0" />
+                        <span className="text-sm text-[#ffffff] flex-1 truncate">
                           {idDocumentPreview.includes("/") ||
                           idDocumentPreview.startsWith("http")
                             ? idDocumentPreview.split("/").pop() || "Document"
@@ -778,9 +778,9 @@ export function EditKYC({
                           ? "Current document"
                           : "المستند الحالي"}
                       </p>
-                      <div className="flex items-center gap-2 p-3 bg-[#1e293b]/50 rounded-lg border border-white/10">
-                        <FileText className="w-5 h-5 text-[#14b8a6] shrink-0" />
-                        <span className="text-sm text-[#fef3c7] flex-1 truncate">
+                      <div className="flex items-center gap-2 p-3 bg-[#1D112A]/50 rounded-lg border border-white/10">
+                        <FileText className="w-5 h-5 text-[#45e3d3] shrink-0" />
+                        <span className="text-sm text-[#ffffff] flex-1 truncate">
                           {proofOfAddressPreview.includes("/") ||
                           proofOfAddressPreview.startsWith("http")
                             ? proofOfAddressPreview.split("/").pop() ||
@@ -868,7 +868,7 @@ export function EditKYC({
                 <Button
                   type="submit"
                   disabled={isLoading || !acceptedCompliance}
-                  className="flex-1 h-12 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {isLoading ? (
@@ -876,7 +876,7 @@ export function EditKYC({
                         <Oval
                           height={20}
                           width={20}
-                          color="#0f172a"
+                          color="#0F021C"
                           ariaLabel="loading"
                           visible={true}
                         />

@@ -44,7 +44,7 @@ export function ReferralPage() {
 
   // Show loading state while redirecting
   return (
-    <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
+    <div className="min-h-screen bg-[#0F021C] flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         <div className="w-16 h-16 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin" />
         <p className="text-white/70">Redirecting...</p>

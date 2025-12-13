@@ -111,7 +111,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           <Label
             htmlFor={fieldId}
             className={cn(
-              "text-[#fef3c7]/80",
+              "text-[#ffffff]/80",
               hasError && "text-destructive",
               labelClassName
             )}
@@ -129,7 +129,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           {hasIcon && effectiveIconPosition === (isRTL ? "right" : "left") && (
             <Icon
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#fef3c7]/40 pointer-events-none",
+                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#ffffff]/40 pointer-events-none",
                 isRTL ? "right-3" : "left-3",
                 iconClassName
               )}
@@ -140,8 +140,8 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             ref={registerRef || ref}
             id={fieldId}
             className={cn(
-              "bg-[#fef3c7]/5 border-[#d4af37]/20 text-[#fef3c7] placeholder:text-[#fef3c7]/30 h-11",
-              "focus:border-[#d4af37]/50 focus:ring-[#d4af37]/20",
+              "bg-[#ffffff]/5 border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
+              "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20",
               hasError &&
                 "border-destructive focus:border-destructive focus:ring-destructive/20",
               hasIcon &&
@@ -167,7 +167,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           {hasIcon && effectiveIconPosition === (isRTL ? "left" : "right") && (
             <Icon
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#fef3c7]/40 pointer-events-none",
+                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#ffffff]/40 pointer-events-none",
                 isRTL ? "left-3" : "right-3",
                 iconClassName
               )}
@@ -186,7 +186,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
         )}
 
         {helperText && !error && (
-          <p id={`${fieldId}-helper`} className="text-sm text-[#fef3c7]/60">
+          <p id={`${fieldId}-helper`} className="text-sm text-[#ffffff]/60">
             {helperText}
           </p>
         )}
@@ -298,7 +298,7 @@ export const PasswordField = React.forwardRef<
           <Label
             htmlFor={fieldId}
             className={cn(
-              "text-[#fef3c7]/80",
+              "text-[#ffffff]/80",
               hasError && "text-destructive",
               labelClassName
             )}
@@ -316,7 +316,7 @@ export const PasswordField = React.forwardRef<
           {hasIcon && effectiveIconPosition === (isRTL ? "right" : "left") && (
             <Icon
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#fef3c7]/40 pointer-events-none",
+                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#ffffff]/40 pointer-events-none",
                 isRTL ? "right-3" : "left-3",
                 iconClassName
               )}
@@ -328,8 +328,8 @@ export const PasswordField = React.forwardRef<
             id={fieldId}
             type={showPassword ? "text" : "password"}
             className={cn(
-              "bg-[#fef3c7]/5 border-[#d4af37]/20 text-[#fef3c7] placeholder:text-[#fef3c7]/30 h-11",
-              "focus:border-[#d4af37]/50 focus:ring-[#d4af37]/20",
+              "bg-[#ffffff]/5 border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
+              "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20",
               hasError &&
                 "border-destructive focus:border-destructive focus:ring-destructive/20",
               // Icon padding (left side for LTR, right side for RTL)
@@ -357,7 +357,7 @@ export const PasswordField = React.forwardRef<
               type="button"
               onClick={handleTogglePassword}
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 text-[#fef3c7]/40 hover:text-[#fef3c7]/60 transition-colors",
+                "absolute top-1/2 -translate-y-1/2 text-[#ffffff]/40 hover:text-[#ffffff]/60 transition-colors",
                 isRTL ? "left-3" : "right-3",
                 toggleButtonClassName
               )}
@@ -375,7 +375,7 @@ export const PasswordField = React.forwardRef<
           {hasIcon && effectiveIconPosition === (isRTL ? "left" : "right") && (
             <Icon
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#fef3c7]/40 pointer-events-none",
+                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#ffffff]/40 pointer-events-none",
                 showToggle
                   ? isRTL
                     ? "right-10"
@@ -400,7 +400,7 @@ export const PasswordField = React.forwardRef<
         )}
 
         {helperText && !error && (
-          <p id={`${fieldId}-helper`} className="text-sm text-[#fef3c7]/60">
+          <p id={`${fieldId}-helper`} className="text-sm text-[#ffffff]/60">
             {helperText}
           </p>
         )}
@@ -510,7 +510,7 @@ export const SelectField = React.forwardRef<
           <Label
             htmlFor={fieldId}
             className={cn(
-              "text-[#fef3c7]/80",
+              "text-[#ffffff]/80",
               hasError && "text-destructive",
               labelClassName
             )}
@@ -528,7 +528,7 @@ export const SelectField = React.forwardRef<
           {hasIcon && effectiveIconPosition === (isRTL ? "right" : "left") && (
             <Icon
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#fef3c7]/40 z-10 pointer-events-none",
+                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#ffffff]/40 z-10 pointer-events-none",
                 isRTL ? "right-3" : "left-3",
                 iconClassName
               )}
@@ -541,15 +541,15 @@ export const SelectField = React.forwardRef<
               id={fieldId}
               size="default"
               className={cn(
-                "bg-[#fef3c7]/5 border-[#d4af37]/20 text-[#fef3c7]",
+                "bg-[#ffffff]/5 border-[#ffcc33]/20 text-[#ffffff]",
                 "h-11 data-[size=default]:!h-11",
                 "!py-1 px-3",
-                "data-[placeholder]:text-[#fef3c7]/30",
-                "focus-visible:border-[#d4af37]/50 focus-visible:ring-[#d4af37]/20 focus-visible:ring-[3px]",
-                "hover:bg-[#fef3c7]/10 transition-[color,box-shadow]",
-                '[&_svg:not([class*="text-"])]:text-[#fef3c7]/40',
-                "[&_[data-slot=select-value]]:text-[#fef3c7]",
-                "[&_[data-slot=select-value][data-placeholder]]:text-[#fef3c7]/30",
+                "data-[placeholder]:text-[#ffffff]/30",
+                "focus-visible:border-[#ffcc33]/50 focus-visible:ring-[#ffcc33]/20 focus-visible:ring-[3px]",
+                "hover:bg-[#ffffff]/10 transition-[color,box-shadow]",
+                '[&_svg:not([class*="text-"])]:text-[#ffffff]/40',
+                "[&_[data-slot=select-value]]:text-[#ffffff]",
+                "[&_[data-slot=select-value][data-placeholder]]:text-[#ffffff]/30",
                 hasError &&
                   "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
                 hasIcon &&
@@ -571,7 +571,7 @@ export const SelectField = React.forwardRef<
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent
-              className={cn("bg-[#1a1a24] border-white/10", contentClassName)}
+              className={cn("bg-[#1D112A] border-white/10", contentClassName)}
             >
               {options.map((option) => (
                 <SelectItem
@@ -598,8 +598,8 @@ export const SelectField = React.forwardRef<
                 onValueChange("");
               }}
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#fef3c7]/40 hover:text-[#fef3c7]/60 transition-colors z-10 cursor-pointer",
-                "flex items-center justify-center rounded-full hover:bg-[#fef3c7]/10",
+                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#ffffff]/40 hover:text-[#ffffff]/60 transition-colors z-10 cursor-pointer",
+                "flex items-center justify-center rounded-full hover:bg-[#ffffff]/10",
                 isRTL ? "left-3" : "right-3"
               )}
               aria-label={isRTL ? "مسح" : "Clear"}
@@ -612,7 +612,7 @@ export const SelectField = React.forwardRef<
           {hasIcon && effectiveIconPosition === (isRTL ? "left" : "right") && (
             <Icon
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#fef3c7]/40 z-10 pointer-events-none",
+                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#ffffff]/40 z-10 pointer-events-none",
                 value
                   ? isRTL
                     ? "right-10"
@@ -637,7 +637,7 @@ export const SelectField = React.forwardRef<
         )}
 
         {helperText && !error && (
-          <p id={`${fieldId}-helper`} className="text-sm text-[#fef3c7]/60">
+          <p id={`${fieldId}-helper`} className="text-sm text-[#ffffff]/60">
             {helperText}
           </p>
         )}
@@ -725,7 +725,7 @@ export const TextareaField = React.forwardRef<
           <Label
             htmlFor={fieldId}
             className={cn(
-              "text-[#fef3c7]/80",
+              "text-[#ffffff]/80",
               hasError && "text-destructive",
               labelClassName
             )}
@@ -743,7 +743,7 @@ export const TextareaField = React.forwardRef<
           {hasIcon && effectiveIconPosition === (isRTL ? "right" : "left") && (
             <Icon
               className={cn(
-                "absolute top-3 w-5 h-5 text-[#fef3c7]/40 pointer-events-none",
+                "absolute top-3 w-5 h-5 text-[#ffffff]/40 pointer-events-none",
                 isRTL ? "right-3" : "left-3",
                 iconClassName
               )}
@@ -754,8 +754,8 @@ export const TextareaField = React.forwardRef<
             ref={registerRef || ref}
             id={fieldId}
             className={cn(
-              "bg-[#fef3c7]/5 border-[#d4af37]/20 text-[#fef3c7] placeholder:text-[#fef3c7]/30 min-h-32",
-              "focus:border-[#d4af37]/50 focus:ring-[#d4af37]/20 resize-none",
+              "bg-[#ffffff]/5 border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 min-h-32",
+              "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20 resize-none",
               hasError &&
                 "border-destructive focus:border-destructive focus:ring-destructive/20",
               hasIcon &&
@@ -778,7 +778,7 @@ export const TextareaField = React.forwardRef<
           {hasIcon && effectiveIconPosition === (isRTL ? "left" : "right") && (
             <Icon
               className={cn(
-                "absolute top-3 w-5 h-5 text-[#fef3c7]/40 pointer-events-none",
+                "absolute top-3 w-5 h-5 text-[#ffffff]/40 pointer-events-none",
                 isRTL ? "left-3" : "right-3",
                 iconClassName
               )}
@@ -797,7 +797,7 @@ export const TextareaField = React.forwardRef<
         )}
 
         {helperText && !error && (
-          <p id={`${fieldId}-helper`} className="text-sm text-[#fef3c7]/60">
+          <p id={`${fieldId}-helper`} className="text-sm text-[#ffffff]/60">
             {helperText}
           </p>
         )}
@@ -965,7 +965,7 @@ export const FileUploadField = React.forwardRef<
           <Label
             htmlFor={fieldId}
             className={cn(
-              "text-[#fef3c7]/80",
+              "text-[#ffffff]/80",
               hasError && "text-destructive",
               labelClassName
             )}
@@ -1085,7 +1085,7 @@ export const FileUploadField = React.forwardRef<
         )}
 
         {helperText && !error && !fileError && (
-          <p id={`${fieldId}-helper`} className="text-sm text-[#fef3c7]/60">
+          <p id={`${fieldId}-helper`} className="text-sm text-[#ffffff]/60">
             {helperText}
           </p>
         )}
@@ -1165,7 +1165,7 @@ export const SwitchField = React.forwardRef<
       <div className={cn("space-y-2", className)}>
         <div
           className={cn(
-            "flex items-center justify-between p-4 bg-[#1e293b]/50 rounded-xl",
+            "flex items-center justify-between p-4 bg-[#1D112A]/50 rounded-xl",
             isRTL ? "flex-row-reverse" : "",
             switchWrapperClassName
           )}
@@ -1178,7 +1178,7 @@ export const SwitchField = React.forwardRef<
           >
             {hasIcon && (
               <Icon
-                className={cn("w-5 h-5 text-[#d4af37] shrink-0", iconClassName)}
+                className={cn("w-5 h-5 text-[#ffcc33] shrink-0", iconClassName)}
               />
             )}
             <div className={cn(isRTL ? "text-right" : "text-left", "flex-1")}>
@@ -1186,7 +1186,7 @@ export const SwitchField = React.forwardRef<
                 <Label
                   htmlFor={fieldId}
                   className={cn(
-                    "text-[#fef3c7] cursor-pointer",
+                    "text-[#ffffff] cursor-pointer",
                     hasError && "text-destructive",
                     labelClassName
                   )}
@@ -1195,7 +1195,7 @@ export const SwitchField = React.forwardRef<
                 </Label>
               )}
               {description && (
-                <p className="text-sm text-[#cbd5e1] mt-1">{description}</p>
+                <p className="text-sm text-[#808c99] mt-1">{description}</p>
               )}
             </div>
           </div>
@@ -1229,7 +1229,7 @@ export const SwitchField = React.forwardRef<
         )}
 
         {helperText && !error && (
-          <p id={`${fieldId}-helper`} className="text-sm text-[#fef3c7]/60">
+          <p id={`${fieldId}-helper`} className="text-sm text-[#ffffff]/60">
             {helperText}
           </p>
         )}

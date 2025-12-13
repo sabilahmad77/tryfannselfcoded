@@ -67,7 +67,7 @@ export function Footer({ language }: FooterProps) {
   const isRTL = language === 'ar';
 
   return (
-    <footer className="relative bg-[#0a0612] border-t border-[#d4af37]/20" dir={isRTL ? 'rtl' : 'ltr'}>
+    <footer className="relative bg-[#0F021C] border-t border-[#ffcc33]/20" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -76,12 +76,12 @@ export function Footer({ language }: FooterProps) {
           className="w-full h-full object-cover opacity-60"
           style={{ transform: 'scaleX(-1)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/60 via-transparent to-[#0f172a]/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0F021C]/60 via-transparent to-[#0F021C]/50" />
       </div>
 
       {/* Background gradient */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#d4af37]/8 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#ffcc33]/8 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -98,16 +98,16 @@ export function Footer({ language }: FooterProps) {
                 className="h-8 w-auto"
                 animate={{
                   filter: [
-                    'drop-shadow(0 0 8px rgba(212, 175, 55, 0.3))',
-                    'drop-shadow(0 0 16px rgba(212, 175, 55, 0.5))',
-                    'drop-shadow(0 0 8px rgba(212, 175, 55, 0.3))',
+                    'drop-shadow(0 0 8px rgba(255, 204, 51, 0.3))',
+                    'drop-shadow(0 0 16px rgba(255, 204, 51, 0.5))',
+                    'drop-shadow(0 0 8px rgba(255, 204, 51, 0.3))',
                   ]
                 }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
             </motion.div>
-            <p className="text-[#d4af37] mb-3">{t.tagline}</p>
-            <p className="text-[#fef3c7]/60 text-sm mb-6 max-w-sm leading-relaxed">
+            <p className="text-[#ffcc33] mb-3">{t.tagline}</p>
+            <p className="text-[#ffffff]/60 text-sm mb-6 max-w-sm leading-relaxed">
               {t.description}
             </p>
             
@@ -126,9 +126,9 @@ export function Footer({ language }: FooterProps) {
                     href={social.href}
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.9 }}
-                    className="w-11 h-11 rounded-full glass border border-[#d4af37]/30 hover:border-[#d4af37] flex items-center justify-center transition-all group"
+                    className="w-11 h-11 rounded-full glass border border-[#ffcc33]/30 hover:border-[#ffcc33] flex items-center justify-center transition-all group"
                   >
-                    <Icon className="w-5 h-5 text-[#fef3c7]/60 group-hover:text-[#d4af37] transition-colors" />
+                    <Icon className="w-5 h-5 text-[#ffffff]/60 group-hover:text-[#ffcc33] transition-colors" />
                   </motion.a>
                 );
               })}
@@ -138,14 +138,14 @@ export function Footer({ language }: FooterProps) {
           {/* Links */}
           {t.sections.map((section, index) => (
             <div key={index}>
-              <h4 className="text-[#fef3c7] mb-6">{section.title}</h4>
+              <h4 className="text-[#ffffff] mb-6">{section.title}</h4>
               <ul className="space-y-3">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <motion.a
                       href="#"
                       whileHover={{ x: 5 }}
-                      className="text-[#fef3c7]/60 hover:text-[#d4af37] text-sm transition-colors inline-block"
+                      className="text-[#ffffff]/60 hover:text-[#ffcc33] text-sm transition-colors inline-block"
                     >
                       {link}
                     </motion.a>
@@ -157,16 +157,16 @@ export function Footer({ language }: FooterProps) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-[#d4af37]/10">
+        <div className="pt-8 border-t border-[#ffcc33]/10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-[#fef3c7]/60 text-sm">{t.copyright}</p>
+            <p className="text-[#ffffff]/60 text-sm">{t.copyright}</p>
             <div className="flex items-center gap-4">
               <motion.div
-                className="flex items-center gap-2 px-4 py-2 rounded-full glass border border-[#14b8a6]/30"
+                className="flex items-center gap-2 px-4 py-2 rounded-full glass border border-[#45e3d3]/30"
                 whileHover={{ scale: 1.05 }}
               >
-                <div className="w-2 h-2 rounded-full bg-[#14b8a6] animate-pulse" />
-                <span className="text-[#fef3c7]/60 text-xs">{t.compliance}</span>
+                <div className="w-2 h-2 rounded-full bg-[#45e3d3] animate-pulse" />
+                <span className="text-[#ffffff]/60 text-xs">{t.compliance}</span>
               </motion.div>
             </div>
           </div>

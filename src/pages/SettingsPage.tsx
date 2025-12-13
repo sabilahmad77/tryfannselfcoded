@@ -403,7 +403,7 @@ export function SettingsPage() {
     return (
       <DashboardLayout currentPage="settings">
         <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="w-8 h-8 animate-spin text-[#d4af37]" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#ffcc33]" />
         </div>
       </DashboardLayout>
     );
@@ -414,14 +414,13 @@ export function SettingsPage() {
     return (
       <DashboardLayout currentPage="settings">
         <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-          <p className="text-[#cbd5e1]">
+          <p className="text-[#808c99]">
             {language === "en"
               ? "Failed to load settings. Please try again."
               : "فشل تحميل الإعدادات. يرجى المحاولة مرة أخرى."}
           </p>
           <Button
             onClick={() => refetchSettings()}
-            className="bg-gradient-to-r from-[#d4af37] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#d4af37] text-[#0f172a]"
           >
             {language === "en" ? "Retry" : "إعادة المحاولة"}
           </Button>
@@ -443,12 +442,12 @@ export function SettingsPage() {
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] rounded-xl flex items-center justify-center">
-            <SettingsIcon className="w-6 h-6 text-[#0f172a]" />
+          <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
+            <SettingsIcon className="w-6 h-6 text-[#0F021C]" />
           </div>
-          <h1 className="text-4xl text-[#fef3c7]">{t.settings}</h1>
+          <h1 className="text-4xl text-[#ffffff]">{t.settings}</h1>
         </div>
-        <p className="text-[#cbd5e1]">
+        <p className="text-[#808c99]">
           {language === "en"
             ? "Manage your account settings and preferences"
             : "إدارة إعدادات حسابك وتفضيلاتك"}
@@ -461,7 +460,7 @@ export function SettingsPage() {
         className="w-full"
         dir={isRTL ? "rtl" : "ltr"}
       >
-        <TabsList className="glass border border-[#334155] mb-6">
+        <TabsList className="glass border border-[#4e4e4e78] mb-6">
           <TabsTrigger value="account">
             <User className="w-4 h-4 mr-2" />
             {t.account}
@@ -489,7 +488,7 @@ export function SettingsPage() {
           >
             {/* Change Password Section */}
             <h3
-              className={`text-xl text-[#fef3c7] mb-6 ${
+              className={`text-xl text-[#ffffff] mb-6 ${
                 isRTL ? "text-right" : "text-left"
               }`}
             >
@@ -532,8 +531,7 @@ export function SettingsPage() {
               <Button
                 onClick={handleChangePassword}
                 disabled={isChangingPassword}
-                variant="outline"
-                className="border-[#14b8a6] text-[#14b8a6] hover:bg-[#14b8a6]/10 disabled:opacity-50"
+                className="disabled:opacity-50"
               >
                 {isChangingPassword ? (
                   <>
@@ -546,7 +544,7 @@ export function SettingsPage() {
               </Button>
             </div>
 
-            {/* <Separator className="my-8 bg-[#334155]" /> */}
+            {/* <Separator className="my-8 bg-[#4e4e4e78]" /> */}
 
             {/* Delete Account */}
             {/* <div
@@ -555,7 +553,7 @@ export function SettingsPage() {
               }`}
             >
               <h4 className="text-destructive mb-2">{t.deleteAccount}</h4>
-              <p className="text-sm text-[#cbd5e1] mb-4">{t.deleteWarning}</p>
+              <p className="text-sm text-[#808c99] mb-4">{t.deleteWarning}</p>
               <Button variant="destructive" size="sm">
                 {t.deleteAccount}
               </Button>
@@ -572,7 +570,7 @@ export function SettingsPage() {
           >
             <div className="space-y-6">
               <h2
-                className={`text-2xl text-[#fef3c7] mb-6 ${
+                className={`text-2xl text-[#ffffff] mb-6 ${
                   isRTL ? "text-right" : "text-left"
                 }`}
               >
@@ -589,7 +587,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1e293b]/50"
+                switchWrapperClassName="bg-[#1D112A]/50"
               />
 
               {/* Push Notifications */}
@@ -602,10 +600,10 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1e293b]/50"
+                switchWrapperClassName="bg-[#1D112A]/50"
               />
 
-              <Separator className="bg-[#334155]" />
+              <Separator className="bg-[#4e4e4e78]" />
 
               {/* Specific Notification Settings */}
               <SwitchField
@@ -617,7 +615,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1e293b]/30"
+                switchWrapperClassName="bg-[#1D112A]/30"
               />
 
               <SwitchField
@@ -629,7 +627,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1e293b]/30"
+                switchWrapperClassName="bg-[#1D112A]/30"
               />
 
               <SwitchField
@@ -641,7 +639,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1e293b]/30"
+                switchWrapperClassName="bg-[#1D112A]/30"
               />
 
               <SwitchField
@@ -653,7 +651,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1e293b]/30"
+                switchWrapperClassName="bg-[#1D112A]/30"
               />
             </div>
           </motion.div>
@@ -667,7 +665,7 @@ export function SettingsPage() {
             className="glass rounded-2xl p-6"
           >
             <h2
-              className={`text-2xl text-[#fef3c7] mb-6 ${
+              className={`text-2xl text-[#ffffff] mb-6 ${
                 isRTL ? "text-right" : "text-left"
               }`}
             >
@@ -686,10 +684,10 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1e293b]/50"
+                switchWrapperClassName="bg-[#1D112A]/50"
               />
 
-              <Separator className="bg-[#334155]" />
+              <Separator className="bg-[#4e4e4e78]" />
 
               {/* Privacy Toggles */}
               <SwitchField
@@ -700,7 +698,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1e293b]/30"
+                switchWrapperClassName="bg-[#1D112A]/30"
               />
 
               <SwitchField
@@ -711,7 +709,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1e293b]/30"
+                switchWrapperClassName="bg-[#1D112A]/30"
               />
 
               <SwitchField
@@ -722,14 +720,14 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1e293b]/30"
+                switchWrapperClassName="bg-[#1D112A]/30"
               />
 
-              {/* <Separator className="bg-[#334155]" /> */}
+              {/* <Separator className="bg-[#4e4e4e78]" /> */}
 
               {/* Two-Factor Authentication */}
               {/* <div
-                className={`p-4 bg-gradient-to-br from-[#14b8a6]/20 to-[#0ea5e9]/20 border border-[#14b8a6]/30 rounded-xl ${
+                className={`p-4 bg-gradient-to-br from-[#45e3d3]/20 to-[#4de3ed]/20 border border-[#45e3d3]/30 rounded-xl ${
                   isRTL ? "text-right" : "text-left"
                 }`}
               >
@@ -738,15 +736,14 @@ export function SettingsPage() {
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <Shield className="w-6 h-6 text-[#14b8a6]" />
+                  <Shield className="w-6 h-6 text-[#45e3d3]" />
                   <div>
-                    <h3 className="text-[#fef3c7]">{t.twoFactor}</h3>
-                    <p className="text-sm text-[#cbd5e1]">{t.twoFactorDesc}</p>
+                    <h3 className="text-[#ffffff]">{t.twoFactor}</h3>
+                    <p className="text-sm text-[#808c99]">{t.twoFactorDesc}</p>
                   </div>
                 </div>
                 <Button
                   variant="outline"
-                  className="border-[#14b8a6] text-[#14b8a6] hover:bg-[#14b8a6]/10"
                   onClick={() => setTwoFactor(!twoFactor)}
                 >
                   {twoFactor ? (
@@ -762,19 +759,18 @@ export function SettingsPage() {
 
               {/* Active Sessions */}
               {/* <div
-                className={`p-4 bg-[#1e293b]/50 rounded-xl ${
+                className={`p-4 bg-[#1D112A]/50 rounded-xl ${
                   isRTL ? "text-right" : "text-left"
                 }`}
               >
-                <h3 className="text-[#fef3c7] mb-2">{t.sessions}</h3>
-                <p className="text-sm text-[#cbd5e1] mb-4">
+                <h3 className="text-[#ffffff] mb-2">{t.sessions}</h3>
+                <p className="text-sm text-[#808c99] mb-4">
                   {language === "en"
                     ? "Manage devices where you're logged in"
                     : "إدارة الأجهزة التي قمت بتسجيل الدخول منها"}
                 </p>
                 <Button
                   variant="outline"
-                  className="border-[#334155] text-[#cbd5e1]"
                 >
                   {t.viewSessions}
                   <ChevronRight className="w-4 h-4 ml-2" />
@@ -852,7 +848,7 @@ export function SettingsPage() {
               <Button
                 onClick={handleSavePreferences}
                 disabled={isSavingSettings}
-                className="bg-gradient-to-r from-[#d4af37] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#d4af37] text-[#0f172a] w-full md:w-auto disabled:opacity-50"
+                className="w-full md:w-auto disabled:opacity-50"
               >
                 {isSavingSettings ? (
                   <>

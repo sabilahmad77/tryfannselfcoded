@@ -2,110 +2,268 @@
 
 :root {
   --font-size: 16px;
-  /* Midnight Blue, Gold, Cream, Teal Palette */
-  --background: #0f172a;
-  /* Midnight Blue */
-  --foreground: #fef3c7;
-  /* Cream */
-  --card: #1e293b;
-  /* Darker Midnight Blue */
-  --card-foreground: #fef3c7;
-  /* Cream */
-  --popover: #1e293b;
-  --popover-foreground: #fef3c7;
-  --primary: #d4af37;
-  /* Gold */
-  --primary-foreground: #0f172a;
-  /* Midnight Blue */
-  --secondary: #14b8a6;
-  /* Teal */
-  --secondary-foreground: #0f172a;
-  --muted: #334155;
-  --muted-foreground: #cbd5e1;
-  --accent: #14b8a6;
-  /* Teal */
-  --accent-foreground: #0f172a;
-  --destructive: #ef4444;
+  /* FANN Color Palette - Dark Purple, Bright Gold, White, Teal */
+  
+  /* PRIMARY COLORS - FANN Gold System */
+  --primary: #ffcc33;
+  /* Main gold */
+  --primary-light: #ffb54d;
+  /* Lighter gold */
+  --primary-dark: #e6b800;
+  /* Darker gold */
+  --primary-foreground: #020e27;
+  /* Dark background for gold text */
+  
+  /* SECONDARY COLORS - FANN Teal System */
+  --secondary: #45e3d3;
+  /* Main teal */
+  --secondary-light: #5ee7d8;
+  /* Lighter teal */
+  --secondary-dark: #3bc4b5;
+  /* Darker teal */
+  --secondary-foreground: #020e27;
+  /* Dark background for teal text */
+  
+  /* ACCENT COLORS */
+  --accent: #ffc936;
+  /* Accent gold */
+  --accent-pink: #fface3;
+  /* Accent pink */
+  --accent-purple: #9375b5;
+  /* Accent purple */
+  --accent-foreground: #020e27;
+  
+  /* BACKGROUND COLORS - FANN Dark Purple System */
+  --background: #0F021C;
+  /* Main background */
+  --background-dark: #020e27;
+  /* Primary dark background */
+  --background-secondary: #160328;
+  /* Secondary dark background */
+  --background-darker: #080808;
+  /* Very dark background */
+  
+  /* CARD COLORS */
+  --card: #1D112A;
+  /* Card background */
+  --card-foreground: #ffffff;
+  /* White text on cards */
+  --card-transparent: rgba(255, 255, 255, 0.06);
+  /* #ffffff0f */
+  --card-hover: rgba(255, 255, 255, 0.1);
+  /* #ffffff1a */
+  
+  /* TEXT COLORS */
+  --foreground: #ffffff;
+  /* Primary white text */
+  --foreground-secondary: rgba(255, 255, 255, 0.9);
+  /* #ffffffe6 */
+  --muted-foreground: #808c99;
+  /* Muted gray text */
+  --muted-foreground-light: #BEC0C9;
+  /* Light gray text */
+  --muted-foreground-medium: #7D8096;
+  /* Medium gray text */
+  
+  /* MUTED COLORS */
+  --muted: #4e4e4e;
+  /* Muted gray */
+  
+  /* POPOVER */
+  --popover: #1D112A;
+  --popover-foreground: #ffffff;
+  
+  /* STATUS COLORS */
+  --destructive: #ff6b6b;
+  /* Error red */
   --destructive-foreground: #ffffff;
-  --border: rgba(212, 175, 55, 0.2);
-  /* Gold with opacity */
+  --success: #90f2a6;
+  /* Success green */
+  --success-foreground: #020e27;
+  --warning: #ffcc33;
+  /* Warning gold (same as primary) */
+  --warning-foreground: #020e27;
+  --info: #4de3ed;
+  /* Info cyan */
+  --info-foreground: #020e27;
+  
+  /* BORDER COLORS */
+  --border: rgba(255, 204, 51, 0.3);
+  /* #ffcc334c - Gold border ~30% */
+  --border-gold: rgba(255, 204, 51, 0.3);
+  /* #FFCC334D */
+  --border-gold-light: rgba(255, 201, 54, 0.2);
+  /* #FFC93633 */
+  --border-secondary: rgba(78, 78, 78, 0.47);
+  /* #4e4e4e78 */
+  --border-light: rgba(255, 255, 255, 0.3);
+  /* #ffffff4c */
+  --border-orange: #FEB848;
+  
+  /* INPUT COLORS */
   --input: transparent;
-  --input-background: rgba(254, 243, 199, 0.05);
-  /* Cream with opacity */
-  --switch-background: #cbd5e1;
+  --input-background: rgba(255, 255, 255, 0.05);
+  --ring: #ffcc33;
+  /* Focus ring gold */
+  
+  /* CHART COLORS */
+  --chart-1: #ffcc33;
+  /* Gold */
+  --chart-2: #45e3d3;
+  /* Teal */
+  --chart-3: #4de3ed;
+  /* Cyan */
+  --chart-4: #ffb54d;
+  /* Light gold */
+  --chart-5: #90f2a6;
+  /* Success green */
+  
+  /* SIDEBAR COLORS */
+  --sidebar: #1D112A;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffcc33;
+  --sidebar-primary-foreground: #020e27;
+  --sidebar-accent: #4e4e4e;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 204, 51, 0.3);
+  --sidebar-ring: #ffcc33;
+  
+  /* GRADIENTS */
+  --gradient-primary: linear-gradient(174deg, rgba(255,204,51,1) 0%, rgba(255,181,77,1) 100%);
+  --gradient-secondary: linear-gradient(171deg, rgba(255,204,51,1) 0%, rgba(255,181,77,1) 100%);
+  --gradient-card: linear-gradient(90deg, rgba(255,204,51,0.1) 0%, rgba(69,227,211,0.1) 100%);
+  --gradient-gold: linear-gradient(to right, #FFCC33, #FFB54D);
+  --gradient-amber: linear-gradient(to right, #FFCB35, #FFD700);
+  
+  /* SHADOWS */
+  --shadow-primary: inset 0px -1px 0px 1px rgba(230, 134, 0, 0.6), 
+                    inset 0px 1px 0px 1px rgba(255, 204, 51, 0.4), 
+                    0px 4px 12px rgba(255, 204, 51, 0.35), 
+                    0px 10px 30px -10px rgba(255, 204, 51, 0.4);
+  --shadow-secondary: 0px 30.51px 30.51px rgba(0, 0, 0, 0.4), 
+                      inset 0px 0px 5.08px #fface3, 
+                      inset 0px -1.02px 8.14px #9375b5;
+  --shadow-card: 0px 0px 136.8px 15px #070721;
+  --shadow-hover: 0 0 20px 4px rgba(255, 204, 51, 0.7);
+  --shadow-button: 0 8px 25px rgba(255, 204, 51, 0.3);
+  
+  --radius: 0.625rem;
+  --switch-background: #808c99;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #d4af37;
-  /* Gold */
-  --chart-1: #d4af37;
-  /* Gold */
-  --chart-2: #14b8a6;
-  /* Teal */
-  --chart-3: #0ea5e9;
-  /* Sky Blue */
-  --chart-4: #fbbf24;
-  /* Amber */
-  --chart-5: #10b981;
-  /* Emerald */
-  --radius: 0.625rem;
-  --sidebar: #1e293b;
-  --sidebar-foreground: #fef3c7;
-  --sidebar-primary: #d4af37;
-  --sidebar-primary-foreground: #0f172a;
-  --sidebar-accent: #334155;
-  --sidebar-accent-foreground: #fef3c7;
-  --sidebar-border: rgba(212, 175, 55, 0.2);
-  --sidebar-ring: #d4af37;
 }
 
 .dark {
-  --background: #0f172a;
-  /* Midnight Blue */
-  --foreground: #fef3c7;
-  /* Cream */
-  --card: #1e293b;
-  /* Darker Midnight Blue */
-  --card-foreground: #fef3c7;
-  /* Cream */
-  --popover: #1e293b;
-  --popover-foreground: #fef3c7;
-  --primary: #d4af37;
-  /* Gold */
-  --primary-foreground: #0f172a;
-  /* Midnight Blue */
-  --secondary: #14b8a6;
-  /* Teal */
-  --secondary-foreground: #0f172a;
-  --muted: #334155;
-  --muted-foreground: #cbd5e1;
-  --accent: #14b8a6;
-  /* Teal */
-  --accent-foreground: #0f172a;
-  --destructive: #ef4444;
+  /* Same as :root for FANN scheme */
+  --font-size: 16px;
+  
+  /* PRIMARY COLORS - FANN Gold System */
+  --primary: #ffcc33;
+  --primary-light: #ffb54d;
+  --primary-dark: #e6b800;
+  --primary-foreground: #020e27;
+  
+  /* SECONDARY COLORS - FANN Teal System */
+  --secondary: #45e3d3;
+  --secondary-light: #5ee7d8;
+  --secondary-dark: #3bc4b5;
+  --secondary-foreground: #020e27;
+  
+  /* ACCENT COLORS */
+  --accent: #ffc936;
+  --accent-pink: #fface3;
+  --accent-purple: #9375b5;
+  --accent-foreground: #020e27;
+  
+  /* BACKGROUND COLORS - FANN Dark Purple System */
+  --background: #0F021C;
+  --background-dark: #020e27;
+  --background-secondary: #160328;
+  --background-darker: #080808;
+  
+  /* CARD COLORS */
+  --card: #1D112A;
+  --card-foreground: #ffffff;
+  --card-transparent: rgba(255, 255, 255, 0.06);
+  --card-hover: rgba(255, 255, 255, 0.1);
+  
+  /* TEXT COLORS */
+  --foreground: #ffffff;
+  --foreground-secondary: rgba(255, 255, 255, 0.9);
+  --muted-foreground: #808c99;
+  --muted-foreground-light: #BEC0C9;
+  --muted-foreground-medium: #7D8096;
+  
+  /* MUTED COLORS */
+  --muted: #4e4e4e;
+  
+  /* POPOVER */
+  --popover: #1D112A;
+  --popover-foreground: #ffffff;
+  
+  /* STATUS COLORS */
+  --destructive: #ff6b6b;
   --destructive-foreground: #ffffff;
-  --border: rgba(212, 175, 55, 0.2);
-  --input: rgba(254, 243, 199, 0.1);
-  --ring: #d4af37;
+  --success: #90f2a6;
+  --success-foreground: #020e27;
+  --warning: #ffcc33;
+  --warning-foreground: #020e27;
+  --info: #4de3ed;
+  --info-foreground: #020e27;
+  
+  /* BORDER COLORS */
+  --border: rgba(255, 204, 51, 0.3);
+  --border-gold: rgba(255, 204, 51, 0.3);
+  --border-gold-light: rgba(255, 201, 54, 0.2);
+  --border-secondary: rgba(78, 78, 78, 0.47);
+  --border-light: rgba(255, 255, 255, 0.3);
+  --border-orange: #FEB848;
+  
+  /* INPUT COLORS */
+  --input: rgba(255, 255, 255, 0.1);
+  --input-background: rgba(255, 255, 255, 0.05);
+  --ring: #ffcc33;
+  
+  /* CHART COLORS */
+  --chart-1: #ffcc33;
+  --chart-2: #45e3d3;
+  --chart-3: #4de3ed;
+  --chart-4: #ffb54d;
+  --chart-5: #90f2a6;
+  
+  /* SIDEBAR COLORS */
+  --sidebar: #1D112A;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffcc33;
+  --sidebar-primary-foreground: #020e27;
+  --sidebar-accent: #4e4e4e;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 204, 51, 0.3);
+  --sidebar-ring: #ffcc33;
+  
+  /* GRADIENTS */
+  --gradient-primary: linear-gradient(174deg, rgba(255,204,51,1) 0%, rgba(255,181,77,1) 100%);
+  --gradient-secondary: linear-gradient(171deg, rgba(255,204,51,1) 0%, rgba(255,181,77,1) 100%);
+  --gradient-card: linear-gradient(90deg, rgba(255,204,51,0.1) 0%, rgba(69,227,211,0.1) 100%);
+  --gradient-gold: linear-gradient(to right, #FFCC33, #FFB54D);
+  --gradient-amber: linear-gradient(to right, #FFCB35, #FFD700);
+  
+  /* SHADOWS */
+  --shadow-primary: inset 0px -1px 0px 1px rgba(230, 134, 0, 0.6), 
+                    inset 0px 1px 0px 1px rgba(255, 204, 51, 0.4), 
+                    0px 4px 12px rgba(255, 204, 51, 0.35), 
+                    0px 10px 30px -10px rgba(255, 204, 51, 0.4);
+  --shadow-secondary: 0px 30.51px 30.51px rgba(0, 0, 0, 0.4), 
+                      inset 0px 0px 5.08px #fface3, 
+                      inset 0px -1.02px 8.14px #9375b5;
+  --shadow-card: 0px 0px 136.8px 15px #070721;
+  --shadow-hover: 0 0 20px 4px rgba(255, 204, 51, 0.7);
+  --shadow-button: 0 8px 25px rgba(255, 204, 51, 0.3);
+  
+  --radius: 0.625rem;
+  --switch-background: #808c99;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: #d4af37;
-  /* Gold */
-  --chart-2: #14b8a6;
-  /* Teal */
-  --chart-3: #0ea5e9;
-  /* Sky Blue */
-  --chart-4: #fbbf24;
-  /* Amber */
-  --chart-5: #10b981;
-  /* Emerald */
-  --sidebar: #1e293b;
-  --sidebar-foreground: #fef3c7;
-  --sidebar-primary: #d4af37;
-  --sidebar-primary-foreground: #0f172a;
-  --sidebar-accent: #334155;
-  --sidebar-accent-foreground: #fef3c7;
-  --sidebar-border: rgba(212, 175, 55, 0.2);
-  --sidebar-ring: #d4af37;
 }
 
 @theme inline {
@@ -147,6 +305,35 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* FANN Gold Color Mappings (amber/orange/yellow → gold) */
+  --color-amber-400: #ffcc33;
+  --color-amber-500: #ffcc33;
+  --color-amber-600: #e6b800;
+  --color-orange-400: #ffb54d;
+  --color-orange-500: #ffb54d;
+  --color-orange-600: #e6b800;
+  --color-yellow-400: #ffcc33;
+  --color-yellow-500: #ffcc33;
+  --color-yellow-600: #ffb54d;
+  
+  /* FANN Teal Color Mappings (blue/cyan/sky → teal) */
+  --color-blue-400: #45e3d3;
+  --color-blue-500: #45e3d3;
+  --color-cyan-400: #45e3d3;
+  --color-cyan-500: #45e3d3;
+  --color-sky-400: #4de3ed;
+  --color-sky-500: #4de3ed;
+  
+  /* FANN Purple Color Mappings */
+  --color-purple-400: #9375b5;
+  --color-purple-500: #9375b5;
+  --color-purple-600: #7a5f9a;
+  
+  /* FANN Success Green Mappings */
+  --color-green-400: #90f2a6;
+  --color-green-500: #90f2a6;
+  --color-green-600: #7ae09a;
 }
 
 @layer base {
@@ -232,11 +419,11 @@ html {
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 0 20px rgba(255, 204, 51, 0.4);
   }
 
   50% {
-    box-shadow: 0 0 40px rgba(212, 175, 55, 0.8);
+    box-shadow: 0 0 40px rgba(255, 204, 51, 0.8);
   }
 }
 
@@ -285,36 +472,36 @@ html {
 
 /* Glass morphism - Enhanced for better visibility against vibrant backgrounds */
 .glass {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: #1D112A;
+  /* backdrop-filter: blur(16px) saturate(180%); */
+  /* border: 1px solid rgba(255, 204, 51, 0.25); */
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 
 /* Glow effects for gamification */
 .glow-gold {
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 20px rgba(255, 204, 51, 0.5);
 }
 
 .glow-teal {
-  box-shadow: 0 0 20px rgba(20, 184, 166, 0.5);
+  box-shadow: 0 0 20px rgba(69, 227, 211, 0.5);
 }
 
 .glow-sky {
-  box-shadow: 0 0 20px rgba(14, 165, 233, 0.5);
+  box-shadow: 0 0 20px rgba(77, 227, 237, 0.5);
 }
 
 .glow-cream {
-  box-shadow: 0 0 20px rgba(254, 243, 199, 0.3);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 /* Sky gradient for gamified accents */
 .sky-gradient {
-  background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 50%, #d4af37 100%);
+  background: linear-gradient(135deg, #4de3ed 0%, #45e3d3 50%, #ffcc33 100%);
 }
 
 .midnight-gradient {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  background: linear-gradient(135deg, #0F021C 0%, #1D112A 50%, #4e4e4e 100%);
 }
 
 /* Glowing buttons for gamification */
@@ -331,7 +518,7 @@ html {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgba(212, 175, 55, 0.5);
+  background: rgba(255, 204, 51, 0.5);
   transform: translate(-50%, -50%);
   transition: width 0.6s, height 0.6s;
 }
@@ -352,23 +539,23 @@ html {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(15, 2, 28, 0.5);
   border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.4);
+  background: rgba(255, 204, 51, 0.4);
   border-radius: 4px;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid rgba(255, 204, 51, 0.2);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(212, 175, 55, 0.6);
+  background: rgba(255, 204, 51, 0.6);
 }
 
 /* Firefox scrollbar */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(212, 175, 55, 0.4) rgba(15, 23, 42, 0.5);
+  scrollbar-color: rgba(255, 204, 51, 0.4) rgba(15, 2, 28, 0.5);
   overflow-x: hidden; /* Hide horizontal scrollbar */
 }

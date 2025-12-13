@@ -152,8 +152,8 @@ export function PointWallet() {
     return (
       <div className="glass rounded-2xl p-6 h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 text-[#d4af37] animate-spin" />
-          <p className="text-[#cbd5e1]">
+          <Loader2 className="w-8 h-8 text-[#ffcc33] animate-spin" />
+          <p className="text-[#808c99]">
             {language === "en" ? "Loading points..." : "جاري تحميل النقاط..."}
           </p>
         </div>
@@ -169,7 +169,7 @@ export function PointWallet() {
           <div className="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center">
             <Wallet className="w-6 h-6 text-red-500" />
           </div>
-          <p className="text-[#cbd5e1]">
+          <p className="text-[#808c99]">
             {language === "en"
               ? "Failed to load points. Please try again."
               : "فشل تحميل النقاط. يرجى المحاولة مرة أخرى."}
@@ -192,12 +192,12 @@ export function PointWallet() {
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] rounded-xl flex items-center justify-center">
-            <Wallet className="w-6 h-6 text-[#0f172a]" />
+          <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
+            <Wallet className="w-6 h-6 text-[#0F021C]" />
           </div>
-          <h2 className="text-2xl text-[#fef3c7]">{t.title}</h2>
+          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
         </div>
-        <Badge className="bg-gradient-to-r from-[#d4af37] to-[#fbbf24] text-[#0f172a] border-0">
+        <Badge className="bg-gradient-to-r from-[#ffcc33] to-[#fbbf24] text-[#0F021C] border-0">
           {currentTier}
         </Badge>
       </div>
@@ -206,7 +206,7 @@ export function PointWallet() {
       <motion.div
         className="relative overflow-hidden rounded-xl p-6 mb-6"
         style={{
-          background: "linear-gradient(135deg, #d4af37 0%, #14b8a6 100%)",
+          background: "linear-gradient(135deg, #ffcc33 0%, #45e3d3 100%)",
         }}
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.3 }}
@@ -216,8 +216,8 @@ export function PointWallet() {
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full blur-xl" />
         </div>
         <div className={`relative z-10 ${isRTL ? "text-right" : "text-left"}`}>
-          <p className="text-[#0f172a] opacity-80 mb-2">{t.totalPoints}</p>
-          <p className="text-5xl text-[#0f172a]">
+          <p className="text-[#0F021C] opacity-80 mb-2">{t.totalPoints}</p>
+          <p className="text-5xl text-[#0F021C]">
             {totalPoints.toLocaleString()}
           </p>
           {nextTier ? (
@@ -226,8 +226,8 @@ export function PointWallet() {
                 isRTL ? "flex-row-reverse" : ""
               }`}
             >
-              <TrendingUp className="w-4 h-4 text-[#0f172a]" />
-              <span className="text-sm text-[#0f172a]">
+              <TrendingUp className="w-4 h-4 text-[#0F021C]" />
+              <span className="text-sm text-[#0F021C]">
                 {pointsNeeded} {t.pointsNeeded}
               </span>
             </div>
@@ -237,8 +237,8 @@ export function PointWallet() {
                 isRTL ? "flex-row-reverse" : ""
               }`}
             >
-              <TrendingUp className="w-4 h-4 text-[#0f172a]" />
-              <span className="text-sm text-[#0f172a]">{t.maxTierReached}</span>
+              <TrendingUp className="w-4 h-4 text-[#0F021C]" />
+              <span className="text-sm text-[#0F021C]">{t.maxTierReached}</span>
             </div>
           )}
         </div>
@@ -252,14 +252,14 @@ export function PointWallet() {
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <span className="text-sm text-[#cbd5e1]">
+            <span className="text-sm text-[#808c99]">
               {t.progress} {nextTier}
             </span>
-            <span className="text-sm text-[#d4af37]">
+            <span className="text-sm text-[#ffcc33]">
               {Math.round(progress)}%
             </span>
           </div>
-          <Progress value={progress} className="h-2 bg-[#334155]" />
+          <Progress value={progress} className="h-2 bg-[#4e4e4e78]" />
         </div>
       ) : (
         <div className="mb-6">
@@ -268,10 +268,10 @@ export function PointWallet() {
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <span className="text-sm text-[#cbd5e1]">{t.maxTierReached}</span>
-            <span className="text-sm text-[#d4af37]">100%</span>
+            <span className="text-sm text-[#808c99]">{t.maxTierReached}</span>
+            <span className="text-sm text-[#ffcc33]">100%</span>
           </div>
-          <Progress value={100} className="h-2 bg-[#334155]" />
+          <Progress value={100} className="h-2 bg-[#4e4e4e78]" />
         </div>
       )}
 
@@ -279,17 +279,17 @@ export function PointWallet() {
       <div className="grid grid-cols-3 gap-3 mb-6">
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#8b5cf6]/20 to-[#8b5cf6]/5 rounded-xl p-4 border border-[#8b5cf6]/30"
+          className="bg-gradient-to-br from-[#9375b5]/20 to-[#9375b5]/5 rounded-xl p-4 border border-[#9375b5]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <Flame className="w-5 h-5 text-[#8b5cf6]" />
-            <span className="text-xs text-[#cbd5e1]">{t.influencePoints}</span>
+            <Flame className="w-5 h-5 text-[#9375b5]" />
+            <span className="text-xs text-[#808c99]">{t.influencePoints}</span>
           </div>
-          <p className="text-2xl text-[#fef3c7]">{influencePoints}</p>
+          <p className="text-2xl text-[#ffffff]">{influencePoints}</p>
         </motion.div>
 
         <motion.div
@@ -302,31 +302,31 @@ export function PointWallet() {
             }`}
           >
             <Shield className="w-5 h-5 text-[#0ea5e9]" />
-            <span className="text-xs text-[#cbd5e1]">{t.provenancePoints}</span>
+            <span className="text-xs text-[#808c99]">{t.provenancePoints}</span>
           </div>
-          <p className="text-2xl text-[#fef3c7]">{provenancePoints}</p>
+          <p className="text-2xl text-[#ffffff]">{provenancePoints}</p>
         </motion.div>
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#ec4899]/20 to-[#ec4899]/5 rounded-xl p-4 border border-[#ec4899]/30"
+          className="bg-gradient-to-br from-[#fface3]/20 to-[#fface3]/5 rounded-xl p-4 border border-[#fface3]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <Users className="w-5 h-5 text-[#ec4899]" />
-            <span className="text-xs text-[#cbd5e1]">{t.followers}</span>
+            <Users className="w-5 h-5 text-[#fface3]" />
+            <span className="text-xs text-[#808c99]">{t.followers}</span>
           </div>
-          <p className="text-2xl text-[#fef3c7]">{followerCount}</p>
+          <p className="text-2xl text-[#ffffff]">{followerCount}</p>
         </motion.div>
       </div>
 
       {/* Recent Activity */}
       <div>
         <h3
-          className={`text-sm text-[#cbd5e1] mb-3 ${
+          className={`text-sm text-[#808c99] mb-3 ${
             isRTL ? "text-right" : "text-left"
           }`}
         >
@@ -340,7 +340,7 @@ export function PointWallet() {
                 initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`flex items-center justify-between p-3 bg-[#1e293b]/50 rounded-lg border border-[#334155] hover:border-[#d4af37]/30 transition-all ${
+                className={`flex items-center justify-between p-3 bg-[#1D112A]/50 rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${
                   isRTL ? "flex-row-reverse" : ""
                 }`}
               >
@@ -352,7 +352,7 @@ export function PointWallet() {
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center ${
                       activity.type === "influence"
-                        ? "bg-[#8b5cf6]/20 text-[#8b5cf6]"
+                        ? "bg-[#9375b5]/20 text-[#9375b5]"
                         : "bg-[#0ea5e9]/20 text-[#0ea5e9]"
                     }`}
                   >
@@ -362,18 +362,18 @@ export function PointWallet() {
                       <Shield className="w-4 h-4" />
                     )}
                   </div>
-                  <span className="text-sm text-[#fef3c7]">
+                  <span className="text-sm text-[#ffffff]">
                     {activity.action}
                   </span>
                 </div>
-                <span className="text-sm text-[#14b8a6]">
+                <span className="text-sm text-[#45e3d3]">
                   {activity.points}
                 </span>
               </motion.div>
             ))
           ) : (
             <p
-              className={`text-sm text-[#cbd5e1] text-center py-4 ${
+              className={`text-sm text-[#808c99] text-center py-4 ${
                 isRTL ? "text-right" : "text-left"
               }`}
             >

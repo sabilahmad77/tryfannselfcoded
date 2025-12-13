@@ -480,7 +480,7 @@ export function EditProfile({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-5xl max-h-[95vh] overflow-y-auto custom-scrollbar glass border border-white/10 bg-[#0f172a] p-8"
+        className="max-w-5xl max-h-[95vh] overflow-y-auto custom-scrollbar glass border border-white/10 bg-[#0F021C] p-8"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <DialogHeader>
@@ -497,8 +497,8 @@ export function EditProfile({
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-8"
             >
-              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center">
-                <Icon className="w-8 h-8 text-amber-400" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-primary/20 to-primary/20 border border-primary/30 flex items-center justify-center">
+                <Icon className="w-8 h-8 text-primary" />
               </div>
               <h2 className="text-3xl text-white mb-2">{content.title}</h2>
               <p className="text-white/60">{content.subtitle}</p>
@@ -544,7 +544,7 @@ export function EditProfile({
                       : "PNG، JPG حتى 5 ميجابايت"
                   }
                   labelClassName="text-white/80 text-sm"
-                  buttonClassName="border-white/20 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
+                  buttonClassName="border-white/20 hover:border-primary/50 hover:bg-primary/10 text-white/70 hover:text-white"
                 />
                 {/* Show current profile image preview if exists and no new file selected */}
                 {profileImagePreview && !profileImage && (
@@ -596,7 +596,7 @@ export function EditProfile({
                   isRTL={isRTL}
                   required
                   error={errors.title?.message}
-                  inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                  inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
                   labelClassName="text-white/80 text-sm"
                 />
               </motion.div>
@@ -626,7 +626,7 @@ export function EditProfile({
                   isRTL={isRTL}
                   required
                   error={errors.bio?.message}
-                  inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                  inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
                   labelClassName="text-white/80 text-sm"
                 />
               </motion.div>
@@ -645,7 +645,7 @@ export function EditProfile({
                     placeholder={personaContent.specializationPlaceholder}
                     isRTL={isRTL}
                     error={errors.focus?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
                     labelClassName="text-white/80 text-sm"
                   />
                 </motion.div>
@@ -671,7 +671,7 @@ export function EditProfile({
                     placeholder={personaContent.experiencePlaceholder}
                     isRTL={isRTL}
                     error={errors.years_of_experience?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
                     labelClassName="text-white/80 text-sm"
                   />
                 </motion.div>
@@ -701,7 +701,7 @@ export function EditProfile({
                     icon={Globe}
                     isRTL={isRTL}
                     error={errors.website?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
                     labelClassName="text-white/80 text-sm"
                   />
                 </motion.div>
@@ -719,7 +719,7 @@ export function EditProfile({
                     icon={Instagram}
                     isRTL={isRTL}
                     error={errors.instagram_handle?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
                     labelClassName="text-white/80 text-sm"
                   />
                 </motion.div>
@@ -728,49 +728,49 @@ export function EditProfile({
               {/* Location and Phone */}
               {(storedUser?.show_location === true ||
                 storedUser?.show_phone === true) && (
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* Location - only show if show_location is true */}
-                  {storedUser?.show_location === true && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8 }}
-                    >
-                      <InputField
-                        {...register("location")}
-                        label={content.common.location}
-                        placeholder={content.common.locationPlaceholder}
-                        icon={MapPin}
-                        isRTL={isRTL}
-                        error={errors.location?.message}
-                        inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                        labelClassName="text-white/80 text-sm"
-                      />
-                    </motion.div>
-                  )}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* Location - only show if show_location is true */}
+                    {storedUser?.show_location === true && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.8 }}
+                      >
+                        <InputField
+                          {...register("location")}
+                          label={content.common.location}
+                          placeholder={content.common.locationPlaceholder}
+                          icon={MapPin}
+                          isRTL={isRTL}
+                          error={errors.location?.message}
+                          inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
+                          labelClassName="text-white/80 text-sm"
+                        />
+                      </motion.div>
+                    )}
 
-                  {/* Phone Number - only show if show_phone is true */}
-                  {storedUser?.show_phone === true && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.9 }}
-                    >
-                      <InputField
-                        {...register("phone_number")}
-                        label={content.common.phone}
-                        type="tel"
-                        placeholder={content.common.phonePlaceholder}
-                        icon={Phone}
-                        isRTL={isRTL}
-                        error={errors.phone_number?.message}
-                        inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                        labelClassName="text-white/80 text-sm"
-                      />
-                    </motion.div>
-                  )}
-                </div>
-              )}
+                    {/* Phone Number - only show if show_phone is true */}
+                    {storedUser?.show_phone === true && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.9 }}
+                      >
+                        <InputField
+                          {...register("phone_number")}
+                          label={content.common.phone}
+                          type="tel"
+                          placeholder={content.common.phonePlaceholder}
+                          icon={Phone}
+                          isRTL={isRTL}
+                          error={errors.phone_number?.message}
+                          inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
+                          labelClassName="text-white/80 text-sm"
+                        />
+                      </motion.div>
+                    )}
+                  </div>
+                )}
 
               {/* Action Buttons */}
               <motion.div
@@ -784,14 +784,14 @@ export function EditProfile({
                   onClick={onClose}
                   variant="outline"
                   disabled={isLoading}
-                  className="flex-1 h-12 border-white/20 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="flex-1 h-12 border-white/20 hover:border-primary/50 hover:bg-primary/10 text-white/70 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {content.cancel}
                 </Button>
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="flex-1 h-12 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {isLoading ? (
@@ -799,7 +799,7 @@ export function EditProfile({
                         <Oval
                           height={20}
                           width={20}
-                          color="#0f172a"
+                          color="#0F021C"
                           ariaLabel="loading"
                           visible={true}
                         />
@@ -809,9 +809,8 @@ export function EditProfile({
                       <>
                         {content.save}
                         <ArrowRight
-                          className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
-                            isRTL ? "rotate-180" : ""
-                          }`}
+                          className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
+                            }`}
                         />
                       </>
                     )}

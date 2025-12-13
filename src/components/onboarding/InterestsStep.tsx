@@ -706,7 +706,7 @@ export function InterestsStep({
               onClick={onBack}
               variant="outline"
               disabled={isLoading}
-              className="flex-1 h-12 border-white/20 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex-1 h-12 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               <ChevronLeft
                 className={`w-5 h-5 mr-2 ${isRTL ? "rotate-180" : ""}`}
@@ -718,7 +718,7 @@ export function InterestsStep({
             type="button"
             onClick={handleSubmit}
             disabled={isLoading || totalSelections < 1}
-            className="flex-1 h-12 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
               {isLoading ? (
@@ -726,7 +726,7 @@ export function InterestsStep({
                   <Oval
                     height={20}
                     width={20}
-                    color="#0f172a"
+                    color="#0F021C"
                     ariaLabel="loading"
                     visible={true}
                   />

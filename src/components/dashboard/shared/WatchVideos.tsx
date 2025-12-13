@@ -89,11 +89,11 @@ const content = {
 };
 
 const thumbnailGradients: { [key: string]: string } = {
-  intro: "from-[#d4af37] to-[#fbbf24]",
-  collection: "from-[#14b8a6] to-[#0ea5e9]",
-  auth: "from-[#8b5cf6] to-[#ec4899]",
-  referral: "from-[#0ea5e9] to-[#14b8a6]",
-  default: "from-[#0ea5e9] to-[#14b8a6]",
+  intro: "from-[#ffcc33] to-[#fbbf24]",
+  collection: "from-[#45e3d3] to-[#0ea5e9]",
+  auth: "from-[#9375b5] to-[#fface3]",
+  referral: "from-[#0ea5e9] to-[#45e3d3]",
+  default: "from-[#0ea5e9] to-[#45e3d3]",
 };
 
 // Helper function to get thumbnail gradient based on video index or title
@@ -229,12 +229,12 @@ export function WatchVideos() {
           isRTL ? "flex-row-reverse" : ""
         }`}
       >
-        <div className="w-12 h-12 bg-gradient-to-br from-[#0ea5e9] to-[#14b8a6] rounded-xl flex items-center justify-center">
+        <div className="w-12 h-12 bg-gradient-to-br from-[#0ea5e9] to-[#45e3d3] rounded-xl flex items-center justify-center">
           <Film className="w-6 h-6 text-white" />
         </div>
         <div className={isRTL ? "text-right" : "text-left"}>
-          <h2 className="text-2xl text-[#fef3c7]">{t.title}</h2>
-          <p className="text-sm text-[#cbd5e1]">{t.description}</p>
+          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
+          <p className="text-sm text-[#808c99]">{t.description}</p>
         </div>
       </div>
 
@@ -242,32 +242,32 @@ export function WatchVideos() {
       <div className="grid grid-cols-2 gap-4 mb-6">
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#d4af37]/20 to-[#d4af37]/5 rounded-xl p-4 border border-[#d4af37]/30"
+          className="bg-gradient-to-br from-[#ffcc33]/20 to-[#ffcc33]/5 rounded-xl p-4 border border-[#ffcc33]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <Award className="w-5 h-5 text-[#d4af37]" />
-            <span className="text-xs text-[#cbd5e1]">{t.totalEarned}</span>
+            <Award className="w-5 h-5 text-[#ffcc33]" />
+            <span className="text-xs text-[#808c99]">{t.totalEarned}</span>
           </div>
-          <p className="text-2xl text-[#fef3c7]">{totalPointsEarned}</p>
+          <p className="text-2xl text-[#ffffff]">{totalPointsEarned}</p>
         </motion.div>
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#14b8a6]/20 to-[#14b8a6]/5 rounded-xl p-4 border border-[#14b8a6]/30"
+          className="bg-gradient-to-br from-[#45e3d3]/20 to-[#45e3d3]/5 rounded-xl p-4 border border-[#45e3d3]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <CheckCircle className="w-5 h-5 text-[#14b8a6]" />
-            <span className="text-xs text-[#cbd5e1]">{t.videosCompleted}</span>
+            <CheckCircle className="w-5 h-5 text-[#45e3d3]" />
+            <span className="text-xs text-[#808c99]">{t.videosCompleted}</span>
           </div>
-          <p className="text-2xl text-[#fef3c7]">
+          <p className="text-2xl text-[#ffffff]">
             {completedCount}/{totalVideos}
           </p>
         </motion.div>
@@ -280,12 +280,12 @@ export function WatchVideos() {
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
-          <span className="text-sm text-[#cbd5e1]">{t.progress}</span>
-          <span className="text-sm text-[#d4af37]">
+          <span className="text-sm text-[#808c99]">{t.progress}</span>
+          <span className="text-sm text-[#ffcc33]">
             {Math.round(progressPercent)}%
           </span>
         </div>
-        <Progress value={progressPercent} className="h-2 bg-[#334155]" />
+        <Progress value={progressPercent} className="h-2 bg-[#4e4e4e78]" />
       </div>
 
       {/* Video List */}
@@ -295,19 +295,19 @@ export function WatchVideos() {
             <Loader2 className="w-6 h-6 text-[#0ea5e9] animate-spin" />
           </div>
         ) : isVideosError ? (
-          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
+          <div className="flex flex-col items-center justify-center py-8 text-[#808c99]">
             <AlertCircle className="w-12 h-12 mb-2 text-[#ef4444]" />
             <p className="text-sm mb-4">{t.loadingError}</p>
             <Button
               onClick={() => refetchVideos()}
               size="sm"
-              className="bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#0ea5e9] hover:shadow-lg hover:shadow-[#0ea5e9]/50 text-white transition-all duration-200 cursor-pointer"
+              className="hover:shadow-lg hover:shadow-primary/50 transition-all duration-200 cursor-pointer"
             >
               {language === "en" ? "Retry" : "إعادة المحاولة"}
             </Button>
           </div>
         ) : videos.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
+          <div className="flex flex-col items-center justify-center py-8 text-[#808c99]">
             <Film className="w-12 h-12 mb-2" />
             <p className="text-sm">{t.noVideos}</p>
           </div>
@@ -326,8 +326,8 @@ export function WatchVideos() {
                 whileHover={{ scale: 1.02 }}
                 className={`relative overflow-hidden rounded-xl border transition-all ${
                   isCompleted
-                    ? "border-[#14b8a6]/30 bg-[#1e293b]/30"
-                    : "border-[#334155] bg-[#1e293b]/50 hover:border-[#d4af37]/30"
+                    ? "border-[#45e3d3]/30 bg-[#1D112A]/30"
+                    : "border-[#4e4e4e78] bg-[#1D112A]/50 hover:border-[#ffcc33]/30"
                 }`}
               >
                 <div
@@ -364,13 +364,13 @@ export function WatchVideos() {
                     }`}
                   >
                     <div>
-                      <h4 className="text-[#fef3c7] mb-1">{video.title}</h4>
+                      <h4 className="text-[#ffffff] mb-1">{video.title}</h4>
                       <Badge
                         variant="outline"
                         className={`${
                           isCompleted
-                            ? "border-[#14b8a6] text-[#14b8a6]"
-                            : "border-[#d4af37] text-[#d4af37]"
+                            ? "border-[#45e3d3] text-[#45e3d3]"
+                            : "border-[#ffcc33] text-[#ffcc33]"
                         }`}
                       >
                         +{videoPoints} {t.points}
@@ -382,7 +382,7 @@ export function WatchVideos() {
                         onClick={() => handleWatchVideo(video)}
                         disabled={isWatching}
                         size="sm"
-                        className="mt-2 bg-gradient-to-r from-[#0ea5e9] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#0ea5e9] hover:shadow-lg hover:shadow-[#0ea5e9]/50 text-white transition-all duration-200 self-start cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+                        className="mt-2 bg-gradient-to-r from-[#0ea5e9] to-[#45e3d3] hover:from-[#45e3d3] hover:to-[#0ea5e9] hover:shadow-lg hover:shadow-[#0ea5e9]/50 text-white transition-all duration-200 self-start cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
                       >
                         {isWatching ? (
                           <Loader2
@@ -401,7 +401,7 @@ export function WatchVideos() {
 
                     {isCompleted && (
                       <div
-                        className={`flex items-center gap-2 mt-2 text-[#14b8a6] ${
+                        className={`flex items-center gap-2 mt-2 text-[#45e3d3] ${
                           isRTL ? "flex-row-reverse" : ""
                         }`}
                       >

@@ -16,7 +16,7 @@ export function HomePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
+    <div className="min-h-screen bg-[#0F021C]">
       <Navigation 
         onNavigateToSignIn={() => navigate(ROUTES.SIGN_IN)}
       />

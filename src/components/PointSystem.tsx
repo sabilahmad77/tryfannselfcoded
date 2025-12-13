@@ -97,11 +97,11 @@ const content = {
 };
 
 const colorMap = {
-  purple: { gradient: 'from-orange-600 to-amber-600', glow: 'shadow-orange-500/50', text: 'text-orange-400' },
-  cyan: { gradient: 'from-yellow-600 to-amber-600', glow: 'shadow-yellow-500/50', text: 'text-yellow-400' },
+  purple: { gradient: 'from-[#ffcc33] to-[#ffb54d]', glow: 'shadow-[#ffcc33]/50', text: 'text-[#ffcc33]' },
+  cyan: { gradient: 'from-[#ffcc33] to-[#ffb54d]', glow: 'shadow-[#ffcc33]/50', text: 'text-[#ffcc33]' },
   gray: { gradient: 'from-gray-600 to-gray-500', glow: 'shadow-gray-500/50', text: 'text-white/60' },
-  blue: { gradient: 'from-amber-600 to-yellow-600', glow: 'shadow-amber-500/50', text: 'text-amber-400' },
-  gold: { gradient: 'from-amber-600 to-yellow-600', glow: 'shadow-amber-500/50', text: 'text-amber-400' }
+  blue: { gradient: 'from-[#ffcc33] to-[#ffb54d]', glow: 'shadow-[#ffcc33]/50', text: 'text-[#ffcc33]' },
+  gold: { gradient: 'from-[#ffcc33] to-[#ffb54d]', glow: 'shadow-[#ffcc33]/50', text: 'text-[#ffcc33]' }
 };
 
 export function PointSystem({ language }: PointSystemProps) {
@@ -109,7 +109,7 @@ export function PointSystem({ language }: PointSystemProps) {
   const isRTL = language === 'ar';
 
   return (
-    <section className="relative py-32 overflow-hidden bg-[#0a0612]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="relative py-32 overflow-hidden bg-[#0F021C]" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -118,13 +118,13 @@ export function PointSystem({ language }: PointSystemProps) {
           className="w-full h-full object-cover opacity-75"
           style={{ transform: 'rotate(180deg)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/45 via-transparent to-[#0f172a]/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/45 via-transparent to-[#0F021C]/50" />
       </div>
 
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#d4af37]/15 rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#ffcc33]/15 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             rotate: [0, 180, 360],
@@ -147,7 +147,7 @@ export function PointSystem({ language }: PointSystemProps) {
         >
           <h2 className="mb-4 text-4xl md:text-5xl">
             <span className="text-white">{t.title.white}</span>
-            <span className="text-[#d4af37]">{t.title.gold}</span>
+            <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto text-lg">
             {t.subtitle}
@@ -170,10 +170,10 @@ export function PointSystem({ language }: PointSystemProps) {
                 key={index}
                 whileHover={{ scale: 1.05, rotateY: 5 }}
                 style={{ transformStyle: 'preserve-3d' }}
-                className="relative p-8 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/70 via-[#1e293b]/60 to-[#0f172a]/70 border border-[#d4af37]/40 hover:border-[#d4af37]/80 transition-all duration-300 group overflow-hidden"
+                className="relative p-8 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/70 via-[#1D112A]/60 to-[#0F021C]/70 border border-[#ffcc33]/40 hover:border-[#ffcc33]/80 transition-all duration-300 group overflow-hidden"
               >
                 {/* Gradient Glow Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#d4af37]/10 via-transparent to-[#14b8a6]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc33]/10 via-transparent to-[#45e3d3]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 
                 {/* Holographic Shimmer */}
                 <motion.div 
@@ -216,13 +216,13 @@ export function PointSystem({ language }: PointSystemProps) {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="max-w-5xl mx-auto"
         >
-          <div className="p-10 rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/80 via-[#1e293b]/70 to-[#0f172a]/80 border-2 border-[#d4af37]/50 shadow-2xl shadow-[#d4af37]/20 relative overflow-hidden">
+          <div className="p-10 rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0F021C]/80 border-2 border-[#ffcc33]/50 shadow-2xl shadow-[#ffcc33]/20 relative overflow-hidden">
             {/* Gradient Border Pulse */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#d4af37]/20 via-[#14b8a6]/20 to-[#d4af37]/20 opacity-50" />
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#ffcc33]/20 via-[#45e3d3]/20 to-[#ffcc33]/20 opacity-50" />
             
             {/* Animated background */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-[#d4af37]/10 via-[#14b8a6]/10 to-[#d4af37]/10"
+              className="absolute inset-0 bg-gradient-to-r from-[#ffcc33]/10 via-[#45e3d3]/10 to-[#ffcc33]/10"
               animate={{
                 backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
               }}

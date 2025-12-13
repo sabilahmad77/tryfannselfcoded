@@ -144,7 +144,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
   };
 
   return (
-    <section className="relative py-32 overflow-hidden bg-[#0a0612]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="relative py-32 overflow-hidden bg-[#0F021C]" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -153,7 +153,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
           className="w-full h-full object-cover opacity-70"
           style={{ transform: 'rotate(270deg) scale(1.1)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/45 via-transparent to-[#0f172a]/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/45 via-transparent to-[#0F021C]/50" />
       </div>
       {/* Background */}
       <div className="absolute inset-0">
@@ -181,7 +181,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
           </motion.div>
           <h2 className="mb-4 text-4xl md:text-5xl max-w-3xl mx-auto">
             <span className="text-white">{t.title.white}</span>
-            <span className="text-[#d4af37]">{t.title.gold}</span>
+            <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto text-lg">{t.subtitle}</p>
         </motion.div>
@@ -193,18 +193,18 @@ export function ReferralModule({ language }: ReferralModuleProps) {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <div className="p-8 md:p-12 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/80 via-[#1e293b]/70 to-[#0f172a]/80 border-2 border-[#d4af37]/50 relative overflow-hidden shadow-2xl shadow-[#d4af37]/30">
+          <div className="p-8 md:p-12 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0F021C]/80 border-2 border-[#ffcc33]/50 relative overflow-hidden shadow-2xl shadow-[#ffcc33]/30">
             {/* Gradient top accent */}
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent" />
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#ffcc33] to-transparent" />
             
             {/* Holographic overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#d4af37]/10 via-transparent to-[#14b8a6]/10 opacity-50" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc33]/10 via-transparent to-[#45e3d3]/10 opacity-50" />
             
             <div className="relative z-10 max-w-5xl mx-auto">
               {/* Code Section */}
               <div className="mb-8 text-center">
                 <div className="text-white/60 text-sm mb-4 uppercase tracking-wider">{t.codeCard.label}</div>
-                <div className="inline-flex items-center gap-4 p-6 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#1e1b4b]/60 to-[#0f172a]/60 border-2 border-[#d4af37]/40 mb-6 shadow-lg hover:shadow-[#d4af37]/30 transition-shadow">
+                <div className="inline-flex items-center gap-4 p-6 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#1D112A]/60 to-[#0F021C]/60 border-2 border-[#ffcc33]/40 mb-6 shadow-lg hover:shadow-[#ffcc33]/30 transition-shadow">
                   <div className="text-3xl md:text-4xl tracking-[0.3em] text-white font-mono">
                     {referralCode}
                   </div>
@@ -212,7 +212,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                     onClick={handleCopy}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#d4af37]/20 to-[#14b8a6]/20 border-2 border-[#d4af37]/40 hover:border-[#d4af37]/80 flex items-center justify-center transition-all shadow-md cursor-pointer"
+                    className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 border-2 border-[#ffcc33]/40 hover:border-[#ffcc33]/80 flex items-center justify-center transition-all shadow-md cursor-pointer"
                   >
                     {copied ? (
                       <Check className="w-5 h-5 text-green-400" />
@@ -236,7 +236,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleShare(social.platform)}
-                        className="px-4 py-2 rounded-lg backdrop-blur-md bg-gradient-to-br from-[#1e1b4b]/40 to-[#0f172a]/40 border border-[#d4af37]/30 hover:border-[#d4af37]/70 flex items-center gap-2 transition-all text-sm text-white/60 hover:text-white shadow-md hover:shadow-[#d4af37]/20 cursor-pointer"
+                        className="px-4 py-2 rounded-lg backdrop-blur-md bg-gradient-to-br from-[#1D112A]/40 to-[#0F021C]/40 border border-[#ffcc33]/30 hover:border-[#ffcc33]/70 flex items-center gap-2 transition-all text-sm text-white/60 hover:text-white shadow-md hover:shadow-[#ffcc33]/20 cursor-pointer"
                       >
                         <Icon className="w-4 h-4" />
                         <span className="hidden sm:inline">{social.label}</span>
@@ -261,7 +261,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                       viewport={{ once: true }}
                       transition={{ delay: 0.1 + index * 0.1 }}
                       whileHover={{ y: -3, scale: 1.02 }}
-                      className="text-center p-5 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#1e1b4b]/40 via-[#1e293b]/30 to-[#0f172a]/40 border border-[#d4af37]/20 hover:border-[#d4af37]/50 transition-all shadow-lg hover:shadow-[#d4af37]/20"
+                      className="text-center p-5 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#1D112A]/40 via-[#1D112A]/30 to-[#0F021C]/40 border border-[#ffcc33]/20 hover:border-[#ffcc33]/50 transition-all shadow-lg hover:shadow-[#ffcc33]/20"
                     >
                       <Icon className="w-5 h-5 text-amber-500/60 mx-auto mb-3" />
                       <div className="text-3xl text-white mb-2">{stat.value}</div>
@@ -286,11 +286,11 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             transition={{ delay: 0.2 }}
             className="lg:col-span-1"
           >
-            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/70 via-[#1e293b]/60 to-[#0f172a]/70 border-2 border-[#d4af37]/40 h-full shadow-xl hover:shadow-[#d4af37]/30 transition-shadow duration-300 overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#d4af37]/5 via-transparent to-[#14b8a6]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/70 via-[#1D112A]/60 to-[#0F021C]/70 border-2 border-[#ffcc33]/40 h-full shadow-xl hover:shadow-[#ffcc33]/30 transition-shadow duration-300 overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc33]/5 via-transparent to-[#45e3d3]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               <div className="flex items-center gap-2 mb-6 relative z-10">
-                <Target className="w-5 h-5 text-[#d4af37]" />
+                <Target className="w-5 h-5 text-[#ffcc33]" />
                 <h3 className="text-white text-lg">{t.process.title}</h3>
               </div>
               <div className="space-y-4 relative z-10">
@@ -304,10 +304,10 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                       viewport={{ once: true }}
                       transition={{ delay: 0.3 + index * 0.1 }}
                       whileHover={{ scale: 1.02, x: 4 }}
-                      className="flex items-center gap-4 p-3 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#1e1b4b]/50 to-[#0f172a]/50 border border-[#d4af37]/20 hover:border-[#d4af37]/50 transition-all"
+                      className="flex items-center gap-4 p-3 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#1D112A]/50 to-[#0F021C]/50 border border-[#ffcc33]/20 hover:border-[#ffcc33]/50 transition-all"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#d4af37]/40 to-[#14b8a6]/40 flex items-center justify-center shrink-0 shadow-lg border border-[#d4af37]/30">
-                        <Icon className="w-5 h-5 text-[#d4af37]" />
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#ffcc33]/40 to-[#45e3d3]/40 flex items-center justify-center shrink-0 shadow-lg border border-[#ffcc33]/30">
+                        <Icon className="w-5 h-5 text-[#ffcc33]" />
                       </div>
                       <div>
                         <div className="text-white text-sm mb-1">{step.title}</div>
@@ -328,16 +328,16 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             transition={{ delay: 0.3 }}
             className="lg:col-span-1"
           >
-            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/70 via-[#1e293b]/60 to-[#0f172a]/70 border-2 border-[#d4af37]/40 h-full shadow-xl hover:shadow-[#d4af37]/30 transition-shadow duration-300 overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#d4af37]/5 via-transparent to-[#14b8a6]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/70 via-[#1D112A]/60 to-[#0F021C]/70 border-2 border-[#ffcc33]/40 h-full shadow-xl hover:shadow-[#ffcc33]/30 transition-shadow duration-300 overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc33]/5 via-transparent to-[#45e3d3]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               <div className="flex items-center gap-2 mb-6 relative z-10">
-                <Zap className="w-5 h-5 text-[#d4af37]" />
+                <Zap className="w-5 h-5 text-[#ffcc33]" />
                 <h3 className="text-white text-lg">{t.earnings.title}</h3>
               </div>
 
               {/* Current Rate Highlight */}
-              <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-[#d4af37]/30 to-[#14b8a6]/30 border-2 border-[#d4af37]/60 text-center shadow-xl shadow-[#d4af37]/30 relative z-10 overflow-hidden">
+              <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-[#ffcc33]/30 to-[#45e3d3]/30 border-2 border-[#ffcc33]/60 text-center shadow-xl shadow-[#ffcc33]/30 relative z-10 overflow-hidden">
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
                   animate={{ x: ['-100%', '100%'] }}
@@ -392,11 +392,11 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             transition={{ delay: 0.4 }}
             className="lg:col-span-1"
           >
-            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/70 via-[#1e293b]/60 to-[#0f172a]/70 border-2 border-[#14b8a6]/40 h-full shadow-xl hover:shadow-[#14b8a6]/30 transition-shadow duration-300 overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#14b8a6]/5 via-transparent to-[#d4af37]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/70 via-[#1D112A]/60 to-[#0F021C]/70 border-2 border-[#45e3d3]/40 h-full shadow-xl hover:shadow-[#45e3d3]/30 transition-shadow duration-300 overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#45e3d3]/5 via-transparent to-[#ffcc33]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               <div className="flex items-center gap-2 mb-6 relative z-10">
-                <Award className="w-5 h-5 text-[#14b8a6]" />
+                <Award className="w-5 h-5 text-[#45e3d3]" />
                 <h3 className="text-white text-lg">{t.milestones.title}</h3>
               </div>
 
@@ -411,8 +411,8 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                       whileHover={{ scale: 1.05, y: -2 }}
                       className={`relative p-4 rounded-xl border-2 text-center backdrop-blur-md ${
                         isUnlocked
-                          ? 'bg-gradient-to-br from-[#14b8a6]/30 to-[#0d9488]/30 border-[#14b8a6] shadow-lg shadow-[#14b8a6]/30'
-                          : 'bg-gradient-to-br from-[#1e1b4b]/50 to-[#0f172a]/50 border-[#d4af37]/20'
+                          ? 'bg-gradient-to-br from-[#45e3d3]/30 to-[#3bc4b5]/30 border-[#45e3d3] shadow-lg shadow-[#45e3d3]/30'
+                          : 'bg-gradient-to-br from-[#1D112A]/50 to-[#0F021C]/50 border-[#ffcc33]/20'
                       }`}
                     >
                       {isUnlocked && (

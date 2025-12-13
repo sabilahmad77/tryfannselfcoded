@@ -487,7 +487,7 @@ export function LeaderboardPage() {
             whileHover={{ scale: 1.05, x: isRTL ? 5 : -5 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate(ROUTES.HOME)}
-            className={`flex items-center gap-2 glass px-6 py-3 rounded-full border border-[#d4af37]/30 text-white hover:border-[#d4af37]/50 transition-all cursor-pointer ${
+            className={`flex items-center gap-2 glass px-6 py-3 rounded-full border border-[#ffcc33]/30 text-white hover:border-[#ffcc33]/50 transition-all cursor-pointer ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
@@ -511,14 +511,14 @@ export function LeaderboardPage() {
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] rounded-xl flex items-center justify-center shrink-0">
-            <Trophy className="w-6 h-6 text-[#0f172a]" />
+          <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center shrink-0">
+            <Trophy className="w-6 h-6 text-[#0F021C]" />
           </div>
           <div>
             <h1 className="text-4xl md:text-5xl">
-              <span className="text-[#fef3c7]">{t.title}</span>
+              <span className="text-[#ffffff]">{t.title}</span>
             </h1>
-            <p className="text-[#cbd5e1] text-lg mt-1">{t.subtitle}</p>
+            <p className="text-[#808c99] text-lg mt-1">{t.subtitle}</p>
           </div>
         </div>
       </motion.div>
@@ -537,19 +537,19 @@ export function LeaderboardPage() {
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] rounded-xl flex items-center justify-center">
-              <Award className="w-6 h-6 text-[#0f172a]" />
+            <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
+              <Award className="w-6 h-6 text-[#0F021C]" />
             </div>
           </div>
           <motion.div
             key={`total-${totalCount}`}
             initial={{ scale: 1.2, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-4xl mb-2 bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-[#d4af37] bg-clip-text text-transparent"
+            className="text-4xl mb-2 bg-gradient-to-r from-[#ffcc33] via-[#ffb54d] to-[#ffcc33] bg-clip-text text-transparent"
           >
             {totalCount}
           </motion.div>
-          <div className="text-[#cbd5e1]">{t.stats.totalParticipants}</div>
+          <div className="text-[#808c99]">{t.stats.totalParticipants}</div>
         </div>
 
         {/* Top Tier */}
@@ -559,19 +559,19 @@ export function LeaderboardPage() {
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] rounded-xl flex items-center justify-center">
-              <Crown className="w-6 h-6 text-[#0f172a]" />
+            <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
+              <Crown className="w-6 h-6 text-[#0F021C]" />
             </div>
           </div>
           <motion.div
             key={`tier-${topTierCount}`}
             initial={{ scale: 1.2, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-4xl mb-2 bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-[#d4af37] bg-clip-text text-transparent"
+            className="text-4xl mb-2 bg-gradient-to-r from-[#ffcc33] via-[#ffb54d] to-[#ffcc33] bg-clip-text text-transparent"
           >
             {topTierCount}
           </motion.div>
-          <div className="text-[#cbd5e1]">{t.stats.topTier}</div>
+          <div className="text-[#808c99]">{t.stats.topTier}</div>
         </div>
 
         {/* Average Points */}
@@ -581,19 +581,19 @@ export function LeaderboardPage() {
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] rounded-xl flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-[#0f172a]" />
+            <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
+              <Sparkles className="w-6 h-6 text-[#0F021C]" />
             </div>
           </div>
           <motion.div
             key={`avg-${avgPoints}`}
             initial={{ scale: 1.2, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-4xl mb-2 bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-[#d4af37] bg-clip-text text-transparent"
+            className="text-4xl mb-2 bg-gradient-to-r from-[#ffcc33] via-[#ffb54d] to-[#ffcc33] bg-clip-text text-transparent"
           >
             {avgPoints.toLocaleString()}
           </motion.div>
-          <div className="text-[#cbd5e1]">{t.stats.avgPoints}</div>
+          <div className="text-[#808c99]">{t.stats.avgPoints}</div>
         </div>
       </motion.div>
 
@@ -603,10 +603,10 @@ export function LeaderboardPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/80 via-[#1e293b]/70 to-[#0f172a]/80 border-2 border-[#d4af37]/50 relative overflow-hidden shadow-xl shadow-[#d4af37]/20"
+          className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0F021C]/80 border-2 border-[#ffcc33]/50 relative overflow-hidden shadow-xl shadow-[#ffcc33]/20"
         >
           <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-[#d4af37]/15 via-[#14b8a6]/15 to-[#d4af37]/15"
+            className="absolute inset-0 bg-gradient-to-r from-[#ffcc33]/15 via-[#45e3d3]/15 to-[#ffcc33]/15"
             animate={{
               x: ["-100%", "100%"],
             }}
@@ -861,7 +861,7 @@ export function LeaderboardPage() {
               isRTL ? "flex-row-reverse justify-end" : "justify-start"
             }`}
           >
-            <span className="text-[#cbd5e1] text-sm">{t.userType}:</span>
+            <span className="text-[#808c99] text-sm">{t.userType}:</span>
             {(Object.keys(t.personas) as PersonaFilter[]).map((persona) => (
               <motion.button
                 key={persona}
@@ -883,7 +883,7 @@ export function LeaderboardPage() {
         {/* Loading & Error States */}
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <Loader2 className="w-8 h-8 text-[#d4af37] animate-spin" />
+            <Loader2 className="w-8 h-8 text-[#ffcc33] animate-spin" />
             <span className="text-white/70">{t.loading}</span>
           </div>
         )}
@@ -910,7 +910,7 @@ export function LeaderboardPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.02 }}
                 whileHover={{ scale: 1.01 }}
-                className="bg-white/5 rounded-xl p-4 border border-white/10 hover:border-[#d4af37]/30 transition-all"
+                className="bg-white/5 rounded-xl p-4 border border-white/10 hover:border-[#ffcc33]/30 transition-all"
               >
                 <div
                   className={`flex items-center gap-4 mb-3 ${
@@ -920,7 +920,7 @@ export function LeaderboardPage() {
                   <div className="flex items-center justify-center w-12 shrink-0">
                     {getRankIcon(leader.rank)}
                   </div>
-                  <Avatar className="w-12 h-12 border-2 border-[#d4af37]/50">
+                  <Avatar className="w-12 h-12 border-2 border-[#ffcc33]/50">
                     <AvatarImage src={leader.avatar} alt={leader.name} />
                     <AvatarFallback>{leader.name.charAt(0)}</AvatarFallback>
                   </Avatar>
@@ -946,11 +946,8 @@ export function LeaderboardPage() {
                       size="sm"
                       onClick={() => toggleFollow(leader.id, leader.username)}
                       disabled={loadingUserId === leader.id || leader.is_follow}
-                      className={`shrink-0 cursor-pointer ${
-                        isFollowing(leader.username) || leader.is_follow
-                          ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
-                          : "bg-gradient-to-r from-[#14b8a6] to-[#0ea5e9] hover:from-[#0d9488] hover:to-[#0284c7] text-white"
-                      }`}
+                      variant={isFollowing(leader.username) || leader.is_follow ? "outline" : "default"}
+                      className="shrink-0 cursor-pointer"
                     >
                       {loadingUserId === leader.id ? (
                         <>
@@ -991,7 +988,7 @@ export function LeaderboardPage() {
                       {leader.type}
                     </span>
                   </Badge>
-                  <div className="text-transparent bg-gradient-to-r from-[#d4af37] to-[#14b8a6] bg-clip-text">
+                  <div className="text-transparent bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] bg-clip-text">
                     {leader.points.toLocaleString()}
                   </div>
                   <Badge
@@ -1010,12 +1007,12 @@ export function LeaderboardPage() {
         {!isLoading && !isError && personaFilteredLeaders.length > 0 && (
           <div className="hidden lg:block">
             <table className="w-full">
-              <thead className="sticky top-0 z-10 bg-gradient-to-br from-[#1e1b4b]/95 via-[#1e293b]/95 to-[#0f172a]/95 backdrop-blur-sm">
+              <thead className="sticky top-0 z-10 bg-gradient-to-br from-[#1D112A]/95 via-[#1D112A]/95 to-[#0F021C]/95 backdrop-blur-sm">
                 <tr className="bg-white/5 border-b border-white/10">
                   {t.columns.map((column, index) => (
                     <th
                       key={index}
-                      className={`px-6 py-4 text-[#cbd5e1] ${
+                      className={`px-6 py-4 text-[#808c99] ${
                         isRTL ? "text-right" : "text-left"
                       }`}
                     >
@@ -1024,7 +1021,7 @@ export function LeaderboardPage() {
                   ))}
                   {isAuthenticated && (
                     <th
-                      className={`px-6 py-4 text-[#cbd5e1] ${
+                      className={`px-6 py-4 text-[#808c99] ${
                         isRTL ? "text-right" : "text-left"
                       }`}
                     >
@@ -1041,7 +1038,7 @@ export function LeaderboardPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.02 }}
                     whileHover={{
-                      backgroundColor: "rgba(212, 175, 55, 0.05)",
+                      backgroundColor: "rgba(255, 204, 51, 0.05)",
                     }}
                     className="border-b border-white/5 last:border-0 transition-colors"
                   >
@@ -1059,15 +1056,15 @@ export function LeaderboardPage() {
                           isRTL ? "flex-row-reverse" : ""
                         }`}
                       >
-                        <Avatar className="w-10 h-10 border-2 border-[#d4af37]/50">
+                        <Avatar className="w-10 h-10 border-2 border-[#ffcc33]/50">
                           <AvatarImage src={leader.avatar} alt={leader.name} />
                           <AvatarFallback>
                             {leader.name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <div className="text-[#fef3c7]">{leader.name}</div>
-                          <div className="text-[#cbd5e1] text-sm flex items-center gap-2">
+                          <div className="text-[#ffffff]">{leader.name}</div>
+                          <div className="text-[#808c99] text-sm flex items-center gap-2">
                             {leader.username}
                             {isAuthenticated && (
                               <>
@@ -1099,7 +1096,7 @@ export function LeaderboardPage() {
 
                     {/* Points */}
                     <td className="px-6 py-4">
-                      <span className="text-transparent bg-gradient-to-r from-[#d4af37] to-[#14b8a6] bg-clip-text text-lg">
+                      <span className="text-transparent bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] bg-clip-text text-lg">
                         {leader.points.toLocaleString()}
                       </span>
                     </td>
@@ -1125,11 +1122,8 @@ export function LeaderboardPage() {
                           disabled={
                             loadingUserId === leader.id || leader.is_follow
                           }
-                          className={`cursor-pointer ${
-                            isFollowing(leader.username) || leader.is_follow
-                              ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
-                              : "bg-gradient-to-r from-[#14b8a6] to-[#0ea5e9] hover:from-[#0d9488] hover:to-[#0284c7] text-white"
-                          }`}
+                          variant={isFollowing(leader.username) || leader.is_follow ? "outline" : "default"}
+                          className="cursor-pointer"
                         >
                           {loadingUserId === leader.id ? (
                             <>
@@ -1174,14 +1168,14 @@ export function LeaderboardPage() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-4 py-2 rounded-full border border-[#d4af37]/50 text-white/60 hover:text-white hover:border-[#d4af37]/30 transition-all ${
+            className={`px-4 py-2 rounded-full border border-[#ffcc33]/50 text-white/60 hover:text-white hover:border-[#ffcc33]/30 transition-all ${
               currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
             } ${isRTL ? "flex-row-reverse" : ""}`}
           >
             <ChevronLeft className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />
           </motion.button>
           <div
-            className={`mx-4 text-[#cbd5e1] ${
+            className={`mx-4 text-[#808c99] ${
               isRTL ? "text-right" : "text-left"
             }`}
           >
@@ -1195,7 +1189,7 @@ export function LeaderboardPage() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded-full border border-[#d4af37]/50 text-white/60 hover:text-white hover:border-[#d4af37]/30 transition-all ${
+            className={`px-4 py-2 rounded-full border border-[#ffcc33]/50 text-white/60 hover:text-white hover:border-[#ffcc33]/30 transition-all ${
               currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
             } ${isRTL ? "flex-row-reverse" : ""}`}
           >
@@ -1214,7 +1208,7 @@ export function LeaderboardPage() {
     // Render without dashboard layout (public access or from homepage)
     return (
       <div
-        className="min-h-screen bg-[#0a0612] relative"
+        className="min-h-screen bg-[#0F021C] relative"
         dir={isRTL ? "rtl" : "ltr"}
       >
         {/* Background */}
@@ -1224,7 +1218,7 @@ export function LeaderboardPage() {
             alt="Background"
             className="w-full h-full object-cover opacity-30"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/90 via-[#0f172a]/95 to-[#0f172a]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/90 via-[#0F021C]/95 to-[#0F021C]" />
         </div>
 
         {/* Main Content */}

@@ -108,14 +108,14 @@ export function ExhibitionPlanner() {
         <div
           className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#8b5cf6] to-[#6366f1] rounded-xl flex items-center justify-center">
+          <div className="w-12 h-12 bg-gradient-to-br from-[#9375b5] to-[#9375b5] rounded-xl flex items-center justify-center">
             <Calendar className="w-6 h-6 text-white" />
           </div>
-          <h2 className="text-2xl text-[#fef3c7]">{t.title}</h2>
+          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
         </div>
         <Button
           size="sm"
-          className="bg-gradient-to-r from-[#d4af37] to-[#fbbf24] hover:from-[#b8941f] hover:to-[#c9a028] hover:shadow-lg hover:shadow-[#d4af37]/50 text-[#0f172a] border-0 transition-all duration-200 cursor-pointer"
+          className="hover:shadow-lg hover:shadow-primary/50 border-0 transition-all duration-200 cursor-pointer"
         >
           <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
           {t.createNew}
@@ -131,7 +131,7 @@ export function ExhibitionPlanner() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
             whileHover={{ scale: 1.02 }}
-            className="bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-xl p-4 border border-[#334155] hover:border-[#d4af37]/50 transition-all cursor-pointer"
+            className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
           >
             <div
               className={`flex items-start justify-between mb-3 ${
@@ -139,9 +139,9 @@ export function ExhibitionPlanner() {
               }`}
             >
               <div className={isRTL ? "text-right" : "text-left"}>
-                <h3 className="text-[#fef3c7] mb-1">{exhibition.title}</h3>
+                <h3 className="text-[#ffffff] mb-1">{exhibition.title}</h3>
                 <div
-                  className={`flex items-center gap-2 text-sm text-[#cbd5e1] ${
+                  className={`flex items-center gap-2 text-sm text-[#808c99] ${
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
@@ -155,7 +155,7 @@ export function ExhibitionPlanner() {
             </div>
 
             <div
-              className={`flex items-center gap-2 mb-3 text-sm text-[#cbd5e1] ${
+              className={`flex items-center gap-2 mb-3 text-sm text-[#808c99] ${
                 isRTL ? "flex-row-reverse" : ""
               }`}
             >
@@ -169,16 +169,16 @@ export function ExhibitionPlanner() {
               <div
                 className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}
               >
-                <Eye className="w-4 h-4 text-[#14b8a6]" />
-                <span className="text-sm text-[#cbd5e1]">
+                <Eye className="w-4 h-4 text-[#45e3d3]" />
+                <span className="text-sm text-[#808c99]">
                   {exhibition.visitors} {t.visitors}
                 </span>
               </div>
               <div
                 className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}
               >
-                <TrendingUp className="w-4 h-4 text-[#8b5cf6]" />
-                <span className="text-sm text-[#cbd5e1]">
+                <TrendingUp className="w-4 h-4 text-[#9375b5]" />
+                <span className="text-sm text-[#808c99]">
                   {exhibition.artworks} {t.artworks}
                 </span>
               </div>
@@ -190,7 +190,7 @@ export function ExhibitionPlanner() {
       {/* View All Button */}
       <Button
         variant="ghost"
-        className="w-full mt-4 text-[#d4af37] hover:text-[#fbbf24] hover:bg-[#d4af37]/20 transition-all duration-200 cursor-pointer"
+        className="w-full mt-4 transition-all duration-200 cursor-pointer"
       >
         {t.viewAll}
       </Button>

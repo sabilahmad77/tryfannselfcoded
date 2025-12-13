@@ -21,8 +21,6 @@ import { ROUTES } from "@/routes/paths";
 import { clearAuth } from "@/store/authSlice";
 import { persistor } from "@/store/store";
 import type { RootState } from "@/store/store";
-import { useGetProgressionQuery } from "@/services/api/dashboardApi";
-import { getCurrentTier, tierNameToKey, buildTierThresholds } from "@/utils/tierSystem";
 import fannLogo from "figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png";
 
 interface DashboardNavProps {
@@ -41,7 +39,12 @@ const content = {
     logout: "Logout",
     collapse: "Collapse",
     expand: "Expand",
-    // Tier names will be fetched from API
+    roles: {
+      artist: "Artist",
+      collector: "Collector",
+      gallery: "Gallery",
+      ambassador: "Ambassador",
+    },
   },
   ar: {
     dashboard: "لوحة التحكم",
@@ -51,7 +54,12 @@ const content = {
     logout: "تسجيل الخروج",
     collapse: "طي",
     expand: "توسيع",
-    // Tier names will be fetched from API
+    roles: {
+      artist: "فنان",
+      collector: "جامع",
+      gallery: "معرض",
+      ambassador: "سفير",
+    },
   },
 };
 
@@ -66,6 +74,7 @@ export function DashboardNav({
   const location = useLocation();
   const dispatch = useDispatch();
   const storedUser = useSelector((state: RootState) => state.auth.user);
+  const persona = useSelector((state: RootState) => state.auth.persona);
   const t = content[language];
   const isRTL = language === "ar";
   const [internalCollapsed, setInternalCollapsed] = useState(false);
@@ -91,33 +100,26 @@ export function DashboardNav({
       "U"
     : "U";
 
-  // Fetch progression data for dynamic tier system
-  const { data: progressionData } = useGetProgressionQuery();
-
-  // Get user tier using dynamic tier system
-  const getUserTier = () => {
-    if (!storedUser) {
-      // Fallback to first tier from API or default
-      const firstTier = progressionData?.data?.[0];
-      return firstTier?.name || "Explorer";
-    }
+  // Get user role for display
+  const getUserRole = () => {
+    // Get role from storedUser.role first, then fallback to persona
+    const displayRoleRaw =
+      storedUser?.role?.toLowerCase() || persona?.toLowerCase() || "artist";
     
-    const points = parseInt(storedUser.points || "0", 10);
-    const progressionTiers = progressionData?.data || [];
+    // Validate and map role to our supported roles
+    const validRoles: Array<"artist" | "collector" | "gallery" | "ambassador"> = [
+      "artist",
+      "collector",
+      "gallery",
+      "ambassador",
+    ];
+    const displayRole = validRoles.includes(
+      displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador"
+    )
+      ? (displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador")
+      : "artist";
     
-    if (progressionTiers.length === 0) {
-      // Fallback to first tier from API or default
-      const firstTier = progressionData?.data?.[0];
-      return firstTier?.name || "Explorer";
-    }
-    
-    // Build tier thresholds and get current tier
-    const tierThresholds = buildTierThresholds(progressionTiers);
-    const tierKey = getCurrentTier(points, tierThresholds);
-    
-    // Find tier name from API data
-    const tier = progressionTiers.find(t => tierNameToKey(t.name) === tierKey);
-    return tier?.name || "Explorer";
+    return t.roles[displayRole] || t.roles.artist;
   };
 
   // Use controlled state if provided, otherwise use internal state
@@ -204,7 +206,7 @@ export function DashboardNav({
   return (
     <>
       {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-[#d4af37]/20">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-[#ffcc33]/20">
         <div className="flex items-center justify-between h-16 px-4">
           {/* Logo */}
           <div className="flex items-center gap-3">
@@ -218,7 +220,7 @@ export function DashboardNav({
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-[#fef3c7] p-2 hover:text-[#d4af37] hover:bg-[#d4af37]/10 rounded-lg transition-all cursor-pointer"
+            className="text-[#ffffff] p-2 hover:text-[#ffcc33] hover:bg-[#ffcc33]/10 rounded-lg transition-all cursor-pointer"
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6" />
@@ -235,7 +237,7 @@ export function DashboardNav({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="border-t border-[#d4af37]/20"
+              className="border-t border-[#ffcc33]/20"
             >
               <div className="flex flex-col gap-2 p-4">
                 {navItems
@@ -253,8 +255,8 @@ export function DashboardNav({
                         }}
                         className={`justify-start gap-3 transition-all duration-200 cursor-pointer ${
                           isActive
-                            ? "bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/30"
-                            : "text-[#cbd5e1] hover:text-[#d4af37] hover:bg-[#d4af37]/20"
+                            ? "bg-[#ffcc33]/20 text-[#ffcc33] border border-[#ffcc33]/30"
+                            : "text-[#808c99] hover:text-[#ffcc33] hover:bg-[#ffcc33]/20"
                         }`}
                       >
                         <Icon className="w-5 h-5" />
@@ -262,14 +264,14 @@ export function DashboardNav({
                       </Button>
                     );
                   })}
-                <div className="h-px bg-[#d4af37]/20 my-2" />
+                <div className="h-px bg-[#ffcc33]/20 my-2" />
                 <Button
                   variant="ghost"
                   onClick={() => {
                     handleLogout();
                     setMobileMenuOpen(false);
                   }}
-                  className="justify-start gap-3 text-[#cbd5e1] hover:text-destructive hover:bg-destructive/20 transition-all duration-200 cursor-pointer"
+                  className="justify-start gap-3 text-[#808c99] hover:text-destructive hover:bg-destructive/20 transition-all duration-200 cursor-pointer"
                 >
                   <LogOut className="w-5 h-5" />
                   {t.logout}
@@ -286,11 +288,11 @@ export function DashboardNav({
         animate={{ width: isCollapsed ? "80px" : "280px" }}
         className={`hidden lg:flex fixed ${
           isRTL ? "right-0 border-l" : "left-0 border-r"
-        } top-0 bottom-0 z-40 glass border-[#d4af37]/20 flex-col`}
+        } top-0 bottom-0 z-40 glass border-[#ffcc33]/20 flex-col`}
         style={{ pointerEvents: "auto" }}
       >
         {/* Header */}
-        <div className="p-6 border-b border-[#d4af37]/20">
+        <div className="p-6 border-b border-[#ffcc33]/20">
           <motion.div
             className="flex items-center justify-center"
             initial={false}
@@ -320,7 +322,7 @@ export function DashboardNav({
         </div>
 
         {/* User Profile Section */}
-        <div className="p-6 border-b border-[#d4af37]/20">
+        <div className="p-6 border-b border-[#ffcc33]/20">
           <motion.div
             className={`flex items-center gap-3 ${
               isCollapsed ? "justify-center" : ""
@@ -328,14 +330,14 @@ export function DashboardNav({
             initial={false}
           >
             <Avatar
-              className="w-12 h-12 border-2 border-[#d4af37] cursor-pointer shrink-0 hover:scale-105 transition-transform"
+              className="w-12 h-12 border-2 border-[#ffcc33] cursor-pointer shrink-0 hover:scale-105 transition-transform"
               onClick={() => navigate(ROUTES.PROFILE)}
             >
               <AvatarImage
                 src={storedUser?.profile_image || ""}
                 alt={userName}
               />
-              <AvatarFallback className="bg-gradient-to-br from-[#d4af37] to-[#14b8a6] text-[#0f172a]">
+              <AvatarFallback className="bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] text-[#0F021C]">
                 {userInitials}
               </AvatarFallback>
             </Avatar>
@@ -346,9 +348,9 @@ export function DashboardNav({
                 exit={{ opacity: 0 }}
                 className="flex flex-col overflow-hidden"
               >
-                <span className="text-[#fef3c7] truncate">{userName}</span>
-                <span className="text-[#cbd5e1]/60 text-sm">
-                  {getUserTier()}
+                <span className="text-[#ffffff] truncate">{userName}</span>
+                <span className="text-[#808c99]/60 text-sm">
+                  {getUserRole()}
                 </span>
               </motion.div>
             )}
@@ -370,8 +372,8 @@ export function DashboardNav({
                   whileTap={{ scale: 0.98 }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer ${
                     isActive
-                      ? "bg-gradient-to-r from-[#d4af37]/20 to-[#14b8a6]/10 text-[#d4af37] border border-[#d4af37]/30 glow-gold-subtle"
-                      : "text-[#cbd5e1] hover:text-[#d4af37] hover:bg-[#d4af37]/10"
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-[#808c99] hover:text-primary hover:bg-primary/10"
                   } ${isCollapsed ? "justify-center" : ""}`}
                   style={{ pointerEvents: "auto" }}
                 >
@@ -391,13 +393,13 @@ export function DashboardNav({
         </nav>
 
         {/* Bottom Section */}
-        <div className="p-4 border-t border-[#d4af37]/20 space-y-2">
+        <div className="p-4 border-t border-[#ffcc33]/20 space-y-2">
           {/* Logout Button */}
           <motion.button
             onClick={handleLogout}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#cbd5e1] hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer ${
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#808c99] hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer ${
               isCollapsed ? "justify-center" : ""
             }`}
             style={{ pointerEvents: "auto" }}
@@ -419,7 +421,7 @@ export function DashboardNav({
             onClick={() => setIsCollapsed(!isCollapsed)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#cbd5e1]/60 hover:text-[#cbd5e1] hover:bg-[#fef3c7]/5 transition-all cursor-pointer ${
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#808c99]/60 hover:text-[#808c99] hover:bg-[#ffffff]/5 transition-all cursor-pointer ${
               isCollapsed ? "justify-center" : ""
             }`}
             title={isCollapsed ? t.expand : t.collapse}

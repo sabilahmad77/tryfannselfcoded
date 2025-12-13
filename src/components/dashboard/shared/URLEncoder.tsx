@@ -141,8 +141,8 @@ export function URLEncoder() {
     return (
       <div className="glass rounded-2xl p-6 h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 text-[#14b8a6] animate-spin" />
-          <p className="text-[#cbd5e1]">
+          <Loader2 className="w-8 h-8 text-[#45e3d3] animate-spin" />
+          <p className="text-[#808c99]">
             {language === "en"
               ? "Loading referral data..."
               : "جاري تحميل بيانات الإحالة..."}
@@ -160,12 +160,12 @@ export function URLEncoder() {
           isRTL ? "flex-row-reverse" : ""
         }`}
       >
-        <div className="w-12 h-12 bg-gradient-to-br from-[#14b8a6] to-[#0ea5e9] rounded-xl flex items-center justify-center">
-          <Link2 className="w-6 h-6 text-[#0f172a]" />
+        <div className="w-12 h-12 bg-gradient-to-br from-[#45e3d3] to-[#0ea5e9] rounded-xl flex items-center justify-center">
+          <Link2 className="w-6 h-6 text-[#0F021C]" />
         </div>
         <div className={isRTL ? "text-right" : "text-left"}>
-          <h2 className="text-2xl text-[#fef3c7]">{t.title}</h2>
-          <p className="text-sm text-[#cbd5e1]">{t.description}</p>
+          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
+          <p className="text-sm text-[#808c99]">{t.description}</p>
         </div>
       </div>
 
@@ -177,7 +177,7 @@ export function URLEncoder() {
           }`}
         >
           <label
-            className={`text-sm text-[#cbd5e1] block ${
+            className={`text-sm text-[#808c99] block ${
               isRTL ? "text-right" : "text-left"
             }`}
           >
@@ -188,7 +188,7 @@ export function URLEncoder() {
             disabled={isGenerating || isReferralCode}
             size="sm"
             variant="outline"
-            className="text-xs border-[#14b8a6] text-[#14b8a6] hover:bg-[#14b8a6] hover:text-white hover:border-[#0d9488] hover:shadow-lg hover:shadow-[#14b8a6]/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="text-xs transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {isGenerating ? (
               <>
@@ -209,12 +209,12 @@ export function URLEncoder() {
                 ? "No referral link yet"
                 : "لا يوجد رابط إحالة بعد"
             }
-            className="flex-1 bg-[#1e293b] border-[#334155] text-[#fef3c7] focus:border-[#d4af37]"
+            className="flex-1 bg-[#1D112A] border-[#4e4e4e78] text-[#ffffff] focus:border-[#ffcc33]"
           />
           <Button
             onClick={handleCopy}
             disabled={!referralLink}
-            className="bg-gradient-to-r from-[#d4af37] to-[#fbbf24] hover:from-[#fbbf24] hover:to-[#d4af37] hover:shadow-lg hover:shadow-[#d4af37]/50 text-[#0f172a] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="hover:shadow-lg hover:shadow-primary/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {copied ? (
               <>
@@ -237,28 +237,28 @@ export function URLEncoder() {
           whileHover={{ scale: 1.05 }}
           className="bg-gradient-to-br from-[#0ea5e9]/20 to-[#0ea5e9]/5 rounded-xl p-4 border border-[#0ea5e9]/30 text-center"
         >
-          <p className="text-2xl text-[#fef3c7] mb-1">{stats.clicks}</p>
-          <p className="text-xs text-[#cbd5e1]">{t.stats.clicks}</p>
+          <p className="text-2xl text-[#ffffff] mb-1">{stats.clicks}</p>
+          <p className="text-xs text-[#808c99]">{t.stats.clicks}</p>
         </motion.div>
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#14b8a6]/20 to-[#14b8a6]/5 rounded-xl p-4 border border-[#14b8a6]/30 text-center"
+          className="bg-gradient-to-br from-[#45e3d3]/20 to-[#45e3d3]/5 rounded-xl p-4 border border-[#45e3d3]/30 text-center"
         >
-          <p className="text-2xl text-[#fef3c7] mb-1">{stats.conversions}</p>
-          <p className="text-xs text-[#cbd5e1]">{t.stats.conversions}</p>
+          <p className="text-2xl text-[#ffffff] mb-1">{stats.conversions}</p>
+          <p className="text-xs text-[#808c99]">{t.stats.conversions}</p>
         </motion.div>
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#fbbf24]/20 to-[#fbbf24]/5 rounded-xl p-4 border border-[#fbbf24]/30 text-center"
+          className="bg-gradient-to-br from-[#ffb54d]/20 to-[#ffb54d]/5 rounded-xl p-4 border border-[#ffb54d]/30 text-center"
         >
-          <p className="text-2xl text-[#fef3c7] mb-1">{stats.pending}</p>
-          <p className="text-xs text-[#cbd5e1]">{t.stats.pending}</p>
+          <p className="text-2xl text-[#ffffff] mb-1">{stats.pending}</p>
+          <p className="text-xs text-[#808c99]">{t.stats.pending}</p>
         </motion.div>
       </div>
 
       {/* Share Buttons */}
       <div className={isRTL ? "text-right" : "text-left"}>
-        <p className="text-sm text-[#cbd5e1] mb-3">{t.shareOn}</p>
+        <p className="text-sm text-[#808c99] mb-3">{t.shareOn}</p>
         <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
           <motion.button
             whileHover={{ scale: 1.1, rotate: 5 }}
@@ -298,9 +298,9 @@ export function URLEncoder() {
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => handleShare("email")}
-            className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#d4af37] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#d4af37]/50 transition-all cursor-pointer"
+            className="w-12 h-12 bg-primary hover:bg-primary/90 rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-primary/50 transition-all cursor-pointer"
           >
-            <Mail className="w-6 h-6 text-[#0f172a]" />
+            <Mail className="w-6 h-6 text-[#0F021C]" />
           </motion.button>
         </div>
       </div>
@@ -318,11 +318,11 @@ export function URLEncoder() {
               value={referralLink}
               size={128}
               level="H"
-              fgColor="#0f172a"
+              fgColor="#0F021C"
               bgColor="#ffffff"
             />
           </div>
-          <p className="text-xs text-[#cbd5e1] text-center mt-2">
+          <p className="text-xs text-[#808c99] text-center mt-2">
             {language === "en"
               ? "Scan QR Code to share"
               : "امسح رمز QR للمشاركة"}
@@ -333,8 +333,8 @@ export function URLEncoder() {
           whileHover={{ scale: 1.02 }}
           className="mt-6 p-4 bg-white/5 rounded-xl flex items-center justify-center"
         >
-          <div className="w-32 h-32 bg-gradient-to-br from-[#d4af37]/20 to-[#14b8a6]/20 rounded-lg flex items-center justify-center border-2 border-dashed border-[#334155]">
-            <Share2 className="w-16 h-16 text-[#cbd5e1] opacity-30" />
+          <div className="w-32 h-32 bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 rounded-lg flex items-center justify-center border-2 border-dashed border-[#4e4e4e78]">
+            <Share2 className="w-16 h-16 text-[#808c99] opacity-30" />
           </div>
         </motion.div>
       )}

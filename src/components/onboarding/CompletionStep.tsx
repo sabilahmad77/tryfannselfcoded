@@ -383,7 +383,7 @@ export function CompletionStep({ language }: CompletionStepProps) {
         >
           <Button
             onClick={handleComplete}
-            className="w-full h-16 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/50 transition-all group relative overflow-hidden text-lg cursor-pointer"
+            className="w-full h-16 shadow-lg shadow-primary/50 transition-all group relative overflow-hidden text-lg cursor-pointer"
           >
             <span className="relative z-10 flex items-center justify-center gap-3">
               <Sparkles className="w-6 h-6" />

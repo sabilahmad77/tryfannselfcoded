@@ -32,7 +32,7 @@ const content = {
           "Direct collector access",
         ],
         gradient: "from-amber-500 via-yellow-500 to-amber-600",
-        accentColor: "#f59e0b",
+        accentColor: "#ffcc33",
       },
       {
         id: "gallery",
@@ -74,7 +74,7 @@ const content = {
           "Community leadership",
         ],
         gradient: "from-teal-500 via-cyan-500 to-teal-600",
-        accentColor: "#14b8a6",
+        accentColor: "#45e3d3",
       },
     ],
     cta: "Get Started",
@@ -95,7 +95,7 @@ const content = {
           "وصول مباشر للمقتنين",
         ],
         gradient: "from-amber-500 via-yellow-500 to-amber-600",
-        accentColor: "#f59e0b",
+        accentColor: "#ffcc33",
       },
       {
         id: "gallery",
@@ -137,7 +137,7 @@ const content = {
           "قيادة المجتمع",
         ],
         gradient: "from-teal-500 via-cyan-500 to-teal-600",
-        accentColor: "#14b8a6",
+        accentColor: "#45e3d3",
       },
     ],
     cta: "ابدأ الآن",
@@ -172,7 +172,7 @@ export function PersonaPaths({
 
   return (
     <section
-      className="relative py-16 sm:py-24 lg:py-32 overflow-hidden bg-[#0a0612]"
+      className="relative py-16 sm:py-24 lg:py-32 overflow-hidden bg-[#0F021C]"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -183,13 +183,13 @@ export function PersonaPaths({
           className="w-full h-full object-cover opacity-80"
           style={{ transform: "scaleY(-1)" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/40 via-transparent to-[#0f172a]/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/40 via-transparent to-[#0F021C]/40" />
       </div>
 
       {/* Background gradient mesh */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#d4af37]/15 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#14b8a6]/15 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#ffcc33]/15 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#45e3d3]/15 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -202,7 +202,7 @@ export function PersonaPaths({
         >
           <h2 className="mb-3 sm:mb-4 text-3xl sm:text-4xl md:text-5xl">
             <span className="text-white">{t.title.white}</span>
-            <span className="text-[#d4af37]">{t.title.gold}</span>
+            <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto text-base sm:text-lg px-4">
             {t.subtitle}
@@ -245,7 +245,7 @@ export function PersonaPaths({
                       ease: "linear",
                     }}
                   >
-                    <div className="w-full h-full rounded-3xl bg-[#0a0612]" />
+                    <div className="w-full h-full rounded-3xl bg-[#0F021C]" />
                   </motion.div>
 
                   {/* Card Content */}
