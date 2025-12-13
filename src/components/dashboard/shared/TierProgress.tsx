@@ -45,12 +45,12 @@ const getTierConfig = (tierName: string) => {
     },
     Ambassador: {
       icon: Crown,
-      color: "from-orange-600 to-amber-600",
+      color: "from-[#ffcc33] to-[#ffb54d]",
       multiplier: "3x",
     },
     "Founding Patron": {
       icon: Award,
-      color: "from-amber-600 to-yellow-600",
+      color: "from-[#ffcc33] to-[#ffb54d]",
       multiplier: "5x",
     },
   };
@@ -58,7 +58,7 @@ const getTierConfig = (tierName: string) => {
   return (
     configMap[tierName] || {
       icon: Star,
-      color: "from-blue-400 to-cyan-500",
+      color: "from-[#45e3d3] to-[#4de3ed]",
       multiplier: "1x",
     }
   );
@@ -170,12 +170,12 @@ export function TierProgress() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-2xl p-6 border border-[#d4af37]/20"
+        className="glass rounded-2xl p-6 border border-[#ffcc33]/20"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <div className="flex flex-col items-center justify-center py-12 gap-4">
-          <Loader2 className="w-8 h-8 text-[#d4af37] animate-spin" />
-          <p className="text-[#cbd5e1]">
+          <Loader2 className="w-8 h-8 text-[#ffcc33] animate-spin" />
+          <p className="text-[#808c99]">
             {language === "en"
               ? "Loading tier progress..."
               : "جاري تحميل تقدم المستوى..."}
@@ -192,14 +192,14 @@ export function TierProgress() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-2xl p-6 border border-[#d4af37]/20"
+        className="glass rounded-2xl p-6 border border-[#ffcc33]/20"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <div className="flex flex-col items-center justify-center py-12 gap-4 text-center">
           <div className="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center">
             <Award className="w-6 h-6 text-red-500" />
           </div>
-          <p className="text-[#cbd5e1]">
+          <p className="text-[#808c99]">
             {language === "en"
               ? "Failed to load tier progress. Please try again."
               : "فشل تحميل تقدم المستوى. يرجى المحاولة مرة أخرى."}
@@ -213,7 +213,7 @@ export function TierProgress() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass rounded-2xl p-6 border border-[#d4af37]/20"
+      className="glass rounded-2xl p-6 border border-[#ffcc33]/20"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Header */}
@@ -222,12 +222,12 @@ export function TierProgress() {
           isRTL ? "flex-row-reverse" : ""
         }`}
       >
-        <h2 className="text-2xl text-[#fef3c7]">{t.tierProgress}</h2>
+        <h2 className="text-2xl text-[#ffffff]">{t.tierProgress}</h2>
         <div
           className={`flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r ${currentTierConfig.color}`}
         >
-          <Zap className="w-4 h-4 text-[#0f172a]" />
-          <span className="text-[#0f172a]">{currentTierConfig.multiplier}</span>
+          <Zap className="w-4 h-4 text-[#0F021C]" />
+          <span className="text-[#0F021C]">{currentTierConfig.multiplier}</span>
         </div>
       </div>
 
@@ -235,36 +235,36 @@ export function TierProgress() {
       <div className="grid grid-cols-2 gap-4 mb-6">
         {/* Current */}
         <div
-          className={`bg-gradient-to-br ${currentTierConfig.color} bg-opacity-20 border border-[#d4af37]/40 rounded-xl p-4`}
+          className={`bg-gradient-to-br ${currentTierConfig.color} bg-opacity-20 border border-[#ffcc33]/40 rounded-xl p-4`}
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <CurrentTierIcon className="w-5 h-5 text-[#d4af37]" />
-            <span className="text-xs text-[#cbd5e1]">{t.currentTier}</span>
+            <CurrentTierIcon className="w-5 h-5 text-[#ffcc33]" />
+            <span className="text-xs text-[#808c99]">{t.currentTier}</span>
           </div>
-          <p className="text-xl text-[#fef3c7]">{currentTierName}</p>
-          <p className="text-sm text-[#cbd5e1] mt-1">{userPoints} pts</p>
+          <p className="text-xl text-[#ffffff]">{currentTierName}</p>
+          <p className="text-sm text-[#808c99] mt-1">{userPoints} pts</p>
         </div>
 
         {/* Next */}
-        <div className="bg-[#1e293b]/50 border border-[#334155] rounded-xl p-4">
+        <div className="bg-[#1D112A]/50 border border-[#4e4e4e78] rounded-xl p-4">
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <NextTierIcon className="w-5 h-5 text-[#14b8a6]" />
-            <span className="text-xs text-[#cbd5e1]">
+            <NextTierIcon className="w-5 h-5 text-[#45e3d3]" />
+            <span className="text-xs text-[#808c99]">
               {nextTierName ? t.nextTier : t.currentTier}
             </span>
           </div>
-          <p className="text-xl text-[#fef3c7]">
+          <p className="text-xl text-[#ffffff]">
             {nextTierName || currentTierName}
           </p>
-          <p className="text-sm text-[#cbd5e1] mt-1">
+          <p className="text-sm text-[#808c99] mt-1">
             {nextTierName
               ? `${pointsNeeded} pts ${t.pointsToGo}`
               : language === "en"
@@ -276,7 +276,7 @@ export function TierProgress() {
 
       {/* Progress Bar */}
       <div className="mb-6">
-        <div className="relative h-3 bg-[#1e293b] rounded-full overflow-hidden border border-[#334155]">
+        <div className="relative h-3 bg-[#1D112A] rounded-full overflow-hidden border border-[#4e4e4e78]">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${Math.min(progress, 100)}%` }}
@@ -287,12 +287,12 @@ export function TierProgress() {
           />
         </div>
         <div
-          className={`flex items-center justify-between mt-2 text-xs text-[#cbd5e1]/60 ${
+          className={`flex items-center justify-between mt-2 text-xs text-[#808c99]/60 ${
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
           <span>{tierInfo?.currentTierMin || 0}</span>
-          <span className="text-[#d4af37]">{Math.round(progress)}%</span>
+          <span className="text-[#ffcc33]">{Math.round(progress)}%</span>
           <span>
             {tierInfo?.nextTierMin || tierInfo?.currentTierMax || "∞"}
           </span>
@@ -321,23 +321,23 @@ export function TierProgress() {
                     isCurrent
                       ? `bg-gradient-to-br ${tierConfig.color} glow-gold`
                       : isUnlocked
-                      ? "bg-[#1e293b] border border-[#d4af37]/30"
-                      : "bg-[#1e293b]/30 border border-[#334155]"
+                      ? "bg-[#1D112A] border border-[#ffcc33]/30"
+                      : "bg-[#1D112A]/30 border border-[#4e4e4e78]"
                   }`}
                 >
                   <TierIcon
                     className={`w-5 h-5 ${
                       isCurrent
-                        ? "text-[#0f172a]"
+                        ? "text-[#0F021C]"
                         : isUnlocked
-                        ? "text-[#d4af37]"
-                        : "text-[#475569]"
+                        ? "text-[#ffcc33]"
+                        : "text-[#808c99]"
                     }`}
                   />
                 </motion.div>
                 <span
                   className={`text-xs text-center ${
-                    isUnlocked ? "text-[#cbd5e1]" : "text-[#475569]"
+                    isUnlocked ? "text-[#808c99]" : "text-[#808c99]"
                   }`}
                 >
                   {tier.name}

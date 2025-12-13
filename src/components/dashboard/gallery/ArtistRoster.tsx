@@ -178,12 +178,12 @@ export function ArtistRoster() {
     if (status === "established") {
       return {
         label: t.established,
-        className: "bg-[#d4af37]/20 text-[#d4af37] border-[#d4af37]/30",
+        className: "bg-[#ffcc33]/20 text-[#ffcc33] border-[#ffcc33]/30",
       };
     }
     return {
       label: t.emerging,
-      className: "bg-[#14b8a6]/20 text-[#14b8a6] border-[#14b8a6]/30",
+      className: "bg-[#45e3d3]/20 text-[#45e3d3] border-[#45e3d3]/30",
     };
   };
 
@@ -198,12 +198,12 @@ export function ArtistRoster() {
         <div
           className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#14b8a6] to-[#0ea5e9] rounded-xl flex items-center justify-center">
+          <div className="w-12 h-12 bg-gradient-to-br from-[#45e3d3] to-[#4de3ed] rounded-xl flex items-center justify-center">
             <Users className="w-6 h-6 text-white" />
           </div>
           <div className={isRTL ? "text-right" : "text-left"}>
-            <h2 className="text-2xl text-[#fef3c7]">{t.title}</h2>
-            <p className="text-sm text-[#cbd5e1]">
+            <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
+            <p className="text-sm text-[#808c99]">
               {t.totalArtists}: {artists.length}
             </p>
           </div>
@@ -211,7 +211,7 @@ export function ArtistRoster() {
         <Button
           size="sm"
           onClick={() => setIsModalOpen(true)}
-          className="bg-gradient-to-r from-[#14b8a6] to-[#0ea5e9] hover:from-[#0d9488] hover:to-[#0284c7] hover:shadow-lg hover:shadow-[#14b8a6]/50 text-white border-0 transition-all duration-200 cursor-pointer"
+          className="bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#0284c7] hover:shadow-lg hover:shadow-[#45e3d3]/50 text-white border-0 transition-all duration-200 cursor-pointer"
         >
           <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
           {t.addArtist}
@@ -222,10 +222,10 @@ export function ArtistRoster() {
       <div className="space-y-4">
         {isLoadingArtists ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 text-[#14b8a6] animate-spin" />
+            <Loader2 className="w-6 h-6 text-[#45e3d3] animate-spin" />
           </div>
         ) : artistsError ? (
-          <div className="text-center py-8 text-[#cbd5e1]">
+          <div className="text-center py-8 text-[#808c99]">
             <p className="text-sm">
               {language === "en"
                 ? "Failed to load artists. Showing default data."
@@ -233,7 +233,7 @@ export function ArtistRoster() {
             </p>
           </div>
         ) : artists.length === 0 ? (
-          <div className="text-center py-8 text-[#cbd5e1]">
+          <div className="text-center py-8 text-[#808c99]">
             <p className="text-sm">
               {language === "en"
                 ? "No artists found. Add your first artist!"
@@ -247,14 +247,14 @@ export function ArtistRoster() {
             initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-xl p-4 border border-[#334155] hover:border-[#14b8a6]/50 transition-all"
+            className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#45e3d3]/50 transition-all"
           >
             <div
               className={`flex items-start gap-4 ${isRTL ? "flex-row-reverse" : ""}`}
             >
               {/* Avatar */}
-              <Avatar className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#14b8a6] border-2 border-[#d4af37]/30">
-                <AvatarFallback className="bg-transparent text-[#0f172a]">
+              <Avatar className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] border-2 border-[#ffcc33]/30">
+                <AvatarFallback className="bg-transparent text-[#0F021C]">
                   {artist.initials}
                 </AvatarFallback>
               </Avatar>
@@ -266,14 +266,14 @@ export function ArtistRoster() {
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <h3 className="text-[#fef3c7]">{artist.name}</h3>
+                  <h3 className="text-[#ffffff]">{artist.name}</h3>
                   <Badge
                     className={`${getStatusBadge(artist.status).className} border text-xs`}
                   >
                     {getStatusBadge(artist.status).label}
                   </Badge>
                 </div>
-                <p className="text-sm text-[#cbd5e1] mb-1">{artist.specialty}</p>
+                <p className="text-sm text-[#808c99] mb-1">{artist.specialty}</p>
                 {artist.email && (
                   <p className="text-xs text-[#94a3b8] mb-3">{artist.email}</p>
                 )}
@@ -289,8 +289,8 @@ export function ArtistRoster() {
                       isRTL ? "flex-row-reverse" : ""
                     }`}
                   >
-                    <TrendingUp className="w-4 h-4 text-[#8b5cf6]" />
-                    <span className="text-[#cbd5e1]">
+                    <TrendingUp className="w-4 h-4 text-[#9375b5]" />
+                    <span className="text-[#808c99]">
                       {artist.artworks} {t.artworks}
                     </span>
                   </div>
@@ -299,8 +299,8 @@ export function ArtistRoster() {
                       isRTL ? "flex-row-reverse" : ""
                     }`}
                   >
-                    <Award className="w-4 h-4 text-[#d4af37]" />
-                    <span className="text-[#cbd5e1]">
+                    <Award className="w-4 h-4 text-[#ffcc33]" />
+                    <span className="text-[#808c99]">
                       {artist.exhibitions} {t.exhibitions}
                     </span>
                   </div>
@@ -312,14 +312,14 @@ export function ArtistRoster() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="text-[#14b8a6] hover:text-[#0d9488] hover:bg-[#14b8a6]/20 hover:scale-110 transition-all duration-200 cursor-pointer"
+                  className="text-[#45e3d3] hover:text-[#3bc4b5] hover:bg-[#45e3d3]/20 hover:scale-110 transition-all duration-200 cursor-pointer"
                 >
                   <ExternalLink className="w-4 h-4" />
                 </Button>
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="text-[#d4af37] hover:text-[#b8941f] hover:bg-[#d4af37]/20 hover:scale-110 transition-all duration-200 cursor-pointer"
+                  className="text-[#ffcc33] hover:text-[#b8941f] hover:bg-[#ffcc33]/20 hover:scale-110 transition-all duration-200 cursor-pointer"
                 >
                   <Mail className="w-4 h-4" />
                 </Button>

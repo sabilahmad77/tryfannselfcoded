@@ -480,7 +480,7 @@ export function EditProfile({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-5xl max-h-[95vh] overflow-y-auto custom-scrollbar glass border border-white/10 bg-[#0f172a] p-8"
+        className="max-w-5xl max-h-[95vh] overflow-y-auto custom-scrollbar glass border border-white/10 bg-[#0F021C] p-8"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <DialogHeader>
@@ -799,7 +799,7 @@ export function EditProfile({
                         <Oval
                           height={20}
                           width={20}
-                          color="#0f172a"
+                          color="#0F021C"
                           ariaLabel="loading"
                           visible={true}
                         />

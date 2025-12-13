@@ -65,17 +65,17 @@ export function ConfirmationDialog({
         };
       case "warning":
         return {
-          iconColor: "text-amber-400",
-          iconBg: "bg-amber-500/20",
+          iconColor: "text-[#ffcc33]",
+          iconBg: "bg-[#ffcc33]/20",
           buttonColor:
-            "bg-amber-500 hover:bg-amber-600 hover:shadow-lg hover:shadow-amber-500/50 text-white border-0 cursor-pointer transition-all duration-200",
+            "bg-[#ffcc33] hover:bg-[#e6b800] hover:shadow-lg hover:shadow-[#ffcc33]/50 text-white border-0 cursor-pointer transition-all duration-200",
         };
       default:
         return {
-          iconColor: "text-blue-400",
-          iconBg: "bg-blue-500/20",
+          iconColor: "text-[#45e3d3]",
+          iconBg: "bg-[#45e3d3]/20",
           buttonColor:
-            "bg-blue-500 hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/50 text-white border-0 cursor-pointer transition-all duration-200",
+            "bg-[#45e3d3] hover:bg-[#3bc4b5] hover:shadow-lg hover:shadow-[#45e3d3]/50 text-white border-0 cursor-pointer transition-all duration-200",
         };
     }
   };
@@ -101,7 +101,7 @@ export function ConfirmationDialog({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-2xl p-6 max-w-md w-full border border-[#334155] shadow-2xl"
+        className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-2xl p-6 max-w-md w-full border border-[#4e4e4e78] shadow-2xl"
       >
         {/* Header */}
         <div
@@ -115,8 +115,8 @@ export function ConfirmationDialog({
             <AlertTriangle className={`w-6 h-6 ${styles.iconColor}`} />
           </div>
           <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
-            <h3 className="text-xl text-[#fef3c7] mb-2">{finalTitle}</h3>
-            <p className="text-sm text-[#cbd5e1]">{finalMessage}</p>
+            <h3 className="text-xl text-[#ffffff] mb-2">{finalTitle}</h3>
+            <p className="text-sm text-[#808c99]">{finalMessage}</p>
           </div>
         </div>
 
@@ -128,7 +128,7 @@ export function ConfirmationDialog({
             onClick={onClose}
             variant="outline"
             disabled={isLoading}
-            className="flex-1 border-[#334155] hover:bg-[#334155]/30 hover:border-[#475569] text-[#cbd5e1] hover:text-[#fef3c7] transition-all duration-200 cursor-pointer"
+            className="flex-1 border-[#4e4e4e78] hover:bg-[#4e4e4e78]/30 hover:border-[#808c99] text-[#808c99] hover:text-[#ffffff] transition-all duration-200 cursor-pointer"
           >
             {finalCancelText}
           </Button>

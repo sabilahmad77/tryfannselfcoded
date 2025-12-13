@@ -171,7 +171,7 @@ export function AddArtworkModal({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-2xl border border-[#d4af37]/30 p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-2xl border border-[#ffcc33]/30 p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
       >
         {/* Modal Header */}
         <div
@@ -179,14 +179,14 @@ export function AddArtworkModal({
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
-          <h2 className="text-2xl text-[#fef3c7]">
+          <h2 className="text-2xl text-[#ffffff]">
             {isEditMode ? t.editArtworkTitle : t.addArtworkTitle}
           </h2>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="text-[#cbd5e1] hover:text-[#fef3c7] transition-colors"
+            className="text-[#808c99] hover:text-[#ffffff] transition-colors"
           >
             <X className="w-6 h-6" />
           </Button>
@@ -314,7 +314,7 @@ export function AddArtworkModal({
           <Button
             onClick={onClose}
             variant="outline"
-            className="flex-1 border-[#334155] hover:bg-[#334155]/30 hover:border-[#475569] text-[#cbd5e1] hover:text-[#fef3c7] transition-all duration-200 cursor-pointer"
+            className="flex-1 border-[#4e4e4e78] hover:bg-[#4e4e4e78]/30 hover:border-[#808c99] text-[#808c99] hover:text-[#ffffff] transition-all duration-200 cursor-pointer"
           >
             {t.cancel}
           </Button>
@@ -323,7 +323,7 @@ export function AddArtworkModal({
             disabled={
               !formData.title || !formData.artist || !formData.year || isLoading
             }
-            className="flex-1 bg-gradient-to-r from-[#d4af37] to-[#fbbf24] hover:from-[#b8941f] hover:to-[#c9a028] hover:shadow-lg hover:shadow-[#d4af37]/50 text-[#0f172a] border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
+            className="flex-1 bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#e6b800] hover:to-[#e6b800] hover:shadow-lg hover:shadow-[#ffcc33]/50 text-[#0F021C] border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
           >
             {isLoading ? (
               <>

@@ -590,7 +590,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 error={errors.nationality?.message}
                 inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
                 labelClassName="text-white/80 text-sm"
-                contentClassName="bg-[#1a1a24] border-white/10"
+                contentClassName="bg-[#1D112A] border-white/10"
                 itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
               />
             </motion.div>
@@ -779,7 +779,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                       <Oval
                         height={20}
                         width={20}
-                        color="#0f172a"
+                        color="#0F021C"
                         ariaLabel="loading"
                         visible={true}
                       />

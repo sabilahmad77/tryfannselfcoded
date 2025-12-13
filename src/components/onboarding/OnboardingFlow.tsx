@@ -131,7 +131,7 @@ export function OnboardingFlow({
 
   return (
     <div
-      className="min-h-screen bg-[#0a0a0f] relative overflow-hidden"
+      className="min-h-screen bg-[#0F021C] relative overflow-hidden"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Animated Background */}
@@ -183,7 +183,7 @@ export function OnboardingFlow({
                           isCompleted || isCurrent
                             ? "border-amber-500"
                             : "border-white/20"
-                        } relative z-10 bg-[#0a0a0f]`}
+                        } relative z-10 bg-[#0F021C]`}
                       >
                         {isCompleted ? (
                           <motion.div

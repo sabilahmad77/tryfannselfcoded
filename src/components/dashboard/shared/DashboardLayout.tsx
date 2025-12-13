@@ -64,7 +64,7 @@ export function DashboardLayout({
           alt="Background"
           className="w-full h-full object-cover opacity-30"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/90 via-[#0f172a]/95 to-[#0f172a]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/90 via-[#0F021C]/95 to-[#0F021C]" />
       </div>
 
       {/* Navigation */}

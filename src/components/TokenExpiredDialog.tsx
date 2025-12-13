@@ -75,7 +75,7 @@ export function TokenExpiredDialog({ open, onClose }: TokenExpiredDialogProps) {
         className="sm:max-w-md"
         dir={isRTL ? "rtl" : "ltr"}
         style={{
-          background: "rgba(15, 23, 42, 0.98)",
+          background: "rgba(15, 2, 28, 0.98)",
           border: "1px solid rgba(251, 191, 36, 0.3)",
           backdropFilter: "blur(10px)",
         }}

@@ -84,18 +84,18 @@ export function RecommendedArtworks() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass rounded-2xl p-6 border border-[#d4af37]/20"
+      className="glass rounded-2xl p-6 border border-[#ffcc33]/20"
       dir={isRTL ? "rtl" : "ltr"}
     >
       <div
         className={`flex items-center gap-3 mb-6 ${isRTL ? "flex-row-reverse" : ""}`}
       >
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#d4af37] to-[#fbbf24] flex items-center justify-center">
-          <Sparkles className="w-5 h-5 text-[#0f172a]" />
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] flex items-center justify-center">
+          <Sparkles className="w-5 h-5 text-[#0F021C]" />
         </div>
         <div className={isRTL ? "text-right" : "text-left"}>
-          <h2 className="text-2xl text-[#fef3c7]">{t.title}</h2>
-          <p className="text-sm text-[#cbd5e1]/70">{t.subtitle}</p>
+          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
+          <p className="text-sm text-[#808c99]/70">{t.subtitle}</p>
         </div>
       </div>
 
@@ -107,30 +107,30 @@ export function RecommendedArtworks() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.1 }}
             whileHover={{ y: -5 }}
-            className="glass rounded-xl overflow-hidden border border-[#334155] hover:border-[#d4af37]/30 transition-all group"
+            className="glass rounded-xl overflow-hidden border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all group"
           >
             {/* Image */}
-            <div className="relative h-48 bg-gradient-to-br from-[#1e293b] to-[#0f172a]">
-              <div className="absolute inset-0 bg-[#d4af37]/5 group-hover:bg-[#d4af37]/10 transition-colors" />
+            <div className="relative h-48 bg-gradient-to-br from-[#1D112A] to-[#0F021C]">
+              <div className="absolute inset-0 bg-[#ffcc33]/5 group-hover:bg-[#ffcc33]/10 transition-colors" />
               <div className="absolute top-3 right-3 z-10">
-                <Badge className="bg-[#14b8a6] text-[#0f172a] border-0">
+                <Badge className="bg-[#45e3d3] text-[#0F021C] border-0">
                   {t.available}
                 </Badge>
               </div>
-              <button className="absolute top-3 left-3 z-10 w-8 h-8 rounded-full glass border border-[#334155] flex items-center justify-center hover:border-[#d4af37]/50 hover:bg-[#d4af37]/20 hover:scale-110 transition-all duration-200 cursor-pointer">
-                <Heart className="w-4 h-4 text-[#fef3c7]" />
+              <button className="absolute top-3 left-3 z-10 w-8 h-8 rounded-full glass border border-[#4e4e4e78] flex items-center justify-center hover:border-[#ffcc33]/50 hover:bg-[#ffcc33]/20 hover:scale-110 transition-all duration-200 cursor-pointer">
+                <Heart className="w-4 h-4 text-[#ffffff]" />
               </button>
             </div>
 
             {/* Content */}
             <div className="p-4">
               <h3
-                className={`text-[#fef3c7] mb-1 ${isRTL ? "text-right" : "text-left"}`}
+                className={`text-[#ffffff] mb-1 ${isRTL ? "text-right" : "text-left"}`}
               >
                 {artwork.title}
               </h3>
               <p
-                className={`text-sm text-[#cbd5e1]/70 mb-3 ${
+                className={`text-sm text-[#808c99]/70 mb-3 ${
                   isRTL ? "text-right" : "text-left"
                 }`}
               >
@@ -142,9 +142,9 @@ export function RecommendedArtworks() {
                   isRTL ? "flex-row-reverse" : ""
                 }`}
               >
-                <span className="text-[#d4af37]">{artwork.price}</span>
+                <span className="text-[#ffcc33]">{artwork.price}</span>
                 <div
-                  className={`flex items-center gap-3 text-xs text-[#cbd5e1]/70 ${
+                  className={`flex items-center gap-3 text-xs text-[#808c99]/70 ${
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
@@ -165,7 +165,7 @@ export function RecommendedArtworks() {
 
               <Button
                 size="sm"
-                className="w-full bg-gradient-to-r from-[#14b8a6] to-[#0ea5e9] hover:from-[#0d9488] hover:to-[#0284c7] hover:shadow-lg hover:shadow-[#14b8a6]/50 text-[#0f172a] border-0 h-8 transition-all duration-200 cursor-pointer"
+                className="w-full bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#3bc4b5] hover:shadow-lg hover:shadow-[#45e3d3]/50 text-[#0F021C] border-0 h-8 transition-all duration-200 cursor-pointer"
               >
                 <ShoppingCart className="w-4 h-4 mr-1" />
                 {t.viewDetails}

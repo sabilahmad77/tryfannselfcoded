@@ -277,22 +277,22 @@ export function SignIn({
     {
       value: "500+",
       label: content.stats.artists,
-      color: "from-[#d4af37] to-[#fbbf24]",
+      color: "from-[#ffcc33] to-[#ffb54d]",
     },
     {
       value: "1.2K+",
       label: content.stats.collectors,
-      color: "from-[#14b8a6] to-[#0ea5e9]",
+      color: "from-[#45e3d3] to-[#4de3ed]",
     },
     {
       value: "150+",
       label: content.stats.galleries,
-      color: "from-[#0ea5e9] to-[#14b8a6]",
+      color: "from-[#4de3ed] to-[#45e3d3]",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[#0f172a] flex" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-[#0F021C] flex" dir={isRTL ? "rtl" : "ltr"}>
       {/* LEFT PANEL - Branding & Info */}
       <motion.div
         initial={{ opacity: 0, x: isRTL ? 50 : -50 }}
@@ -302,10 +302,10 @@ export function SignIn({
       >
         {/* Background Effects */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#d4af37]/10 via-[#14b8a6]/5 to-[#0ea5e9]/10" />
-          <div className="absolute top-20 -left-20 w-80 h-80 bg-[#d4af37]/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 -right-20 w-80 h-80 bg-[#14b8a6]/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(212,175,55,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(212,175,55,0.05)_1px,transparent_1px)] bg-[size:50px_50px]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc33]/10 via-[#45e3d3]/5 to-[#4de3ed]/10" />
+          <div className="absolute top-20 -left-20 w-80 h-80 bg-[#ffcc33]/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 -right-20 w-80 h-80 bg-[#45e3d3]/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,204,51,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,204,51,0.05)_1px,transparent_1px)] bg-[size:50px_50px]" />
         </div>
 
         {/* Content */}
@@ -315,7 +315,7 @@ export function SignIn({
             <motion.button
               onClick={onNavigateToHome}
               whileHover={{ scale: 1.02 }}
-              className="flex items-center gap-2 text-cream/70 hover:text-[#d4af37] transition-colors group mb-8 cursor-pointer"
+              className="flex items-center gap-2 text-cream/70 hover:text-[#ffcc33] transition-colors group mb-8 cursor-pointer"
             >
               <ChevronLeft
                 className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${
@@ -326,12 +326,12 @@ export function SignIn({
             </motion.button>
 
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#d4af37] to-[#fbbf24] flex items-center justify-center glow-gold">
-                <Sparkles className="w-6 h-6 text-[#0f172a]" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] flex items-center justify-center glow-gold">
+                <Sparkles className="w-6 h-6 text-[#0F021C]" />
               </div>
-              <h1 className="text-3xl text-[#fef3c7]">FANN</h1>
+              <h1 className="text-3xl text-[#ffffff]">FANN</h1>
             </div>
-            <p className="text-[#fef3c7]/60 text-sm">{content.subtitle}</p>
+            <p className="text-[#ffffff]/60 text-sm">{content.subtitle}</p>
           </div>
 
           {/* Features Section */}
@@ -341,10 +341,10 @@ export function SignIn({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <h2 className="text-2xl text-[#fef3c7] mb-3">
+              <h2 className="text-2xl text-[#ffffff] mb-3">
                 {content.leftPanel.title}
               </h2>
-              <p className="text-[#fef3c7]/70 mb-8 leading-relaxed">
+              <p className="text-[#ffffff]/70 mb-8 leading-relaxed">
                 {content.leftPanel.desc}
               </p>
 
@@ -359,12 +359,12 @@ export function SignIn({
                       transition={{ delay: 0.1 * idx }}
                       className="flex gap-4"
                     >
-                      <div className="w-12 h-12 rounded-lg bg-[#fef3c7]/5 border border-[#d4af37]/20 flex items-center justify-center shrink-0">
-                        <Icon className="w-6 h-6 text-[#d4af37]" />
+                      <div className="w-12 h-12 rounded-lg bg-[#ffffff]/5 border border-[#ffcc33]/20 flex items-center justify-center shrink-0">
+                        <Icon className="w-6 h-6 text-[#ffcc33]" />
                       </div>
                       <div>
-                        <h3 className="text-[#fef3c7] mb-1">{feature.title}</h3>
-                        <p className="text-[#fef3c7]/60 text-sm">
+                        <h3 className="text-[#ffffff] mb-1">{feature.title}</h3>
+                        <p className="text-[#ffffff]/60 text-sm">
                           {feature.desc}
                         </p>
                       </div>
@@ -381,14 +381,14 @@ export function SignIn({
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 + index * 0.1 }}
-                    className="glass border border-[#d4af37]/20 rounded-lg p-3 text-center hover:border-[#d4af37]/50 transition-all"
+                    className="glass border border-[#ffcc33]/20 rounded-lg p-3 text-center hover:border-[#ffcc33]/50 transition-all"
                   >
                     <div
                       className={`text-xl mb-1 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}
                     >
                       {stat.value}
                     </div>
-                    <div className="text-[#fef3c7]/50 text-xs">
+                    <div className="text-[#ffffff]/50 text-xs">
                       {stat.label}
                     </div>
                   </motion.div>
@@ -412,10 +412,10 @@ export function SignIn({
             >
               {/* Header */}
               <div className="mb-8">
-                <h2 className="text-3xl text-[#fef3c7] mb-2">
+                <h2 className="text-3xl text-[#ffffff] mb-2">
                   {content.title}
                 </h2>
-                <p className="text-[#fef3c7]/60">{content.subtitle}</p>
+                <p className="text-[#ffffff]/60">{content.subtitle}</p>
               </div>
 
               {/* Form */}
@@ -481,7 +481,7 @@ export function SignIn({
                   >
                     <button
                       type="button"
-                      className="text-sm text-[#d4af37] hover:text-[#fbbf24] transition-colors cursor-pointer"
+                      className="text-sm text-[#ffcc33] hover:text-[#ffb54d] transition-colors cursor-pointer"
                     >
                       {content.forgotPassword}
                     </button>
@@ -493,7 +493,7 @@ export function SignIn({
                       type="button"
                       onClick={handleFormSubmit(onSubmit)}
                       disabled={isLoading}
-                      className={`w-full h-12 bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-[#d4af37] hover:from-[#fbbf24] hover:via-[#d4af37] hover:to-[#fbbf24] text-[#0f172a] shadow-lg shadow-[#d4af37]/30 transition-all group glow-gold btn-glow ${
+                      className={`w-full h-12 bg-gradient-to-r from-[#ffcc33] via-[#ffb54d] to-[#ffcc33] hover:from-[#ffb54d] hover:via-[#ffcc33] hover:to-[#ffb54d] text-[#0F021C] shadow-lg shadow-[#ffcc33]/30 transition-all group glow-gold btn-glow ${
                         isLoading
                           ? "cursor-not-allowed opacity-50"
                           : "cursor-pointer"
@@ -505,7 +505,7 @@ export function SignIn({
                             <Oval
                               height={20}
                               width={20}
-                              color="#0f172a"
+                              color="#0F021C"
                               ariaLabel="loading"
                               visible={true}
                             />
@@ -528,20 +528,20 @@ export function SignIn({
 
                 {/* Divider */}
                 <div className="my-6 flex items-center gap-4">
-                  <div className="flex-1 h-px bg-[#d4af37]/20" />
-                  <span className="text-[#fef3c7]/40 text-sm">
+                  <div className="flex-1 h-px bg-[#ffcc33]/20" />
+                  <span className="text-[#ffffff]/40 text-sm">
                     {content.orContinue}
                   </span>
-                  <div className="flex-1 h-px bg-[#d4af37]/20" />
+                  <div className="flex-1 h-px bg-[#ffcc33]/20" />
                 </div>
 
                 {/* SSO / Social Login */}
                 <Button
                   variant="outline"
-                  className="w-full h-11 border-[#14b8a6]/30 hover:border-[#14b8a6]/60 hover:bg-[#14b8a6]/10 text-[#fef3c7]/70 hover:text-[#fef3c7] transition-all group cursor-pointer"
+                  className="w-full h-11 border-[#45e3d3]/30 hover:border-[#45e3d3]/60 hover:bg-[#45e3d3]/10 text-[#ffffff]/70 hover:text-[#ffffff] transition-all group cursor-pointer"
                 >
                   <Sparkles
-                    className={`w-5 h-5 text-[#14b8a6] ${
+                    className={`w-5 h-5 text-[#45e3d3] ${
                       isRTL ? "ml-2" : "mr-2"
                     }`}
                   />
@@ -550,13 +550,13 @@ export function SignIn({
 
                 {/* Sign Up Link */}
                 <div className="mt-6 text-center">
-                  <span className="text-[#fef3c7]/60 text-sm">
+                  <span className="text-[#ffffff]/60 text-sm">
                     {content.noAccount}
                   </span>{" "}
                   <button
                     type="button"
                     onClick={onNavigateToSignUp}
-                    className="text-[#d4af37] hover:text-[#fbbf24] transition-colors text-sm cursor-pointer"
+                    className="text-[#ffcc33] hover:text-[#ffb54d] transition-colors text-sm cursor-pointer"
                   >
                     {content.signUp}
                   </button>

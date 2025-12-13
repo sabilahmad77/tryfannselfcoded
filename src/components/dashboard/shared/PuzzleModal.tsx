@@ -157,8 +157,8 @@ export function PuzzleModal({
           <div
             className={`glass rounded-2xl p-6 h-full flex flex-col transition-all duration-300 border-2 ${
               puzzleCompleted
-                ? "border-[#14b8a6]/30 cursor-not-allowed opacity-75"
-                : "border-[#334155] cursor-pointer hover:border-[#d4af37]/50"
+                ? "border-[#45e3d3]/30 cursor-not-allowed opacity-75"
+                : "border-[#4e4e4e78] cursor-pointer hover:border-[#ffcc33]/50"
             }`}
           >
             {/* Header */}
@@ -167,18 +167,18 @@ export function PuzzleModal({
                 isRTL ? "flex-row-reverse" : ""
               }`}
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-[#8b5cf6] to-[#ec4899] rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#9375b5] to-[#fface3] rounded-xl flex items-center justify-center">
                 <Puzzle className="w-6 h-6 text-white" />
               </div>
               <div className={isRTL ? "text-right" : "text-left"}>
-                <h2 className="text-2xl text-[#fef3c7]">{t.title}</h2>
-                <p className="text-sm text-[#cbd5e1]">{t.description}</p>
+                <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
+                <p className="text-sm text-[#808c99]">{t.description}</p>
               </div>
             </div>
 
             {/* Points Reward Badge */}
             <div className="mb-4">
-              <Badge className="bg-gradient-to-r from-[#d4af37] to-[#fbbf24] text-[#0f172a] border-0">
+              <Badge className="bg-gradient-to-r from-[#ffcc33] to-[#fbbf24] text-[#0F021C] border-0">
                 <Award className="w-3 h-3 mr-1" />
                 {calculatedPoints} {t.pointsReward}
               </Badge>
@@ -187,11 +187,11 @@ export function PuzzleModal({
             {/* Difficulty Info */}
             <div className="flex-1 flex items-center justify-center">
               <div
-                className={`flex items-center gap-2 text-[#cbd5e1] ${
+                className={`flex items-center gap-2 text-[#808c99] ${
                   isRTL ? "flex-row-reverse" : ""
                 }`}
               >
-                <Sparkles className="w-5 h-5 text-[#8b5cf6]" />
+                <Sparkles className="w-5 h-5 text-[#9375b5]" />
                 <span className="text-sm">
                   {t.difficulty[difficulty === "easy" ? "easy" : "medium"]}
                 </span>
@@ -200,14 +200,14 @@ export function PuzzleModal({
 
             {/* Start Button or Completed State */}
             {puzzleCompleted ? (
-              <div className="mt-4 p-4 bg-gradient-to-r from-[#14b8a6]/20 to-[#0ea5e9]/20 rounded-lg border border-[#14b8a6]/30">
+              <div className="mt-4 p-4 bg-gradient-to-r from-[#45e3d3]/20 to-[#0ea5e9]/20 rounded-lg border border-[#45e3d3]/30">
                 <div
                   className={`flex items-center gap-2 justify-center ${
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <CheckCircle className="w-5 h-5 text-[#14b8a6]" />
-                  <span className="text-sm text-[#fef3c7] font-semibold">
+                  <CheckCircle className="w-5 h-5 text-[#45e3d3]" />
+                  <span className="text-sm text-[#ffffff] font-semibold">
                     {t.completed}
                   </span>
                 </div>
@@ -215,7 +215,7 @@ export function PuzzleModal({
             ) : (
               <Button
                 disabled={isLoadingStats}
-                className="w-full bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:from-[#ec4899] hover:to-[#8b5cf6] hover:shadow-lg hover:shadow-[#8b5cf6]/50 text-white transition-all duration-200 cursor-pointer mt-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+                className="w-full bg-gradient-to-r from-[#9375b5] to-[#fface3] hover:from-[#fface3] hover:to-[#9375b5] hover:shadow-lg hover:shadow-[#9375b5]/50 text-white transition-all duration-200 cursor-pointer mt-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
               >
                 {isLoadingStats ? (
                   <Loader2
@@ -234,32 +234,32 @@ export function PuzzleModal({
       </div>
 
       <DialogContent
-        className="max-w-2xl w-[calc(100%-2rem)] max-h-[90vh] overflow-y-auto glass border-2 border-[#334155]"
+        className="max-w-2xl w-[calc(100%-2rem)] max-h-[90vh] overflow-y-auto glass border-2 border-[#4e4e4e78]"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <DialogHeader>
-          <DialogTitle className="text-2xl text-[#fef3c7]">
+          <DialogTitle className="text-2xl text-[#ffffff]">
             {t.title}
           </DialogTitle>
-          <DialogDescription className="text-[#cbd5e1]">
+          <DialogDescription className="text-[#808c99]">
             {puzzleCompleted ? t.completedDescription : t.description}
           </DialogDescription>
         </DialogHeader>
 
         {/* Show completed message if puzzle is already completed */}
         {puzzleCompleted && (
-          <div className="mb-4 p-4 bg-gradient-to-r from-[#14b8a6]/20 to-[#0ea5e9]/20 rounded-lg border border-[#14b8a6]/30">
+          <div className="mb-4 p-4 bg-gradient-to-r from-[#45e3d3]/20 to-[#0ea5e9]/20 rounded-lg border border-[#45e3d3]/30">
             <div
               className={`flex items-center gap-3 ${
                 isRTL ? "flex-row-reverse" : ""
               }`}
             >
-              <CheckCircle className="w-6 h-6 text-[#14b8a6] shrink-0" />
+              <CheckCircle className="w-6 h-6 text-[#45e3d3] shrink-0" />
               <div className={isRTL ? "text-right" : "text-left"}>
-                <p className="text-[#fef3c7] font-semibold">
+                <p className="text-[#ffffff] font-semibold">
                   {t.alreadyCompleted}
                 </p>
-                <p className="text-sm text-[#cbd5e1]">
+                <p className="text-sm text-[#808c99]">
                   {t.completedDescription}
                 </p>
               </div>
@@ -271,7 +271,7 @@ export function PuzzleModal({
         {!isCompleted && !puzzleCompleted && (
           <div className="mb-4">
             <label
-              className={`text-sm text-[#cbd5e1] mb-2 block ${
+              className={`text-sm text-[#808c99] mb-2 block ${
                 isRTL ? "text-right" : "text-left"
               }`}
             >
@@ -288,8 +288,8 @@ export function PuzzleModal({
                 size="sm"
                 className={
                   difficulty === "easy"
-                    ? "bg-gradient-to-r from-[#d4af37] to-[#fbbf24] text-[#0f172a] border-0"
-                    : "border-[#334155] text-[#cbd5e1] hover:bg-[#1e293b]"
+                    ? "bg-gradient-to-r from-[#ffcc33] to-[#fbbf24] text-[#0F021C] border-0"
+                    : "border-[#4e4e4e78] text-[#808c99] hover:bg-[#1D112A]"
                 }
               >
                 {t.difficulty.easy}
@@ -304,8 +304,8 @@ export function PuzzleModal({
                 size="sm"
                 className={
                   difficulty === "medium"
-                    ? "bg-gradient-to-r from-[#14b8a6] to-[#0ea5e9] text-white border-0"
-                    : "border-[#334155] text-[#cbd5e1] hover:bg-[#1e293b]"
+                    ? "bg-gradient-to-r from-[#45e3d3] to-[#0ea5e9] text-white border-0"
+                    : "border-[#4e4e4e78] text-[#808c99] hover:bg-[#1D112A]"
                 }
               >
                 {t.difficulty.medium}

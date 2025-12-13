@@ -360,19 +360,19 @@ export function RedemptionCodes() {
           isRTL ? "flex-row-reverse" : ""
         }`}
       >
-        <div className="w-12 h-12 bg-gradient-to-br from-[#8b5cf6] to-[#ec4899] rounded-xl flex items-center justify-center">
+        <div className="w-12 h-12 bg-gradient-to-br from-[#9375b5] to-[#fface3] rounded-xl flex items-center justify-center">
           <Gift className="w-6 h-6 text-white" />
         </div>
         <div className={isRTL ? "text-right" : "text-left"}>
-          <h2 className="text-2xl text-[#fef3c7]">{t.title}</h2>
-          <p className="text-sm text-[#cbd5e1]">{t.description}</p>
+          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
+          <p className="text-sm text-[#808c99]">{t.description}</p>
         </div>
       </div>
 
       {/* Code Input */}
       <div className="mb-6">
         <label
-          className={`text-sm text-[#cbd5e1] mb-2 block ${
+          className={`text-sm text-[#808c99] mb-2 block ${
             isRTL ? "text-right" : "text-left"
           }`}
         >
@@ -383,13 +383,13 @@ export function RedemptionCodes() {
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
             placeholder="XXXXXX"
-            className="flex-1 bg-[#1e293b] border-[#334155] text-[#fef3c7] placeholder:text-[#475569] focus:border-[#8b5cf6] uppercase"
+            className="flex-1 bg-[#1D112A] border-[#4e4e4e78] text-[#ffffff] placeholder:text-[#808c99] focus:border-[#9375b5] uppercase"
             onKeyPress={(e) => e.key === "Enter" && handleRedeem()}
           />
           <Button
             onClick={handleRedeem}
             disabled={isRedeeming || !code.trim() || isLoadingRedemptions}
-            className={`bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:from-[#ec4899] hover:to-[#8b5cf6] hover:shadow-lg hover:shadow-[#8b5cf6]/50 text-white transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none ${
+            className={`bg-gradient-to-r from-[#9375b5] to-[#fface3] hover:from-[#fface3] hover:to-[#9375b5] hover:shadow-lg hover:shadow-[#9375b5]/50 text-white transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none ${
               isRedeeming || !code.trim() || isLoadingRedemptions
                 ? "cursor-not-allowed"
                 : "cursor-pointer"
@@ -411,7 +411,7 @@ export function RedemptionCodes() {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <h3
-            className={`text-sm text-[#cbd5e1] ${
+            className={`text-sm text-[#808c99] ${
               isRTL ? "text-right" : "text-left"
             }`}
           >
@@ -426,7 +426,7 @@ export function RedemptionCodes() {
             }}
             variant="outline"
             size="sm"
-            className={`border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/20 hover:border-[#7c3aed] hover:text-[#7c3aed] transition-all duration-200 cursor-pointer ${
+            className={`border-[#9375b5] text-[#9375b5] hover:bg-[#9375b5]/20 hover:border-[#7a5f9a] hover:text-[#7a5f9a] transition-all duration-200 cursor-pointer ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
@@ -444,15 +444,15 @@ export function RedemptionCodes() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-[#1e293b]/50 rounded-lg p-4 border border-[#8b5cf6]/30 space-y-4"
+            className="bg-[#1D112A]/50 rounded-lg p-4 border border-[#9375b5]/30 space-y-4"
           >
-            <p className="text-xs text-[#cbd5e1] mb-3">
+            <p className="text-xs text-[#808c99] mb-3">
               {t.generateDescription}
             </p>
             <div className="space-y-3">
               <div>
                 <label
-                  className={`text-xs text-[#cbd5e1] mb-2 block ${
+                  className={`text-xs text-[#808c99] mb-2 block ${
                     isRTL ? "text-right" : "text-left"
                   }`}
                 >
@@ -464,12 +464,12 @@ export function RedemptionCodes() {
                   placeholder={
                     language === "en" ? "Enter code title" : "أدخل عنوان الكود"
                   }
-                  className="bg-[#1e293b] border-[#334155] text-[#fef3c7] placeholder:text-[#475569] focus:border-[#8b5cf6]"
+                  className="bg-[#1D112A] border-[#4e4e4e78] text-[#ffffff] placeholder:text-[#808c99] focus:border-[#9375b5]"
                 />
               </div>
               <div>
                 <label
-                  className={`text-xs text-[#cbd5e1] mb-2 block ${
+                  className={`text-xs text-[#808c99] mb-2 block ${
                     isRTL ? "text-right" : "text-left"
                   }`}
                 >
@@ -482,7 +482,7 @@ export function RedemptionCodes() {
                   placeholder={
                     language === "en" ? "Enter points" : "أدخل النقاط"
                   }
-                  className="bg-[#1e293b] border-[#334155] text-[#fef3c7] placeholder:text-[#475569] focus:border-[#8b5cf6]"
+                  className="bg-[#1D112A] border-[#4e4e4e78] text-[#ffffff] placeholder:text-[#808c99] focus:border-[#9375b5]"
                   min="1"
                 />
               </div>
@@ -493,7 +493,7 @@ export function RedemptionCodes() {
                   !generateTitle.trim() ||
                   !generatePoints.trim()
                 }
-                className={`w-full bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] hover:from-[#ec4899] hover:to-[#8b5cf6] hover:shadow-lg hover:shadow-[#8b5cf6]/50 text-white transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none ${
+                className={`w-full bg-gradient-to-r from-[#9375b5] to-[#fface3] hover:from-[#fface3] hover:to-[#9375b5] hover:shadow-lg hover:shadow-[#9375b5]/50 text-white transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none ${
                   isGenerating ||
                   !generateTitle.trim() ||
                   !generatePoints.trim()
@@ -521,7 +521,7 @@ export function RedemptionCodes() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-4 bg-gradient-to-r from-[#8b5cf6]/20 to-[#ec4899]/20 rounded-lg p-4 border border-[#8b5cf6]/50"
+            className="mt-4 bg-gradient-to-r from-[#9375b5]/20 to-[#fface3]/20 rounded-lg p-4 border border-[#9375b5]/50"
           >
             <div
               className={`flex items-center justify-between ${
@@ -529,11 +529,11 @@ export function RedemptionCodes() {
               }`}
             >
               <div className={isRTL ? "text-right" : "text-left"}>
-                <p className="text-xs text-[#cbd5e1] mb-1">{t.generatedCode}</p>
-                <p className="text-lg font-bold text-[#fef3c7]">
+                <p className="text-xs text-[#808c99] mb-1">{t.generatedCode}</p>
+                <p className="text-lg font-bold text-[#ffffff]">
                   {generatedCode.code}
                 </p>
-                <p className="text-sm text-[#cbd5e1] mt-1">
+                <p className="text-sm text-[#808c99] mt-1">
                   {generatedCode.title} - {generatedCode.points} {t.points}
                 </p>
               </div>
@@ -541,7 +541,7 @@ export function RedemptionCodes() {
                 onClick={() => handleCopyCode(generatedCode.code || "")}
                 variant="outline"
                 size="sm"
-                className="border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/20 hover:border-[#7c3aed] hover:text-[#7c3aed] hover:scale-110 transition-all duration-200 cursor-pointer"
+                className="border-[#9375b5] text-[#9375b5] hover:bg-[#9375b5]/20 hover:border-[#7a5f9a] hover:text-[#7a5f9a] hover:scale-110 transition-all duration-200 cursor-pointer"
               >
                 <Copy className="w-4 h-4" />
               </Button>
@@ -553,7 +553,7 @@ export function RedemptionCodes() {
       {/* My Redeem List */}
       <div className="mb-6">
         <h3
-          className={`text-sm text-[#cbd5e1] mb-3 ${
+          className={`text-sm text-[#808c99] mb-3 ${
             isRTL ? "text-right" : "text-left"
           }`}
         >
@@ -561,11 +561,11 @@ export function RedemptionCodes() {
         </h3>
         {isLoadingMyRedeemList ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 text-[#8b5cf6] animate-spin" />
+            <Loader2 className="w-6 h-6 text-[#9375b5] animate-spin" />
           </div>
         ) : isMyRedeemListError ? (
-          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
-            <AlertCircle className="w-12 h-12 mb-2 text-[#ef4444]" />
+          <div className="flex flex-col items-center justify-center py-8 text-[#808c99]">
+            <AlertCircle className="w-12 h-12 mb-2 text-[#ff6b6b]" />
             <p className="text-sm">
               {language === "en"
                 ? "Failed to load my redeem list"
@@ -580,7 +580,7 @@ export function RedemptionCodes() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-gradient-to-r from-[#8b5cf6]/20 to-[#ec4899]/20 rounded-lg p-4 border border-[#8b5cf6]/50"
+                className="bg-gradient-to-r from-[#9375b5]/20 to-[#fface3]/20 rounded-lg p-4 border border-[#9375b5]/50"
               >
                 <div
                   className={`flex items-center justify-between ${
@@ -588,13 +588,13 @@ export function RedemptionCodes() {
                   }`}
                 >
                   <div className={isRTL ? "text-right" : "text-left"}>
-                    <p className="text-xs text-[#cbd5e1] mb-1">
+                    <p className="text-xs text-[#808c99] mb-1">
                       {redemption.title || redemption.code}
                     </p>
-                    <p className="text-lg font-bold text-[#fef3c7]">
+                    <p className="text-lg font-bold text-[#ffffff]">
                       {redemption.code}
                     </p>
-                    <p className="text-sm text-[#cbd5e1] mt-1">
+                    <p className="text-sm text-[#808c99] mt-1">
                       {redemption.points} {t.points} •{" "}
                       {formatDateForDisplay(
                         redemption.updated_at || redemption.created_at || "",
@@ -607,12 +607,12 @@ export function RedemptionCodes() {
                       onClick={() => handleCopyCode(redemption.code || "")}
                       variant="outline"
                       size="sm"
-                      className="border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/20 hover:border-[#7c3aed] hover:text-[#7c3aed] hover:scale-110 transition-all duration-200 cursor-pointer"
+                      className="border-[#9375b5] text-[#9375b5] hover:bg-[#9375b5]/20 hover:border-[#7a5f9a] hover:text-[#7a5f9a] hover:scale-110 transition-all duration-200 cursor-pointer"
                     >
                       <Copy className="w-4 h-4" />
                     </Button>
-                    <div className="w-10 h-10 bg-[#14b8a6]/30 rounded-full flex items-center justify-center">
-                      <Check className="w-5 h-5 text-[#14b8a6]" />
+                    <div className="w-10 h-10 bg-[#45e3d3]/30 rounded-full flex items-center justify-center">
+                      <Check className="w-5 h-5 text-[#45e3d3]" />
                     </div>
                   </div>
                 </div>
@@ -620,7 +620,7 @@ export function RedemptionCodes() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
+          <div className="flex flex-col items-center justify-center py-8 text-[#808c99]">
             <AlertCircle className="w-12 h-12 mb-2" />
             <p className="text-sm">
               {language === "en"
@@ -639,14 +639,14 @@ export function RedemptionCodes() {
           }`}
         >
           <h3
-            className={`text-sm text-[#cbd5e1] ${
+            className={`text-sm text-[#808c99] ${
               isRTL ? "text-right" : "text-left"
             }`}
           >
             {t.availableRewards}
           </h3>
           {code.trim() && (
-            <span className="text-xs text-[#8b5cf6]">
+            <span className="text-xs text-[#9375b5]">
               {filteredAvailableRedemptions.length}{" "}
               {language === "en" ? "found" : "تم العثور عليها"}
             </span>
@@ -654,11 +654,11 @@ export function RedemptionCodes() {
         </div>
         {isLoadingRedemptions ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 text-[#8b5cf6] animate-spin" />
+            <Loader2 className="w-6 h-6 text-[#9375b5] animate-spin" />
           </div>
         ) : isRedemptionsError ? (
-          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
-            <AlertCircle className="w-12 h-12 mb-2 text-[#ef4444]" />
+          <div className="flex flex-col items-center justify-center py-8 text-[#808c99]">
+            <AlertCircle className="w-12 h-12 mb-2 text-[#ff6b6b]" />
             <p className="text-sm">
               {language === "en"
                 ? "Failed to load available rewards"
@@ -675,7 +675,7 @@ export function RedemptionCodes() {
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.02 }}
                 onClick={() => handleRewardClick(redemption.code || "")}
-                className="bg-gradient-to-r from-[#8b5cf6]/20 to-[#ec4899]/20 rounded-lg p-4 border border-[#8b5cf6]/50 cursor-pointer hover:border-[#8b5cf6]/80 hover:shadow-lg hover:shadow-[#8b5cf6]/30 transition-all duration-200"
+                className="bg-gradient-to-r from-[#9375b5]/20 to-[#fface3]/20 rounded-lg p-4 border border-[#9375b5]/50 cursor-pointer hover:border-[#9375b5]/80 hover:shadow-lg hover:shadow-[#9375b5]/30 transition-all duration-200"
               >
                 <div
                   className={`flex items-center justify-between ${
@@ -683,13 +683,13 @@ export function RedemptionCodes() {
                   }`}
                 >
                   <div className={isRTL ? "text-right" : "text-left"}>
-                    <p className="text-xs text-[#cbd5e1] mb-1">
+                    <p className="text-xs text-[#808c99] mb-1">
                       {redemption.title || redemption.code}
                     </p>
-                    <p className="text-lg font-bold text-[#fef3c7]">
+                    <p className="text-lg font-bold text-[#ffffff]">
                       {redemption.code}
                     </p>
-                    <p className="text-sm text-[#cbd5e1] mt-1">
+                    <p className="text-sm text-[#808c99] mt-1">
                       {redemption.points} {t.points}
                     </p>
                   </div>
@@ -700,7 +700,7 @@ export function RedemptionCodes() {
                     }}
                     variant="outline"
                     size="sm"
-                    className="border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/20 hover:border-[#7c3aed] hover:text-[#7c3aed] hover:scale-110 transition-all duration-200 cursor-pointer"
+                    className="border-[#9375b5] text-[#9375b5] hover:bg-[#9375b5]/20 hover:border-[#7a5f9a] hover:text-[#7a5f9a] hover:scale-110 transition-all duration-200 cursor-pointer"
                   >
                     <Copy className="w-4 h-4" />
                   </Button>
@@ -709,7 +709,7 @@ export function RedemptionCodes() {
             ))}
           </div>
         ) : code.trim() ? (
-          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
+          <div className="flex flex-col items-center justify-center py-8 text-[#808c99]">
             <AlertCircle className="w-12 h-12 mb-2" />
             <p className="text-sm">
               {language === "en"
@@ -718,7 +718,7 @@ export function RedemptionCodes() {
             </p>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
+          <div className="flex flex-col items-center justify-center py-8 text-[#808c99]">
             <AlertCircle className="w-12 h-12 mb-2" />
             <p className="text-sm">
               {language === "en"
@@ -732,7 +732,7 @@ export function RedemptionCodes() {
       {/* Redeemed Codes History */}
       <div className="flex-1">
         <h3
-          className={`text-sm text-[#cbd5e1] mb-3 ${
+          className={`text-sm text-[#808c99] mb-3 ${
             isRTL ? "text-right" : "text-left"
           }`}
         >
@@ -740,7 +740,7 @@ export function RedemptionCodes() {
         </h3>
         {isLoadingRedemptions ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 text-[#8b5cf6] animate-spin" />
+            <Loader2 className="w-6 h-6 text-[#9375b5] animate-spin" />
           </div>
         ) : redeemedCodes.length > 0 ? (
           <div className="space-y-2">
@@ -750,7 +750,7 @@ export function RedemptionCodes() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`flex items-center justify-between p-3 bg-[#1e293b]/30 rounded-lg border border-[#334155] ${
+                className={`flex items-center justify-between p-3 bg-[#1D112A]/30 rounded-lg border border-[#4e4e4e78] ${
                   isRTL ? "flex-row-reverse" : ""
                 }`}
               >
@@ -759,14 +759,14 @@ export function RedemptionCodes() {
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <div className="w-8 h-8 bg-[#14b8a6]/20 rounded-full flex items-center justify-center">
-                    <Check className="w-4 h-4 text-[#14b8a6]" />
+                  <div className="w-8 h-8 bg-[#45e3d3]/20 rounded-full flex items-center justify-center">
+                    <Check className="w-4 h-4 text-[#45e3d3]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
-                    <p className="text-sm text-[#fef3c7]">
+                    <p className="text-sm text-[#ffffff]">
                       {redemption.code || redemption.title}
                     </p>
-                    <p className="text-xs text-[#cbd5e1]">
+                    <p className="text-xs text-[#808c99]">
                       {formatDateForDisplay(
                         redemption.updated_at || redemption.created_at || "",
                         language
@@ -774,14 +774,14 @@ export function RedemptionCodes() {
                     </p>
                   </div>
                 </div>
-                <span className="text-sm text-[#14b8a6]">
+                <span className="text-sm text-[#45e3d3]">
                   +{redemption.points} {t.points}
                 </span>
               </motion.div>
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-8 text-[#475569]">
+          <div className="flex flex-col items-center justify-center py-8 text-[#808c99]">
             <AlertCircle className="w-12 h-12 mb-2" />
             <p className="text-sm">{t.noHistory}</p>
           </div>

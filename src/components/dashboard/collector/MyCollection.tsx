@@ -335,16 +335,16 @@ export function MyCollection() {
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#d4af37] to-[#8b5cf6] rounded-xl flex items-center justify-center">
+          <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#9375b5] rounded-xl flex items-center justify-center">
             <Gem className="w-6 h-6 text-white" />
           </div>
-          <h2 className="text-2xl text-[#fef3c7]">{t.title}</h2>
+          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
         </div>
         <div className={`flex gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
           <Button
             size="sm"
             onClick={() => setIsModalOpen(true)}
-            className="bg-gradient-to-r from-[#d4af37] to-[#fbbf24] hover:from-[#b8941f] hover:to-[#d4af37] text-[#0f172a] border-0 cursor-pointer"
+            className="bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#e6b800] hover:to-[#ffcc33] text-[#0F021C] border-0 cursor-pointer"
           >
             <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
             {t.addPiece}
@@ -356,34 +356,34 @@ export function MyCollection() {
       <div className="grid grid-cols-3 gap-4 mb-6">
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#8b5cf6]/20 to-[#8b5cf6]/5 rounded-xl p-4 border border-[#8b5cf6]/30"
+          className="bg-gradient-to-br from-[#9375b5]/20 to-[#9375b5]/5 rounded-xl p-4 border border-[#9375b5]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <Gem className="w-4 h-4 text-[#8b5cf6]" />
-            <span className="text-xs text-[#cbd5e1]">{t.totalPieces}</span>
+            <Gem className="w-4 h-4 text-[#9375b5]" />
+            <span className="text-xs text-[#808c99]">{t.totalPieces}</span>
           </div>
-          <p className="text-2xl text-[#fef3c7]">
+          <p className="text-2xl text-[#ffffff]">
             {dashboardStatsData?.data?.artwork_count ?? artworkList.length}
           </p>
         </motion.div>
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#14b8a6]/20 to-[#14b8a6]/5 rounded-xl p-4 border border-[#14b8a6]/30"
+          className="bg-gradient-to-br from-[#45e3d3]/20 to-[#45e3d3]/5 rounded-xl p-4 border border-[#45e3d3]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <TrendingUp className="w-4 h-4 text-[#14b8a6]" />
-            <span className="text-xs text-[#cbd5e1]">{t.totalValue}</span>
+            <TrendingUp className="w-4 h-4 text-[#45e3d3]" />
+            <span className="text-xs text-[#808c99]">{t.totalValue}</span>
           </div>
-          <p className="text-2xl text-[#fef3c7]">
+          <p className="text-2xl text-[#ffffff]">
             {dashboardStatsData?.data?.portfolio_value
               ? `$${dashboardStatsData.data.portfolio_value.toFixed(1)}K`
               : "$0K"}
@@ -392,15 +392,15 @@ export function MyCollection() {
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#d4af37]/20 to-[#d4af37]/5 rounded-xl p-4 border border-[#d4af37]/30"
+          className="bg-gradient-to-br from-[#ffcc33]/20 to-[#ffcc33]/5 rounded-xl p-4 border border-[#ffcc33]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <TrendingUp className="w-4 h-4 text-[#d4af37]" />
-            <span className="text-xs text-[#cbd5e1]">{t.growth}</span>
+            <TrendingUp className="w-4 h-4 text-[#ffcc33]" />
+            <span className="text-xs text-[#808c99]">{t.growth}</span>
           </div>
           <p className="text-2xl text-emerald-400">
             {dashboardStatsData?.data?.growth !== undefined
@@ -413,7 +413,7 @@ export function MyCollection() {
       {/* Recent Acquisitions */}
       <div>
         <h3
-          className={`text-sm text-[#cbd5e1] mb-4 ${
+          className={`text-sm text-[#808c99] mb-4 ${
             isRTL ? "text-right" : "text-left"
           }`}
         >
@@ -421,10 +421,10 @@ export function MyCollection() {
         </h3>
         {isLoadingArtworks ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 text-[#d4af37] animate-spin" />
+            <Loader2 className="w-6 h-6 text-[#ffcc33] animate-spin" />
           </div>
         ) : artworksError ? (
-          <div className="text-center py-8 text-[#cbd5e1]">
+          <div className="text-center py-8 text-[#808c99]">
             <p className="text-sm">
               {language === "en"
                 ? "Failed to load artworks. Showing default data."
@@ -432,7 +432,7 @@ export function MyCollection() {
             </p>
           </div>
         ) : artworkList.length === 0 ? (
-          <div className="text-center py-8 text-[#cbd5e1]">
+          <div className="text-center py-8 text-[#808c99]">
             <p className="text-sm">
               {language === "en"
                 ? "No artworks found. Add your first artwork!"
@@ -448,7 +448,7 @@ export function MyCollection() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.02 }}
-                className="bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-xl p-4 border border-[#334155] hover:border-[#d4af37]/50 transition-all"
+                className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all"
               >
                 <div
                   className={`flex items-start justify-between ${
@@ -461,7 +461,7 @@ export function MyCollection() {
                         isRTL ? "flex-row-reverse" : ""
                       }`}
                     >
-                      <h3 className="text-[#fef3c7]">{piece.title}</h3>
+                      <h3 className="text-[#ffffff]">{piece.title}</h3>
                       <Badge
                         className={`${getCategoryColor(
                           piece.category
@@ -474,10 +474,10 @@ export function MyCollection() {
                         }
                       </Badge>
                     </div>
-                    <p className="text-sm text-[#cbd5e1]">
+                    <p className="text-sm text-[#808c99]">
                       {t.by} {piece.artist} • {piece.year}
                     </p>
-                    <p className="text-xs text-[#94a3b8] mt-1">{piece.medium}</p>
+                    <p className="text-xs text-[#BEC0C9] mt-1">{piece.medium}</p>
                   </div>
                   <div
                     className={`flex items-start gap-3 ${
@@ -485,10 +485,10 @@ export function MyCollection() {
                     }`}
                   >
                     <div className={isRTL ? "text-left" : "text-right"}>
-                      <p className="text-lg text-[#d4af37]">
+                      <p className="text-lg text-[#ffcc33]">
                         ${parseFloat(piece.value || "0").toLocaleString()}
                       </p>
-                      <p className="text-xs text-[#94a3b8]">
+                      <p className="text-xs text-[#BEC0C9]">
                         {piece.acquired ? formatDateForDisplay(piece.acquired, language) : ""}
                       </p>
                     </div>
@@ -501,7 +501,7 @@ export function MyCollection() {
                           handleEditArtwork(piece);
                         }}
                         disabled={isUpdating || isDeleting}
-                        className="p-2 rounded-lg bg-[#14b8a6]/20 hover:bg-[#14b8a6]/40 hover:scale-110 text-[#14b8a6] hover:text-[#0d9488] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                        className="p-2 rounded-lg bg-[#45e3d3]/20 hover:bg-[#45e3d3]/40 hover:scale-110 text-[#45e3d3] hover:text-[#3bc4b5] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                         title={language === "en" ? "Edit" : "تعديل"}
                       >
                         <Edit className="w-4 h-4" />

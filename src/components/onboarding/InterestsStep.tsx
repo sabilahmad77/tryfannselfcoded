@@ -726,7 +726,7 @@ export function InterestsStep({
                   <Oval
                     height={20}
                     width={20}
-                    color="#0f172a"
+                    color="#0F021C"
                     ariaLabel="loading"
                     visible={true}
                   />

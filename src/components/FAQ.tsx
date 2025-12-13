@@ -203,7 +203,7 @@ export function FAQ({ language }: FAQProps) {
 
   return (
     <section
-      className="relative py-32 overflow-hidden bg-[#0a0612]"
+      className="relative py-32 overflow-hidden bg-[#0F021C]"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -214,12 +214,12 @@ export function FAQ({ language }: FAQProps) {
           className="w-full h-full object-cover opacity-65"
           style={{ transform: "rotate(180deg) scale(1.1)" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/50 via-transparent to-[#0f172a]/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/50 via-transparent to-[#0F021C]/55" />
       </div>
 
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#d4af37]/12 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#ffcc33]/12 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -232,7 +232,7 @@ export function FAQ({ language }: FAQProps) {
         >
           <h2 className="text-4xl md:text-5xl mb-4">
             <span className="text-white">{t.title.white}</span>
-            <span className="text-[#d4af37]">{t.title.gold}</span>
+            <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto text-lg">
             {t.subtitle}

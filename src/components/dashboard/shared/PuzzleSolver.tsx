@@ -225,10 +225,10 @@ export function PuzzleSolver({
     }
     // Default gradient backgrounds
     const gradients = [
-      "linear-gradient(135deg, #d4af37 0%, #fbbf24 100%)",
-      "linear-gradient(135deg, #14b8a6 0%, #0ea5e9 100%)",
-      "linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)",
-      "linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%)",
+      "linear-gradient(135deg, #ffcc33 0%, #fbbf24 100%)",
+      "linear-gradient(135deg, #45e3d3 0%, #0ea5e9 100%)",
+      "linear-gradient(135deg, #9375b5 0%, #fface3 100%)",
+      "linear-gradient(135deg, #0ea5e9 0%, #45e3d3 100%)",
     ];
     return gradients[value % gradients.length];
   };
@@ -253,10 +253,10 @@ export function PuzzleSolver({
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <Move className="w-4 h-4 text-[#d4af37]" />
-            <span className="text-sm text-[#cbd5e1]">
+            <Move className="w-4 h-4 text-[#ffcc33]" />
+            <span className="text-sm text-[#808c99]">
               {t.moves}:{" "}
-              <span className="text-[#fef3c7] font-semibold">{moves}</span>
+              <span className="text-[#ffffff] font-semibold">{moves}</span>
             </span>
           </div>
           <div
@@ -264,10 +264,10 @@ export function PuzzleSolver({
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <Clock className="w-4 h-4 text-[#14b8a6]" />
-            <span className="text-sm text-[#cbd5e1]">
+            <Clock className="w-4 h-4 text-[#45e3d3]" />
+            <span className="text-sm text-[#808c99]">
               {t.time}:{" "}
-              <span className="text-[#fef3c7] font-semibold">
+              <span className="text-[#ffffff] font-semibold">
                 {formatTime(time)}
               </span>
             </span>
@@ -277,7 +277,7 @@ export function PuzzleSolver({
           onClick={handleReset}
           variant="outline"
           size="sm"
-          className="border-[#334155] text-[#cbd5e1] hover:bg-[#1e293b] hover:text-[#fef3c7] hover:border-[#d4af37]/30 transition-all duration-200 cursor-pointer"
+          className="border-[#4e4e4e78] text-[#808c99] hover:bg-[#1D112A] hover:text-[#ffffff] hover:border-[#ffcc33]/30 transition-all duration-200 cursor-pointer"
         >
           <RotateCcw className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
           {t.reset}
@@ -286,7 +286,7 @@ export function PuzzleSolver({
 
       {/* Puzzle Grid */}
       <div
-        className="relative w-full aspect-square rounded-xl overflow-hidden border-2 border-[#334155] bg-[#0f172a] mb-4 grid gap-0.5 p-0.5"
+        className="relative w-full aspect-square rounded-xl overflow-hidden border-2 border-[#4e4e4e78] bg-[#0F021C] mb-4 grid gap-0.5 p-0.5"
         style={{
           gridTemplateColumns: `repeat(${size}, 1fr)`,
           gridTemplateRows: `repeat(${size}, 1fr)`,
@@ -312,12 +312,12 @@ export function PuzzleSolver({
                   ${isEmpty ? "bg-transparent" : ""}
                   ${
                     isValidMove && !isEmpty
-                      ? "cursor-pointer hover:ring-2 hover:ring-[#d4af37]/50"
+                      ? "cursor-pointer hover:ring-2 hover:ring-[#ffcc33]/50"
                       : "cursor-not-allowed opacity-60"
                   }
                   ${isCompleted ? "opacity-100" : ""}
                   transition-all duration-200
-                  border border-[#334155]/50
+                  border border-[#4e4e4e78]/50
                 `}
                 style={{
                   background: getTileBackground(value),
@@ -357,50 +357,50 @@ export function PuzzleSolver({
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 20 }}
-              className="glass rounded-2xl p-8 text-center max-w-md mx-4 border-2 border-[#d4af37]/50"
+              className="glass rounded-2xl p-8 text-center max-w-md mx-4 border-2 border-[#ffcc33]/50"
             >
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-[#d4af37] to-[#fbbf24] rounded-full flex items-center justify-center"
+                className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-[#ffcc33] to-[#fbbf24] rounded-full flex items-center justify-center"
               >
-                <Trophy className="w-10 h-10 text-[#0f172a]" />
+                <Trophy className="w-10 h-10 text-[#0F021C]" />
               </motion.div>
-              <h3 className="text-2xl font-bold text-[#fef3c7] mb-2">
+              <h3 className="text-2xl font-bold text-[#ffffff] mb-2">
                 {t.congratulations}
               </h3>
-              <p className="text-[#cbd5e1] mb-4">{t.completed}</p>
+              <p className="text-[#808c99] mb-4">{t.completed}</p>
               <div className="space-y-2 mb-6">
                 <div
-                  className={`flex items-center justify-between p-3 bg-[#1e293b]/50 rounded-lg ${
+                  className={`flex items-center justify-between p-3 bg-[#1D112A]/50 rounded-lg ${
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <span className="text-sm text-[#cbd5e1]">{t.moves}</span>
-                  <span className="text-lg font-semibold text-[#d4af37]">
+                  <span className="text-sm text-[#808c99]">{t.moves}</span>
+                  <span className="text-lg font-semibold text-[#ffcc33]">
                     {moves}
                   </span>
                 </div>
                 <div
-                  className={`flex items-center justify-between p-3 bg-[#1e293b]/50 rounded-lg ${
+                  className={`flex items-center justify-between p-3 bg-[#1D112A]/50 rounded-lg ${
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <span className="text-sm text-[#cbd5e1]">{t.time}</span>
-                  <span className="text-lg font-semibold text-[#14b8a6]">
+                  <span className="text-sm text-[#808c99]">{t.time}</span>
+                  <span className="text-lg font-semibold text-[#45e3d3]">
                     {formatTime(time)}
                   </span>
                 </div>
                 <div
-                  className={`flex items-center justify-between p-3 bg-gradient-to-r from-[#d4af37]/20 to-[#14b8a6]/20 rounded-lg border border-[#d4af37]/30 ${
+                  className={`flex items-center justify-between p-3 bg-gradient-to-r from-[#ffcc33]/20 to-[#45e3d3]/20 rounded-lg border border-[#ffcc33]/30 ${
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <span className="text-sm text-[#cbd5e1]">
+                  <span className="text-sm text-[#808c99]">
                     {t.pointsEarned}
                   </span>
-                  <span className="text-xl font-bold text-[#d4af37]">
+                  <span className="text-xl font-bold text-[#ffcc33]">
                     +{pointsReward}
                   </span>
                 </div>

@@ -18,9 +18,9 @@ const content = {
     cta: "Launch Your Journey",
     watchDemo: "View AR Experience",
     stats: [
-      { number: "20K+", label: "Early Adopters", icon: Users, gradient: "from-[#d4af37] to-[#fbbf24]" },
-      { number: "2K+", label: "Verified Artists", icon: Palette, gradient: "from-[#14b8a6] to-[#0ea5e9]" },
-      { number: "1K+", label: "Galleries & Museums", icon: Building2, gradient: "from-[#0ea5e9] to-[#14b8a6]" }
+      { number: "20K+", label: "Early Adopters", icon: Users, gradient: "from-[#ffcc33] to-[#fbbf24]" },
+      { number: "2K+", label: "Verified Artists", icon: Palette, gradient: "from-[#45e3d3] to-[#4de3ed]" },
+      { number: "1K+", label: "Galleries & Museums", icon: Building2, gradient: "from-[#4de3ed] to-[#45e3d3]" }
     ]
   },
   ar: {
@@ -31,9 +31,9 @@ const content = {
     cta: "ابدأ رحلتك",
     watchDemo: "شاهد تجربة الواقع المعزز",
     stats: [
-      { number: "+20K", label: "مستخدم مبكر", icon: Users, gradient: "from-[#d4af37] to-[#fbbf24]" },
-      { number: "+2K", label: "فنان موثق", icon: Palette, gradient: "from-[#14b8a6] to-[#0ea5e9]" },
-      { number: "+1K", label: "معرض ومتحف", icon: Building2, gradient: "from-[#0ea5e9] to-[#14b8a6]" }
+      { number: "+20K", label: "مستخدم مبكر", icon: Users, gradient: "from-[#ffcc33] to-[#fbbf24]" },
+      { number: "+2K", label: "فنان موثق", icon: Palette, gradient: "from-[#45e3d3] to-[#4de3ed]" },
+      { number: "+1K", label: "معرض ومتحف", icon: Building2, gradient: "from-[#4de3ed] to-[#45e3d3]" }
     ]
   }
 };
@@ -43,7 +43,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
   const isRTL = language === 'ar';
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0a0612]">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0F021C]">
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -52,14 +52,14 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
           className="w-full h-full object-cover opacity-90"
         />
         {/* Lighter Gradient Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/40 via-transparent to-[#0f172a]/50" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/30 via-transparent to-[#0f172a]/30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/40 via-transparent to-[#0F021C]/50" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0F021C]/30 via-transparent to-[#0F021C]/30" />
       </div>
 
       {/* Animated gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div 
-          className="absolute -top-40 -right-40 w-96 h-96 bg-[#d4af37]/20 rounded-full blur-3xl"
+          className="absolute -top-40 -right-40 w-96 h-96 bg-[#ffcc33]/20 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.5, 0.3],
@@ -71,7 +71,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
           }}
         />
         <motion.div 
-          className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#14b8a6]/20 rounded-full blur-3xl"
+          className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#45e3d3]/20 rounded-full blur-3xl"
           animate={{
             scale: [1.2, 1, 1.2],
             opacity: [0.2, 0.4, 0.2],
@@ -84,7 +84,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
           }}
         />
         <motion.div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#0ea5e9]/15 rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#4de3ed]/15 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.3, 1],
             rotate: [0, 180, 360],
@@ -122,7 +122,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
               delay: i * 0.5,
             }}
           >
-            <Hexagon className="w-16 h-16 text-[#d4af37]/20" />
+            <Hexagon className="w-16 h-16 text-[#ffcc33]/20" />
           </motion.div>
         ))}
       </div>
@@ -135,10 +135,10 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 mt-12 border border-[#d4af37]/30"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 mt-12 border border-[#ffcc33]/30"
           >
-            <Sparkles className="w-4 h-4 text-[#d4af37]" />
-            <span className="text-[#d4af37] tracking-wider text-sm">{t.badge}</span>
+            <Sparkles className="w-4 h-4 text-[#ffcc33]" />
+            <span className="text-[#ffcc33] tracking-wider text-sm">{t.badge}</span>
           </motion.div>
 
           {/* Headline */}
@@ -148,8 +148,8 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-6 text-5xl md:text-7xl"
           >
-            <span className="block text-[#fef3c7]">{t.headline}</span>
-            <span className="block bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-[#d4af37] bg-clip-text text-transparent animate-gradient">
+            <span className="block text-[#ffffff]">{t.headline}</span>
+            <span className="block bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] bg-clip-text text-transparent animate-gradient">
               {t.headlineAccent}
             </span>
           </motion.h1>
@@ -159,7 +159,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-8 text-[#fef3c7]/60 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
+            className="mb-8 text-[#ffffff]/60 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
           >
             {t.subheadline}
           </motion.p>
@@ -175,10 +175,10 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
               <Button
                 size="lg"
                 onClick={onNavigateToSignUp}
-                className="relative px-8 py-6 bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-[#d4af37] text-[#0f172a] border-0 overflow-hidden group shadow-lg shadow-[#d4af37]/30 hover:shadow-2xl hover:shadow-[#d4af37]/60 transition-all duration-500 glow-gold btn-glow cursor-pointer"
+                className="relative px-8 py-6 bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] text-[#0F021C] border-0 overflow-hidden group shadow-lg shadow-[#ffcc33]/30 hover:shadow-2xl hover:shadow-[#ffcc33]/60 transition-all duration-500 glow-gold btn-glow cursor-pointer"
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-[#fbbf24] via-[#d4af37] to-[#fbbf24]"
+                  className="absolute inset-0 bg-gradient-to-r from-[#fbbf24] via-[#ffcc33] to-[#fbbf24]"
                   initial={{ x: '-100%' }}
                   whileHover={{ x: '100%' }}
                   transition={{ duration: 0.6 }}
@@ -190,7 +190,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                 <motion.div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   style={{
-                    background: 'radial-gradient(circle at center, rgba(254,243,199,0.2) 0%, transparent 70%)',
+                    background: 'radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 70%)',
                   }}
                 />
               </Button>
@@ -200,10 +200,10 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
               <Button
                 size="lg"
                 variant="outline"
-                className="relative px-8 py-6 glass border-2 border-[#14b8a6]/40 text-[#fef3c7] hover:border-[#14b8a6] hover:bg-[#14b8a6]/10 backdrop-blur-xl overflow-hidden group transition-all duration-300"
+                className="relative px-8 py-6 glass border-2 border-[#45e3d3]/40 text-[#ffffff] hover:border-[#45e3d3] hover:bg-[#45e3d3]/10 backdrop-blur-xl overflow-hidden group transition-all duration-300"
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-[#14b8a6]/0 via-[#14b8a6]/20 to-[#14b8a6]/0"
+                  className="absolute inset-0 bg-gradient-to-r from-[#45e3d3]/0 via-[#45e3d3]/20 to-[#45e3d3]/0"
                   initial={{ x: '-100%' }}
                   whileHover={{ x: '100%' }}
                   transition={{ duration: 0.8 }}
@@ -267,17 +267,17 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                       {/* Icon */}
                       <div className="mb-4">
                         <div className="inline-flex p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 group-hover:bg-white/15 group-hover:border-white/30 transition-all duration-300">
-                          <Icon className="w-6 h-6 text-[#fef3c7]" />
+                          <Icon className="w-6 h-6 text-[#ffffff]" />
                         </div>
                       </div>
                       
                       {/* Number */}
-                      <div className="text-4xl text-[#fef3c7] mb-2">
+                      <div className="text-4xl text-[#ffffff] mb-2">
                         {stat.number}
                       </div>
                       
                       {/* Label */}
-                      <div className="text-sm text-[#fef3c7]/70">
+                      <div className="text-sm text-[#ffffff]/70">
                         {stat.label}
                       </div>
                     </div>

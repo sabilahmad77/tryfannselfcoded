@@ -87,7 +87,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
   const isRTL = language === 'ar';
 
   return (
-    <section className="relative py-32 overflow-hidden bg-[#0a0612]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="relative py-32 overflow-hidden bg-[#0F021C]" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -96,13 +96,13 @@ export function HowItWorks({ language }: HowItWorksProps) {
           className="w-full h-full object-cover opacity-80"
           style={{ transform: 'scaleX(-1)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/35 via-transparent to-[#0f172a]/45" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/35 via-transparent to-[#0F021C]/45" />
       </div>
 
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#d4af37]/15 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#14b8a6]/15 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#ffcc33]/15 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#45e3d3]/15 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -115,9 +115,9 @@ export function HowItWorks({ language }: HowItWorksProps) {
         >
           <h2 className="mb-4 text-4xl md:text-5xl">
             <span className="text-white">{t.title.white}</span>
-            <span className="text-[#d4af37]">{t.title.gold}</span>
+            <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-[#fef3c7]/60 max-w-2xl mx-auto text-lg">
+          <p className="text-[#ffffff]/60 max-w-2xl mx-auto text-lg">
             {t.subtitle}
           </p>
         </motion.div>
@@ -144,9 +144,9 @@ export function HowItWorks({ language }: HowItWorksProps) {
                 {/* Connector Line (hidden on mobile and last item) */}
                 {index < t.steps.length - 1 && (
                   <div className="hidden lg:block absolute top-20 left-[60%] w-[80%] h-px">
-                    <div className="w-full h-full bg-gradient-to-r from-[#d4af37]/60 via-[#d4af37]/40 to-transparent" />
+                    <div className="w-full h-full bg-gradient-to-r from-[#ffcc33]/60 via-[#ffcc33]/40 to-transparent" />
                     <motion.div 
-                      className="absolute inset-0 bg-gradient-to-r from-[#d4af37] via-[#fbbf24] to-transparent"
+                      className="absolute inset-0 bg-gradient-to-r from-[#ffcc33] via-[#ffb54d] to-transparent"
                       initial={{ scaleX: 0 }}
                       whileInView={{ scaleX: 1 }}
                       viewport={{ once: true }}
@@ -155,7 +155,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
                   </div>
                 )}
 
-                <div className="relative backdrop-blur-2xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 rounded-3xl overflow-hidden h-full border border-[#d4af37]/20 hover:border-[#d4af37]/60 transition-all duration-500">
+                <div className="relative backdrop-blur-2xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 rounded-3xl overflow-hidden h-full border border-[#ffcc33]/20 hover:border-[#ffcc33]/60 transition-all duration-500">
                   {/* Glass Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent" />
                   
@@ -172,13 +172,13 @@ export function HowItWorks({ language }: HowItWorksProps) {
                       ease: "linear"
                     }}
                     style={{
-                      background: 'linear-gradient(to bottom, transparent 0%, rgba(212, 175, 55, 0.1) 50%, transparent 100%)',
+                      background: 'linear-gradient(to bottom, transparent 0%, rgba(255, 204, 51, 0.1) 50%, transparent 100%)',
                       backgroundSize: '100% 200%'
                     }}
                   />
 
                   {/* Top Gradient Bar */}
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffcc33] to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
                   
                   {/* Step Number Badge */}
                   <motion.div 
@@ -188,7 +188,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
                   >
                     {/* Outer Glow Ring */}
                     <motion.div
-                      className="absolute inset-0 rounded-full bg-gradient-to-br from-[#d4af37] to-[#fbbf24] blur-lg"
+                      className="absolute inset-0 rounded-full bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] blur-lg"
                       animate={{
                         scale: [1, 1.2, 1],
                         opacity: [0.7, 1, 0.7],
@@ -204,7 +204,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
                     <motion.div
                       className="absolute inset-0 rounded-full"
                       style={{
-                        background: 'conic-gradient(from 0deg, #d4af37, #fbbf24, #14b8a6, #d4af37)',
+                        background: 'conic-gradient(from 0deg, #ffcc33, #ffb54d, #45e3d3, #ffcc33)',
                         padding: '3px',
                       }}
                       animate={{
@@ -220,12 +220,12 @@ export function HowItWorks({ language }: HowItWorksProps) {
                     </motion.div>
 
                     {/* Main Badge */}
-                    <div className="absolute inset-[3px] rounded-full bg-gradient-to-br from-[#d4af37] via-[#fbbf24] to-[#b87333] flex items-center justify-center shadow-2xl border border-[#fef3c7]/30">
+                    <div className="absolute inset-[3px] rounded-full bg-gradient-to-br from-[#ffcc33] via-[#ffb54d] to-[#e6b800] flex items-center justify-center shadow-2xl border border-[#ffffff]/30">
                       {/* Inner Glass Effect */}
                       <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 via-transparent to-transparent" />
                       
                       {/* Number */}
-                      <span className="relative z-10 text-[#0f172a] text-2xl drop-shadow-lg" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                      <span className="relative z-10 text-[#0F021C] text-2xl drop-shadow-lg" style={{ fontVariantNumeric: 'tabular-nums' }}>
                         {index + 1}
                       </span>
 
@@ -254,16 +254,16 @@ export function HowItWorks({ language }: HowItWorksProps) {
                         transition={{ duration: 0.3 }}
                       >
                         {/* Outer Glow Ring */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#d4af37]/30 to-[#14b8a6]/30 blur-xl group-hover:blur-2xl transition-all duration-500" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#ffcc33]/30 to-[#45e3d3]/30 blur-xl group-hover:blur-2xl transition-all duration-500" />
                         
                         {/* Main Circle */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#d4af37]/20 via-[#1a1a2e]/80 to-[#14b8a6]/20 border-2 border-[#d4af37]/40 group-hover:border-[#d4af37]/80 transition-all duration-500 flex items-center justify-center backdrop-blur-xl">
-                          <Icon className="w-12 h-12 text-[#d4af37] relative z-10 drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#ffcc33]/20 via-[#1a1a2e]/80 to-[#45e3d3]/20 border-2 border-[#ffcc33]/40 group-hover:border-[#ffcc33]/80 transition-all duration-500 flex items-center justify-center backdrop-blur-xl">
+                          <Icon className="w-12 h-12 text-[#ffcc33] relative z-10 drop-shadow-[0_0_10px_rgba(255,204,51,0.5)]" />
                         </div>
 
                         {/* Animated Ring */}
                         <motion.div
-                          className="absolute inset-0 rounded-full border-2 border-[#d4af37]/0 group-hover:border-[#d4af37]/60"
+                          className="absolute inset-0 rounded-full border-2 border-[#ffcc33]/0 group-hover:border-[#ffcc33]/60"
                           animate={{
                             scale: [1, 1.2, 1],
                             opacity: [0.5, 0, 0.5],
@@ -288,7 +288,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
 
                   {/* Bottom Glow Line */}
                   <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent"
+                    className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffcc33] to-transparent"
                     initial={{ opacity: 0, scaleX: 0 }}
                     whileHover={{ opacity: 1, scaleX: 1 }}
                     transition={{ duration: 0.4 }}

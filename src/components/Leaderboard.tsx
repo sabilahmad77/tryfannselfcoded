@@ -259,7 +259,7 @@ export function Leaderboard({
 
   return (
     <section
-      className="relative py-32 overflow-hidden bg-[#0a0612]"
+      className="relative py-32 overflow-hidden bg-[#0F021C]"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -270,13 +270,13 @@ export function Leaderboard({
           className="w-full h-full object-cover opacity-75"
           style={{ transform: "rotate(90deg) scale(1.1)" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/50 via-transparent to-[#0f172a]/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/50 via-transparent to-[#0F021C]/55" />
       </div>
 
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/3 w-96 h-96 bg-[#d4af37]/15 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#14b8a6]/15 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/3 w-96 h-96 bg-[#ffcc33]/15 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#45e3d3]/15 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -289,7 +289,7 @@ export function Leaderboard({
         >
           <h2 className="text-4xl md:text-5xl mb-4">
             <span className="text-white">{t.title.white}</span>
-            <span className="text-[#d4af37]">{t.title.gold}</span>
+            <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto text-lg">
             {t.subtitle}
@@ -338,10 +338,10 @@ export function Leaderboard({
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/80 via-[#1e293b]/70 to-[#0f172a]/80 border-2 border-[#d4af37]/50 relative overflow-hidden shadow-xl shadow-[#d4af37]/20"
+              className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0F021C]/80 border-2 border-[#ffcc33]/50 relative overflow-hidden shadow-xl shadow-[#ffcc33]/20"
             >
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-[#d4af37]/15 via-[#14b8a6]/15 to-[#d4af37]/15"
+                className="absolute inset-0 bg-gradient-to-r from-[#ffcc33]/15 via-[#45e3d3]/15 to-[#ffcc33]/15"
                 animate={{
                   x: ["-100%", "100%"],
                 }}
@@ -387,12 +387,12 @@ export function Leaderboard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#1e1b4b]/75 via-[#1e293b]/65 to-[#0f172a]/75 border-2 border-[#d4af37]/40 overflow-hidden shadow-2xl shadow-[#d4af37]/20"
+            className="rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/75 via-[#1D112A]/65 to-[#0F021C]/75 border-2 border-[#ffcc33]/40 overflow-hidden shadow-2xl shadow-[#ffcc33]/20"
           >
             {/* Loading & Error States */}
             {isLoading && (
               <div className="flex flex-col items-center justify-center py-20 gap-4">
-                <Loader2 className="w-8 h-8 text-[#d4af37] animate-spin" />
+                <Loader2 className="w-8 h-8 text-[#ffcc33] animate-spin" />
                 <span className="text-white/70">
                   {language === "en"
                     ? "Loading leaderboard..."
@@ -432,10 +432,10 @@ export function Leaderboard({
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                     whileHover={{
-                      backgroundColor: "rgba(212, 175, 55, 0.08)",
+                      backgroundColor: "rgba(255, 204, 51, 0.08)",
                       scale: 1.01,
                     }}
-                    className="p-6 border-b border-[#d4af37]/10 last:border-0 transition-all duration-200"
+                    className="p-6 border-b border-[#ffcc33]/10 last:border-0 transition-all duration-200"
                   >
                     <div className="flex items-center gap-4">
                       {/* Rank */}
@@ -487,7 +487,7 @@ export function Leaderboard({
                           className={`shrink-0 ${
                             isFollowing(leader.username)
                               ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
-                              : "bg-gradient-to-r from-[#14b8a6] to-[#0ea5e9] hover:from-[#0d9488] hover:to-[#0284c7] text-white"
+                              : "bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#3bc4b5] text-white"
                           }`}
                         >
                           {isFollowing(leader.username) ? (
@@ -606,7 +606,7 @@ export function Leaderboard({
                               className={`${
                                 isFollowing(leader.username)
                                   ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
-                                  : "bg-gradient-to-r from-[#14b8a6] to-[#0ea5e9] hover:from-[#0d9488] hover:to-[#0284c7] text-white"
+                                  : "bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#3bc4b5] text-white"
                               }`}
                             >
                               {isFollowing(leader.username) ? (
