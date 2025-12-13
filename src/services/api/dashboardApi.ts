@@ -42,7 +42,6 @@ export interface DashboardStatsResponse {
     collection_count: number;
     is_referral_code: boolean;
     user_followers: number;
-    puzzle_completed?: boolean;
     portfolio_value?: number;
     growth?: number;
     tier_name?: string;
@@ -689,23 +688,6 @@ export const dashboardApi = baseApi.injectEndpoints({
       invalidatesTags: ["User", "Leaderboard"],
     }),
 
-    // User Puzzle Completion - POST /api/market_final/user_puzzle_completion
-    userPuzzleCompletion: builder.mutation<
-      {
-        success: boolean;
-        status_code: number;
-        message: Record<string, unknown> | string;
-        data?: Record<string, unknown>;
-      },
-      void
-    >({
-      query: () => ({
-        url: "/market_final/user_puzzle_completion",
-        method: "POST",
-      }),
-      invalidatesTags: ["User"], // Invalidate User tag to refresh dashboard stats
-    }),
-
   }),
 });
 
@@ -736,7 +718,6 @@ export const {
   useGetArtworkCollectionByIdQuery,
   useCreateArtworkCollectionMutation,
   useUpdateArtworkCollectionMutation,
-  useDeleteArtworkCollectionMutation,
-  useFollowUserMutation,
-  useUserPuzzleCompletionMutation,
+    useDeleteArtworkCollectionMutation,
+    useFollowUserMutation,
 } = dashboardApi;

@@ -301,7 +301,7 @@ export function WatchVideos() {
             <Button
               onClick={() => refetchVideos()}
               size="sm"
-              className="bg-gradient-to-r from-[#0ea5e9] to-[#45e3d3] hover:from-[#45e3d3] hover:to-[#0ea5e9] hover:shadow-lg hover:shadow-[#0ea5e9]/50 text-white transition-all duration-200 cursor-pointer"
+              className="hover:shadow-lg hover:shadow-primary/50 transition-all duration-200 cursor-pointer"
             >
               {language === "en" ? "Retry" : "إعادة المحاولة"}
             </Button>

@@ -211,7 +211,7 @@ export function ArtistRoster() {
         <Button
           size="sm"
           onClick={() => setIsModalOpen(true)}
-          className="bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#0284c7] hover:shadow-lg hover:shadow-[#45e3d3]/50 text-white border-0 transition-all duration-200 cursor-pointer"
+          className="hover:shadow-lg hover:shadow-primary/50 border-0 transition-all duration-200 cursor-pointer"
         >
           <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
           {t.addArtist}
@@ -312,14 +312,14 @@ export function ArtistRoster() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="text-[#45e3d3] hover:text-[#3bc4b5] hover:bg-[#45e3d3]/20 hover:scale-110 transition-all duration-200 cursor-pointer"
+                  className="hover:scale-110 transition-all duration-200 cursor-pointer"
                 >
                   <ExternalLink className="w-4 h-4" />
                 </Button>
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="text-[#ffcc33] hover:text-[#b8941f] hover:bg-[#ffcc33]/20 hover:scale-110 transition-all duration-200 cursor-pointer"
+                  className="hover:scale-110 transition-all duration-200 cursor-pointer"
                 >
                   <Mail className="w-4 h-4" />
                 </Button>

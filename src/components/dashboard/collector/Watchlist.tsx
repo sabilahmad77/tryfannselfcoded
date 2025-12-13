@@ -187,7 +187,7 @@ export function Watchlist() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="text-[#45e3d3] hover:text-[#3bc4b5] hover:bg-[#45e3d3]/20 hover:scale-110 transition-all duration-200 cursor-pointer"
+                  className="hover:scale-110 transition-all duration-200 cursor-pointer"
                   title={t.viewDetails}
                 >
                   <ExternalLink className="w-4 h-4" />
@@ -195,7 +195,7 @@ export function Watchlist() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="text-[#fface3] hover:text-[#fface3] hover:bg-[#fface3]/20 hover:scale-110 transition-all duration-200 cursor-pointer"
+                  className="hover:scale-110 transition-all duration-200 cursor-pointer"
                   title={t.notify}
                 >
                   <Bell className="w-4 h-4" />
@@ -217,7 +217,7 @@ export function Watchlist() {
       {/* View All Button */}
       <Button
         variant="ghost"
-        className="w-full mt-4 text-[#fface3] hover:text-[#fface3] hover:bg-[#fface3]/20 transition-all duration-200 cursor-pointer"
+        className="w-full mt-4 transition-all duration-200 cursor-pointer"
       >
         {language === "en"
           ? "View All Watchlist Items"

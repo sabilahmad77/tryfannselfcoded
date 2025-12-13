@@ -113,7 +113,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
                 <Button 
                   onClick={() => navigate(ROUTES.SIGN_IN)}
                   variant="ghost" 
-                  className="relative px-4 py-2 text-white/70 hover:text-white glass border border-amber-500/30 hover:border-amber-400/60 hover:bg-amber-500/10 transition-all duration-300 overflow-hidden group cursor-pointer"
+                  className="relative px-4 py-2 glass transition-all duration-300 overflow-hidden group cursor-pointer"
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/10 to-amber-500/0"
@@ -128,7 +128,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
                   onClick={handleNavigateToSignIn}
-                  className="relative px-5 py-2 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black border-0 overflow-hidden group shadow-lg shadow-amber-500/30 hover:shadow-amber-500/60 transition-all duration-300 cursor-pointer"
+                  className="relative px-5 py-2 border-0 overflow-hidden group shadow-lg shadow-primary/30 hover:shadow-primary/60 transition-all duration-300 cursor-pointer"
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500"
@@ -178,7 +178,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
                 <Button 
                   onClick={() => navigate(ROUTES.SIGN_IN)}
                   variant="ghost" 
-                  className="relative text-white/70 hover:text-white glass border border-amber-500/30 hover:border-amber-400/60 hover:bg-amber-500/10 w-full transition-all duration-300 overflow-hidden group cursor-pointer"
+                  className="relative glass w-full transition-all duration-300 overflow-hidden group cursor-pointer"
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/10 to-amber-500/0"
@@ -189,7 +189,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
                 </Button>
                 <Button 
                   onClick={handleNavigateToSignIn}
-                  className="relative bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black w-full border-0 shadow-lg shadow-amber-500/30 overflow-hidden group cursor-pointer"
+                  className="relative w-full border-0 shadow-lg shadow-primary/30 overflow-hidden group cursor-pointer"
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"

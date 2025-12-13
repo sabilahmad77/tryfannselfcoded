@@ -1,28 +1,28 @@
-import { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import {
-  Gem,
-  TrendingUp,
-  Plus,
-  Loader2,
-  Edit,
-  Trash2,
-} from "lucide-react";
-import { Button } from "../../ui/button";
-import { Badge } from "../../ui/badge";
 import { useLanguage } from "@/contexts/useLanguage";
-import { AddArtworkModal, type Artwork } from "./AddArtworkModal";
-import { ConfirmationDialog } from "../../ui/ConfirmationDialog";
 import {
-  useGetArtworkCollectionQuery,
   useCreateArtworkCollectionMutation,
-  useUpdateArtworkCollectionMutation,
   useDeleteArtworkCollectionMutation,
+  useGetArtworkCollectionQuery,
   useGetDashboardStatsQuery,
+  useUpdateArtworkCollectionMutation,
   type ArtworkCollection,
 } from "@/services/api/dashboardApi";
 import { formatDateForDisplay } from "@/utils/dateUtils";
+import {
+  Gem,
+  Loader2,
+  Plus,
+  Trash2,
+  TrendingUp
+} from "lucide-react";
+import { Edit2 } from "lucide-react@0.487.0";
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Badge } from "../../ui/badge";
+import { Button } from "../../ui/button";
+import { ConfirmationDialog } from "../../ui/ConfirmationDialog";
+import { AddArtworkModal, type Artwork } from "./AddArtworkModal";
 
 const content = {
   en: {
@@ -74,6 +74,10 @@ const content = {
     editSuccess: "Artwork updated successfully",
     addError: "Failed to add artwork",
     editError: "Failed to update artwork",
+    actions: {
+      edit: "Edit",
+      delete: "Delete",
+    },
   },
   ar: {
     title: "مجموعتي",
@@ -124,6 +128,10 @@ const content = {
     editSuccess: "تم تحديث العمل الفني بنجاح",
     addError: "فشل إضافة العمل الفني",
     editError: "فشل تحديث العمل الفني",
+    actions: {
+      edit: "تعديل",
+      delete: "حذف",
+    },
   },
 };
 
@@ -283,7 +291,7 @@ export function MyCollection() {
     try {
       setDeletingArtworkId(artworkToDelete);
       const response = await deleteArtwork(artworkToDelete).unwrap();
-      
+
       // Extract success message from API response
       let successMessage = t.deleteSuccess;
       if (response?.message) {
@@ -300,7 +308,7 @@ export function MyCollection() {
           }
         }
       }
-      
+
       toast.success(successMessage);
       setShowDeleteConfirm(false);
       setArtworkToDelete(null);
@@ -326,14 +334,12 @@ export function MyCollection() {
     <div className="glass rounded-2xl p-6 h-full">
       {/* Header */}
       <div
-        className={`flex items-center justify-between mb-6 ${
-          isRTL ? "flex-row-reverse" : ""
-        }`}
+        className={`flex items-center justify-between mb-6 ${isRTL ? "flex-row-reverse" : ""
+          }`}
       >
         <div
-          className={`flex items-center gap-3 ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
+          className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+            }`}
         >
           <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#9375b5] rounded-xl flex items-center justify-center">
             <Gem className="w-6 h-6 text-white" />
@@ -344,7 +350,7 @@ export function MyCollection() {
           <Button
             size="sm"
             onClick={() => setIsModalOpen(true)}
-            className="bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#e6b800] hover:to-[#ffcc33] text-[#0F021C] border-0 cursor-pointer"
+            className="border-0 cursor-pointer"
           >
             <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
             {t.addPiece}
@@ -359,9 +365,8 @@ export function MyCollection() {
           className="bg-gradient-to-br from-[#9375b5]/20 to-[#9375b5]/5 rounded-xl p-4 border border-[#9375b5]/30"
         >
           <div
-            className={`flex items-center gap-2 mb-2 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <Gem className="w-4 h-4 text-[#9375b5]" />
             <span className="text-xs text-[#808c99]">{t.totalPieces}</span>
@@ -376,9 +381,8 @@ export function MyCollection() {
           className="bg-gradient-to-br from-[#45e3d3]/20 to-[#45e3d3]/5 rounded-xl p-4 border border-[#45e3d3]/30"
         >
           <div
-            className={`flex items-center gap-2 mb-2 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <TrendingUp className="w-4 h-4 text-[#45e3d3]" />
             <span className="text-xs text-[#808c99]">{t.totalValue}</span>
@@ -395,9 +399,8 @@ export function MyCollection() {
           className="bg-gradient-to-br from-[#ffcc33]/20 to-[#ffcc33]/5 rounded-xl p-4 border border-[#ffcc33]/30"
         >
           <div
-            className={`flex items-center gap-2 mb-2 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <TrendingUp className="w-4 h-4 text-[#ffcc33]" />
             <span className="text-xs text-[#808c99]">{t.growth}</span>
@@ -413,9 +416,8 @@ export function MyCollection() {
       {/* Recent Acquisitions */}
       <div>
         <h3
-          className={`text-sm text-[#808c99] mb-4 ${
-            isRTL ? "text-right" : "text-left"
-          }`}
+          className={`text-sm text-[#808c99] mb-4 ${isRTL ? "text-right" : "text-left"
+            }`}
         >
           {t.recent}
         </h3>
@@ -451,15 +453,13 @@ export function MyCollection() {
                 className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all"
               >
                 <div
-                  className={`flex items-start justify-between ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-start justify-between ${isRTL ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
                     <div
-                      className={`flex items-center gap-2 mb-1 ${
-                        isRTL ? "flex-row-reverse" : ""
-                      }`}
+                      className={`flex items-center gap-2 mb-1 ${isRTL ? "flex-row-reverse" : ""
+                        }`}
                     >
                       <h3 className="text-[#ffffff]">{piece.title}</h3>
                       <Badge
@@ -469,7 +469,7 @@ export function MyCollection() {
                       >
                         {
                           t.categories[
-                            piece.category.toLowerCase() as keyof typeof t.categories
+                          piece.category.toLowerCase() as keyof typeof t.categories
                           ]
                         }
                       </Badge>
@@ -480,9 +480,8 @@ export function MyCollection() {
                     <p className="text-xs text-[#BEC0C9] mt-1">{piece.medium}</p>
                   </div>
                   <div
-                    className={`flex items-start gap-3 ${
-                      isRTL ? "flex-row-reverse" : ""
-                    }`}
+                    className={`flex items-start gap-3 ${isRTL ? "flex-row-reverse" : ""
+                      }`}
                   >
                     <div className={isRTL ? "text-left" : "text-right"}>
                       <p className="text-lg text-[#ffcc33]">
@@ -495,18 +494,20 @@ export function MyCollection() {
                     <div
                       className={`flex gap-2 ${isRTL ? "flex-row-reverse" : ""}`}
                     >
-                      <button
+                      <Button
                         onClick={(e) => {
                           e.stopPropagation();
                           handleEditArtwork(piece);
                         }}
                         disabled={isUpdating || isDeleting}
-                        className="p-2 rounded-lg bg-[#45e3d3]/20 hover:bg-[#45e3d3]/40 hover:scale-110 text-[#45e3d3] hover:text-[#3bc4b5] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                        title={language === "en" ? "Edit" : "تعديل"}
+                        className="bg-primary/10 hover:bg-primary/20 hover:scale-110 text-primary hover:text-primary transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                        title={t.actions.edit}
                       >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button
+                        <Edit2 className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (piece.id) handleDeleteClick(piece.id);
@@ -516,15 +517,15 @@ export function MyCollection() {
                           deletingArtworkId === piece.id ||
                           !piece.id
                         }
-                        className="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/40 hover:scale-110 text-red-400 hover:text-red-300 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                        title={language === "en" ? "Delete" : "حذف"}
+                        className="bg-primary/10 hover:bg-primary/20 hover:scale-110 text-primary hover:text-primary transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                        title={t.actions.delete}
                       >
                         {deletingArtworkId === piece.id ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
                           <Trash2 className="w-4 h-4" />
                         )}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>

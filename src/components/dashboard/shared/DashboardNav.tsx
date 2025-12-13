@@ -21,8 +21,6 @@ import { ROUTES } from "@/routes/paths";
 import { clearAuth } from "@/store/authSlice";
 import { persistor } from "@/store/store";
 import type { RootState } from "@/store/store";
-import { useGetProgressionQuery } from "@/services/api/dashboardApi";
-import { getCurrentTier, tierNameToKey, buildTierThresholds } from "@/utils/tierSystem";
 import fannLogo from "figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png";
 
 interface DashboardNavProps {
@@ -41,7 +39,12 @@ const content = {
     logout: "Logout",
     collapse: "Collapse",
     expand: "Expand",
-    // Tier names will be fetched from API
+    roles: {
+      artist: "Artist",
+      collector: "Collector",
+      gallery: "Gallery",
+      ambassador: "Ambassador",
+    },
   },
   ar: {
     dashboard: "لوحة التحكم",
@@ -51,7 +54,12 @@ const content = {
     logout: "تسجيل الخروج",
     collapse: "طي",
     expand: "توسيع",
-    // Tier names will be fetched from API
+    roles: {
+      artist: "فنان",
+      collector: "جامع",
+      gallery: "معرض",
+      ambassador: "سفير",
+    },
   },
 };
 
@@ -66,6 +74,7 @@ export function DashboardNav({
   const location = useLocation();
   const dispatch = useDispatch();
   const storedUser = useSelector((state: RootState) => state.auth.user);
+  const persona = useSelector((state: RootState) => state.auth.persona);
   const t = content[language];
   const isRTL = language === "ar";
   const [internalCollapsed, setInternalCollapsed] = useState(false);
@@ -91,33 +100,26 @@ export function DashboardNav({
       "U"
     : "U";
 
-  // Fetch progression data for dynamic tier system
-  const { data: progressionData } = useGetProgressionQuery();
-
-  // Get user tier using dynamic tier system
-  const getUserTier = () => {
-    if (!storedUser) {
-      // Fallback to first tier from API or default
-      const firstTier = progressionData?.data?.[0];
-      return firstTier?.name || "Explorer";
-    }
+  // Get user role for display
+  const getUserRole = () => {
+    // Get role from storedUser.role first, then fallback to persona
+    const displayRoleRaw =
+      storedUser?.role?.toLowerCase() || persona?.toLowerCase() || "artist";
     
-    const points = parseInt(storedUser.points || "0", 10);
-    const progressionTiers = progressionData?.data || [];
+    // Validate and map role to our supported roles
+    const validRoles: Array<"artist" | "collector" | "gallery" | "ambassador"> = [
+      "artist",
+      "collector",
+      "gallery",
+      "ambassador",
+    ];
+    const displayRole = validRoles.includes(
+      displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador"
+    )
+      ? (displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador")
+      : "artist";
     
-    if (progressionTiers.length === 0) {
-      // Fallback to first tier from API or default
-      const firstTier = progressionData?.data?.[0];
-      return firstTier?.name || "Explorer";
-    }
-    
-    // Build tier thresholds and get current tier
-    const tierThresholds = buildTierThresholds(progressionTiers);
-    const tierKey = getCurrentTier(points, tierThresholds);
-    
-    // Find tier name from API data
-    const tier = progressionTiers.find(t => tierNameToKey(t.name) === tierKey);
-    return tier?.name || "Explorer";
+    return t.roles[displayRole] || t.roles.artist;
   };
 
   // Use controlled state if provided, otherwise use internal state
@@ -348,7 +350,7 @@ export function DashboardNav({
               >
                 <span className="text-[#ffffff] truncate">{userName}</span>
                 <span className="text-[#808c99]/60 text-sm">
-                  {getUserTier()}
+                  {getUserRole()}
                 </span>
               </motion.div>
             )}
@@ -370,8 +372,8 @@ export function DashboardNav({
                   whileTap={{ scale: 0.98 }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer ${
                     isActive
-                      ? "bg-gradient-to-r from-[#ffcc33]/20 to-[#45e3d3]/10 text-[#ffcc33] border border-[#ffcc33]/30 glow-gold-subtle"
-                      : "text-[#808c99] hover:text-[#ffcc33] hover:bg-[#ffcc33]/10"
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-[#808c99] hover:text-primary hover:bg-primary/10"
                   } ${isCollapsed ? "justify-center" : ""}`}
                   style={{ pointerEvents: "auto" }}
                 >

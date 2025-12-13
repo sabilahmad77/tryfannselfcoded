@@ -421,7 +421,6 @@ export function SettingsPage() {
           </p>
           <Button
             onClick={() => refetchSettings()}
-            className="bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] hover:from-[#45e3d3] hover:to-[#ffcc33] text-[#0F021C]"
           >
             {language === "en" ? "Retry" : "إعادة المحاولة"}
           </Button>
@@ -532,8 +531,7 @@ export function SettingsPage() {
               <Button
                 onClick={handleChangePassword}
                 disabled={isChangingPassword}
-                variant="outline"
-                className="border-[#45e3d3] text-[#45e3d3] hover:bg-[#45e3d3]/10 disabled:opacity-50"
+                className="disabled:opacity-50"
               >
                 {isChangingPassword ? (
                   <>
@@ -746,7 +744,6 @@ export function SettingsPage() {
                 </div>
                 <Button
                   variant="outline"
-                  className="border-[#45e3d3] text-[#45e3d3] hover:bg-[#45e3d3]/10"
                   onClick={() => setTwoFactor(!twoFactor)}
                 >
                   {twoFactor ? (
@@ -774,7 +771,6 @@ export function SettingsPage() {
                 </p>
                 <Button
                   variant="outline"
-                  className="border-[#4e4e4e78] text-[#808c99]"
                 >
                   {t.viewSessions}
                   <ChevronRight className="w-4 h-4 ml-2" />
@@ -852,7 +848,7 @@ export function SettingsPage() {
               <Button
                 onClick={handleSavePreferences}
                 disabled={isSavingSettings}
-                className="bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] hover:from-[#45e3d3] hover:to-[#ffcc33] text-[#0F021C] w-full md:w-auto disabled:opacity-50"
+                className="w-full md:w-auto disabled:opacity-50"
               >
                 {isSavingSettings ? (
                   <>

@@ -240,7 +240,7 @@ export function AddArtistModal({
           <Button
             onClick={onClose}
             variant="outline"
-            className="flex-1 border-[#4e4e4e78] hover:bg-[#4e4e4e78]/30 hover:border-[#808c99] text-[#808c99] hover:text-[#ffffff] transition-all duration-200 cursor-pointer"
+            className="flex-1 transition-all duration-200 cursor-pointer"
           >
             {t.cancel}
           </Button>

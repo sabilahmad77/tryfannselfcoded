@@ -175,10 +175,10 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
               <Button
                 size="lg"
                 onClick={onNavigateToSignUp}
-                className="relative px-8 py-6 bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] text-[#0F021C] border-0 overflow-hidden group shadow-lg shadow-[#ffcc33]/30 hover:shadow-2xl hover:shadow-[#ffcc33]/60 transition-all duration-500 glow-gold btn-glow cursor-pointer"
+                className="relative px-8 py-6 border-0 overflow-hidden group shadow-lg shadow-primary/30 hover:shadow-2xl hover:shadow-primary/60 transition-all duration-500 glow-gold btn-glow cursor-pointer"
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-[#fbbf24] via-[#ffcc33] to-[#fbbf24]"
+                  className="absolute inset-0 bg-primary/20"
                   initial={{ x: '-100%' }}
                   whileHover={{ x: '100%' }}
                   transition={{ duration: 0.6 }}
@@ -200,10 +200,10 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
               <Button
                 size="lg"
                 variant="outline"
-                className="relative px-8 py-6 glass border-2 border-[#45e3d3]/40 text-[#ffffff] hover:border-[#45e3d3] hover:bg-[#45e3d3]/10 backdrop-blur-xl overflow-hidden group transition-all duration-300"
+                className="relative px-8 py-6 glass border-2 backdrop-blur-xl overflow-hidden group transition-all duration-300"
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-[#45e3d3]/0 via-[#45e3d3]/20 to-[#45e3d3]/0"
+                  className="absolute inset-0 bg-primary/20"
                   initial={{ x: '-100%' }}
                   whileHover={{ x: '100%' }}
                   transition={{ duration: 0.8 }}

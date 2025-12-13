@@ -22,7 +22,6 @@ import { Card } from "../../ui/card";
 import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
 import { TierProgress } from "../shared/TierProgress";
-import { PuzzleModal } from "../shared/PuzzleModal";
 import { useLanguage } from "@/contexts/useLanguage";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -37,12 +36,6 @@ const content = {
   en: {
     welcome: "Welcome back",
     subtitle: "Track your performance and grow your influence",
-    roles: {
-      artist: "Artist",
-      collector: "Collector",
-      gallery: "Gallery",
-      ambassador: "Ambassador",
-    },
     stats: {
       totalReach: "Total Reach",
       engagement: "Engagement Rate",
@@ -116,31 +109,14 @@ export function AmbassadorDashboard() {
   const isRTL = language === "ar";
   const navigate = useNavigate();
   const storedUser = useSelector((state: RootState) => state.auth.user);
-  const persona = useSelector((state: RootState) => state.auth.persona);
 
   // Get user name from stored data
   const userName = storedUser
     ? `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim() ||
-      storedUser.title ||
-      storedUser.email ||
-      "Ambassador"
+    storedUser.title ||
+    storedUser.email ||
+    "Ambassador"
     : "Ambassador";
-
-  // Get user role for display
-  const displayRoleRaw =
-    storedUser?.role?.toLowerCase() || persona?.toLowerCase() || "ambassador";
-  const validRoles: Array<"artist" | "collector" | "gallery" | "ambassador"> = [
-    "artist",
-    "collector",
-    "gallery",
-    "ambassador",
-  ];
-  const displayRole = validRoles.includes(
-    displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador"
-  )
-    ? (displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador")
-    : "ambassador";
-  const roleLabel = t.roles[displayRole] || t.roles.ambassador;
 
   const [referralLinkCopied, setReferralLinkCopied] = useState(false);
 
@@ -253,7 +229,6 @@ export function AmbassadorDashboard() {
       <DashboardWelcome
         userName={userName}
         subtitle={t.subtitle}
-        roleLabel={roleLabel}
       />
 
       {/* Key Stats */}
@@ -380,9 +355,8 @@ export function AmbassadorDashboard() {
           <Card className="glass border-[#ffcc33]/20 p-6 bg-gradient-to-br from-[#1D112A]/80 to-[#0F021C]/80 h-full">
             {/* Header */}
             <div
-              className={`flex items-center gap-2 mb-6 ${
-                isRTL ? "flex-row-reverse" : ""
-              }`}
+              className={`flex items-center gap-2 mb-6 ${isRTL ? "flex-row-reverse" : ""
+                }`}
             >
               <Share2 className="w-6 h-6 text-purple-400" />
               <h2 className="text-2xl text-[#ffffff]">{t.referrals.title}</h2>
@@ -421,7 +395,7 @@ export function AmbassadorDashboard() {
                       <p className="text-[#808c99] text-xs mb-1">
                         {t.referrals.rewards}
                       </p>
-                      <p className="text-2xl text-amber-400">
+                      <p className="text-2xl text-primary">
                         {rewardsPoints >= 1000
                           ? `${(rewardsPoints / 1000).toFixed(0)}K`
                           : rewardsPoints}
@@ -432,7 +406,7 @@ export function AmbassadorDashboard() {
               )}
 
               <Button
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white cursor-pointer"
+                className="w-full cursor-pointer"
                 onClick={handleCopyReferralLink}
               >
                 {referralLinkCopied ? (
@@ -559,7 +533,7 @@ export function AmbassadorDashboard() {
             transition={{ delay: 0.4 }}
           >
             <h2 className="text-2xl text-[#ffffff] flex items-center gap-2 mb-4">
-              <Trophy className="w-6 h-6 text-amber-400" />
+              <Trophy className="w-6 h-6 text-primary" />
               {t.leaderboard.title}
             </h2>
 
@@ -570,11 +544,11 @@ export function AmbassadorDashboard() {
                     <Loader2 className="w-6 h-6 text-[#ffcc33] animate-spin" />
                   </div>
                 ) : (
-                  <div className="p-4 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-center">
+                  <div className="p-4 rounded-lg bg-gradient-to-br from-primary/20 to-primary/20 border border-primary/30 text-center">
                     <p className="text-[#808c99] text-sm mb-1">
                       {t.leaderboard.rank}
                     </p>
-                    <p className="text-5xl text-amber-400 mb-2">
+                    <p className="text-5xl text-primary mb-2">
                       {userRank ? `#${userRank}` : "—"}
                     </p>
                     <p className="text-[#808c99] text-xs">
@@ -587,7 +561,7 @@ export function AmbassadorDashboard() {
 
                 <Button
                   onClick={() => navigate(ROUTES.LEADERBOARD)}
-                  className="w-full bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffb54d] hover:to-[#ffcc33] text-[#0F021C] cursor-pointer"
+                  className="w-full cursor-pointer"
                 >
                   <Trophy className="w-4 h-4 mr-2" />
                   {t.leaderboard.viewFull}
@@ -597,18 +571,6 @@ export function AmbassadorDashboard() {
           </motion.div>
         </div>
       </div>
-
-      {/* Puzzle Challenge - At the end */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="mt-8"
-      >
-        <div className="max-w-md mx-auto lg:mx-0">
-          <PuzzleModal difficulty="easy" pointsReward={50} />
-        </div>
-      </motion.div>
     </DashboardLayout>
   );
 }

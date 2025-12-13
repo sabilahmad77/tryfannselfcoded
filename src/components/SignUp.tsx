@@ -353,13 +353,13 @@ export function SignUp({
   const regionOptions =
     regionsData && regionsData.length > 0
       ? regionsData.map((region) => ({
-          value: region.name,
-          label: region.name,
-        }))
+        value: region.name,
+        label: region.name,
+      }))
       : content.regions.map((region) => ({
-          value: region,
-          label: region,
-        }));
+        value: region,
+        label: region,
+      }));
 
   const personas = [
     {
@@ -655,9 +655,8 @@ export function SignUp({
               className="flex items-center gap-2 text-[#ffffff]/70 hover:text-[#ffcc33] transition-colors group mb-8 cursor-pointer"
             >
               <ChevronLeft
-                className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${
-                  isRTL ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
+                  }`}
               />
               <span className="text-sm">{content.backToHome}</span>
             </motion.button>
@@ -869,30 +868,26 @@ export function SignUp({
                             onClick={() => setSelectedPersona(persona.id)}
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
-                            className={`w-full p-5 rounded-xl border transition-all text-left relative overflow-hidden group cursor-pointer ${
-                              isSelected
-                                ? "bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 border-[#ffcc33]/50 shadow-lg shadow-[#ffcc33]/20"
-                                : "glass border-[#ffcc33]/20 hover:border-[#ffcc33]/40"
-                            }`}
+                            className={`w-full p-5 rounded-xl border transition-all text-left relative overflow-hidden group cursor-pointer ${isSelected
+                              ? "bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 border-[#ffcc33]/50 shadow-lg shadow-[#ffcc33]/20"
+                              : "glass border-[#ffcc33]/20 hover:border-[#ffcc33]/40"
+                              }`}
                           >
                             <div className="flex items-center gap-4">
                               <div
-                                className={`w-12 h-12 rounded-lg bg-gradient-to-br ${
-                                  persona.gradient
-                                } flex items-center justify-center shrink-0 ${
-                                  isSelected ? "scale-110" : ""
-                                } transition-transform`}
+                                className={`w-12 h-12 rounded-lg bg-gradient-to-br ${persona.gradient
+                                  } flex items-center justify-center shrink-0 ${isSelected ? "scale-110" : ""
+                                  } transition-transform`}
                               >
                                 <Icon className="w-6 h-6 text-[#0F021C]" />
                               </div>
                               <div className="flex-1">
                                 <div className="flex items-center justify-between gap-3 mb-1">
                                   <h3
-                                    className={`${
-                                      isSelected
-                                        ? "text-[#ffffff]"
-                                        : "text-[#ffffff]/90"
-                                    }`}
+                                    className={`${isSelected
+                                      ? "text-[#ffffff]"
+                                      : "text-[#ffffff]/90"
+                                      }`}
                                   >
                                     {persona.name}
                                   </h3>
@@ -926,18 +921,16 @@ export function SignUp({
                     <Button
                       onClick={handleContinueToStep2}
                       disabled={!selectedPersona}
-                      className={`w-full h-12 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/30 transition-all group ${
-                        !selectedPersona
-                          ? "disabled:opacity-50 disabled:cursor-not-allowed"
-                          : "cursor-pointer"
-                      }`}
+                      className={`w-full h-12 shadow-lg shadow-primary/30 transition-all group ${!selectedPersona
+                        ? "disabled:opacity-50 disabled:cursor-not-allowed"
+                        : "cursor-pointer"
+                        }`}
                     >
                       <span className="flex items-center justify-center gap-2">
                         {content.continue}
                         <ArrowRight
-                          className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
-                            isRTL ? "rotate-180" : ""
-                          }`}
+                          className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
+                            }`}
                         />
                       </span>
                     </Button>
@@ -949,7 +942,7 @@ export function SignUp({
                       <button
                         type="button"
                         onClick={onNavigateToSignIn}
-                        className="text-amber-400 hover:text-amber-300 transition-colors text-sm cursor-pointer"
+                        className="text-primary hover:text-primary/80 transition-colors text-sm cursor-pointer"
                       >
                         {content.signIn}
                       </button>
@@ -990,7 +983,7 @@ export function SignUp({
                         isRTL={isRTL}
                         required
                         error={errors.fullName?.message}
-                        inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                        inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
                         labelClassName="text-white/80 text-sm"
                       />
 
@@ -1016,7 +1009,7 @@ export function SignUp({
                         isRTL={isRTL}
                         required
                         error={errors.email?.message}
-                        inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                        inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
                         labelClassName="text-white/80 text-sm"
                       />
 
@@ -1045,7 +1038,7 @@ export function SignUp({
                           onShowPasswordChange={setShowPassword}
                           required
                           error={errors.password?.message}
-                          inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                          inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
                           labelClassName="text-white/80 text-sm"
                         />
 
@@ -1072,12 +1065,12 @@ export function SignUp({
                             required
                             error={errors.confirmPassword?.message}
                             inputClassName={cn(
-                              "bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20",
+                              "bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20",
                               passwordsMatch &&
-                                !errors.confirmPassword &&
-                                "border-green-500/50 focus:border-green-500/50",
+                              !errors.confirmPassword &&
+                              "border-green-500/50 focus:border-green-500/50",
                               passwordsMismatch &&
-                                "border-red-500/50 focus:border-red-500/50"
+                              "border-red-500/50 focus:border-red-500/50"
                             )}
                             labelClassName="text-white/80 text-sm"
                           />
@@ -1122,10 +1115,10 @@ export function SignUp({
                               });
                             }}
                             isRTL={isRTL}
-                            inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
+                            inputClassName="bg-white/5 border-white/10 text-white focus:border-primary/50 focus:ring-primary/20"
                             labelClassName="text-white/80 text-sm"
                             contentClassName="bg-[#1D112A] border-white/10"
-                            itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
+                            itemClassName="text-white focus:bg-primary/10 focus:text-primary"
                           />
                         </div>
 
@@ -1142,7 +1135,7 @@ export function SignUp({
                           inputClassName={
                             initialReferralCode
                               ? "bg-white/5 border-white/10 text-white/60 placeholder:text-white/30 cursor-not-allowed opacity-60"
-                              : "bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                              : "bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
                           }
                           labelClassName="text-white/80 text-sm"
                         />
@@ -1174,7 +1167,7 @@ export function SignUp({
                             onCheckedChange={(checked: boolean) =>
                               setAcceptedTerms(checked)
                             }
-                            className="mt-0.5 border-white/20 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+                            className="mt-0.5 border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                           />
                           <Label
                             htmlFor="terms"
@@ -1196,13 +1189,13 @@ export function SignUp({
                       <div className="flex gap-3">
                         <Button
                           type="button"
+                          variant="outline"
                           onClick={() => setStep(1)}
                           disabled={isLoading}
-                          className={`h-12 px-6 bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all ${
-                            isLoading
-                              ? "disabled:opacity-30 disabled:cursor-not-allowed"
-                              : "cursor-pointer"
-                          }`}
+                          className={`h-12 px-6 transition-all ${isLoading
+                            ? "disabled:opacity-30 disabled:cursor-not-allowed"
+                            : "cursor-pointer"
+                            }`}
                         >
                           <span className="flex items-center gap-2">
                             <ChevronLeft
@@ -1215,11 +1208,10 @@ export function SignUp({
                         <Button
                           type="submit"
                           disabled={isLoading || !acceptedTerms}
-                          className={`flex-1 h-12 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/30 transition-all group ${
-                            isLoading || !acceptedTerms
-                              ? "disabled:opacity-50 disabled:cursor-not-allowed"
-                              : "cursor-pointer"
-                          }`}
+                          className={`flex-1 h-12 shadow-lg shadow-primary/30 transition-all group ${isLoading || !acceptedTerms
+                            ? "disabled:opacity-50 disabled:cursor-not-allowed"
+                            : "cursor-pointer"
+                            }`}
                         >
                           <span className="flex items-center justify-center gap-2">
                             {isLoading ? (
@@ -1237,9 +1229,8 @@ export function SignUp({
                               <>
                                 {content.signUpButton}
                                 <ArrowRight
-                                  className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
-                                    isRTL ? "rotate-180" : ""
-                                  }`}
+                                  className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
+                                    }`}
                                 />
                               </>
                             )}

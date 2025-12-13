@@ -165,7 +165,7 @@ export function RecommendedArtworks() {
 
               <Button
                 size="sm"
-                className="w-full bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#3bc4b5] hover:shadow-lg hover:shadow-[#45e3d3]/50 text-[#0F021C] border-0 h-8 transition-all duration-200 cursor-pointer"
+                className="w-full hover:shadow-lg hover:shadow-primary/50 border-0 h-8 transition-all duration-200 cursor-pointer"
               >
                 <ShoppingCart className="w-4 h-4 mr-1" />
                 {t.viewDetails}

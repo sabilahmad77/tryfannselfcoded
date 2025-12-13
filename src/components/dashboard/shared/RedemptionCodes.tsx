@@ -1,26 +1,24 @@
-import { useState, useMemo } from "react";
-import { motion } from "motion/react";
-import {
-  Gift,
-  Sparkles,
-  Check,
-  AlertCircle,
-  Loader2,
-  Plus,
-  Copy,
-} from "lucide-react";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
-import { toast } from "sonner";
 import { useLanguage } from "@/contexts/useLanguage";
 import {
   useGetRedemptionsQuery,
-  useGetMyRedeemListQuery,
+  // useGetMyRedeemListQuery,
   useUserRedemptionMutation,
-  useGenerateRedeemCodeMutation,
+  // useGenerateRedeemCodeMutation,
   type Redemption,
 } from "@/services/api/dashboardApi";
 import { formatDateForDisplay } from "@/utils/dateUtils";
+import {
+  AlertCircle,
+  Check,
+  Gift,
+  Loader2,
+  Sparkles
+} from "lucide-react";
+import { motion } from "motion/react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 
 const content = {
   en: {
@@ -130,36 +128,35 @@ export function RedemptionCodes() {
   const t = content[language];
   const isRTL = language === "ar";
   const [code, setCode] = useState("");
-  const [showGenerateForm, setShowGenerateForm] = useState(false);
-  const [generateTitle, setGenerateTitle] = useState("");
-  const [generatePoints, setGeneratePoints] = useState("");
-  const [generatedCode, setGeneratedCode] = useState<Redemption | null>(null);
+  // const [showGenerateForm, setShowGenerateForm] = useState(false);
+  // const [generateTitle, setGenerateTitle] = useState("");
+  // const [generatePoints, setGeneratePoints] = useState("");
+  // const [generatedCode, setGeneratedCode] = useState<Redemption | null>(null);
 
   // Fetch available redemptions from API
   const {
     data: redemptionsData,
     isLoading: isLoadingRedemptions,
-    isError: isRedemptionsError,
   } = useGetRedemptionsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
 
   // Fetch my redeem list from API
-  const {
-    data: myRedeemListData,
-    isLoading: isLoadingMyRedeemList,
-    isError: isMyRedeemListError,
-  } = useGetMyRedeemListQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
+  // const {
+  //   data: myRedeemListData,
+  //   isLoading: isLoadingMyRedeemList,
+  //   isError: isMyRedeemListError,
+  // } = useGetMyRedeemListQuery(undefined, {
+  //   refetchOnMountOrArgChange: true,
+  // });
 
   // User redemption mutation
   const [userRedemption, { isLoading: isRedeeming }] =
     useUserRedemptionMutation();
 
   // Generate redeem code mutation
-  const [generateRedeemCode, { isLoading: isGenerating }] =
-    useGenerateRedeemCodeMutation();
+  // const [generateRedeemCode, { isLoading: isGenerating }] =
+  //   useGenerateRedeemCodeMutation();
 
   // Parse redemptions from API response
   const allRedemptions = useMemo(() => {
@@ -175,24 +172,24 @@ export function RedemptionCodes() {
   }, [redemptionsData]);
 
   // Filter available redemptions (is_completed === false)
-  const availableRedemptions = useMemo(() => {
-    return allRedemptions.filter(
-      (r) => r.is_completed === false || r.is_completed === undefined
-    );
-  }, [allRedemptions]);
+  // const availableRedemptions = useMemo(() => {
+  //   return allRedemptions.filter(
+  //     (r) => r.is_completed === false || r.is_completed === undefined
+  //   );
+  // }, [allRedemptions]);
 
   // Filter available redemptions based on search code input
-  const filteredAvailableRedemptions = useMemo(() => {
-    if (!code.trim()) {
-      return availableRedemptions;
-    }
-    const searchTerm = code.trim().toUpperCase();
-    return availableRedemptions.filter(
-      (r) =>
-        r.code?.toUpperCase().includes(searchTerm) ||
-        r.title?.toUpperCase().includes(searchTerm)
-    );
-  }, [availableRedemptions, code]);
+  // const filteredAvailableRedemptions = useMemo(() => {
+  //   if (!code.trim()) {
+  //     return availableRedemptions;
+  //   }
+  //   const searchTerm = code.trim().toUpperCase();
+  //   return availableRedemptions.filter(
+  //     (r) =>
+  //       r.code?.toUpperCase().includes(searchTerm) ||
+  //       r.title?.toUpperCase().includes(searchTerm)
+  //   );
+  // }, [availableRedemptions, code]);
 
   // Filter redeemed codes (is_completed === true)
   const redeemedCodes = useMemo(() => {
@@ -200,22 +197,22 @@ export function RedemptionCodes() {
   }, [allRedemptions]);
 
   // Parse my redeem list from API response
-  const myRedeemList = useMemo(() => {
-    if (!myRedeemListData?.data) return [];
+  // const myRedeemList = useMemo(() => {
+  //   if (!myRedeemListData?.data) return [];
 
-    // Handle both array and single object responses
-    const data = myRedeemListData.data;
-    if (Array.isArray(data)) {
-      return data;
-    }
-    // If single object, wrap in array
-    return [data as Redemption];
-  }, [myRedeemListData]);
+  //   // Handle both array and single object responses
+  //   const data = myRedeemListData.data;
+  //   if (Array.isArray(data)) {
+  //     return data;
+  //   }
+  //   // If single object, wrap in array
+  //   return [data as Redemption];
+  // }, [myRedeemListData]);
 
   // Handle clicking on available reward to populate code field
-  const handleRewardClick = (redemptionCode: string) => {
-    setCode(redemptionCode.toUpperCase());
-  };
+  // const handleRewardClick = (redemptionCode: string) => {
+  //   setCode(redemptionCode.toUpperCase());
+  // };
 
   const handleRedeem = async () => {
     if (!code.trim()) {
@@ -278,87 +275,86 @@ export function RedemptionCodes() {
     }
   };
 
-  const handleGenerateCode = async () => {
-    if (!generateTitle.trim()) {
-      toast.error(
-        language === "en"
-          ? "Please enter a code title"
-          : "يرجى إدخال عنوان الكود"
-      );
-      return;
-    }
+  // const handleGenerateCode = async () => {
+  //   if (!generateTitle.trim()) {
+  //     toast.error(
+  //       language === "en"
+  //         ? "Please enter a code title"
+  //         : "يرجى إدخال عنوان الكود"
+  //     );
+  //     return;
+  //   }
 
-    const points = parseInt(generatePoints, 10);
-    if (!generatePoints.trim() || isNaN(points) || points <= 0) {
-      toast.error(
-        language === "en"
-          ? "Please enter valid points"
-          : "يرجى إدخال نقاط صالحة"
-      );
-      return;
-    }
+  //   const points = parseInt(generatePoints, 10);
+  //   if (!generatePoints.trim() || isNaN(points) || points <= 0) {
+  //     toast.error(
+  //       language === "en"
+  //         ? "Please enter valid points"
+  //         : "يرجى إدخال نقاط صالحة"
+  //     );
+  //     return;
+  //   }
 
-    try {
-      const result = await generateRedeemCode({
-        title: generateTitle.trim(),
-        points: points,
-      }).unwrap();
+  //   try {
+  //     const result = await generateRedeemCode({
+  //       title: generateTitle.trim(),
+  //       points: points,
+  //     }).unwrap();
 
-      if (result.success && result.data) {
-        toast.success(t.messages.generateSuccess);
-        setGeneratedCode(result.data);
-        setGenerateTitle("");
-        setGeneratePoints("");
-        setShowGenerateForm(false);
-        // Auto-populate the code field with the generated code
-        if (result.data.code) {
-          setCode(result.data.code.toUpperCase());
-        }
-      } else {
-        const errorMessage =
-          typeof result.message === "string"
-            ? result.message
-            : t.messages.generateError;
-        toast.error(errorMessage);
-      }
-    } catch (error: unknown) {
-      console.error("Error generating code:", error);
-      if (error && typeof error === "object" && "data" in error) {
-        const errorData = error.data as {
-          message?: string;
-          detail?: string;
-          [key: string]: unknown;
-        };
-        const errorMessage =
-          errorData?.message ||
-          errorData?.detail ||
-          (typeof errorData === "string"
-            ? errorData
-            : t.messages.generateError);
-        toast.error(errorMessage);
-      } else {
-        toast.error(t.messages.generateError);
-      }
-    }
-  };
+  //     if (result.success && result.data) {
+  //       toast.success(t.messages.generateSuccess);
+  //       setGeneratedCode(result.data);
+  //       setGenerateTitle("");
+  //       setGeneratePoints("");
+  //       setShowGenerateForm(false);
+  //       // Auto-populate the code field with the generated code
+  //       if (result.data.code) {
+  //         setCode(result.data.code.toUpperCase());
+  //       }
+  //     } else {
+  //       const errorMessage =
+  //         typeof result.message === "string"
+  //           ? result.message
+  //           : t.messages.generateError;
+  //       toast.error(errorMessage);
+  //     }
+  //   } catch (error: unknown) {
+  //     console.error("Error generating code:", error);
+  //     if (error && typeof error === "object" && "data" in error) {
+  //       const errorData = error.data as {
+  //         message?: string;
+  //         detail?: string;
+  //         [key: string]: unknown;
+  //       };
+  //       const errorMessage =
+  //         errorData?.message ||
+  //         errorData?.detail ||
+  //         (typeof errorData === "string"
+  //           ? errorData
+  //           : t.messages.generateError);
+  //       toast.error(errorMessage);
+  //     } else {
+  //       toast.error(t.messages.generateError);
+  //     }
+  //   }
+  // };
 
-  const handleCopyCode = async (codeToCopy: string) => {
-    try {
-      await navigator.clipboard.writeText(codeToCopy);
-      toast.success(t.messages.codeCopied);
-    } catch (error) {
-      console.error("Failed to copy code:", error);
-      toast.error(language === "en" ? "Failed to copy code" : "فشل نسخ الكود");
-    }
-  };
+  // const handleCopyCode = async (codeToCopy: string) => {
+  //   try {
+  //     await navigator.clipboard.writeText(codeToCopy);
+  //     toast.success(t.messages.codeCopied);
+  //   } catch (error) {
+  //     console.error("Failed to copy code:", error);
+  //     toast.error(language === "en" ? "Failed to copy code" : "فشل نسخ الكود");
+  //   }
+  // };
 
   return (
     <div className="glass rounded-2xl p-6 h-full flex flex-col">
       {/* Header */}
       <div
-        className={`flex items-center gap-3 mb-4 ${
-          isRTL ? "flex-row-reverse" : ""
-        }`}
+        className={`flex items-center gap-3 mb-4 ${isRTL ? "flex-row-reverse" : ""
+          }`}
       >
         <div className="w-12 h-12 bg-gradient-to-br from-[#9375b5] to-[#fface3] rounded-xl flex items-center justify-center">
           <Gift className="w-6 h-6 text-white" />
@@ -372,9 +368,8 @@ export function RedemptionCodes() {
       {/* Code Input */}
       <div className="mb-6">
         <label
-          className={`text-sm text-[#808c99] mb-2 block ${
-            isRTL ? "text-right" : "text-left"
-          }`}
+          className={`text-sm text-[#808c99] mb-2 block ${isRTL ? "text-right" : "text-left"
+            }`}
         >
           {t.enterCode}
         </label>
@@ -389,11 +384,10 @@ export function RedemptionCodes() {
           <Button
             onClick={handleRedeem}
             disabled={isRedeeming || !code.trim() || isLoadingRedemptions}
-            className={`bg-gradient-to-r from-[#9375b5] to-[#fface3] hover:from-[#fface3] hover:to-[#9375b5] hover:shadow-lg hover:shadow-[#9375b5]/50 text-white transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none ${
-              isRedeeming || !code.trim() || isLoadingRedemptions
-                ? "cursor-not-allowed"
-                : "cursor-pointer"
-            }`}
+            className={`hover:shadow-lg hover:shadow-primary/50 transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none ${isRedeeming || !code.trim() || isLoadingRedemptions
+              ? "cursor-not-allowed"
+              : "cursor-pointer"
+              }`}
           >
             {isRedeeming ? (
               <Loader2
@@ -407,8 +401,8 @@ export function RedemptionCodes() {
         </div>
       </div>
 
-      {/* Generate Code Section */}
-      <div className="mb-6">
+      {/* Generate Code Section - COMMENTED OUT */}
+      {/* <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <h3
             className={`text-sm text-[#808c99] ${
@@ -516,7 +510,6 @@ export function RedemptionCodes() {
           </motion.div>
         )}
 
-        {/* Display Generated Code */}
         {generatedCode && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -548,10 +541,10 @@ export function RedemptionCodes() {
             </div>
           </motion.div>
         )}
-      </div>
+      </div> */}
 
-      {/* My Redeem List */}
-      <div className="mb-6">
+      {/* My Redeem List - COMMENTED OUT */}
+      {/* <div className="mb-6">
         <h3
           className={`text-sm text-[#808c99] mb-3 ${
             isRTL ? "text-right" : "text-left"
@@ -629,10 +622,10 @@ export function RedemptionCodes() {
             </p>
           </div>
         )}
-      </div>
+      </div> */}
 
-      {/* Available Rewards */}
-      <div className="mb-6">
+      {/* Available Rewards - COMMENTED OUT */}
+      {/* <div className="mb-6">
         <div
           className={`flex items-center justify-between mb-3 ${
             isRTL ? "flex-row-reverse" : ""
@@ -727,14 +720,13 @@ export function RedemptionCodes() {
             </p>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* Redeemed Codes History */}
       <div className="flex-1">
         <h3
-          className={`text-sm text-[#808c99] mb-3 ${
-            isRTL ? "text-right" : "text-left"
-          }`}
+          className={`text-sm text-[#808c99] mb-3 ${isRTL ? "text-right" : "text-left"
+            }`}
         >
           {t.redeemedCodes}
         </h3>
@@ -750,14 +742,12 @@ export function RedemptionCodes() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`flex items-center justify-between p-3 bg-[#1D112A]/30 rounded-lg border border-[#4e4e4e78] ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
+                className={`flex items-center justify-between p-3 bg-[#1D112A]/30 rounded-lg border border-[#4e4e4e78] ${isRTL ? "flex-row-reverse" : ""
+                  }`}
               >
                 <div
-                  className={`flex items-center gap-3 ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div className="w-8 h-8 bg-[#45e3d3]/20 rounded-full flex items-center justify-center">
                     <Check className="w-4 h-4 text-[#45e3d3]" />

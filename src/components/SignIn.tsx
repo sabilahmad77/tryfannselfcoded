@@ -17,6 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Oval } from "react-loader-spinner";
 import { useDispatch } from "react-redux";
@@ -24,7 +25,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { ROUTES } from "@/routes/paths";
 import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
 import { InputField, PasswordField } from "./ui/custom-form-elements";
+import { Label } from "./ui/label";
 
 interface SignInProps {
   language: "en" | "ar";
@@ -35,6 +38,7 @@ interface SignInProps {
 interface SignInFormData {
   email: string;
   password: string;
+  rememberMe: boolean;
 }
 
 interface LoginResponseData {
@@ -56,6 +60,9 @@ interface LoginResponse {
   user?: unknown;
 }
 
+const REMEMBERED_EMAIL_KEY = "fann_remembered_email";
+const REMEMBERED_PASSWORD_KEY = "fann_remembered_password";
+
 export function SignIn({
   language,
   onNavigateToSignUp,
@@ -67,14 +74,30 @@ export function SignIn({
     register,
     handleSubmit: handleFormSubmit,
     formState: { errors },
+    setValue,
+    watch,
   } = useForm<SignInFormData>({
     defaultValues: {
       email: "",
       password: "",
+      rememberMe: false,
     },
   });
 
+  const rememberMe = watch("rememberMe");
   const [login, { isLoading }] = useLoginMutation();
+
+  // Load remembered credentials on component mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem(REMEMBERED_EMAIL_KEY);
+    const savedPassword = localStorage.getItem(REMEMBERED_PASSWORD_KEY);
+
+    if (savedEmail && savedPassword) {
+      setValue("email", savedEmail);
+      setValue("password", savedPassword);
+      setValue("rememberMe", true);
+    }
+  }, [setValue]);
 
   const t = {
     en: {
@@ -85,6 +108,7 @@ export function SignIn({
       password: "Password",
       passwordPlaceholder: "Enter your password",
       forgotPassword: "Forgot password?",
+      rememberMe: "Remember me",
       signInButton: "Sign In",
       signingIn: "Signing in...",
       noAccount: "Don't have an account?",
@@ -132,6 +156,7 @@ export function SignIn({
       password: "كلمة المرور",
       passwordPlaceholder: "أدخل كلمة المرور",
       forgotPassword: "نسيت كلمة المرور؟",
+      rememberMe: "تذكرني",
       signInButton: "تسجيل الدخول",
       signingIn: "جارٍ تسجيل الدخول...",
       noAccount: "ليس لديك حساب؟",
@@ -178,6 +203,16 @@ export function SignIn({
 
   const onSubmit = async (data: SignInFormData) => {
     try {
+      // Handle remember me functionality
+      if (data.rememberMe) {
+        localStorage.setItem(REMEMBERED_EMAIL_KEY, data.email.trim());
+        localStorage.setItem(REMEMBERED_PASSWORD_KEY, data.password.trim());
+      } else {
+        // Clear saved credentials if remember me is unchecked
+        localStorage.removeItem(REMEMBERED_EMAIL_KEY);
+        localStorage.removeItem(REMEMBERED_PASSWORD_KEY);
+      }
+
       const result = await login({
         email: data.email.trim(),
         password: data.password.trim(),
@@ -318,9 +353,8 @@ export function SignIn({
               className="flex items-center gap-2 text-cream/70 hover:text-[#ffcc33] transition-colors group mb-8 cursor-pointer"
             >
               <ChevronLeft
-                className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${
-                  isRTL ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
+                  }`}
               />
               <span className="text-sm">{content.backToHome}</span>
             </motion.button>
@@ -473,12 +507,30 @@ export function SignIn({
                     error={errors.password?.message}
                   />
 
-                  {/* Forgot Password */}
+                  {/* Remember Me and Forgot Password */}
                   <div
-                    className={`flex ${
-                      isRTL ? "justify-start" : "justify-end"
-                    }`}
+                    className={`flex items-center ${isRTL ? "flex-row-reverse justify-between" : "justify-between"
+                      }`}
                   >
+                    {/* Remember Me Checkbox */}
+                    <div className={`flex items-center ${isRTL ? "gap-2 flex-row-reverse" : "gap-2"}`}>
+                      <Checkbox
+                        id="rememberMe"
+                        checked={rememberMe}
+                        onCheckedChange={(checked) =>
+                          setValue("rememberMe", checked === true)
+                        }
+                        className="border-[#ffcc33]/30 data-[state=checked]:bg-[#ffcc33] data-[state=checked]:border-[#ffcc33]"
+                      />
+                      <Label
+                        htmlFor="rememberMe"
+                        className="text-sm text-[#ffffff]/70 cursor-pointer hover:text-[#ffffff] transition-colors"
+                      >
+                        {content.rememberMe}
+                      </Label>
+                    </div>
+
+                    {/* Forgot Password */}
                     <button
                       type="button"
                       className="text-sm text-[#ffcc33] hover:text-[#ffb54d] transition-colors cursor-pointer"
@@ -493,11 +545,10 @@ export function SignIn({
                       type="button"
                       onClick={handleFormSubmit(onSubmit)}
                       disabled={isLoading}
-                      className={`w-full h-12 bg-gradient-to-r from-[#ffcc33] via-[#ffb54d] to-[#ffcc33] hover:from-[#ffb54d] hover:via-[#ffcc33] hover:to-[#ffb54d] text-[#0F021C] shadow-lg shadow-[#ffcc33]/30 transition-all group glow-gold btn-glow ${
-                        isLoading
+                      className={`w-full h-12 shadow-lg shadow-primary/30 transition-all group glow-gold btn-glow ${isLoading
                           ? "cursor-not-allowed opacity-50"
                           : "cursor-pointer"
-                      }`}
+                        }`}
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         {isLoading ? (
@@ -515,9 +566,8 @@ export function SignIn({
                           <>
                             {content.signInButton}
                             <ArrowRight
-                              className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
-                                isRTL ? "rotate-180" : ""
-                              }`}
+                              className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
+                                }`}
                             />
                           </>
                         )}
@@ -525,28 +575,6 @@ export function SignIn({
                     </Button>
                   </div>
                 </div>
-
-                {/* Divider */}
-                <div className="my-6 flex items-center gap-4">
-                  <div className="flex-1 h-px bg-[#ffcc33]/20" />
-                  <span className="text-[#ffffff]/40 text-sm">
-                    {content.orContinue}
-                  </span>
-                  <div className="flex-1 h-px bg-[#ffcc33]/20" />
-                </div>
-
-                {/* SSO / Social Login */}
-                <Button
-                  variant="outline"
-                  className="w-full h-11 border-[#45e3d3]/30 hover:border-[#45e3d3]/60 hover:bg-[#45e3d3]/10 text-[#ffffff]/70 hover:text-[#ffffff] transition-all group cursor-pointer"
-                >
-                  <Sparkles
-                    className={`w-5 h-5 text-[#45e3d3] ${
-                      isRTL ? "ml-2" : "mr-2"
-                    }`}
-                  />
-                  {content.sso}
-                </Button>
 
                 {/* Sign Up Link */}
                 <div className="mt-6 text-center">

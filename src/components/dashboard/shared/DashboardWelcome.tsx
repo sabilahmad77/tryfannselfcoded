@@ -4,7 +4,6 @@ import { useLanguage } from "@/contexts/useLanguage";
 interface DashboardWelcomeProps {
   userName: string;
   subtitle: string;
-  roleLabel: string;
 }
 
 const content = {
@@ -19,7 +18,6 @@ const content = {
 export function DashboardWelcome({
   userName,
   subtitle,
-  roleLabel,
 }: DashboardWelcomeProps) {
   const { language } = useLanguage();
   const t = content[language];
@@ -39,9 +37,6 @@ export function DashboardWelcome({
             {userName}
           </span>
         </h1>
-        <span className="px-3 py-1 rounded-full bg-gradient-to-r from-[#45e3d3]/20 to-[#0ea5e9]/20 border border-[#45e3d3]/30 text-[#45e3d3] text-sm font-medium">
-          {roleLabel}
-        </span>
       </div>
       <p className="text-[#808c99] text-lg">{subtitle}</p>
     </motion.div>

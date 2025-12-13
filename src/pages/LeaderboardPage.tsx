@@ -946,11 +946,8 @@ export function LeaderboardPage() {
                       size="sm"
                       onClick={() => toggleFollow(leader.id, leader.username)}
                       disabled={loadingUserId === leader.id || leader.is_follow}
-                      className={`shrink-0 cursor-pointer ${
-                        isFollowing(leader.username) || leader.is_follow
-                          ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
-                          : "bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#3bc4b5] text-white"
-                      }`}
+                      variant={isFollowing(leader.username) || leader.is_follow ? "outline" : "default"}
+                      className="shrink-0 cursor-pointer"
                     >
                       {loadingUserId === leader.id ? (
                         <>
@@ -1125,11 +1122,8 @@ export function LeaderboardPage() {
                           disabled={
                             loadingUserId === leader.id || leader.is_follow
                           }
-                          className={`cursor-pointer ${
-                            isFollowing(leader.username) || leader.is_follow
-                              ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
-                              : "bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#3bc4b5] text-white"
-                          }`}
+                          variant={isFollowing(leader.username) || leader.is_follow ? "outline" : "default"}
+                          className="cursor-pointer"
                         >
                           {loadingUserId === leader.id ? (
                             <>

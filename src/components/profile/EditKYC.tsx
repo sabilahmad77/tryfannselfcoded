@@ -868,7 +868,7 @@ export function EditKYC({
                 <Button
                   type="submit"
                   disabled={isLoading || !acceptedCompliance}
-                  className="flex-1 h-12 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-600 hover:via-yellow-600 hover:to-amber-700 text-black shadow-lg shadow-amber-500/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {isLoading ? (

@@ -4,7 +4,6 @@ import { PointWallet } from "@/components/dashboard/shared/PointWallet";
 import { URLEncoder } from "@/components/dashboard/shared/URLEncoder";
 import { RedemptionCodes } from "@/components/dashboard/shared/RedemptionCodes";
 import { WatchVideos } from "@/components/dashboard/shared/WatchVideos";
-import { PuzzleModal } from "@/components/dashboard/shared/PuzzleModal";
 import { CollectorDashboard } from "@/components/dashboard/collector/CollectorDashboard";
 import { GalleryDashboard } from "@/components/dashboard/gallery/GalleryDashboard";
 import { AmbassadorDashboard } from "@/components/dashboard/ambassador/AmbassadorDashboard";
@@ -100,9 +99,6 @@ export function DashboardPage() {
     ? (displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador")
     : "artist";
 
-  // Map role to label - ensure it matches one of our defined roles
-  const roleLabel = t.roles[displayRole] || t.roles.artist;
-
   // Get role-based subtitle
   const subtitleKey = displayRole;
   const subtitle = t.subtitles[subtitleKey] || t.subtitles.artist;
@@ -113,7 +109,6 @@ export function DashboardPage() {
       <DashboardWelcome
         userName={userName}
         subtitle={subtitle}
-        roleLabel={roleLabel}
       />
 
       {/* Widgets Grid */}
@@ -152,15 +147,6 @@ export function DashboardPage() {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <WatchVideos />
-        </motion.div>
-
-        {/* Puzzle Challenge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-        >
-          <PuzzleModal difficulty="easy" pointsReward={50} />
         </motion.div>
       </div>
     </DashboardLayout>

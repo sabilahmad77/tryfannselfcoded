@@ -188,7 +188,7 @@ export function URLEncoder() {
             disabled={isGenerating || isReferralCode}
             size="sm"
             variant="outline"
-            className="text-xs border-[#45e3d3] text-[#45e3d3] hover:bg-[#45e3d3] hover:text-white hover:border-[#3bc4b5] hover:shadow-lg hover:shadow-[#45e3d3]/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="text-xs transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {isGenerating ? (
               <>
@@ -214,7 +214,7 @@ export function URLEncoder() {
           <Button
             onClick={handleCopy}
             disabled={!referralLink}
-            className="bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffb54d] hover:to-[#ffcc33] hover:shadow-lg hover:shadow-[#ffcc33]/50 text-[#0F021C] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="hover:shadow-lg hover:shadow-primary/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {copied ? (
               <>
@@ -298,7 +298,7 @@ export function URLEncoder() {
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => handleShare("email")}
-            className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] hover:from-[#45e3d3] hover:to-[#ffcc33] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#ffcc33]/50 transition-all cursor-pointer"
+            className="w-12 h-12 bg-primary hover:bg-primary/90 rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-primary/50 transition-all cursor-pointer"
           >
             <Mail className="w-6 h-6 text-[#0F021C]" />
           </motion.button>

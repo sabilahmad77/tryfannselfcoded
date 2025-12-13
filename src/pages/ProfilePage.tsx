@@ -557,7 +557,7 @@ export function ProfilePage() {
               <div className={`flex gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
                 <Button
                   variant="outline"
-                  className="border-[#ffcc33] text-[#ffcc33] hover:bg-[#ffcc33]/10 hover:text-white cursor-pointer"
+                  className="cursor-pointer"
                   onClick={() => setIsEditProfileOpen(true)}
                 >
                   <Edit2 className="w-4 h-4 mr-2" />
@@ -574,27 +574,27 @@ export function ProfilePage() {
                 isRTL ? "text-right" : "text-left"
               }`}
             >
-              <div className="bg-[#1D112A]/50 rounded-lg p-3">
+              <div className="bg-[#1D112A] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffcc33]">
                   {userData.totalPoints}
                 </p>
                 <p className="text-xs text-[#808c99]">{t.totalPoints}</p>
               </div>
-              <div className="bg-[#1D112A]/50 rounded-lg p-3">
+              <div className="bg-[#1D112A] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">{userData.followers}</p>
                 <p className="text-xs text-[#808c99]">{t.followers}</p>
               </div>
-              <div className="bg-[#1D112A]/50 rounded-lg p-3">
+              <div className="bg-[#1D112A] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">{userData.referrals}</p>
                 <p className="text-xs text-[#808c99]">{t.referrals}</p>
               </div>
-              <div className="bg-[#1D112A]/50 rounded-lg p-3">
+              <div className="bg-[#1D112A] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">
                   {userData.artworksSaved}
                 </p>
                 <p className="text-xs text-[#808c99]">{t.artworksSaved}</p>
               </div>
-              <div className="bg-[#1D112A]/50 rounded-lg p-3">
+              <div className="bg-[#1D112A] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">
                   {userData.collections}
                 </p>
@@ -782,7 +782,6 @@ export function ProfilePage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-[#45e3d3] text-[#45e3d3] hover:bg-[#45e3d3]/10 hover:text-white"
                   onClick={() => setIsEditKYCOpen(true)}
                 >
                   <Edit2 className="w-4 h-4 mr-2" />
@@ -809,7 +808,6 @@ export function ProfilePage() {
                     </p>
                     <Button
                       variant="outline"
-                      className="border-[#45e3d3] text-[#45e3d3] hover:bg-[#45e3d3]/10 hover:text-white"
                       onClick={() => setIsEditKYCOpen(true)}
                     >
                       <Shield className="w-4 h-4 mr-2" />
@@ -1101,7 +1099,7 @@ export function ProfilePage() {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Point Distribution */}
-              <div className="bg-[#1D112A]/50 rounded-xl p-6">
+              <div className="bg-[#1D112A] border border-primary/20 rounded-xl p-6">
                 <h3
                   className={`text-xl text-[#ffffff] mb-4 ${
                     isRTL ? "text-right" : "text-left"
@@ -1168,7 +1166,7 @@ export function ProfilePage() {
               </div>
 
               {/* Engagement Stats */}
-              <div className="bg-[#1D112A]/50 rounded-xl p-6">
+              <div className="bg-[#1D112A] border border-primary/20 rounded-xl p-6">
                 <h3
                   className={`text-xl text-[#ffffff] mb-4 ${
                     isRTL ? "text-right" : "text-left"

@@ -65,17 +65,17 @@ export function ConfirmationDialog({
         };
       case "warning":
         return {
-          iconColor: "text-[#ffcc33]",
-          iconBg: "bg-[#ffcc33]/20",
+          iconColor: "text-primary",
+          iconBg: "bg-primary/20",
           buttonColor:
-            "bg-[#ffcc33] hover:bg-[#e6b800] hover:shadow-lg hover:shadow-[#ffcc33]/50 text-white border-0 cursor-pointer transition-all duration-200",
+            "hover:shadow-lg hover:shadow-primary/50 border-0 cursor-pointer transition-all duration-200",
         };
       default:
         return {
-          iconColor: "text-[#45e3d3]",
-          iconBg: "bg-[#45e3d3]/20",
+          iconColor: "text-primary",
+          iconBg: "bg-primary/20",
           buttonColor:
-            "bg-[#45e3d3] hover:bg-[#3bc4b5] hover:shadow-lg hover:shadow-[#45e3d3]/50 text-white border-0 cursor-pointer transition-all duration-200",
+            "hover:shadow-lg hover:shadow-primary/50 border-0 cursor-pointer transition-all duration-200",
         };
     }
   };
@@ -128,7 +128,7 @@ export function ConfirmationDialog({
             onClick={onClose}
             variant="outline"
             disabled={isLoading}
-            className="flex-1 border-[#4e4e4e78] hover:bg-[#4e4e4e78]/30 hover:border-[#808c99] text-[#808c99] hover:text-[#ffffff] transition-all duration-200 cursor-pointer"
+            className="flex-1 transition-all duration-200 cursor-pointer"
           >
             {finalCancelText}
           </Button>

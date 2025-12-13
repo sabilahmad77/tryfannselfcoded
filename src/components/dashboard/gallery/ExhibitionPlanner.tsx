@@ -115,7 +115,7 @@ export function ExhibitionPlanner() {
         </div>
         <Button
           size="sm"
-          className="bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#e6b800] hover:to-[#e6b800] hover:shadow-lg hover:shadow-[#ffcc33]/50 text-[#0F021C] border-0 transition-all duration-200 cursor-pointer"
+          className="hover:shadow-lg hover:shadow-primary/50 border-0 transition-all duration-200 cursor-pointer"
         >
           <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
           {t.createNew}
@@ -190,7 +190,7 @@ export function ExhibitionPlanner() {
       {/* View All Button */}
       <Button
         variant="ghost"
-        className="w-full mt-4 text-[#ffcc33] hover:text-[#ffb54d] hover:bg-[#ffcc33]/20 transition-all duration-200 cursor-pointer"
+        className="w-full mt-4 transition-all duration-200 cursor-pointer"
       >
         {t.viewAll}
       </Button>
