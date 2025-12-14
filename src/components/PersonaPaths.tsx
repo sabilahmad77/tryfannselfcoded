@@ -73,8 +73,8 @@ const content = {
           "Brand partnership perks",
           "Community leadership",
         ],
-        gradient: "from-teal-500 via-cyan-500 to-teal-600",
-        accentColor: "#45e3d3",
+        gradient: "from-amber-400 via-yellow-400 to-amber-500",
+        accentColor: "#fbbf24",
       },
     ],
     cta: "Get Started",
@@ -136,8 +136,8 @@ const content = {
           "امتيازات شراكة العلامة التجارية",
           "قيادة المجتمع",
         ],
-        gradient: "from-teal-500 via-cyan-500 to-teal-600",
-        accentColor: "#45e3d3",
+        gradient: "from-amber-400 via-yellow-400 to-amber-500",
+        accentColor: "#fbbf24",
       },
     ],
     cta: "ابدأ الآن",
@@ -189,7 +189,7 @@ export function PersonaPaths({
       {/* Background gradient mesh */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#ffcc33]/15 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#45e3d3]/15 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#fbbf24]/15 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">

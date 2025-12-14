@@ -495,7 +495,7 @@ export function SettingsPage() {
               {t.changePassword}
             </h3>
 
-            <div className="space-y-4 mb-6">
+            <div className="space-y-4">
               <PasswordField
                 label={t.currentPassword}
                 value={currentPassword}

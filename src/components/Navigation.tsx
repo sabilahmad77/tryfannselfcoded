@@ -52,6 +52,10 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
     }
   };
 
+  const handleNavigateToSignUp = () => {
+    navigate(ROUTES.SIGN_UP);
+  };
+
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
@@ -111,7 +115,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
             <div className="hidden md:flex items-center gap-3">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
-                  onClick={() => navigate(ROUTES.SIGN_IN)}
+                  onClick={handleNavigateToSignIn}
                   variant="ghost" 
                   className="relative px-4 py-2 glass transition-all duration-300 overflow-hidden group cursor-pointer"
                 >
@@ -127,7 +131,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
               
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button 
-                  onClick={handleNavigateToSignIn}
+                  onClick={handleNavigateToSignUp}
                   className="relative px-5 py-2 border-0 overflow-hidden group shadow-lg shadow-primary/30 hover:shadow-primary/60 transition-all duration-300 cursor-pointer"
                 >
                   <motion.div
@@ -176,7 +180,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-white/10">
                 <Button 
-                  onClick={() => navigate(ROUTES.SIGN_IN)}
+                  onClick={handleNavigateToSignIn}
                   variant="ghost" 
                   className="relative glass w-full transition-all duration-300 overflow-hidden group cursor-pointer"
                 >
@@ -188,7 +192,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
                   <span className="relative z-10">{t.login}</span>
                 </Button>
                 <Button 
-                  onClick={handleNavigateToSignIn}
+                  onClick={handleNavigateToSignUp}
                   className="relative w-full border-0 shadow-lg shadow-primary/30 overflow-hidden group cursor-pointer"
                 >
                   <motion.div
