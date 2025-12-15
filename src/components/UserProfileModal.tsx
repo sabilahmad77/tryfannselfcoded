@@ -590,32 +590,32 @@ export function UserProfileModal({
             <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
               {/* Follow Button */}
               {onToggleFollow && (
-                <Button
+              <Button
                   onClick={onToggleFollow}
-                  size="sm"
+                size="sm"
                   disabled={isFollowLoading || isFollowing}
-                  className={`${isFollowing
-                    ? 'bg-gradient-to-r from-[#45e3d3] to-[#3bc4b5] hover:from-[#3bc4b5] hover:to-[#45e3d3]'
-                    : 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffb54d] hover:to-[#ffcc33]'
-                    } text-[#020e27] transition-all duration-300`}
-                >
+                className={`${isFollowing
+                  ? 'bg-gradient-to-r from-[#45e3d3] to-[#3bc4b5] hover:from-[#3bc4b5] hover:to-[#45e3d3]'
+                  : 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffb54d] hover:to-[#ffcc33]'
+                  } text-[#020e27] transition-all duration-300`}
+              >
                   {isFollowLoading ? (
                     <>
                       <Loader2 className={`w-4 h-4 animate-spin ${isRTL ? 'ml-2' : 'mr-2'}`} />
                       {language === 'en' ? 'Loading...' : 'جاري التحميل...'}
                     </>
                   ) : isFollowing ? (
-                    <>
-                      <UserCheck className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                      {t.following}
-                    </>
-                  ) : (
-                    <>
-                      <UserPlus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                      {t.follow}
-                    </>
-                  )}
-                </Button>
+                  <>
+                    <UserCheck className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                    {t.following}
+                  </>
+                ) : (
+                  <>
+                    <UserPlus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                    {t.follow}
+                  </>
+                )}
+              </Button>
               )}
               {/* Close Button */}
               <Button

@@ -55,7 +55,7 @@ const content = {
         benefits: [
           "Lifetime benefits",
           "Executive access",
-          "Founding member NFT",
+          "Founding member status",
         ],
       },
     ],
@@ -83,7 +83,7 @@ const content = {
         icon: Crown,
         color: "from-[#ffcc33] to-[#ffb54d]",
         glowColor: "shadow-[#ffcc33]/50",
-        benefits: ["مكافآت إحالة محسنة", "دعم ذو أولوية", "شارة المنسق"],
+        benefits: ["مكافآت إحالة محسنة", "دعم ذو أولوية", "شارة السفير"],
       },
       {
         name: "راعي مؤسس",
@@ -91,7 +91,7 @@ const content = {
         icon: Award,
         color: "from-[#ffcc33] to-[#ffb54d]",
         glowColor: "shadow-[#ffcc33]/50",
-        benefits: ["فوائد مدى الحياة", "وصول متميز", "NFT لعضو مؤسس"],
+        benefits: ["فوائد مدى الحياة", "وصول متميز", "حالة عضو مؤسس"],
       },
     ],
   },
@@ -138,6 +138,40 @@ export function RewardsTiers({
               "الميزات الأساسية",
             ],
     },
+    Curator: {
+      icon: Crown,
+      color: "from-sky-500 to-cyan-400",
+      glowColor: "shadow-sky-400/50",
+      benefits:
+        language === "en"
+          ? [
+              "Enhanced curation tools",
+              "Priority listing",
+              "Curator badge",
+            ]
+          : [
+              "أدوات تنسيق محسّنة",
+              "قائمة الأولويات",
+              "شارة المنسق",
+            ],
+    },
+    Patron: {
+      icon: Crown,
+      color: "from-purple-500 to-violet-500",
+      glowColor: "shadow-purple-500/50",
+      benefits:
+        language === "en"
+          ? [
+              "Exclusive previews",
+              "VIP support",
+              "Patron privileges",
+            ]
+          : [
+              "معاينات حصرية",
+              "دعم VIP",
+              "امتيازات الراعي",
+            ],
+    },
     Ambassador: {
       icon: Crown,
       color: "from-orange-600 to-amber-600",
@@ -149,7 +183,7 @@ export function RewardsTiers({
               "Priority support",
               "Ambassador badge",
             ]
-          : ["مكافآت إحالة محسنة", "دعم ذو أولوية", "شارة المنسق"],
+          : ["مكافآت إحالة محسنة", "دعم ذو أولوية", "شارة السفير"],
     },
     "Founding Patron": {
       icon: Award,
@@ -157,14 +191,22 @@ export function RewardsTiers({
       glowColor: "shadow-amber-500/50",
       benefits:
         language === "en"
-          ? ["Lifetime benefits", "Executive access", "Founding member NFT"]
-          : ["فوائد مدى الحياة", "وصول متميز", "NFT لعضو مؤسس"],
+          ? ["Lifetime benefits", "Executive access", "Founding member status"]
+          : ["فوائد مدى الحياة", "وصول متميز", "حالة عضو مؤسس"],
     },
   };
 
   // Map API data to display tiers (only show what API returns)
   const apiTiers = progressionData?.data || [];
-  const orderedNames = ["Explorer", "Ambassador", "Founding Patron"];
+  // Order tiers from entry-level to highest, matching backend names:
+  // Explorer -> Curator -> Patron -> Ambassador -> Founding Patron
+  const orderedNames = [
+    "Explorer",
+    "Curator",
+    "Patron",
+    "Ambassador",
+    "Founding Patron",
+  ];
 
   // Sort API tiers by predefined order
   const sortedApiTiers =
