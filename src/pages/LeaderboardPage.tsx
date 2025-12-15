@@ -25,6 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardLayout } from "@/components/dashboard/shared/DashboardLayout";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import { UserProfileModal } from "@/components/UserProfileModal";
 import { useLanguage } from "@/contexts/useLanguage";
 import {
   useGetLeaderboardQuery,
@@ -134,6 +135,8 @@ export function LeaderboardPage() {
   const navigate = useNavigate();
   const [follows, setFollows] = useState<Set<string>>(new Set());
   const [loadingUserId, setLoadingUserId] = useState<number | null>(null);
+  const [selectedUser, setSelectedUser] = useState<typeof currentLeaders[0] | null>(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   // Mock follower counts - will be replaced with API data after login
   const followerCounts: Record<string, number> = {
@@ -473,6 +476,18 @@ export function LeaderboardPage() {
     if (lowerType.includes("ambassador") || lowerType.includes("سفير"))
       return "border-orange-500/50 text-orange-400 bg-orange-500/10";
     return "border-white/20 text-white/60 bg-white/5";
+  };
+
+  // Handle user click to open profile modal
+  const handleUserClick = (leader: typeof currentLeaders[0]) => {
+    setSelectedUser(leader);
+    setIsProfileModalOpen(true);
+  };
+
+  // Handle close profile modal
+  const handleCloseProfile = () => {
+    setIsProfileModalOpen(false);
+    setSelectedUser(null);
   };
 
   // Content to be rendered (same for both cases)
@@ -910,7 +925,8 @@ export function LeaderboardPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.02 }}
                 whileHover={{ scale: 1.01 }}
-                className="bg-white/5 rounded-xl p-4 border border-white/10 hover:border-[#ffcc33]/30 transition-all"
+                onClick={() => handleUserClick(leader)}
+                className="bg-white/5 rounded-xl p-4 border border-white/10 hover:border-[#ffcc33]/30 transition-all cursor-pointer"
               >
                 <div
                   className={`flex items-center gap-4 mb-3 ${
@@ -944,7 +960,10 @@ export function LeaderboardPage() {
                   {isAuthenticated && leader.id && (
                     <Button
                       size="sm"
-                      onClick={() => toggleFollow(leader.id, leader.username)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFollow(leader.id, leader.username);
+                      }}
                       disabled={loadingUserId === leader.id || leader.is_follow}
                       variant={isFollowing(leader.username) || leader.is_follow ? "outline" : "default"}
                       className="shrink-0 cursor-pointer"
@@ -1040,7 +1059,8 @@ export function LeaderboardPage() {
                     whileHover={{
                       backgroundColor: "rgba(255, 204, 51, 0.05)",
                     }}
-                    className="border-b border-white/5 last:border-0 transition-colors"
+                    onClick={() => handleUserClick(leader)}
+                    className="border-b border-white/5 last:border-0 transition-colors cursor-pointer"
                   >
                     {/* Rank */}
                     <td className="px-6 py-4">
@@ -1113,7 +1133,7 @@ export function LeaderboardPage() {
 
                     {/* Follow Button - Only show when authenticated */}
                     {isAuthenticated && leader.id && (
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                         <Button
                           size="sm"
                           onClick={() =>
@@ -1200,6 +1220,15 @@ export function LeaderboardPage() {
 
       {/* Bottom Spacing */}
       <div className="h-20" />
+
+      {/* User Profile Modal */}
+      {selectedUser && (
+        <UserProfileModal
+          isOpen={isProfileModalOpen}
+          user={selectedUser}
+          onClose={handleCloseProfile}
+        />
+      )}
     </>
   );
 

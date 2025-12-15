@@ -378,7 +378,7 @@ export function RedemptionCodes() {
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
             placeholder="XXXXXX"
-            className="flex-1 bg-[#1D112A] border-[#4e4e4e78] text-[#ffffff] placeholder:text-[#808c99] focus:border-[#9375b5] uppercase"
+            className="flex-1 bg-[#0f021c] border-[#4e4e4e78] text-[#ffffff] placeholder:text-[#808c99] focus:border-[#9375b5] uppercase"
             onKeyPress={(e) => e.key === "Enter" && handleRedeem()}
           />
           <Button
@@ -458,7 +458,7 @@ export function RedemptionCodes() {
                   placeholder={
                     language === "en" ? "Enter code title" : "أدخل عنوان الكود"
                   }
-                  className="bg-[#1D112A] border-[#4e4e4e78] text-[#ffffff] placeholder:text-[#808c99] focus:border-[#9375b5]"
+                  className="bg-[#0f021c] border-[#4e4e4e78] text-[#ffffff] placeholder:text-[#808c99] focus:border-[#9375b5]"
                 />
               </div>
               <div>
@@ -476,7 +476,7 @@ export function RedemptionCodes() {
                   placeholder={
                     language === "en" ? "Enter points" : "أدخل النقاط"
                   }
-                  className="bg-[#1D112A] border-[#4e4e4e78] text-[#ffffff] placeholder:text-[#808c99] focus:border-[#9375b5]"
+                  className="bg-[#0f021c] border-[#4e4e4e78] text-[#ffffff] placeholder:text-[#808c99] focus:border-[#9375b5]"
                   min="1"
                 />
               </div>
@@ -742,7 +742,7 @@ export function RedemptionCodes() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`flex items-center justify-between p-3 bg-[#1D112A]/30 rounded-lg border border-[#4e4e4e78] ${isRTL ? "flex-row-reverse" : ""
+                className={`flex items-center justify-between p-3 bg-[#0f021c] rounded-lg border border-[#4e4e4e78] ${isRTL ? "flex-row-reverse" : ""
                   }`}
               >
                 <div

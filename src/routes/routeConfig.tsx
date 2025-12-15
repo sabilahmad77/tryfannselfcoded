@@ -62,6 +62,16 @@ export const routes: RouteConfig[] = [
     description: "User registration page - accessible without token",
   },
   {
+    path: ROUTES.FORGOT_PASSWORD,
+    component: () =>
+      import("@/pages/ForgotPasswordPage").then((module) => ({
+        default: module.ForgotPasswordPage,
+      })),
+    type: "public",
+    title: "Forgot Password",
+    description: "Password reset page - accessible without token",
+  },
+  {
     path: ROUTES.REFERRAL,
     component: () =>
       import("@/pages/ReferralPage").then((module) => ({
@@ -102,6 +112,16 @@ export const routes: RouteConfig[] = [
     description: "User profile page - requires token (private route)",
   },
   {
+    path: ROUTES.PROFILE_COMPLETION,
+    component: () =>
+      import("@/pages/ProfileCompletionPage").then((module) => ({
+        default: module.ProfileCompletionPage,
+      })),
+    type: "private",
+    title: "Complete Profile",
+    description: "Profile completion flow - requires token (private route)",
+  },
+  {
     path: ROUTES.SETTINGS,
     component: () =>
       import("@/pages/SettingsPage").then((module) => ({
@@ -120,6 +140,26 @@ export const routes: RouteConfig[] = [
     type: "public",
     title: "Leaderboard",
     description: "Global leaderboard page - accessible with or without token (public route)",
+  },
+  {
+    path: ROUTES.FEEDBACK,
+    component: () =>
+      import("@/pages/FeedbackPage").then((module) => ({
+        default: module.FeedbackPage,
+      })),
+    type: "private",
+    title: "Feedback",
+    description: "User feedback page - requires token (private route)",
+  },
+  {
+    path: ROUTES.BUG_REPORT,
+    component: () =>
+      import("@/pages/BugReportPage").then((module) => ({
+        default: module.BugReportPage,
+      })),
+    type: "private",
+    title: "Bug Report",
+    description: "Bug report page - requires token (private route)",
   },
 ];
 

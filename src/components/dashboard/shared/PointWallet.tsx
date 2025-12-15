@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { useState } from "react";
 import {
   Wallet,
   TrendingUp,
@@ -6,6 +7,8 @@ import {
   Shield,
   Loader2,
   Users,
+  Award,
+  Zap,
 } from "lucide-react";
 import { Progress } from "../../ui/progress";
 import { Badge } from "../../ui/badge";
@@ -31,12 +34,19 @@ const content = {
     provenancePoints: "Provenance Points",
     followers: "Followers",
     recentActivity: "Recent Activity",
+    nextSteps: "Next Steps",
     pointsNeeded: "points needed",
     maxTierReached: "Maximum tier reached!",
     activities: [
       { action: "Profile Completed", points: "+50", type: "provenance" },
       { action: "Referral Joined", points: "+100", type: "influence" },
       { action: "First Login", points: "+25", type: "provenance" },
+    ],
+    nextStepsList: [
+      { action: "Share referral link", points: "+100", type: "influence", icon: Users },
+      { action: "Add your first artwork", points: "+50", type: "provenance", icon: Award },
+      { action: "Watch educational videos", points: "+25", type: "influence", icon: Zap },
+      { action: "Complete KYC verification", points: "+75", type: "provenance", icon: Shield },
     ],
     // Tier names will be fetched from API
   },
@@ -50,12 +60,19 @@ const content = {
     provenancePoints: "نقاط المصداقية",
     followers: "المتابعون",
     recentActivity: "النشاط الأخير",
+    nextSteps: "الخطوات التالية",
     pointsNeeded: "نقطة مطلوبة",
     maxTierReached: "تم الوصول إلى أعلى مستوى!",
     activities: [
       { action: "إكمال الملف الشخصي", points: "+50", type: "provenance" },
       { action: "انضمام إحالة", points: "+100", type: "influence" },
       { action: "تسجيل الدخول الأول", points: "+25", type: "provenance" },
+    ],
+    nextStepsList: [
+      { action: "مشاركة رابط الإحالة", points: "+100", type: "influence", icon: Users },
+      { action: "إضافة أول عمل فني", points: "+50", type: "provenance", icon: Award },
+      { action: "مشاهدة مقاطع تعليمية", points: "+25", type: "influence", icon: Zap },
+      { action: "إكمال التحقق من الهوية", points: "+75", type: "provenance", icon: Shield },
     ],
     // Tier names will be fetched from API
   },
@@ -65,6 +82,7 @@ export function PointWallet() {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === "ar";
+  const [activeTab, setActiveTab] = useState<'activity' | 'nextSteps'>('activity');
 
   // Fetch dashboard stats and progression data from API
   const {
@@ -259,7 +277,7 @@ export function PointWallet() {
               {Math.round(progress)}%
             </span>
           </div>
-          <Progress value={progress} className="h-2 bg-[#4e4e4e78]" />
+          <Progress value={progress} className="h-2 bg-[#0f021c]" />
         </div>
       ) : (
         <div className="mb-6">
@@ -271,7 +289,7 @@ export function PointWallet() {
             <span className="text-sm text-[#808c99]">{t.maxTierReached}</span>
             <span className="text-sm text-[#ffcc33]">100%</span>
           </div>
-          <Progress value={100} className="h-2 bg-[#4e4e4e78]" />
+          <Progress value={100} className="h-2 bg-[#0f021c]" />
         </div>
       )}
 
@@ -279,7 +297,7 @@ export function PointWallet() {
       <div className="grid grid-cols-3 gap-3 mb-6">
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#9375b5]/20 to-[#9375b5]/5 rounded-xl p-4 border border-[#9375b5]/30"
+          className="bg-[#0f021c] rounded-xl p-4 border border-[#9375b5]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
@@ -294,7 +312,7 @@ export function PointWallet() {
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#0ea5e9]/20 to-[#0ea5e9]/5 rounded-xl p-4 border border-[#0ea5e9]/30"
+          className="bg-[#0f021c] rounded-xl p-4 border border-[#0ea5e9]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
@@ -309,7 +327,7 @@ export function PointWallet() {
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#fface3]/20 to-[#fface3]/5 rounded-xl p-4 border border-[#fface3]/30"
+          className="bg-[#0f021c] rounded-xl p-4 border border-[#fface3]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
@@ -323,65 +341,128 @@ export function PointWallet() {
         </motion.div>
       </div>
 
-      {/* Recent Activity */}
-      <div>
-        <h3
-          className={`text-sm text-[#808c99] mb-3 ${
-            isRTL ? "text-right" : "text-left"
+      {/* Tabs */}
+      <div className={`flex gap-2 mb-4 p-1 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
+        <button
+          onClick={() => setActiveTab('activity')}
+          className={`flex-1 px-4 py-2 rounded-md text-sm transition-all ${
+            activeTab === 'activity'
+              ? 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#020e27]'
+              : 'text-[#808c99] hover:text-[#ffffff]'
           }`}
         >
           {t.recentActivity}
-        </h3>
-        <div className="space-y-2">
-          {activities.length > 0 ? (
-            activities.map((activity, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className={`flex items-center justify-between p-3 bg-[#1D112A]/50 rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
-              >
-                <div
-                  className={`flex items-center gap-3 ${
+        </button>
+        <button
+          onClick={() => setActiveTab('nextSteps')}
+          className={`flex-1 px-4 py-2 rounded-md text-sm transition-all ${
+            activeTab === 'nextSteps'
+              ? 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#020e27]'
+              : 'text-[#808c99] hover:text-[#ffffff]'
+          }`}
+        >
+          {t.nextSteps}
+        </button>
+      </div>
+
+      {/* Recent Activity */}
+      {activeTab === 'activity' && (
+        <div>
+          <div className="space-y-2">
+            {activities.length > 0 ? (
+              activities.map((activity, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`flex items-center justify-between p-3 bg-background rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      activity.type === "influence"
-                        ? "bg-[#9375b5]/20 text-[#9375b5]"
-                        : "bg-[#0ea5e9]/20 text-[#0ea5e9]"
+                    className={`flex items-center gap-3 ${
+                      isRTL ? "flex-row-reverse" : ""
                     }`}
                   >
-                    {activity.type === "influence" ? (
-                      <Flame className="w-4 h-4" />
-                    ) : (
-                      <Shield className="w-4 h-4" />
-                    )}
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        activity.type === "influence"
+                          ? "bg-[#9375b5]/20 text-[#9375b5]"
+                          : "bg-[#0ea5e9]/20 text-[#0ea5e9]"
+                      }`}
+                    >
+                      {activity.type === "influence" ? (
+                        <Flame className="w-4 h-4" />
+                      ) : (
+                        <Shield className="w-4 h-4" />
+                      )}
+                    </div>
+                    <span className="text-sm text-[#ffffff]">
+                      {activity.action}
+                    </span>
                   </div>
-                  <span className="text-sm text-[#ffffff]">
-                    {activity.action}
+                  <span className="text-sm text-[#45e3d3]">
+                    {activity.points}
                   </span>
-                </div>
-                <span className="text-sm text-[#45e3d3]">
-                  {activity.points}
-                </span>
-              </motion.div>
-            ))
-          ) : (
-            <p
-              className={`text-sm text-[#808c99] text-center py-4 ${
-                isRTL ? "text-right" : "text-left"
-              }`}
-            >
-              {language === "en" ? "No recent activity" : "لا يوجد نشاط حديث"}
-            </p>
-          )}
+                </motion.div>
+              ))
+            ) : (
+              <p
+                className={`text-sm text-[#808c99] text-center py-4 ${
+                  isRTL ? "text-right" : "text-left"
+                }`}
+              >
+                {language === "en" ? "No recent activity" : "لا يوجد نشاط حديث"}
+              </p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Next Steps */}
+      {activeTab === 'nextSteps' && (
+        <div>
+          <div className="space-y-2">
+            {t.nextStepsList.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`flex items-center justify-between p-3 bg-background rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${
+                    isRTL ? "flex-row-reverse" : ""
+                  }`}
+                >
+                  <div
+                    className={`flex items-center gap-3 ${
+                      isRTL ? "flex-row-reverse" : ""
+                    }`}
+                  >
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        step.type === "influence"
+                          ? "bg-[#9375b5]/20 text-[#9375b5]"
+                          : "bg-[#0ea5e9]/20 text-[#0ea5e9]"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm text-[#ffffff]">
+                      {step.action}
+                    </span>
+                  </div>
+                  <span className="text-sm text-[#45e3d3]">
+                    {step.points}
+                  </span>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

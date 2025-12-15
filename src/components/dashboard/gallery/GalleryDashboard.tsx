@@ -3,11 +3,14 @@ import { useGetDashboardStatsGalleryQuery } from "@/services/api/dashboardApi";
 import type { RootState } from "@/store/store";
 import { motion } from "motion/react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
+import { CompleteProfile } from "../shared/CompleteProfile";
 import { PointWallet } from "../shared/PointWallet";
 import { TierProgress } from "../shared/TierProgress";
 import { ArtistRoster } from "./ArtistRoster";
+import { ROUTES } from "@/routes/paths";
 
 const content = {
   en: {
@@ -23,7 +26,18 @@ const content = {
 export function GalleryDashboard() {
   const { language } = useLanguage();
   const t = content[language];
+  const navigate = useNavigate();
   const storedUser = useSelector((state: RootState) => state.auth.user);
+
+  // Get profile completion status from Redux
+  const profileCompleted = useSelector(
+    (state: RootState) => state.auth.profileCompleted
+  );
+
+  // Handler to navigate to profile completion
+  const handleCompleteProfile = () => {
+    navigate(ROUTES.PROFILE_COMPLETION);
+  };
 
   // Fetch gallery-specific dashboard stats (for future use)
   const { data: _galleryStatsData, isLoading: _isLoadingStats } =
@@ -45,6 +59,12 @@ export function GalleryDashboard() {
       <DashboardWelcome
         userName={galleryName}
         subtitle={t.subtitle}
+      />
+
+      {/* Complete Profile Section */}
+      <CompleteProfile
+        profileCompleted={profileCompleted ?? false}
+        onCompleteProfile={handleCompleteProfile}
       />
 
       {/* Widgets Grid */}

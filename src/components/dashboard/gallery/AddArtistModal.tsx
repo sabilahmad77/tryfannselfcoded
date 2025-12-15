@@ -249,11 +249,11 @@ export function AddArtistModal({
             disabled={
               !formData.name.trim() || !formData.email.trim() || !formData.specialty.trim() || isLoading
             }
-            className="flex-1 bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#3bc4b5] hover:shadow-lg hover:shadow-[#45e3d3]/50 text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
+            className="flex-1 bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffcc33]/90 hover:to-[#ffb54d]/90 hover:shadow-lg hover:shadow-[#ffcc33]/50 text-[#0F021C] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'} animate-spin text-[#0F021C]`} />
                 {language === "en" ? "Saving..." : "جاري الحفظ..."}
               </>
             ) : (

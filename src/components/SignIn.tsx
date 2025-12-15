@@ -533,6 +533,7 @@ export function SignIn({
                     {/* Forgot Password */}
                     <button
                       type="button"
+                      onClick={() => navigate(ROUTES.FORGOT_PASSWORD)}
                       className="text-sm text-[#ffcc33] hover:text-[#ffb54d] transition-colors cursor-pointer"
                     >
                       {content.forgotPassword}

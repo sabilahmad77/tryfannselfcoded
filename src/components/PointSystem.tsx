@@ -247,7 +247,7 @@ export function PointSystem({ language }: PointSystemProps) {
                 <span className="text-white text-2xl">350 / 500 Points</span>
               </div>
               <div className="relative">
-                <Progress value={70} className="h-3 bg-white/10 border border-orange-500/30" />
+                <Progress value={70} className="h-3 bg-[#0f021c] border border-orange-500/30" />
                 <motion.div
                   className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 opacity-50 blur-md"
                   animate={{

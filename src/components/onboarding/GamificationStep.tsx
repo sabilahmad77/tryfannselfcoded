@@ -498,49 +498,6 @@ export function GamificationStep({
           </div>
         </motion.div>
 
-        {/* Rewards Preview */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="mb-8"
-        >
-          <div className="mb-6 text-center">
-            <h3 className="text-2xl text-white mb-2">
-              {content.rewards.title}
-            </h3>
-            <p className="text-white/60">{content.tiers.desc}</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-4">
-            {content.rewards.items.map((reward, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 + index * 0.1 }}
-                className="p-6 rounded-xl glass border border-white/10 hover:border-amber-500/30 transition-all"
-              >
-                <div className="text-center mb-4">
-                  <div className="text-xl text-white mb-1">{reward.tier}</div>
-                  <div className="text-amber-400 text-sm">{reward.points}</div>
-                </div>
-                <div className="space-y-2">
-                  {reward.perks.map((perk, perkIndex) => (
-                    <div
-                      key={perkIndex}
-                      className="flex items-center gap-2 text-white/60 text-sm"
-                    >
-                      <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
-                      <span>{perk}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
         {/* Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

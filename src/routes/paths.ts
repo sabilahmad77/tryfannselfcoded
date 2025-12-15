@@ -14,12 +14,16 @@ export const ROUTES = {
   HOME: '/',
   SIGN_IN: '/signin',
   SIGN_UP: '/signup',
+  FORGOT_PASSWORD: '/forgot-password',
   REFERRAL: '/ref/:code',
   ONBOARDING: '/onboarding',
   DASHBOARD: '/dashboard',
   PROFILE: '/profile',
+  PROFILE_COMPLETION: '/complete-profile',
   SETTINGS: '/settings',
   LEADERBOARD: '/leaderboard',
+  FEEDBACK: '/feedback',
+  BUG_REPORT: '/bug-report',
 } as const;
 
 /**

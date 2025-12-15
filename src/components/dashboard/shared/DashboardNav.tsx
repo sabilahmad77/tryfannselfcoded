@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   User,
@@ -10,6 +10,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Trophy,
+  MessageSquare,
+  Bug,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,7 +26,7 @@ import type { RootState } from "@/store/store";
 import fannLogo from "figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png";
 
 interface DashboardNavProps {
-  currentPage?: "dashboard" | "profile" | "settings" | "leaderboard";
+  currentPage?: "dashboard" | "profile" | "settings" | "leaderboard" | "feedback" | "bugReport";
   onLogout?: () => void;
   isCollapsed?: boolean;
   onCollapseChange?: (collapsed: boolean) => void;
@@ -36,6 +38,8 @@ const content = {
     profile: "Profile",
     settings: "Settings",
     leaderboard: "Leaderboard",
+    feedback: "Feedback",
+    bugReport: "Bug Report",
     logout: "Logout",
     collapse: "Collapse",
     expand: "Expand",
@@ -51,6 +55,8 @@ const content = {
     profile: "الملف الشخصي",
     settings: "الإعدادات",
     leaderboard: "لوحة المتصدرين",
+    feedback: "الملاحظات",
+    bugReport: "الإبلاغ عن خلل",
     logout: "تسجيل الخروج",
     collapse: "طي",
     expand: "توسيع",
@@ -131,7 +137,14 @@ export function DashboardNav({
     } else {
       setInternalCollapsed(collapsed);
     }
+    // Update CSS variable when collapsed state changes
+    document.documentElement.style.setProperty('--sidebar-width', collapsed ? '80px' : '280px');
   };
+
+  // Update CSS variable on mount and when collapsed state changes
+  useEffect(() => {
+    document.documentElement.style.setProperty('--sidebar-width', isCollapsed ? '80px' : '280px');
+  }, [isCollapsed]);
 
   // Determine current page from location if not provided
   const activePage =
@@ -144,6 +157,10 @@ export function DashboardNav({
       ? "settings"
       : location.pathname === ROUTES.LEADERBOARD
       ? "leaderboard"
+      : location.pathname === ROUTES.FEEDBACK
+      ? "feedback"
+      : location.pathname === ROUTES.BUG_REPORT
+      ? "bugReport"
       : "dashboard");
 
   // Check profile visibility from user settings
@@ -176,6 +193,23 @@ export function DashboardNav({
       label: t.settings,
       icon: Settings,
       onClick: () => navigate(ROUTES.SETTINGS),
+      show: true,
+    },
+  ];
+
+  const supportItems = [
+    {
+      id: "feedback",
+      label: t.feedback,
+      icon: MessageSquare,
+      onClick: () => navigate(ROUTES.FEEDBACK),
+      show: true,
+    },
+    {
+      id: "bugReport",
+      label: t.bugReport,
+      icon: Bug,
+      onClick: () => navigate(ROUTES.BUG_REPORT),
       show: true,
     },
   ];
@@ -264,6 +298,35 @@ export function DashboardNav({
                       </Button>
                     );
                   })}
+                
+                {/* Support Items Separator */}
+                <div className="h-px bg-[#ffcc33]/20 my-2" />
+                
+                {supportItems
+                  .filter((item) => item.show)
+                  .map((item) => {
+                    const Icon = item.icon;
+                    const isActive = activePage === item.id;
+                    return (
+                      <Button
+                        key={item.id}
+                        variant="ghost"
+                        onClick={() => {
+                          item.onClick();
+                          setMobileMenuOpen(false);
+                        }}
+                        className={`justify-start gap-3 transition-all duration-200 cursor-pointer ${
+                          isActive
+                            ? "bg-[#ffcc33]/20 text-[#ffcc33] border border-[#ffcc33]/30"
+                            : "text-[#808c99] hover:text-[#ffcc33] hover:bg-[#ffcc33]/20"
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        {item.label}
+                      </Button>
+                    );
+                  })}
+                
                 <div className="h-px bg-[#ffcc33]/20 my-2" />
                 <Button
                   variant="ghost"
@@ -283,26 +346,26 @@ export function DashboardNav({
       </div>
 
       {/* Desktop Sidebar */}
-      <motion.aside
-        initial={false}
-        animate={{ width: isCollapsed ? "80px" : "280px" }}
+      <div
         className={`hidden lg:flex fixed ${
           isRTL ? "right-0 border-l" : "left-0 border-r"
-        } top-0 bottom-0 z-40 glass border-[#ffcc33]/20 flex-col`}
-        style={{ pointerEvents: "auto" }}
+        } top-0 h-screen glass border-[#ffcc33]/20 flex-col z-40 transition-all duration-300 ${
+          isCollapsed ? 'w-[80px]' : 'w-[280px]'
+        }`}
       >
         {/* Header */}
         <div className="p-6 border-b border-[#ffcc33]/20">
           <motion.div
-            className="flex items-center justify-center"
+            className="flex items-center justify-between"
             initial={false}
           >
+            {/* Logo - only show when expanded */}
             {!isCollapsed && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-full"
+                className="flex-1"
               >
                 <ImageWithFallback
                   src={fannLogo}
@@ -311,13 +374,21 @@ export function DashboardNav({
                 />
               </motion.div>
             )}
-            {isCollapsed && (
-              <ImageWithFallback
-                src={fannLogo}
-                alt="FANN Logo"
-                className="h-10 w-auto object-contain"
-              />
-            )}
+            
+            {/* Collapse/Expand Button */}
+            <motion.button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className={`${isCollapsed ? 'mx-auto' : ''} p-2 rounded-lg text-[#808c99]/60 hover:text-[#ffcc33] hover:bg-[#ffcc33]/10 transition-all cursor-pointer`}
+              title={isCollapsed ? t.expand : t.collapse}
+            >
+              {isRTL ? (
+                isCollapsed ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />
+              ) : (
+                isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />
+              )}
+            </motion.button>
           </motion.div>
         </div>
 
@@ -392,6 +463,48 @@ export function DashboardNav({
             })}
         </nav>
 
+        {/* Support Items Section */}
+        <div className="p-4">
+          {/* Separator */}
+          {!isCollapsed && (
+            <div className="h-px bg-[#ffcc33]/20 mb-4" />
+          )}
+          
+          <div className="space-y-2">
+            {supportItems
+              .filter((item) => item.show)
+              .map((item) => {
+                const Icon = item.icon;
+                const isActive = activePage === item.id;
+                return (
+                  <motion.button
+                    key={item.id}
+                    onClick={item.onClick}
+                    whileHover={{ scale: isActive ? 1 : 1.02 }}
+                    whileTap={{ scale: isActive ? 1 : 0.98 }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer ${
+                      isActive
+                        ? "bg-primary/20 text-primary border border-primary/30"
+                        : "text-[#808c99] hover:text-primary hover:bg-primary/10"
+                    } ${isCollapsed ? "justify-center" : ""}`}
+                    style={{ pointerEvents: "auto" }}
+                  >
+                    <Icon className="w-5 h-5 shrink-0" />
+                    {!isCollapsed && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        {item.label}
+                      </motion.span>
+                    )}
+                  </motion.button>
+                );
+              })}
+          </div>
+        </div>
+
         {/* Bottom Section */}
         <div className="p-4 border-t border-[#ffcc33]/20 space-y-2">
           {/* Logout Button */}
@@ -415,42 +528,8 @@ export function DashboardNav({
               </motion.span>
             )}
           </motion.button>
-
-          {/* Collapse/Expand Button */}
-          <motion.button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#808c99]/60 hover:text-[#808c99] hover:bg-[#ffffff]/5 transition-all cursor-pointer ${
-              isCollapsed ? "justify-center" : ""
-            }`}
-            title={isCollapsed ? t.expand : t.collapse}
-            style={{ pointerEvents: "auto" }}
-          >
-            {isRTL ? (
-              isCollapsed ? (
-                <ChevronLeft className="w-5 h-5 shrink-0" />
-              ) : (
-                <ChevronRight className="w-5 h-5 shrink-0" />
-              )
-            ) : isCollapsed ? (
-              <ChevronRight className="w-5 h-5 shrink-0" />
-            ) : (
-              <ChevronLeft className="w-5 h-5 shrink-0" />
-            )}
-            {!isCollapsed && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="text-sm"
-              >
-                {t.collapse}
-              </motion.span>
-            )}
-          </motion.button>
         </div>
-      </motion.aside>
+      </div>
     </>
   );
 }

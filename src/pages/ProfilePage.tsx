@@ -574,27 +574,27 @@ export function ProfilePage() {
                 isRTL ? "text-right" : "text-left"
               }`}
             >
-              <div className="bg-[#1D112A] border border-primary/20 rounded-lg p-3">
+              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffcc33]">
                   {userData.totalPoints}
                 </p>
                 <p className="text-xs text-[#808c99]">{t.totalPoints}</p>
               </div>
-              <div className="bg-[#1D112A] border border-primary/20 rounded-lg p-3">
+              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">{userData.followers}</p>
                 <p className="text-xs text-[#808c99]">{t.followers}</p>
               </div>
-              <div className="bg-[#1D112A] border border-primary/20 rounded-lg p-3">
+              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">{userData.referrals}</p>
                 <p className="text-xs text-[#808c99]">{t.referrals}</p>
               </div>
-              <div className="bg-[#1D112A] border border-primary/20 rounded-lg p-3">
+              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">
                   {userData.artworksSaved}
                 </p>
                 <p className="text-xs text-[#808c99]">{t.artworksSaved}</p>
               </div>
-              <div className="bg-[#1D112A] border border-primary/20 rounded-lg p-3">
+              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">
                   {userData.collections}
                 </p>
@@ -620,7 +620,7 @@ export function ProfilePage() {
                   {pointsNeeded} {t.pointsNeeded}
                 </span>
               </div>
-              <Progress value={progress} className="h-3 bg-[#4e4e4e78]" />
+              <Progress value={progress} className="h-3 bg-[#0f021c]" />
             </>
           ) : (
             <>
@@ -636,7 +636,7 @@ export function ProfilePage() {
                 </span>
                 <span className="text-sm text-[#ffcc33]">100%</span>
               </div>
-              <Progress value={100} className="h-3 bg-[#4e4e4e78]" />
+              <Progress value={100} className="h-3 bg-[#0f021c]" />
             </>
           )}
         </div>
@@ -791,7 +791,7 @@ export function ProfilePage() {
 
               {!kycData ? (
                 /* Empty State - No KYC Data */
-                <div className="p-6 rounded-xl bg-[#1D112A]/30 border border-[#4e4e4e78]">
+                <div className="p-6 rounded-xl bg-[#0f021c] border border-[#4e4e4e78]">
                   <div
                     className={`flex flex-col items-center justify-center text-center ${
                       isRTL ? "text-right" : "text-left"
@@ -932,7 +932,7 @@ export function ProfilePage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {kycData.gov_issued_id && (
                           <div
-                            className={`flex items-center gap-3 p-4 bg-[#1D112A]/50 rounded-lg ${
+                            className={`flex items-center gap-3 p-4 bg-[#0f021c] rounded-lg ${
                               isRTL ? "flex-row-reverse" : ""
                             }`}
                           >
@@ -953,7 +953,7 @@ export function ProfilePage() {
                         )}
                         {kycData.proof_address && (
                           <div
-                            className={`flex items-center gap-3 p-4 bg-[#1D112A]/50 rounded-lg ${
+                            className={`flex items-center gap-3 p-4 bg-[#0f021c] rounded-lg ${
                               isRTL ? "flex-row-reverse" : ""
                             }`}
                           >
@@ -995,7 +995,7 @@ export function ProfilePage() {
                   initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`flex items-center justify-between p-4 bg-[#1D112A]/50 rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${
+                  className={`flex items-center justify-between p-4 bg-[#0f021c] rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
@@ -1040,7 +1040,7 @@ export function ProfilePage() {
                     className={`p-6 rounded-xl border transition-all ${
                       achievement.unlocked
                         ? "bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 border-[#ffcc33]/30"
-                        : "bg-[#1D112A]/30 border-[#4e4e4e78] opacity-60"
+                        : "bg-[#0f021c] border-[#4e4e4e78] opacity-60"
                     }`}
                   >
                     <div
@@ -1099,7 +1099,7 @@ export function ProfilePage() {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Point Distribution */}
-              <div className="bg-[#1D112A] border border-primary/20 rounded-xl p-6">
+              <div className="bg-[#0f021c] border border-primary/20 rounded-xl p-6">
                 <h3
                   className={`text-xl text-[#ffffff] mb-4 ${
                     isRTL ? "text-right" : "text-left"
@@ -1132,7 +1132,7 @@ export function ProfilePage() {
                       value={
                         (userData.influencePoints / userData.totalPoints) * 100
                       }
-                      className="h-2 bg-[#4e4e4e78]"
+                      className="h-2 bg-[#0f021c]"
                     />
                   </div>
                   <div>
@@ -1159,14 +1159,14 @@ export function ProfilePage() {
                       value={
                         (userData.provenancePoints / userData.totalPoints) * 100
                       }
-                      className="h-2 bg-[#4e4e4e78]"
+                      className="h-2 bg-[#0f021c]"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Engagement Stats */}
-              <div className="bg-[#1D112A] border border-primary/20 rounded-xl p-6">
+              <div className="bg-[#0f021c] border border-primary/20 rounded-xl p-6">
                 <h3
                   className={`text-xl text-[#ffffff] mb-4 ${
                     isRTL ? "text-right" : "text-left"

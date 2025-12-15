@@ -209,7 +209,7 @@ export function URLEncoder() {
                 ? "No referral link yet"
                 : "لا يوجد رابط إحالة بعد"
             }
-            className="flex-1 bg-[#1D112A] border-[#4e4e4e78] text-[#ffffff] focus:border-[#ffcc33]"
+            className="flex-1 bg-[#0f021c] border-[#4e4e4e78] text-[#ffffff] focus:border-[#ffcc33]"
           />
           <Button
             onClick={handleCopy}

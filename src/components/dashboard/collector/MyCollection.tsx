@@ -362,7 +362,7 @@ export function MyCollection() {
       <div className="grid grid-cols-3 gap-4 mb-6">
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#9375b5]/20 to-[#9375b5]/5 rounded-xl p-4 border border-[#9375b5]/30"
+          className="bg-[#0f021c] rounded-xl p-4 border border-[#9375b5]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
@@ -378,7 +378,7 @@ export function MyCollection() {
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#45e3d3]/20 to-[#45e3d3]/5 rounded-xl p-4 border border-[#45e3d3]/30"
+          className="bg-[#0f021c] rounded-xl p-4 border border-[#45e3d3]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
@@ -396,7 +396,7 @@ export function MyCollection() {
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#ffcc33]/20 to-[#ffcc33]/5 rounded-xl p-4 border border-[#ffcc33]/30"
+          className="bg-[#0f021c] rounded-xl p-4 border border-[#ffcc33]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
@@ -450,7 +450,7 @@ export function MyCollection() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.02 }}
-                className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all"
+                className="bg-[#0f021c] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all"
               >
                 <div
                   className={`flex items-start justify-between ${isRTL ? "flex-row-reverse" : ""

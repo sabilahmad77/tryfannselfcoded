@@ -102,7 +102,7 @@
   
   /* INPUT COLORS */
   --input: transparent;
-  --input-background: rgba(255, 255, 255, 0.05);
+  --input-background: #0f021c;
   --ring: #ffcc33;
   /* Focus ring gold */
   
@@ -221,7 +221,7 @@
   
   /* INPUT COLORS */
   --input: rgba(255, 255, 255, 0.1);
-  --input-background: rgba(255, 255, 255, 0.05);
+  --input-background: #0f021c;
   --ring: #ffcc33;
   
   /* CHART COLORS */

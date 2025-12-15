@@ -1,11 +1,15 @@
 import { motion } from "motion/react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { MyCollection } from "./MyCollection";
+import { MarketInsights } from "./MarketInsights";
 import { TierProgress } from "../shared/TierProgress";
 import { PointWallet } from "../shared/PointWallet";
+import { CompleteProfile } from "../shared/CompleteProfile";
 import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
 import { useLanguage } from "@/contexts/useLanguage";
+import { ROUTES } from "@/routes/paths";
 import type { RootState } from "@/store/store";
 
 const content = {
@@ -22,7 +26,18 @@ const content = {
 export function CollectorDashboard() {
   const { language } = useLanguage();
   const t = content[language];
+  const navigate = useNavigate();
   const storedUser = useSelector((state: RootState) => state.auth.user);
+
+  // Get profile completion status from Redux
+  const profileCompleted = useSelector(
+    (state: RootState) => state.auth.profileCompleted
+  );
+
+  // Handler to navigate to profile completion
+  const handleCompleteProfile = () => {
+    navigate(ROUTES.PROFILE_COMPLETION);
+  };
 
   // Get user name from stored data
   const collectorName = storedUser
@@ -38,6 +53,12 @@ export function CollectorDashboard() {
       <DashboardWelcome
         userName={collectorName}
         subtitle={t.subtitle}
+      />
+
+      {/* Complete Profile Section */}
+      <CompleteProfile
+        profileCompleted={profileCompleted ?? false}
+        onCompleteProfile={handleCompleteProfile}
       />
 
       {/* Widgets Grid */}
@@ -60,11 +81,20 @@ export function CollectorDashboard() {
           <MyCollection />
         </motion.div>
 
-        {/* Tier Progress */}
+        {/* Market Insights */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <MarketInsights />
+        </motion.div>
+
+        {/* Tier Progress */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
         >
           <TierProgress />
         </motion.div>

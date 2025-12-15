@@ -46,13 +46,6 @@ export function CompletionStep({ language }: CompletionStepProps) {
             color: "text-yellow-400",
           },
           {
-            icon: Users,
-            label: "Referral Code",
-            value:
-              "FANN" + Math.random().toString(36).substring(2, 8).toUpperCase(),
-            color: "text-blue-400",
-          },
-          {
             icon: Gift,
             label: "Persona Bonus",
             value: "+750 points",
@@ -120,13 +113,6 @@ export function CompletionStep({ language }: CompletionStepProps) {
             label: "المستوى البدائي",
             value: "مستكشف",
             color: "text-yellow-400",
-          },
-          {
-            icon: Users,
-            label: "كود الإحالة",
-            value:
-              "FANN" + Math.random().toString(36).substring(2, 8).toUpperCase(),
-            color: "text-blue-400",
           },
           {
             icon: Gift,
@@ -248,7 +234,7 @@ export function CompletionStep({ language }: CompletionStepProps) {
           <h2 className="text-2xl text-white mb-6 text-center">
             {content.summary.title}
           </h2>
-          <div className="grid md:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-3 gap-4">
             {content.summary.items.map((item, index) => {
               const Icon = item.icon;
               return (

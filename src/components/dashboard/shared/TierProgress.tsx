@@ -235,28 +235,31 @@ export function TierProgress() {
       <div className="grid grid-cols-2 gap-4 mb-6">
         {/* Current */}
         <div
-          className={`bg-gradient-to-br ${currentTierConfig.color} bg-opacity-20 border border-[#ffcc33]/40 rounded-xl p-4`}
+          className={`bg-gradient-to-br ${currentTierConfig.color} bg-opacity-20 border border-[#ffcc33]/40 rounded-xl p-4 relative overflow-hidden`}
         >
-          <div
-            className={`flex items-center gap-2 mb-2 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
-          >
-            <CurrentTierIcon className="w-5 h-5 text-[#ffcc33]" />
-            <span className="text-xs text-[#808c99]">{t.currentTier}</span>
+          <div className="absolute inset-0 bg-[#0f021c]/60"></div>
+          <div className="relative z-10">
+            <div
+              className={`flex items-center gap-2 mb-2 ${
+                isRTL ? "flex-row-reverse" : ""
+              }`}
+            >
+              <CurrentTierIcon className="w-5 h-5 text-[#ffcc33]" />
+              <span className="text-xs text-[#ffffff]/80">{t.currentTier}</span>
+            </div>
+            <p className="text-xl text-[#ffffff]">{currentTierName}</p>
+            <p className="text-sm text-[#ffffff]/70 mt-1">{userPoints} pts</p>
           </div>
-          <p className="text-xl text-[#ffffff]">{currentTierName}</p>
-          <p className="text-sm text-[#808c99] mt-1">{userPoints} pts</p>
         </div>
 
         {/* Next */}
-        <div className="bg-[#1D112A]/50 border border-[#4e4e4e78] rounded-xl p-4">
+        <div className="bg-[#0f021c] border border-[#ffcc33]/20 rounded-xl p-4">
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <NextTierIcon className="w-5 h-5 text-[#45e3d3]" />
+            <NextTierIcon className="w-5 h-5 text-[#ffcc33]" />
             <span className="text-xs text-[#808c99]">
               {nextTierName ? t.nextTier : t.currentTier}
             </span>
@@ -276,7 +279,7 @@ export function TierProgress() {
 
       {/* Progress Bar */}
       <div className="mb-6">
-        <div className="relative h-3 bg-[#1D112A] rounded-full overflow-hidden border border-[#4e4e4e78]">
+        <div className="relative h-3 bg-[#0f021c] rounded-full overflow-hidden border border-[#4e4e4e78]">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${Math.min(progress, 100)}%` }}
@@ -321,8 +324,8 @@ export function TierProgress() {
                     isCurrent
                       ? `bg-gradient-to-br ${tierConfig.color} glow-gold`
                       : isUnlocked
-                      ? "bg-[#1D112A] border border-[#ffcc33]/30"
-                      : "bg-[#1D112A]/30 border border-[#4e4e4e78]"
+                      ? "bg-[#0f021c] border border-[#ffcc33]/30"
+                      : "bg-[#0f021c] border border-[#4e4e4e78]"
                   }`}
                 >
                   <TierIcon

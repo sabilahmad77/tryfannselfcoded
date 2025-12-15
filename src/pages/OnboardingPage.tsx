@@ -25,7 +25,7 @@ export function OnboardingPage() {
     <OnboardingFlow
       language={language}
       selectedPersona={selectedPersona}
-      onComplete={() => navigate(ROUTES.HOME)}
+      onComplete={() => navigate(ROUTES.DASHBOARD)}
     />
   );
 }

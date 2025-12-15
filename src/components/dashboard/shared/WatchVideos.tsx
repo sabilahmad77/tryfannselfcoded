@@ -285,7 +285,7 @@ export function WatchVideos() {
             {Math.round(progressPercent)}%
           </span>
         </div>
-        <Progress value={progressPercent} className="h-2 bg-[#4e4e4e78]" />
+        <Progress value={progressPercent} className="h-2 bg-[#0f021c]" />
       </div>
 
       {/* Video List */}
@@ -326,8 +326,8 @@ export function WatchVideos() {
                 whileHover={{ scale: 1.02 }}
                 className={`relative overflow-hidden rounded-xl border transition-all ${
                   isCompleted
-                    ? "border-[#45e3d3]/30 bg-[#1D112A]/30"
-                    : "border-[#4e4e4e78] bg-[#1D112A]/50 hover:border-[#ffcc33]/30"
+                    ? "border-[#45e3d3]/30 bg-[#0f021c]"
+                    : "border-[#4e4e4e78] bg-[#0f021c] hover:border-[#ffcc33]/30"
                 }`}
               >
                 <div

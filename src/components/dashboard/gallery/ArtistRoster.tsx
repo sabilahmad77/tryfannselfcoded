@@ -198,8 +198,8 @@ export function ArtistRoster() {
         <div
           className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#45e3d3] to-[#4de3ed] rounded-xl flex items-center justify-center">
-            <Users className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] rounded-xl flex items-center justify-center">
+            <Users className="w-6 h-6 text-[#0F021C]" />
           </div>
           <div className={isRTL ? "text-right" : "text-left"}>
             <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
@@ -247,7 +247,7 @@ export function ArtistRoster() {
             initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#45e3d3]/50 transition-all"
+            className="bg-[#0f021c] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#45e3d3]/50 transition-all"
           >
             <div
               className={`flex items-start gap-4 ${isRTL ? "flex-row-reverse" : ""}`}
