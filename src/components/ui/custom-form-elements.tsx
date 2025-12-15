@@ -140,7 +140,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             ref={registerRef || ref}
             id={fieldId}
             className={cn(
-              "bg-[#0f021c] border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
+              "bg-background border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
               "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20",
               hasError &&
                 "border-destructive focus:border-destructive focus:ring-destructive/20",
@@ -328,7 +328,7 @@ export const PasswordField = React.forwardRef<
             id={fieldId}
             type={showPassword ? "text" : "password"}
             className={cn(
-              "bg-[#0f021c] border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
+              "bg-background border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
               "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20",
               hasError &&
                 "border-destructive focus:border-destructive focus:ring-destructive/20",
@@ -541,15 +541,12 @@ export const SelectField = React.forwardRef<
               id={fieldId}
               size="default"
               className={cn(
-                "bg-[#0f021c] border-[#ffcc33]/20 text-[#ffffff]",
+                "bg-background border-[#ffcc33]/20 text-[#ffffff]",
                 "h-11 data-[size=default]:!h-11",
                 "!py-1 px-3",
-                "data-[placeholder]:text-[#ffffff]/30",
                 "focus-visible:border-[#ffcc33]/50 focus-visible:ring-[#ffcc33]/20 focus-visible:ring-[3px]",
                 "hover:bg-[#0f021c]/80 transition-colors",
                 '[&_svg:not([class*="text-"])]:text-[#ffffff]/40',
-                "[&_[data-slot=select-value]]:text-[#ffffff]",
-                "[&_[data-slot=select-value][data-placeholder]]:text-[#ffffff]/30",
                 hasError &&
                   "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
                 hasIcon &&
@@ -568,10 +565,16 @@ export const SelectField = React.forwardRef<
                   : undefined
               }
             >
-              <SelectValue placeholder={placeholder} />
+              <SelectValue
+                className="text-[#ffffff] data-[placeholder]:text-[#ffffff]/30"
+                placeholder={placeholder}
+              />
             </SelectTrigger>
             <SelectContent
-              className={cn("bg-[#1D112A] border-white/10 shadow-none", contentClassName)}
+              className={cn(
+                "bg-background border-white/10 shadow-none",
+                contentClassName
+              )}
             >
               {options.map((option) => (
                 <SelectItem
@@ -754,7 +757,7 @@ export const TextareaField = React.forwardRef<
             ref={registerRef || ref}
             id={fieldId}
             className={cn(
-              "bg-[#0f021c] border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 min-h-32",
+              "bg-background border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 min-h-32",
               "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20 resize-none",
               hasError &&
                 "border-destructive focus:border-destructive focus:ring-destructive/20",
@@ -1005,7 +1008,7 @@ export const FileUploadField = React.forwardRef<
                 htmlFor={fieldId}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer transition-all",
-                  "bg-[#0f021c] border-white/10 hover:border-amber-500/50 hover:bg-amber-500/10",
+                  "bg-background border-white/10 hover:border-amber-500/50 hover:bg-amber-500/10",
                   "text-white/70 hover:text-white",
                   hasError && "border-destructive",
                   required && !selectedFile && "cursor-not-allowed opacity-50",
@@ -1022,12 +1025,12 @@ export const FileUploadField = React.forwardRef<
           </div>
 
           {/* Selected File Preview */}
-          {selectedFile && (
+              {selectedFile && (
             <div className="space-y-2">
               {/* Image Preview for image files */}
-              {selectedFile.type.startsWith("image/") && (
-                <div className="relative w-full max-w-xs mx-auto">
-                  <div className="relative aspect-square rounded-lg overflow-hidden border border-white/10 bg-[#0f021c]">
+                  {selectedFile.type.startsWith("image/") && (
+                    <div className="relative w-full max-w-xs mx-auto">
+                      <div className="relative aspect-square rounded-lg overflow-hidden border border-white/10 bg-background">
                     <img
                       src={URL.createObjectURL(selectedFile)}
                       alt={selectedFile.name}
@@ -1046,7 +1049,7 @@ export const FileUploadField = React.forwardRef<
               )}
 
               {/* File Info */}
-              <div className="p-3 rounded-lg bg-[#0f021c] border border-white/10 flex items-center justify-between gap-2">
+              <div className="p-3 rounded-lg bg-background border border-white/10 flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
                   <FileText className="w-4 h-4 text-white/60 shrink-0" />
                   <span
@@ -1163,9 +1166,9 @@ export const SwitchField = React.forwardRef<
 
     return (
       <div className={cn("space-y-2", className)}>
-        <div
-          className={cn(
-            "flex items-center justify-between p-4 bg-[#1D112A]/50 rounded-xl",
+          <div
+            className={cn(
+              "flex items-center justify-between p-4 bg-background/50 rounded-xl",
             isRTL ? "flex-row-reverse" : "",
             switchWrapperClassName
           )}

@@ -22,7 +22,10 @@ import { Card } from "../../ui/card";
 import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
 import { CompleteProfile } from "../shared/CompleteProfile";
+import { PointWallet } from "../shared/PointWallet";
+import { RedemptionCodes } from "../shared/RedemptionCodes";
 import { TierProgress } from "../shared/TierProgress";
+import { WatchVideos } from "../shared/WatchVideos";
 import { useLanguage } from "@/contexts/useLanguage";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -146,7 +149,6 @@ export function AmbassadorDashboard() {
   const engagementRate = apiData.engagement_rate || 0;
   const conversions = apiData.conversation || 0; // Note: API uses "conversation" not "conversions"
   const rewardsPoints = apiData.rewards_point || 0; // Note: API uses singular "rewards_point"
-  const followerCount = apiData.fann_platform_follower || 0;
   const userRank = apiData.your_rank ?? null;
   const totalAmbassadors = apiData.rank_out_of ?? 0;
 
@@ -252,7 +254,7 @@ export function AmbassadorDashboard() {
         onCompleteProfile={handleCompleteProfile}
       />
 
-      {/* Key Stats */}
+      {/* Key Stats (Top Stats) */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -356,13 +358,119 @@ export function AmbassadorDashboard() {
         </Card>
       </motion.div>
 
-      {/* Tier Progress & Referral Stats Row */}
+      {/* Point Wallet & Redemption Codes */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <PointWallet />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+        >
+          <RedemptionCodes />
+        </motion.div>
+      </div>
+
+      {/* Watch & Earn + Social Media Performance in one row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Watch & Earn */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <WatchVideos />
+        </motion.div>
+
+        {/* Social Media Performance */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+        >
+          <Card className="glass border-[#ffcc33]/20 p-6 bg-gradient-to-br from-[#1D112A]/80 to-[#0F021C]/80 h-full">
+            <div className="flex items-center gap-2 mb-6">
+              <BarChart3 className="w-6 h-6 text-cyan-400" />
+              <h3 className="text-2xl text-[#ffffff]">{t.socialMetrics.title}</h3>
+              <span className="ml-auto text-[#808c99] text-sm">
+                {t.socialMetrics.lastUpdated}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              {socialStats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <motion.div
+                    key={stat.platform}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4 + index * 0.05 }}
+                    className="p-5 rounded-lg glass border border-[#ffcc33]/10 hover:border-[#ffcc33]/30 transition-all bg-gradient-to-br from-[#0F021C]/50 to-[#1D112A]/50"
+                  >
+                    {/* Header Row */}
+                    <div className="flex items-center gap-3 mb-4 pb-3 border-b border-[#ffcc33]/10">
+                      <div
+                        className={`w-12 h-12 rounded-xl ${stat.bgClass} flex items-center justify-center`}
+                      >
+                        <Icon className={`w-6 h-6 ${stat.iconColor}`} />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-[#ffffff] text-lg">
+                          {stat.platform}
+                        </h4>
+                        <p className="text-[#808c99] text-xs">
+                          {stat.followers}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 text-green-400 text-sm px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20">
+                        <TrendingUp className="w-3 h-3" />
+                        <span>{stat.trend}</span>
+                      </div>
+                    </div>
+
+                    {/* Metrics Grid - Tile Layout */}
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
+                        <p className="text-[#808c99] text-xs mb-1">Followers</p>
+                        <p className="text-[#ffffff]">{stat.followers}</p>
+                      </div>
+
+                      <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
+                        <p className="text-[#808c99] text-xs mb-1">
+                          {t.socialMetrics.engagement}
+                        </p>
+                        <p className="text-[#ffffff]">{stat.engagement}</p>
+                      </div>
+
+                      <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
+                        <p className="text-[#808c99] text-xs mb-1">
+                          {t.socialMetrics.posts}
+                        </p>
+                        <p className="text-[#ffffff]">{stat.posts}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Tier Progress & Referral Stats */}
       <div className="grid lg:grid-cols-2 gap-6 mb-8">
         {/* Tier Progress */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.4 }}
         >
           <TierProgress />
         </motion.div>
@@ -371,13 +479,14 @@ export function AmbassadorDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.45 }}
         >
           <Card className="glass border-[#ffcc33]/20 p-6 bg-gradient-to-br from-[#1D112A]/80 to-[#0F021C]/80 h-full">
             {/* Header */}
             <div
-              className={`flex items-center gap-2 mb-6 ${isRTL ? "flex-row-reverse" : ""
-                }`}
+              className={`flex items-center gap-2 mb-6 ${
+                isRTL ? "flex-row-reverse" : ""
+              }`}
             >
               <Share2 className="w-6 h-6 text-purple-400" />
               <h2 className="text-2xl text-[#ffffff]">{t.referrals.title}</h2>
@@ -447,188 +556,80 @@ export function AmbassadorDashboard() {
         </motion.div>
       </div>
 
-      {/* Social Media Performance, Followers Count, and Leaderboard Position */}
-      <div className="grid lg:grid-cols-3 gap-6 mb-8">
-        {/* Social Media Performance - Left (Takes 2 columns) */}
+      {/* Leaderboard Position */}
+      <div className="mb-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          className="lg:col-span-2"
+          transition={{ delay: 0.55 }}
         >
-          <Card className="glass border-[#ffcc33]/20 p-6 bg-gradient-to-br from-[#1D112A]/80 to-[#0F021C]/80 h-full">
-            <div className="flex items-center gap-2 mb-6">
-              <BarChart3 className="w-6 h-6 text-cyan-400" />
-              <h3 className="text-2xl text-[#ffffff]">{t.socialMetrics.title}</h3>
-              <span className="ml-auto text-[#808c99] text-sm">{t.socialMetrics.lastUpdated}</span>
-            </div>
-            
-            <div className="grid grid-cols-1 gap-4">
-              {socialStats.map((stat, index) => {
-                const Icon = stat.icon;
-                return (
-                  <motion.div
-                    key={stat.platform}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.4 + index * 0.05 }}
-                    className="p-5 rounded-lg glass border border-[#ffcc33]/10 hover:border-[#ffcc33]/30 transition-all bg-gradient-to-br from-[#0F021C]/50 to-[#1D112A]/50"
+          <Card className="glass border-[#ffcc33]/30 p-6 bg-gradient-to-br from-[#ffcc33]/10 via-amber-500/10 to-[#1D112A]/80 relative overflow-hidden">
+            {/* Decorative Background */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#ffcc33]/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-500/10 rounded-full blur-3xl" />
+
+            <div className="relative">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-[#ffcc33]/20 flex items-center justify-center">
+                  <Trophy className="w-5 h-5 text-[#ffcc33]" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-sm text-[#ffffff]">
+                    {t.leaderboard.title}
+                  </h3>
+                  <p className="text-xs text-[#808c99]">
+                    {language === "en"
+                      ? `out of ${totalAmbassadors} ambassadors`
+                      : `من أصل ${totalAmbassadors} سفير`}
+                  </p>
+                </div>
+              </div>
+
+              {isLoadingAmbassadorStats ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-6 h-6 text-[#ffcc33] animate-spin" />
+                </div>
+              ) : (
+                <>
+                  <div className="text-center py-6 rounded-xl bg-gradient-to-br from-[#ffcc33]/20 to-amber-500/20 border border-[#ffcc33]/40 backdrop-blur-sm mb-4">
+                    <p className="text-[#808c99] text-xs mb-2">
+                      {t.leaderboard.rank}
+                    </p>
+                    <motion.div
+                      className="relative inline-block"
+                      initial={{ rotate: -10, scale: 0.5 }}
+                      animate={{ rotate: 0, scale: 1 }}
+                      transition={{ delay: 0.55, type: "spring" }}
+                    >
+                      <p className="text-7xl text-transparent bg-gradient-to-r from-[#ffcc33] via-yellow-400 to-[#ffcc33] bg-clip-text">
+                        {userRank ? `#${userRank}` : "—"}
+                      </p>
+                      {userRank && (
+                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#ffcc33] rounded-full flex items-center justify-center">
+                          <Trophy className="w-3 h-3 text-[#0F021C]" />
+                        </div>
+                      )}
+                    </motion.div>
+                    <div className="mt-3 flex items-center justify-center gap-2">
+                      <ArrowUpRight className="w-4 h-4 text-green-400" />
+                      <p className="text-green-400 text-xs">
+                        +3 positions this week
+                      </p>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={() => navigate(ROUTES.LEADERBOARD)}
+                    className="w-full bg-gradient-to-r from-[#ffcc33] to-amber-500 hover:from-[#ffcc33]/90 hover:to-amber-600 text-[#0F021C] shadow-lg shadow-[#ffcc33]/20 cursor-pointer"
                   >
-                    {/* Header Row */}
-                    <div className="flex items-center gap-3 mb-4 pb-3 border-b border-[#ffcc33]/10">
-                      <div className={`w-12 h-12 rounded-xl ${stat.bgClass} flex items-center justify-center`}>
-                        <Icon className={`w-6 h-6 ${stat.iconColor}`} />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-[#ffffff] text-lg">{stat.platform}</h4>
-                        <p className="text-[#808c99] text-xs">{stat.followers}</p>
-                      </div>
-                      <div className="flex items-center gap-1 text-green-400 text-sm px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20">
-                        <TrendingUp className="w-3 h-3" />
-                        <span>{stat.trend}</span>
-                      </div>
-                    </div>
-                    
-                    {/* Metrics Grid - Tile Layout */}
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
-                        <p className="text-[#808c99] text-xs mb-1">Followers</p>
-                        <p className="text-[#ffffff]">{stat.followers}</p>
-                      </div>
-                      
-                      <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
-                        <p className="text-[#808c99] text-xs mb-1">{t.socialMetrics.engagement}</p>
-                        <p className="text-[#ffffff]">{stat.engagement}</p>
-                      </div>
-                      
-                      <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
-                        <p className="text-[#808c99] text-xs mb-1">{t.socialMetrics.posts}</p>
-                        <p className="text-[#ffffff]">{stat.posts}</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
+                    <Trophy className="w-4 h-4 mr-2" />
+                    {t.leaderboard.viewFull}
+                  </Button>
+                </>
+              )}
             </div>
           </Card>
         </motion.div>
-
-        {/* Right Sidebar - Followers & Leaderboard Stacked */}
-        <div className="space-y-6">
-          {/* Followers Count - Redesigned */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <Card className="glass border-pink-500/30 p-6 bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-[#1D112A]/80 relative overflow-hidden">
-              {/* Decorative Background */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/10 rounded-full blur-3xl" />
-              
-              <div className="relative">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center">
-                    <Users className="w-5 h-5 text-pink-400" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-sm text-[#ffffff]">{t.stats.followers}</h3>
-                    <p className="text-xs text-[#808c99]">FANN Platform</p>
-                  </div>
-                </div>
-                
-                {isLoadingAmbassadorStats ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="w-6 h-6 text-[#ffcc33] animate-spin" />
-                  </div>
-                ) : (
-                  <div className="text-center py-6 rounded-xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-pink-500/40 backdrop-blur-sm">
-                    <motion.p 
-                      className="text-7xl text-transparent bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400 bg-clip-text"
-                      initial={{ scale: 0.5 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.5, type: "spring" }}
-                    >
-                      {followerCount}
-                    </motion.p>
-                    <div className="mt-3 flex items-center justify-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                      <p className="text-green-400 text-xs">Active & Growing</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </Card>
-          </motion.div>
-
-          {/* Leaderboard Position - Redesigned */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45 }}
-          >
-            <Card className="glass border-[#ffcc33]/30 p-6 bg-gradient-to-br from-[#ffcc33]/10 via-amber-500/10 to-[#1D112A]/80 relative overflow-hidden">
-              {/* Decorative Background */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#ffcc33]/10 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-500/10 rounded-full blur-3xl" />
-              
-              <div className="relative">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#ffcc33]/20 flex items-center justify-center">
-                    <Trophy className="w-5 h-5 text-[#ffcc33]" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-sm text-[#ffffff]">{t.leaderboard.title}</h3>
-                    <p className="text-xs text-[#808c99]">
-                      {language === "en"
-                        ? `out of ${totalAmbassadors} ambassadors`
-                        : `من أصل ${totalAmbassadors} سفير`}
-                    </p>
-                  </div>
-                </div>
-
-                {isLoadingAmbassadorStats ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="w-6 h-6 text-[#ffcc33] animate-spin" />
-                  </div>
-                ) : (
-                  <>
-                    <div className="text-center py-6 rounded-xl bg-gradient-to-br from-[#ffcc33]/20 to-amber-500/20 border border-[#ffcc33]/40 backdrop-blur-sm mb-4">
-                      <p className="text-[#808c99] text-xs mb-2">{t.leaderboard.rank}</p>
-                      <motion.div 
-                        className="relative inline-block"
-                        initial={{ rotate: -10, scale: 0.5 }}
-                        animate={{ rotate: 0, scale: 1 }}
-                        transition={{ delay: 0.55, type: "spring" }}
-                      >
-                        <p className="text-7xl text-transparent bg-gradient-to-r from-[#ffcc33] via-yellow-400 to-[#ffcc33] bg-clip-text">
-                          {userRank ? `#${userRank}` : "—"}
-                        </p>
-                        {userRank && (
-                          <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#ffcc33] rounded-full flex items-center justify-center">
-                            <Trophy className="w-3 h-3 text-[#0F021C]" />
-                          </div>
-                        )}
-                      </motion.div>
-                      <div className="mt-3 flex items-center justify-center gap-2">
-                        <ArrowUpRight className="w-4 h-4 text-green-400" />
-                        <p className="text-green-400 text-xs">+3 positions this week</p>
-                      </div>
-                    </div>
-
-                    <Button 
-                      onClick={() => navigate(ROUTES.LEADERBOARD)}
-                      className="w-full bg-gradient-to-r from-[#ffcc33] to-amber-500 hover:from-[#ffcc33]/90 hover:to-amber-600 text-[#0F021C] shadow-lg shadow-[#ffcc33]/20 cursor-pointer"
-                    >
-                      <Trophy className="w-4 h-4 mr-2" />
-                      {t.leaderboard.viewFull}
-                    </Button>
-                  </>
-                )}
-              </div>
-            </Card>
-          </motion.div>
-        </div>
       </div>
     </DashboardLayout>
   );

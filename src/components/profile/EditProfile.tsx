@@ -4,16 +4,11 @@ import {
   InputField,
   TextareaField,
 } from "@/components/ui/custom-form-elements";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { CustomModal } from "@/components/ui/CustomModal";
 import { useProfileSetupMutation } from "@/services/api/onboardingApi";
-import type { RootState } from "@/store/store";
-import { updateUser, setUser } from "@/store/authSlice";
 import type { UserProfileData } from "@/store/authSlice";
+import { setUser, updateUser } from "@/store/authSlice";
+import type { RootState } from "@/store/store";
 import { extractErrorMessage } from "@/utils/errorMessages";
 import {
   ArrowRight,
@@ -478,349 +473,322 @@ export function EditProfile({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent
-        className="max-w-5xl max-h-[95vh] overflow-y-auto custom-scrollbar glass border border-white/10 bg-[#0F021C] p-8"
-        dir={isRTL ? "rtl" : "ltr"}
-      >
-        <DialogHeader>
-          <DialogTitle className="text-white text-2xl">
-            {content.title}
-          </DialogTitle>
-        </DialogHeader>
+    <CustomModal
+      isOpen={open}
+      onClose={onClose}
+      title={content.title}
+      headerIcon={Icon}
+      size="xl"
+      maxHeight="max-h-[95vh]"
+      contentClassName="p-8"
+    >
+      <div className="max-w-3xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <p className="text-white/60">{content.subtitle}</p>
+        </motion.div>
 
-        <div className="mt-4">
-          <div className="max-w-3xl mx-auto">
-            {/* Header */}
+        {/* Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Profile Photo Upload */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <FileUploadField
+              label={content.common.uploadPhoto}
+              accept="image/*"
+              maxSize={5 * 1024 * 1024} // 5MB
+              value={profileImage}
+              onFileChange={(file) => {
+                // Cleanup old preview URL if it was a blob URL
+                if (
+                  profileImagePreview &&
+                  profileImagePreview.startsWith("blob:")
+                ) {
+                  URL.revokeObjectURL(profileImagePreview);
+                }
+
+                setProfileImage(file);
+                setValue("profile_image", file);
+
+                // Create preview URL for new file
+                if (file) {
+                  const previewUrl = URL.createObjectURL(file);
+                  setProfileImagePreview(previewUrl);
+                } else {
+                  setProfileImagePreview(null);
+                }
+              }}
+              isRTL={isRTL}
+              formatText={
+                language === "en"
+                  ? "PNG, JPG up to 5MB"
+                  : "PNG، JPG حتى 5 ميجابايت"
+              }
+            />
+            {/* Show current profile image preview if exists and no new file selected */}
+            {profileImagePreview && !profileImage && (
+              <div className="mt-4 space-y-2">
+                <p className="text-xs text-white/60">
+                  {language === "en"
+                    ? "Current profile image"
+                    : "صورة الملف الشخصي الحالية"}
+                </p>
+                <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                  <img
+                    src={profileImagePreview}
+                    alt="Current profile"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-xs text-white/40">
+                  {language === "en"
+                    ? "Upload new image to replace"
+                    : "قم بتحميل صورة جديدة للاستبدال"}
+                </p>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Display Name / Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <InputField
+              {...register("title", {
+                required:
+                  language === "en"
+                    ? "Display name is required"
+                    : "اسم العرض مطلوب",
+                minLength: {
+                  value: 2,
+                  message:
+                    language === "en"
+                      ? "Name must be at least 2 characters"
+                      : "يجب أن يكون الاسم حرفين على الأقل",
+                },
+              })}
+              label={personaContent.displayName}
+              placeholder={personaContent.displayNamePlaceholder}
+              icon={User}
+              isRTL={isRTL}
+              required
+              error={errors.title?.message}
+            />
+          </motion.div>
+
+          {/* Bio */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <TextareaField
+              {...register("bio", {
+                required:
+                  language === "en"
+                    ? "Bio is required"
+                    : "السيرة الذاتية مطلوبة",
+                minLength: {
+                  value: 10,
+                  message:
+                    language === "en"
+                      ? "Bio must be at least 10 characters"
+                      : "يجب أن تكون السيرة الذاتية 10 أحرف على الأقل",
+                },
+              })}
+              label={personaContent.bio}
+              placeholder={personaContent.bioPlaceholder}
+              isRTL={isRTL}
+              required
+              error={errors.bio?.message}
+            />
+          </motion.div>
+
+          {/* Two Column Fields */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Specialization / Focus */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-8"
+              transition={{ delay: 0.4 }}
             >
-              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-primary/20 to-primary/20 border border-primary/30 flex items-center justify-center">
-                <Icon className="w-8 h-8 text-primary" />
-              </div>
-              <h2 className="text-3xl text-white mb-2">{content.title}</h2>
-              <p className="text-white/60">{content.subtitle}</p>
+              <InputField
+                {...register("focus")}
+                label={personaContent.specialization}
+                placeholder={personaContent.specializationPlaceholder}
+                isRTL={isRTL}
+                error={errors.focus?.message}
+              />
             </motion.div>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Profile Photo Upload */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-              >
-                <FileUploadField
-                  label={content.common.uploadPhoto}
-                  accept="image/*"
-                  maxSize={5 * 1024 * 1024} // 5MB
-                  value={profileImage}
-                  onFileChange={(file) => {
-                    // Cleanup old preview URL if it was a blob URL
-                    if (
-                      profileImagePreview &&
-                      profileImagePreview.startsWith("blob:")
-                    ) {
-                      URL.revokeObjectURL(profileImagePreview);
-                    }
-
-                    setProfileImage(file);
-                    setValue("profile_image", file);
-
-                    // Create preview URL for new file
-                    if (file) {
-                      const previewUrl = URL.createObjectURL(file);
-                      setProfileImagePreview(previewUrl);
-                    } else {
-                      setProfileImagePreview(null);
-                    }
-                  }}
-                  isRTL={isRTL}
-                  formatText={
-                    language === "en"
-                      ? "PNG, JPG up to 5MB"
-                      : "PNG، JPG حتى 5 ميجابايت"
-                  }
-                  labelClassName="text-white/80 text-sm"
-                  buttonClassName="border-white/20 hover:border-primary/50 hover:bg-primary/10 text-white/70 hover:text-white"
-                />
-                {/* Show current profile image preview if exists and no new file selected */}
-                {profileImagePreview && !profileImage && (
-                  <div className="mt-4 space-y-2">
-                    <p className="text-xs text-white/60">
-                      {language === "en"
-                        ? "Current profile image"
-                        : "صورة الملف الشخصي الحالية"}
-                    </p>
-                    <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-white/10 bg-white/5">
-                      <img
-                        src={profileImagePreview}
-                        alt="Current profile"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <p className="text-xs text-white/40">
-                      {language === "en"
-                        ? "Upload new image to replace"
-                        : "قم بتحميل صورة جديدة للاستبدال"}
-                    </p>
-                  </div>
-                )}
-              </motion.div>
-
-              {/* Display Name / Title */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <InputField
-                  {...register("title", {
-                    required:
+            {/* Experience */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <InputField
+                {...register("years_of_experience", {
+                  pattern: {
+                    value: /^\d+$/,
+                    message:
                       language === "en"
-                        ? "Display name is required"
-                        : "اسم العرض مطلوب",
-                    minLength: {
-                      value: 2,
-                      message:
-                        language === "en"
-                          ? "Name must be at least 2 characters"
-                          : "يجب أن يكون الاسم حرفين على الأقل",
-                    },
-                  })}
-                  label={personaContent.displayName}
-                  placeholder={personaContent.displayNamePlaceholder}
-                  icon={User}
-                  isRTL={isRTL}
-                  required
-                  error={errors.title?.message}
-                  inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                  labelClassName="text-white/80 text-sm"
-                />
-              </motion.div>
-
-              {/* Bio */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <TextareaField
-                  {...register("bio", {
-                    required:
-                      language === "en"
-                        ? "Bio is required"
-                        : "السيرة الذاتية مطلوبة",
-                    minLength: {
-                      value: 10,
-                      message:
-                        language === "en"
-                          ? "Bio must be at least 10 characters"
-                          : "يجب أن تكون السيرة الذاتية 10 أحرف على الأقل",
-                    },
-                  })}
-                  label={personaContent.bio}
-                  placeholder={personaContent.bioPlaceholder}
-                  isRTL={isRTL}
-                  required
-                  error={errors.bio?.message}
-                  inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                  labelClassName="text-white/80 text-sm"
-                />
-              </motion.div>
-
-              {/* Two Column Fields */}
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Specialization / Focus */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <InputField
-                    {...register("focus")}
-                    label={personaContent.specialization}
-                    placeholder={personaContent.specializationPlaceholder}
-                    isRTL={isRTL}
-                    error={errors.focus?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                    labelClassName="text-white/80 text-sm"
-                  />
-                </motion.div>
-
-                {/* Experience */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <InputField
-                    {...register("years_of_experience", {
-                      pattern: {
-                        value: /^\d+$/,
-                        message:
-                          language === "en"
-                            ? "Please enter a valid number"
-                            : "يرجى إدخال رقم صحيح",
-                      },
-                    })}
-                    label={personaContent.experience}
-                    type="number"
-                    placeholder={personaContent.experiencePlaceholder}
-                    isRTL={isRTL}
-                    error={errors.years_of_experience?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                    labelClassName="text-white/80 text-sm"
-                  />
-                </motion.div>
-              </div>
-
-              {/* Social Links */}
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Website */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <InputField
-                    {...register("website", {
-                      pattern: {
-                        value: /^https?:\/\/.+/,
-                        message:
-                          language === "en"
-                            ? "Please enter a valid URL"
-                            : "يرجى إدخال رابط صحيح",
-                      },
-                    })}
-                    label={content.common.website}
-                    type="url"
-                    placeholder={content.common.websitePlaceholder}
-                    icon={Globe}
-                    isRTL={isRTL}
-                    error={errors.website?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                    labelClassName="text-white/80 text-sm"
-                  />
-                </motion.div>
-
-                {/* Instagram */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7 }}
-                >
-                  <InputField
-                    {...register("instagram_handle")}
-                    label={content.common.instagram}
-                    placeholder={content.common.instagramPlaceholder}
-                    icon={Instagram}
-                    isRTL={isRTL}
-                    error={errors.instagram_handle?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                    labelClassName="text-white/80 text-sm"
-                  />
-                </motion.div>
-              </div>
-
-              {/* Location and Phone */}
-              {(storedUser?.show_location === true ||
-                storedUser?.show_phone === true) && (
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Location - only show if show_location is true */}
-                    {storedUser?.show_location === true && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.8 }}
-                      >
-                        <InputField
-                          {...register("location")}
-                          label={content.common.location}
-                          placeholder={content.common.locationPlaceholder}
-                          icon={MapPin}
-                          isRTL={isRTL}
-                          error={errors.location?.message}
-                          inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                          labelClassName="text-white/80 text-sm"
-                        />
-                      </motion.div>
-                    )}
-
-                    {/* Phone Number - only show if show_phone is true */}
-                    {storedUser?.show_phone === true && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.9 }}
-                      >
-                        <InputField
-                          {...register("phone_number")}
-                          label={content.common.phone}
-                          type="tel"
-                          placeholder={content.common.phonePlaceholder}
-                          icon={Phone}
-                          isRTL={isRTL}
-                          error={errors.phone_number?.message}
-                          inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                          labelClassName="text-white/80 text-sm"
-                        />
-                      </motion.div>
-                    )}
-                  </div>
-                )}
-
-              {/* Action Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.0 }}
-                className="flex gap-4 pt-6"
-              >
-                <Button
-                  type="button"
-                  onClick={onClose}
-                  variant="outline"
-                  disabled={isLoading}
-                  className="flex-1 h-12 border-white/20 hover:border-primary/50 hover:bg-primary/10 text-white/70 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  {content.cancel}
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    {isLoading ? (
-                      <>
-                        <Oval
-                          height={20}
-                          width={20}
-                          color="#0F021C"
-                          ariaLabel="loading"
-                          visible={true}
-                        />
-                        {content.saving}
-                      </>
-                    ) : (
-                      <>
-                        {content.save}
-                        <ArrowRight
-                          className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
-                            }`}
-                        />
-                      </>
-                    )}
-                  </span>
-                </Button>
-              </motion.div>
-            </form>
+                        ? "Please enter a valid number"
+                        : "يرجى إدخال رقم صحيح",
+                  },
+                })}
+                label={personaContent.experience}
+                type="number"
+                placeholder={personaContent.experiencePlaceholder}
+                isRTL={isRTL}
+                error={errors.years_of_experience?.message}
+              />
+            </motion.div>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+
+          {/* Social Links */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Website */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <InputField
+                {...register("website", {
+                  pattern: {
+                    value: /^https?:\/\/.+/,
+                    message:
+                      language === "en"
+                        ? "Please enter a valid URL"
+                        : "يرجى إدخال رابط صحيح",
+                  },
+                })}
+                label={content.common.website}
+                type="url"
+                placeholder={content.common.websitePlaceholder}
+                icon={Globe}
+                isRTL={isRTL}
+                error={errors.website?.message}
+              />
+            </motion.div>
+
+            {/* Instagram */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <InputField
+                {...register("instagram_handle")}
+                label={content.common.instagram}
+                placeholder={content.common.instagramPlaceholder}
+                icon={Instagram}
+                isRTL={isRTL}
+                error={errors.instagram_handle?.message}
+              />
+            </motion.div>
+          </div>
+
+          {/* Location and Phone */}
+          {(storedUser?.show_location === true ||
+            storedUser?.show_phone === true) && (
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Location - only show if show_location is true */}
+                {storedUser?.show_location === true && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 }}
+                  >
+                    <InputField
+                      {...register("location")}
+                      label={content.common.location}
+                      placeholder={content.common.locationPlaceholder}
+                      icon={MapPin}
+                      isRTL={isRTL}
+                      error={errors.location?.message}
+                    />
+                  </motion.div>
+                )}
+
+                {/* Phone Number - only show if show_phone is true */}
+                {storedUser?.show_phone === true && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 }}
+                  >
+                    <InputField
+                      {...register("phone_number")}
+                      label={content.common.phone}
+                      type="tel"
+                      placeholder={content.common.phonePlaceholder}
+                      icon={Phone}
+                      isRTL={isRTL}
+                      error={errors.phone_number?.message}
+                    />
+                  </motion.div>
+                )}
+              </div>
+            )}
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0 }}
+            className="flex gap-4 pt-6"
+          >
+            <Button
+              type="button"
+              onClick={onClose}
+              variant="outline"
+              disabled={isLoading}
+              className="flex-1 h-12 border-white/20 hover:border-primary/50 hover:bg-primary/10 text-white/70 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              {content.cancel}
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {isLoading ? (
+                  <>
+                    <Oval
+                      height={20}
+                      width={20}
+                      color="#0F021C"
+                      ariaLabel="loading"
+                      visible={true}
+                    />
+                    {content.saving}
+                  </>
+                ) : (
+                  <>
+                    {content.save}
+                    <ArrowRight
+                      className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
+                        }`}
+                    />
+                  </>
+                )}
+              </span>
+            </Button>
+          </motion.div>
+        </form>
+      </div>
+    </CustomModal>
   );
 }

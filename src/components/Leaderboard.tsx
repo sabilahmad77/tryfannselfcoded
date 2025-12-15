@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { motion } from "motion/react";
-import { Medal, Crown, Zap, Loader2, UserPlus, UserCheck } from "lucide-react";
+import { Medal, Crown, Zap, Loader2, UserPlus, UserCheck, Palette, Building2, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -27,7 +27,7 @@ const content = {
     title: { white: "Global", gold: " Leaderboard" },
     subtitle: "Compete with art pioneers from around the world",
     tabs: ["All Time", "This Month", "This Week"],
-    columns: ["Rank", "User", "Points", "Tier"],
+    columns: ["Rank", "User", "Role", "Tier", "Points"],
     viewAll: "View Full Leaderboard",
     yourRank: "Your Current Rank",
     leaders: [
@@ -37,6 +37,7 @@ const content = {
         username: "@sarahm",
         points: 8450,
         tier: "Founding Patron",
+        role: "Artist",
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
       },
       {
@@ -45,6 +46,7 @@ const content = {
         username: "@mchen",
         points: 7230,
         tier: "Founding Patron",
+        role: "Collector",
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael",
       },
       {
@@ -53,6 +55,7 @@ const content = {
         username: "@laylaart",
         points: 6890,
         tier: "Founding Patron",
+        role: "Artist",
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Layla",
       },
       {
@@ -61,6 +64,7 @@ const content = {
         username: "@jrodriguez",
         points: 5420,
         tier: "Founding Patron",
+        role: "Gallery",
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=James",
       },
       {
@@ -69,6 +73,7 @@ const content = {
         username: "@fatimak",
         points: 4980,
         tier: "Ambassador",
+        role: "Ambassador",
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Fatima",
       },
     ],
@@ -77,7 +82,7 @@ const content = {
     title: { white: "لوحة المتصدرين", gold: " العالمية" },
     subtitle: "تنافس مع رواد الفن من جميع أنحاء العالم",
     tabs: ["كل الأوقات", "هذا الشهر", "هذا الأسبوع"],
-    columns: ["الترتيب", "المستخدم", "النقاط", "المستوى"],
+    columns: ["الترتيب", "المستخدم", "الدور", "المستوى", "النقاط"],
     viewAll: "عرض لوحة المتصدرين الكاملة",
     yourRank: "ترتيبك الحالي",
     leaders: [
@@ -87,6 +92,7 @@ const content = {
         username: "@sarahm",
         points: 8450,
         tier: "راعي مؤسس",
+        role: "فنانة",
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
       },
       {
@@ -95,6 +101,7 @@ const content = {
         username: "@mchen",
         points: 7230,
         tier: "راعي مؤسس",
+        role: "جامع",
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael",
       },
       {
@@ -103,6 +110,7 @@ const content = {
         username: "@laylaart",
         points: 6890,
         tier: "راعي مؤسس",
+        role: "فنانة",
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Layla",
       },
       {
@@ -111,6 +119,7 @@ const content = {
         username: "@jrodriguez",
         points: 5420,
         tier: "راعي مؤسس",
+        role: "معرض",
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=James",
       },
       {
@@ -119,6 +128,7 @@ const content = {
         username: "@fatimak",
         points: 4980,
         tier: "سفير",
+        role: "سفير",
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Fatima",
       },
     ],
@@ -188,22 +198,45 @@ export function Leaderboard({
 
   // Map API data to component format
   // Always show top 5 records
+  type EntryWithRoleHints = LeaderboardEntry & {
+    role?: string | null;
+    role_name?: string | null;
+    user_type?: string | null;
+    persona?: string | null;
+  };
+
   const mapApiDataToLeaders = (apiEntries: LeaderboardEntry[]) => {
-    return apiEntries.slice(0, 5).map((entry) => ({
-      rank: entry.rank || 0,
-      name:
-        `${entry.first_name || ""} ${entry.last_name || ""}`.trim() ||
-        entry.email ||
-        "Unknown",
-      username: entry.username || `@${entry.email?.split("@")[0] || "user"}`,
-      points: entry.points ? parseInt(entry.points, 10) : 0,
-      tier: entry.tier || "Explorer",
-      avatar:
-        entry.profile_image ||
-        `https://api.dicebear.com/7.x/avataaars/svg?seed=${
-          entry.first_name || entry.email || entry.id
-        }`,
-    }));
+    return apiEntries.slice(0, 5).map((entry) => {
+      const withHints = entry as EntryWithRoleHints;
+      const rawRole =
+        withHints.role ||
+        withHints.role_name ||
+        withHints.user_type ||
+        withHints.persona ||
+        "";
+
+      const role =
+        typeof rawRole === "string" && rawRole.trim().length > 0
+          ? rawRole
+          : "Collector";
+
+      return {
+        rank: entry.rank || 0,
+        name:
+          `${entry.first_name || ""} ${entry.last_name || ""}`.trim() ||
+          entry.email ||
+          "Unknown",
+        username: entry.username || `@${entry.email?.split("@")[0] || "user"}`,
+        points: entry.points ? parseInt(entry.points, 10) : 0,
+        tier: entry.tier || "Explorer",
+        role,
+        avatar:
+          entry.profile_image ||
+          `https://api.dicebear.com/7.x/avataaars/svg?seed=${
+            entry.first_name || entry.email || entry.id
+          }`,
+      };
+    });
   };
 
   // Public leaderboard doesn't have your_rank field
@@ -255,6 +288,30 @@ export function Leaderboard({
     if (tier.includes("Curator") || tier.includes("منسق"))
       return "border-yellow-500/50 text-yellow-400 bg-yellow-500/10";
     return "border-white/10 text-white/60 bg-white/5";
+  };
+
+  const getPersonaIcon = (type: string) => {
+    const lowerType = type.toLowerCase();
+    if (lowerType.includes("artist") || lowerType.includes("فنان"))
+      return <Palette className="w-4 h-4" />;
+    if (lowerType.includes("gallery") || lowerType.includes("معرض"))
+      return <Building2 className="w-4 h-4" />;
+    if (lowerType.includes("collector") || lowerType.includes("جامع"))
+      return <User className="w-4 h-4" />;
+    return <User className="w-4 h-4" />;
+  };
+
+  const getPersonaBadgeColor = (type: string) => {
+    const lowerType = type.toLowerCase();
+    if (lowerType.includes("artist") || lowerType.includes("فنان"))
+      return "border-purple-500/50 text-purple-400 bg-purple-500/10";
+    if (lowerType.includes("gallery") || lowerType.includes("معرض"))
+      return "border-teal-500/50 text-teal-400 bg-teal-500/10";
+    if (lowerType.includes("collector") || lowerType.includes("جامع"))
+      return "border-pink-500/50 text-pink-400 bg-pink-500/10";
+    if (lowerType.includes("ambassador") || lowerType.includes("سفير"))
+      return "border-orange-500/50 text-orange-400 bg-orange-500/10";
+    return "border-white/20 text-white/60 bg-white/5";
   };
 
   return (
@@ -580,11 +637,19 @@ export function Leaderboard({
                           </div>
                         </td>
 
-                        {/* Points */}
+                        {/* Role */}
                         <td className="px-8 py-5">
-                          <span className="text-transparent bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-lg">
-                            {leader.points.toLocaleString()}
-                          </span>
+                          <Badge
+                            variant="outline"
+                            className={`${getPersonaBadgeColor(
+                              leader.role || "Collector"
+                            )} border text-xs`}
+                          >
+                            <span className="flex items-center gap-1">
+                              {getPersonaIcon(leader.role || "Collector")}
+                              {leader.role || "Collector"}
+                            </span>
+                          </Badge>
                         </td>
 
                         {/* Tier */}
@@ -595,6 +660,13 @@ export function Leaderboard({
                           >
                             {leader.tier}
                           </Badge>
+                        </td>
+
+                        {/* Points */}
+                        <td className="px-8 py-5">
+                          <span className="text-transparent bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-lg">
+                            {leader.points.toLocaleString()}
+                          </span>
                         </td>
 
                         {/* Follow Button - Only show when authenticated */}

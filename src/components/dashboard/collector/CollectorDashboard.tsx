@@ -1,16 +1,18 @@
-import { motion } from "motion/react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { MyCollection } from "./MyCollection";
-import { MarketInsights } from "./MarketInsights";
-import { TierProgress } from "../shared/TierProgress";
-import { PointWallet } from "../shared/PointWallet";
-import { CompleteProfile } from "../shared/CompleteProfile";
-import { DashboardLayout } from "../shared/DashboardLayout";
-import { DashboardWelcome } from "../shared/DashboardWelcome";
 import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
 import type { RootState } from "@/store/store";
+import { motion } from "motion/react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { CompleteProfile } from "../shared/CompleteProfile";
+import { DashboardLayout } from "../shared/DashboardLayout";
+import { DashboardWelcome } from "../shared/DashboardWelcome";
+import { PointWallet } from "../shared/PointWallet";
+import { RedemptionCodes } from "../shared/RedemptionCodes";
+import { TierProgress } from "../shared/TierProgress";
+import { WatchVideos } from "../shared/WatchVideos";
+import { MyCollection } from "./MyCollection";
+import { MarketInsights } from "./MarketInsights";
 
 const content = {
   en: {
@@ -42,9 +44,9 @@ export function CollectorDashboard() {
   // Get user name from stored data
   const collectorName = storedUser
     ? `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim() ||
-      storedUser.title ||
-      storedUser.email ||
-      "Art Collector"
+    storedUser.title ||
+    storedUser.email ||
+    "Art Collector"
     : "Art Collector";
 
   return (
@@ -81,22 +83,40 @@ export function CollectorDashboard() {
           <MyCollection />
         </motion.div>
 
-        {/* Market Insights */}
+        {/* Redemption Codes */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <MarketInsights />
+          <RedemptionCodes />
+        </motion.div>
+
+        {/* Watch & Earn Videos */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
+          <WatchVideos />
         </motion.div>
 
         {/* Tier Progress */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
         >
           <TierProgress />
+        </motion.div>
+
+        {/* Market Insights */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <MarketInsights />
         </motion.div>
       </div>
     </DashboardLayout>

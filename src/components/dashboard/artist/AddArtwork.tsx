@@ -1,196 +1,225 @@
-import { useLanguage } from '@/contexts/useLanguage';
-import { AlertCircle, Camera, DollarSign, Image as ImageIcon, Lock, Palette, Plus, Ruler, Sparkles, Trash2, Upload, X } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useLanguage } from "@/contexts/useLanguage";
+import {
+  AlertCircle,
+  Camera,
+  DollarSign,
+  Image as ImageIcon,
+  Lock,
+  Palette,
+  Plus,
+  Sparkles,
+  Trash2,
+  Pencil,
+  Upload,
+} from "lucide-react";
+import { motion } from "motion/react";
+import { useState } from "react";
+import { toast } from "sonner";
+import {
+  useCreateArtworkMutation,
+  useGetMyArtworksQuery,
+  useUpdateArtworkMutation,
+  useDeleteArtworkMutation,
+  type ArtworkItem,
+} from "@/services/api/artworkApi";
+import { Button } from "@/components/ui/button";
+import { ArtworkModal, type ArtworkFormValues } from "./ArtworkModal";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 interface AddArtworkProps {
   profileCompleted?: boolean;
   onCompleteProfile?: () => void;
 }
 
-interface Artwork {
-  id: string;
-  title: string;
-  description: string;
-  price: string;
-  medium: string;
-  dimensions: string;
-  image: string;
-  uploadedAt: Date;
-}
-
 const content = {
   en: {
-    title: 'Add Artwork',
-    subtitle: 'Upload your masterpiece',
-    uploadImage: 'Upload Image',
-    artworkTitle: 'Artwork Title',
-    description: 'Description',
-    price: 'Price (AED)',
-    medium: 'Medium',
-    dimensions: 'Dimensions',
-    addArtwork: 'Publish',
-    cancel: 'Cancel',
-    quickAdd: 'Quick Add',
-    dragDrop: 'Drop image here',
-    orClick: 'or click to browse',
-    mediamPlaceholder: 'Oil on Canvas, Digital...',
-    dimensionsPlaceholder: '100 x 80 cm',
-    titlePlaceholder: 'Enter title',
-    descriptionPlaceholder: 'Describe your artwork...',
-    pricePlaceholder: '0.00',
-    success: 'Artwork added successfully! +50 points',
-    error: 'Please fill all required fields',
-    imageRequired: 'Please upload an image',
-    earnPoints: '+50 pts',
-    addNew: 'Add New Artwork',
-    myArtworks: 'My Artworks',
-    totalUploaded: 'Total Uploaded',
-    viewAll: 'View All',
-    delete: 'Delete',
-    confirmDelete: 'Artwork deleted',
-    noArtworks: 'No artworks yet',
-    startAdding: 'Start adding your masterpieces',
-    profileLocked: 'Complete Your Profile',
-    unlockFeature: 'Complete your profile to unlock artwork uploads',
-    completeProfile: 'Complete Profile',
-    profileRequired: 'Please complete your profile to add artworks',
+    title: "Add Artwork",
+    subtitle: "Upload your masterpiece",
+    uploadImage: "Upload Image",
+    artworkTitle: "Artwork Title",
+    description: "Description",
+    price: "Price (AED)",
+    medium: "Medium",
+    dimensions: "Dimensions",
+    addArtwork: "Add Artwork", // updated button label
+    cancel: "Cancel",
+    quickAdd: "Quick Add",
+    mediamPlaceholder: "Oil on Canvas, Digital...",
+    dimensionsPlaceholder: "100 x 80 cm",
+    titlePlaceholder: "Enter title",
+    descriptionPlaceholder: "Describe your artwork...",
+    pricePlaceholder: "0.00",
+    success: "Artwork added successfully! +50 points",
+    error: "Please fill all required fields",
+    imageRequired: "Please upload an image",
+    earnPoints: "+50 pts",
+    addNew: "Add New Artwork",
+    myArtworks: "My Artworks",
+    totalUploaded: "Total Uploaded",
+    viewAll: "View All",
+    delete: "Delete",
+    confirmDelete: "Artwork deleted",
+    noArtworks: "No artworks yet",
+    startAdding: "Start adding your masterpieces",
+    profileLocked: "Complete Your Profile",
+    unlockFeature: "Complete your profile to unlock artwork uploads",
+    completeProfile: "Complete Profile",
+    profileRequired: "Please complete your profile to add artworks",
+    loading: "Loading artworks...",
+    loadError: "Unable to load artworks. Please try again.",
   },
   ar: {
-    title: 'إضافة عمل فني',
-    subtitle: 'ارفع تحفتك الفنية',
-    uploadImage: 'تحميل الصورة',
-    artworkTitle: 'عنوان العمل',
-    description: 'الوصف',
-    price: 'السعر (درهم)',
-    medium: 'الوسيط',
-    dimensions: 'الأبعاد',
-    addArtwork: 'نشر',
-    cancel: 'إلغاء',
-    quickAdd: 'إضافة سريعة',
-    dragDrop: 'أفلت الصورة هنا',
-    orClick: 'أو انقر للتصفح',
-    mediamPlaceholder: 'زيت على قماش، رقمي...',
-    dimensionsPlaceholder: '100 × 80 سم',
-    titlePlaceholder: 'أدخل العنوان',
-    descriptionPlaceholder: 'صف عملك الفني...',
-    pricePlaceholder: '0.00',
-    success: 'تمت إضافة العمل الفني! +50 نقطة',
-    error: 'يرجى ملء جميع الحقول',
-    imageRequired: 'يرجى تحميل صورة',
-    earnPoints: '+50 نقطة',
-    addNew: 'إضافة عمل فني جديد',
-    myArtworks: 'أعمالي الفنية',
-    totalUploaded: 'المجموع المرفوع',
-    viewAll: 'عرض الكل',
-    delete: 'حذف',
-    confirmDelete: 'تم حذف العمل الفني',
-    noArtworks: 'لا توجد أعمال فنية حتى الآن',
-    startAdding: 'ابدأ بإضافة روائعك',
-    profileLocked: 'أكمل ملفك الشخصي',
-    unlockFeature: 'أكمل ملفك الشخصي لفتح تحميل الأعمال الفنية',
-    completeProfile: 'إكمال الملف الشخصي',
-    profileRequired: 'يرجى إكمال ملفك الشخصي لإضافة أعمال فنية',
-  }
+    title: "إضافة عمل فني",
+    subtitle: "ارفع تحفتك الفنية",
+    uploadImage: "تحميل الصورة",
+    artworkTitle: "عنوان العمل",
+    description: "الوصف",
+    price: "السعر (درهم)",
+    medium: "الوسيط",
+    dimensions: "الأبعاد",
+    addArtwork: "إضافة عمل فني", // updated button label
+    cancel: "إلغاء",
+    quickAdd: "إضافة سريعة",
+    mediamPlaceholder: "زيت على قماش، رقمي...",
+    dimensionsPlaceholder: "100 × 80 سم",
+    titlePlaceholder: "أدخل العنوان",
+    descriptionPlaceholder: "صف عملك الفني...",
+    pricePlaceholder: "0.00",
+    success: "تمت إضافة العمل الفني! +50 نقطة",
+    error: "يرجى ملء جميع الحقول",
+    imageRequired: "يرجى تحميل صورة",
+    earnPoints: "+50 نقطة",
+    addNew: "إضافة عمل فني جديد",
+    myArtworks: "أعمالي الفنية",
+    totalUploaded: "المجموع المرفوع",
+    viewAll: "عرض الكل",
+    delete: "حذف",
+    confirmDelete: "تم حذف العمل الفني",
+    noArtworks: "لا توجد أعمال فنية حتى الآن",
+    startAdding: "ابدأ بإضافة روائعك",
+    profileLocked: "أكمل ملفك الشخصي",
+    unlockFeature: "أكمل ملفك الشخصي لفتح تحميل الأعمال الفنية",
+    completeProfile: "إكمال الملف الشخصي",
+    profileRequired: "يرجى إكمال ملفك الشخصي لإضافة أعمال فنية",
+    loading: "جارٍ تحميل الأعمال الفنية...",
+    loadError: "تعذر تحميل الأعمال الفنية. يرجى المحاولة مرة أخرى.",
+  },
 };
 
-export function AddArtwork({ profileCompleted, onCompleteProfile }: AddArtworkProps) {
+export function AddArtwork({
+  profileCompleted,
+  onCompleteProfile,
+}: AddArtworkProps) {
   const { language } = useLanguage();
   const t = content[language];
-  const isRTL = language === 'ar';
-  const [showModal, setShowModal] = useState(false);
-  const [artworks, setArtworks] = useState<Artwork[]>([]);
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    price: '',
-    medium: '',
-    dimensions: '',
-  });
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
+  const isRTL = language === "ar";
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"create" | "edit">("create");
+  const [selectedArtwork, setSelectedArtwork] = useState<ArtworkItem | null>(
+    null
+  );
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<ArtworkItem | null>(null);
+  const {
+    data: artworks,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetMyArtworksQuery();
+  const [createArtwork, { isLoading: isCreating }] = useCreateArtworkMutation();
+  const [updateArtwork, { isLoading: isUpdating }] = useUpdateArtworkMutation();
+  const [deleteArtwork, { isLoading: isDeleting }] = useDeleteArtworkMutation();
 
-  const handleImageUpload = (file: File) => {
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+  const handleOpenCreate = () => {
+    setModalMode("create");
+    setSelectedArtwork(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (artwork: ArtworkItem) => {
+    setModalMode("edit");
+    setSelectedArtwork(artwork);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedArtwork(null);
+  };
+
+  const handleCreateSubmit = async (values: ArtworkFormValues) => {
+    try {
+      const created = await createArtwork({
+        title: values.title,
+        description: values.description,
+        price: values.price,
+        medium: values.medium,
+        dimensions: values.dimensions,
+        image: values.imageFile as File,
+      }).unwrap();
+
+      toast.success(t.success);
+      void refetch();
+      handleModalClose();
+
+      if (import.meta.env.DEV) {
+        console.log("Artwork created:", created);
+      }
+    } catch {
+      // Error toast already handled by baseApi
     }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      handleImageUpload(file);
+  const handleEditSubmit = async (values: ArtworkFormValues) => {
+    if (!selectedArtwork) return;
+    try {
+      const updated = await updateArtwork({
+        id: selectedArtwork.id,
+        title: values.title,
+        description: values.description,
+        price: values.price,
+        medium: values.medium,
+        dimensions: values.dimensions,
+        image: values.imageFile ?? undefined,
+      }).unwrap();
+
+      toast.success(
+        language === "en"
+          ? "Artwork updated successfully"
+          : "تم تحديث العمل الفني بنجاح"
+      );
+      void refetch();
+      handleModalClose();
+
+      if (import.meta.env.DEV) {
+        console.log("Artwork updated:", updated);
+      }
+    } catch {
+      // Error toast already handled by baseApi
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleImageUpload(file);
-    }
+  const handleDeleteClick = (artwork: ArtworkItem) => {
+    setDeleteTarget(artwork);
+    setIsDeleteDialogOpen(true);
   };
 
-  const handleSubmit = () => {
-    if (!imagePreview) {
-      toast.error(t.imageRequired);
-      return;
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      await deleteArtwork(deleteTarget.id).unwrap();
+      toast.success(
+        language === "en"
+          ? "Artwork deleted successfully"
+          : "تم حذف العمل الفني بنجاح"
+      );
+      void refetch();
+    } catch {
+      // Error toast already handled by baseApi
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setDeleteTarget(null);
     }
-
-    if (!formData.title || !formData.description || !formData.price || !formData.medium || !formData.dimensions) {
-      toast.error(t.error);
-      return;
-    }
-
-    // Simulate artwork submission
-    toast.success(t.success);
-
-    // Add artwork to the list
-    const newArtwork: Artwork = {
-      id: Date.now().toString(),
-      title: formData.title,
-      description: formData.description,
-      price: formData.price,
-      medium: formData.medium,
-      dimensions: formData.dimensions,
-      image: imagePreview,
-      uploadedAt: new Date(),
-    };
-    setArtworks([...artworks, newArtwork]);
-
-    // Reset form
-    setFormData({
-      title: '',
-      description: '',
-      price: '',
-      medium: '',
-      dimensions: '',
-    });
-    setImagePreview(null);
-    setShowModal(false);
-  };
-
-  const handleCancel = () => {
-    setShowModal(false);
-    setFormData({
-      title: '',
-      description: '',
-      price: '',
-      medium: '',
-      dimensions: '',
-    });
-    setImagePreview(null);
-  };
-
-  const handleDelete = (id: string) => {
-    setArtworks(artworks.filter(artwork => artwork.id !== id));
-    toast.success(t.confirmDelete);
   };
 
   const handleAddClick = () => {
@@ -198,7 +227,7 @@ export function AddArtwork({ profileCompleted, onCompleteProfile }: AddArtworkPr
       toast.error(t.profileRequired);
       return;
     }
-    setShowModal(true);
+    handleOpenCreate();
   };
 
   return (
@@ -206,8 +235,14 @@ export function AddArtwork({ profileCompleted, onCompleteProfile }: AddArtworkPr
       {/* Main Card */}
       <div className="glass rounded-2xl p-6 h-full flex flex-col shadow-2xl">
         {/* Header */}
-        <div className={`flex items-center justify-between mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-          <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+        <div
+          className={`flex items-center justify-between mb-4 ${isRTL ? "flex-row-reverse" : ""
+            }`}
+        >
+          <div
+            className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+              }`}
+          >
             <div className="relative">
               <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] rounded-xl flex items-center justify-center">
                 <Camera className="w-6 h-6 text-[#020e27]" />
@@ -225,31 +260,34 @@ export function AddArtwork({ profileCompleted, onCompleteProfile }: AddArtworkPr
                 </div>
               )}
             </div>
-            <div className={isRTL ? 'text-right' : 'text-left'}>
+            <div className={isRTL ? "text-right" : "text-left"}>
               <h3 className="text-lg text-[#ffffff]">{t.myArtworks}</h3>
               <p className="text-sm text-[#808c99]">
-                {artworks.length} {language === 'en' ? 'artworks' : 'أعمال فنية'}
+                {artworks?.length ?? 0}{" "}
+                {language === "en" ? "artworks" : "أعمال فنية"}
               </p>
             </div>
           </div>
 
-          {/* Add Button (Small) */}
-          <motion.button
+          {/* Add Button - match style to primary CTA / copy-link style */}
+          <Button
+            type="button"
             onClick={handleAddClick}
-            className={`relative overflow-hidden group ${!profileCompleted ? 'opacity-50 cursor-not-allowed' : ''}`}
-            whileHover={profileCompleted ? { scale: 1.05 } : {}}
-            whileTap={profileCompleted ? { scale: 0.95 } : {}}
+            disabled={!profileCompleted}
+            className={`relative overflow-hidden bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#020e27] px-4 py-2 rounded-xl hover:opacity-90 transition-all group ${!profileCompleted ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] rounded-xl" />
-            {profileCompleted && (
-              <div className="absolute inset-0 bg-gradient-to-r from-[#ffcc33]/0 via-white/20 to-[#ffcc33]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-            )}
-            <div className={`relative px-4 py-2 flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-              {!profileCompleted && <Lock className="w-3 h-3 text-white" />}
-              <Plus className="w-4 h-4 text-white" />
-              <span className="text-sm text-white">{language === 'en' ? 'Add' : 'إضافة'}</span>
-            </div>
-          </motion.button>
+            <span
+              className={`relative flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""
+                }`}
+            >
+              {!profileCompleted && <Lock className="w-3 h-3" />}
+              <Plus className="w-4 h-4" />
+              <span className="text-sm">
+                {language === "en" ? "Add Artwork" : "إضافة عمل فني"}
+              </span>
+            </span>
+          </Button>
         </div>
 
         {/* Artworks Grid or Empty State */}
@@ -281,7 +319,24 @@ export function AddArtwork({ profileCompleted, onCompleteProfile }: AddArtworkPr
                 </motion.button>
               </div>
             </div>
-          ) : artworks.length === 0 ? (
+          ) : isLoading ? (
+            <div className="h-full flex items-center justify-center">
+              <p className="text-sm text-[#808c99]">{t.loading}</p>
+            </div>
+          ) : isError ? (
+            <div className="h-full flex flex-col items-center justify-center gap-3 text-center">
+              <p className="text-sm text-[#ff6b6b]">{t.loadError}</p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => refetch()}
+                className="border-[#ffcc33]/40 text-[#ffcc33] hover:bg-[#ffcc33]/10"
+              >
+                {language === "en" ? "Retry" : "إعادة المحاولة"}
+              </Button>
+            </div>
+          ) : !artworks || artworks.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="bg-[#0f021c] border border-[#ffcc33]/20 rounded-xl p-8 text-center max-w-sm mx-auto">
                 <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-[#ffcc33]/10 to-[#45e3d3]/10 border border-[#ffcc33]/30 rounded-2xl flex items-center justify-center">
@@ -304,7 +359,7 @@ export function AddArtwork({ profileCompleted, onCompleteProfile }: AddArtworkPr
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3">
-              {artworks.map((artwork, index) => (
+              {artworks.map((artwork: ArtworkItem, index: number) => (
                 <motion.div
                   key={artwork.id}
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -325,12 +380,20 @@ export function AddArtwork({ profileCompleted, onCompleteProfile }: AddArtworkPr
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0F021C] via-[#0F021C]/40 to-transparent opacity-80" />
 
                       {/* Hover Actions */}
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => handleDelete(artwork.id)}
-                          className="w-10 h-10 bg-red-500/90 hover:bg-red-500 rounded-lg flex items-center justify-center backdrop-blur-sm"
+                          onClick={() => handleOpenEdit(artwork)}
+                          className="w-10 h-10 bg-[#ffcc33]/90 hover:bg-[#ffcc33] rounded-lg flex items-center justify-center backdrop-blur-sm cursor-pointer"
+                        >
+                          <Pencil className="w-5 h-5 text-[#020e27]" />
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleDeleteClick(artwork)}
+                          className="w-10 h-10 bg-red-500/90 hover:bg-red-500 rounded-lg flex items-center justify-center backdrop-blur-sm cursor-pointer"
                         >
                           <Trash2 className="w-5 h-5 text-white" />
                         </motion.button>
@@ -349,11 +412,17 @@ export function AddArtwork({ profileCompleted, onCompleteProfile }: AddArtworkPr
 
                     {/* Info Section */}
                     <div className="p-3">
-                      <h4 className={`text-sm text-[#ffffff] mb-2 truncate ${isRTL ? 'text-right' : 'text-left'}`}>
+                      <h4
+                        className={`text-sm text-[#ffffff] mb-2 truncate ${isRTL ? "text-right" : "text-left"
+                          }`}
+                      >
                         {artwork.title}
                       </h4>
 
-                      <div className={`flex items-center justify-between gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <div
+                        className={`flex items-center justify-between gap-2 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
+                      >
                         {/* Price */}
                         <div className="flex items-center gap-1 px-2 py-1 bg-[#45e3d3]/10 border border-[#45e3d3]/30 rounded-lg">
                           <DollarSign className="w-3 h-3 text-[#45e3d3]" />
@@ -380,196 +449,48 @@ export function AddArtwork({ profileCompleted, onCompleteProfile }: AddArtworkPr
         </div>
       </div>
 
-      {/* Modal */}
-      <AnimatePresence>
-        {showModal && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={handleCancel}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
-            />
+      {/* Add/Edit Modal */}
+      <ArtworkModal
+        isOpen={isModalOpen}
+        mode={modalMode}
+        initialValues={
+          modalMode === "edit" && selectedArtwork
+            ? {
+              title: selectedArtwork.title,
+              description: selectedArtwork.description,
+              price: selectedArtwork.price,
+              medium: selectedArtwork.medium,
+              dimensions: selectedArtwork.dimensions,
+            }
+            : undefined
+        }
+        onClose={handleModalClose}
+        onSubmit={modalMode === "create" ? handleCreateSubmit : handleEditSubmit}
+        isSubmitting={modalMode === "create" ? isCreating : isUpdating}
+      />
 
-            {/* Modal Content */}
-            <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="glass border border-[#ffcc33]/30 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-                dir={isRTL ? 'rtl' : 'ltr'}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Modal Header */}
-                <div className="sticky top-0 bg-[#0F021C]/95 backdrop-blur-lg border-b border-[#ffcc33]/20 p-6 z-10">
-                  <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] rounded-xl flex items-center justify-center">
-                        <Camera className="w-6 h-6 text-[#020e27]" />
-                      </div>
-                      <div className={isRTL ? 'text-right' : 'text-left'}>
-                        <h3 className="text-xl text-[#ffffff]">{t.title}</h3>
-                        <p className="text-sm text-[#808c99]">{t.subtitle}</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={handleCancel}
-                      className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#1D112A]/50 hover:bg-[#1D112A] transition-colors"
-                    >
-                      <X className="w-5 h-5 text-[#808c99]" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Modal Body */}
-                <div className="p-6">
-                  {/* Image Upload Area */}
-                  <div
-                    className={`relative mb-6 border-2 border-dashed rounded-xl overflow-hidden transition-all duration-300 ${isDragging
-                        ? 'border-[#ffcc33] bg-[#ffcc33]/5'
-                        : 'border-[#ffcc33]/30 hover:border-[#ffcc33]/50'
-                      }`}
-                    onDrop={handleDrop}
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      setIsDragging(true);
-                    }}
-                    onDragLeave={() => setIsDragging(false)}
-                  >
-                    {imagePreview ? (
-                      <div className="relative aspect-video">
-                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                        <button
-                          onClick={() => setImagePreview(null)}
-                          className="absolute top-3 right-3 w-10 h-10 bg-red-500/90 hover:bg-red-500 rounded-xl flex items-center justify-center transition-colors backdrop-blur-sm"
-                        >
-                          <X className="w-5 h-5 text-white" />
-                        </button>
-                      </div>
-                    ) : (
-                      <label className="flex flex-col items-center justify-center py-16 cursor-pointer">
-                        <div className="w-20 h-20 bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 border border-[#ffcc33]/30 rounded-2xl flex items-center justify-center mb-4">
-                          <Upload className="w-10 h-10 text-[#ffcc33]" />
-                        </div>
-                        <p className="text-[#ffffff] mb-2">{t.dragDrop}</p>
-                        <p className="text-sm text-[#808c99]">{t.orClick}</p>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileSelect}
-                          className="hidden"
-                        />
-                      </label>
-                    )}
-                  </div>
-
-                  {/* Form Fields */}
-                  <div className="space-y-4">
-                    {/* Title */}
-                    <div>
-                      <label className={`block text-sm text-[#808c99] mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                        {t.artworkTitle} *
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.title}
-                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                        placeholder={t.titlePlaceholder}
-                        className="w-full px-4 py-3 bg-[#0f021c] border border-[#ffcc33]/30 rounded-xl text-[#ffffff] placeholder:text-[#808c99]/30 focus:outline-none focus:border-[#ffcc33] transition-colors"
-                      />
-                    </div>
-
-                    {/* Price and Medium */}
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className={`block text-sm text-[#808c99] mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                          {t.price} *
-                        </label>
-                        <div className="relative">
-                          <DollarSign className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-[#808c99]/50 ${isRTL ? 'right-3' : 'left-3'}`} />
-                          <input
-                            type="number"
-                            value={formData.price}
-                            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                            placeholder={t.pricePlaceholder}
-                            className={`w-full ${isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-3 bg-[#0f021c] border border-[#ffcc33]/30 rounded-xl text-[#ffffff] placeholder:text-[#808c99]/30 focus:outline-none focus:border-[#ffcc33] transition-colors`}
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className={`block text-sm text-[#808c99] mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                          {t.medium} *
-                        </label>
-                        <div className="relative">
-                          <Palette className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-[#808c99]/50 ${isRTL ? 'right-3' : 'left-3'}`} />
-                          <input
-                            type="text"
-                            value={formData.medium}
-                            onChange={(e) => setFormData({ ...formData, medium: e.target.value })}
-                            placeholder={t.mediamPlaceholder}
-                            className={`w-full ${isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-3 bg-[#0f021c] border border-[#ffcc33]/30 rounded-xl text-[#ffffff] placeholder:text-[#808c99]/30 focus:outline-none focus:border-[#ffcc33] transition-colors`}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Dimensions */}
-                    <div>
-                      <label className={`block text-sm text-[#808c99] mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                        {t.dimensions} *
-                      </label>
-                      <div className="relative">
-                        <Ruler className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-[#808c99]/50 ${isRTL ? 'right-3' : 'left-3'}`} />
-                        <input
-                          type="text"
-                          value={formData.dimensions}
-                          onChange={(e) => setFormData({ ...formData, dimensions: e.target.value })}
-                          placeholder={t.dimensionsPlaceholder}
-                          className={`w-full ${isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-3 bg-[#0f021c] border border-[#ffcc33]/30 rounded-xl text-[#ffffff] placeholder:text-[#808c99]/30 focus:outline-none focus:border-[#ffcc33] transition-colors`}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    <div>
-                      <label className={`block text-sm text-[#808c99] mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                        {t.description} *
-                      </label>
-                      <textarea
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder={t.descriptionPlaceholder}
-                        rows={4}
-                        className="w-full px-4 py-3 bg-[#0f021c] border border-[#ffcc33]/30 rounded-xl text-[#ffffff] placeholder:text-[#808c99]/30 focus:outline-none focus:border-[#ffcc33] transition-colors resize-none"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className={`flex gap-3 mt-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <button
-                      onClick={handleSubmit}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] text-[#020e27] rounded-xl hover:opacity-90 transition-opacity"
-                    >
-                      {t.addArtwork}
-                    </button>
-                    <button
-                      onClick={handleCancel}
-                      className="px-6 py-3 bg-[#1D112A]/50 border border-[#4e4e4e78] text-[#808c99] rounded-xl hover:bg-[#1D112A] transition-colors"
-                    >
-                      {t.cancel}
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Delete Confirmation */}
+      <ConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => {
+          if (isDeleting) return;
+          setIsDeleteDialogOpen(false);
+          setDeleteTarget(null);
+        }}
+        onConfirm={handleConfirmDelete}
+        variant="danger"
+        isLoading={isDeleting}
+        title={
+          language === "en"
+            ? "Delete artwork"
+            : "حذف العمل الفني"
+        }
+        message={
+          language === "en"
+            ? "Are you sure you want to delete this artwork? This action cannot be undone."
+            : "هل أنت متأكد من حذف هذا العمل الفني؟ لا يمكن التراجع عن هذا الإجراء."
+        }
+      />
     </>
   );
 }

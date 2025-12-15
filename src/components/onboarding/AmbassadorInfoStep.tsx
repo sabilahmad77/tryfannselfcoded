@@ -673,8 +673,6 @@ export function AmbassadorInfoStep({
                   ? "PNG, JPG up to 5MB"
                   : "PNG، JPG حتى 5 ميجابايت"
               }
-              labelClassName="text-white/80 text-sm"
-              buttonClassName="border-white/20 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
             />
             {profileImagePreview && !profileImage && (
               <div className="mt-4 space-y-2">
@@ -725,8 +723,6 @@ export function AmbassadorInfoStep({
               isRTL={isRTL}
               required
               error={errors.title?.message}
-              inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-              labelClassName="text-white/80 text-sm"
             />
           </motion.div>
 
@@ -751,8 +747,6 @@ export function AmbassadorInfoStep({
                 isRTL={isRTL}
                 hideOptional
                 error={errors.instagram_handle?.message}
-                inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
               />
 
               <SelectField
@@ -768,10 +762,6 @@ export function AmbassadorInfoStep({
                 }}
                 isRTL={isRTL}
                 hideOptional
-                inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
-                contentClassName="bg-[#1D112A] border-white/10"
-                itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
               />
             </div>
           </motion.div>
@@ -797,8 +787,6 @@ export function AmbassadorInfoStep({
                 isRTL={isRTL}
                 hideOptional
                 error={errors.tiktok_handle?.message}
-                inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
               />
 
               <SelectField
@@ -814,10 +802,6 @@ export function AmbassadorInfoStep({
                 }}
                 isRTL={isRTL}
                 hideOptional
-                inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
-                contentClassName="bg-[#1D112A] border-white/10"
-                itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
               />
             </div>
           </motion.div>
@@ -843,8 +827,6 @@ export function AmbassadorInfoStep({
                 isRTL={isRTL}
                 hideOptional
                 error={errors.youtube_handle?.message}
-                inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
               />
 
               <SelectField
@@ -860,10 +842,6 @@ export function AmbassadorInfoStep({
                 }}
                 isRTL={isRTL}
                 hideOptional
-                inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
-                contentClassName="bg-[#1D112A] border-white/10"
-                itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
               />
             </div>
           </motion.div>
@@ -889,8 +867,6 @@ export function AmbassadorInfoStep({
                 isRTL={isRTL}
                 hideOptional
                 error={errors.twitter_handle?.message}
-                inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
               />
 
               <SelectField
@@ -906,10 +882,6 @@ export function AmbassadorInfoStep({
                 }}
                 isRTL={isRTL}
                 hideOptional
-                inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
-                contentClassName="bg-[#1D112A] border-white/10"
-                itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
               />
             </div>
           </motion.div>
@@ -932,10 +904,6 @@ export function AmbassadorInfoStep({
                 });
               }}
               isRTL={isRTL}
-              inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
-              labelClassName="text-white/80 text-sm"
-              contentClassName="bg-[#1D112A] border-white/10"
-              itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
             />
           </motion.div>
 
@@ -958,8 +926,6 @@ export function AmbassadorInfoStep({
               isRTL={isRTL}
               required
               error={errors.content_niche?.message}
-              inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-              labelClassName="text-white/80 text-sm"
             />
           </motion.div>
 
@@ -995,8 +961,6 @@ export function AmbassadorInfoStep({
               isRTL={isRTL}
               required
               error={errors.bio?.message}
-              inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-              labelClassName="text-white/80 text-sm"
               maxLength={250}
             />
             <p className="text-white/40 text-xs text-right mt-1">

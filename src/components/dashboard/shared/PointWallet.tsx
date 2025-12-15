@@ -27,7 +27,7 @@ const content = {
   en: {
     title: "Point Wallet",
     totalPoints: "Total Points",
-    currentTier: "Current Tier",
+    currentTier: "Tier",
     nextTier: "Next Tier",
     progress: "Progress to",
     influencePoints: "Influence Points",
@@ -53,7 +53,7 @@ const content = {
   ar: {
     title: "محفظة النقاط",
     totalPoints: "إجمالي النقاط",
-    currentTier: "المستوى الحالي",
+    currentTier: "المستوى",
     nextTier: "المستوى التالي",
     progress: "التقدم إلى",
     influencePoints: "نقاط التأثير",
@@ -110,7 +110,7 @@ export function PointWallet() {
 
   // Get tier information using dynamic tier system
   const progressionTiers = progressionData?.data || [];
-  
+
   // Get tier display names from API data
   const getTierNameFromKey = (tierKey: string): string => {
     const tier = progressionTiers.find(t => tierNameToKey(t.name) === tierKey);
@@ -124,14 +124,14 @@ export function PointWallet() {
   const tierOrder = progressionTiers.length > 0
     ? getTierOrder(progressionTiers)
     : [];
-  
+
   const currentTierKey = progressionTiers.length > 0
     ? getCurrentTier(totalPoints, tierThresholds)
     : "explorer";
   const nextTierKey = progressionTiers.length > 0
     ? getNextTier(currentTierKey, tierOrder)
     : null;
-  
+
   const tierProgress = progressionTiers.length > 0
     ? calculateTierProgress(totalPoints, currentTierKey, nextTierKey, tierThresholds)
     : { progress: 0, pointsNeeded: 0 };
@@ -201,14 +201,12 @@ export function PointWallet() {
     <div className="glass rounded-2xl p-6 h-full">
       {/* Header */}
       <div
-        className={`flex items-center justify-between mb-6 ${
-          isRTL ? "flex-row-reverse" : ""
-        }`}
+        className={`flex items-center justify-between mb-6 ${isRTL ? "flex-row-reverse" : ""
+          }`}
       >
         <div
-          className={`flex items-center gap-3 ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
+          className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+            }`}
         >
           <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
             <Wallet className="w-6 h-6 text-[#0F021C]" />
@@ -216,7 +214,7 @@ export function PointWallet() {
           <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
         </div>
         <Badge className="bg-gradient-to-r from-[#ffcc33] to-[#fbbf24] text-[#0F021C] border-0">
-          {currentTier}
+          {t.currentTier}: {currentTier}
         </Badge>
       </div>
 
@@ -240,9 +238,8 @@ export function PointWallet() {
           </p>
           {nextTier ? (
             <div
-              className={`flex items-center gap-2 mt-3 ${
-                isRTL ? "flex-row-reverse" : ""
-              }`}
+              className={`flex items-center gap-2 mt-3 ${isRTL ? "flex-row-reverse" : ""
+                }`}
             >
               <TrendingUp className="w-4 h-4 text-[#0F021C]" />
               <span className="text-sm text-[#0F021C]">
@@ -251,9 +248,8 @@ export function PointWallet() {
             </div>
           ) : (
             <div
-              className={`flex items-center gap-2 mt-3 ${
-                isRTL ? "flex-row-reverse" : ""
-              }`}
+              className={`flex items-center gap-2 mt-3 ${isRTL ? "flex-row-reverse" : ""
+                }`}
             >
               <TrendingUp className="w-4 h-4 text-[#0F021C]" />
               <span className="text-sm text-[#0F021C]">{t.maxTierReached}</span>
@@ -266,9 +262,8 @@ export function PointWallet() {
       {nextTier ? (
         <div className="mb-6">
           <div
-            className={`flex items-center justify-between mb-3 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center justify-between mb-3 ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <span className="text-sm text-[#808c99]">
               {t.progress} {nextTier}
@@ -282,9 +277,8 @@ export function PointWallet() {
       ) : (
         <div className="mb-6">
           <div
-            className={`flex items-center justify-between mb-3 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center justify-between mb-3 ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <span className="text-sm text-[#808c99]">{t.maxTierReached}</span>
             <span className="text-sm text-[#ffcc33]">100%</span>
@@ -300,9 +294,8 @@ export function PointWallet() {
           className="bg-[#0f021c] rounded-xl p-4 border border-[#9375b5]/30"
         >
           <div
-            className={`flex items-center gap-2 mb-2 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <Flame className="w-5 h-5 text-[#9375b5]" />
             <span className="text-xs text-[#808c99]">{t.influencePoints}</span>
@@ -315,9 +308,8 @@ export function PointWallet() {
           className="bg-[#0f021c] rounded-xl p-4 border border-[#0ea5e9]/30"
         >
           <div
-            className={`flex items-center gap-2 mb-2 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <Shield className="w-5 h-5 text-[#0ea5e9]" />
             <span className="text-xs text-[#808c99]">{t.provenancePoints}</span>
@@ -330,9 +322,8 @@ export function PointWallet() {
           className="bg-[#0f021c] rounded-xl p-4 border border-[#fface3]/30"
         >
           <div
-            className={`flex items-center gap-2 mb-2 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <Users className="w-5 h-5 text-[#fface3]" />
             <span className="text-xs text-[#808c99]">{t.followers}</span>
@@ -345,21 +336,19 @@ export function PointWallet() {
       <div className={`flex gap-2 mb-4 p-1 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
         <button
           onClick={() => setActiveTab('activity')}
-          className={`flex-1 px-4 py-2 rounded-md text-sm transition-all ${
-            activeTab === 'activity'
+          className={`flex-1 px-4 py-2 rounded-md text-sm transition-all ${activeTab === 'activity'
               ? 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#020e27]'
               : 'text-[#808c99] hover:text-[#ffffff]'
-          }`}
+            }`}
         >
           {t.recentActivity}
         </button>
         <button
           onClick={() => setActiveTab('nextSteps')}
-          className={`flex-1 px-4 py-2 rounded-md text-sm transition-all ${
-            activeTab === 'nextSteps'
+          className={`flex-1 px-4 py-2 rounded-md text-sm transition-all ${activeTab === 'nextSteps'
               ? 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#020e27]'
               : 'text-[#808c99] hover:text-[#ffffff]'
-          }`}
+            }`}
         >
           {t.nextSteps}
         </button>
@@ -376,21 +365,18 @@ export function PointWallet() {
                   initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`flex items-center justify-between p-3 bg-background rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center justify-between p-3 bg-background rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${isRTL ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div
-                    className={`flex items-center gap-3 ${
-                      isRTL ? "flex-row-reverse" : ""
-                    }`}
+                    className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                      }`}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                        activity.type === "influence"
+                      className={`w-8 h-8 rounded-full flex items-center justify-center ${activity.type === "influence"
                           ? "bg-[#9375b5]/20 text-[#9375b5]"
                           : "bg-[#0ea5e9]/20 text-[#0ea5e9]"
-                      }`}
+                        }`}
                     >
                       {activity.type === "influence" ? (
                         <Flame className="w-4 h-4" />
@@ -409,9 +395,8 @@ export function PointWallet() {
               ))
             ) : (
               <p
-                className={`text-sm text-[#808c99] text-center py-4 ${
-                  isRTL ? "text-right" : "text-left"
-                }`}
+                className={`text-sm text-[#808c99] text-center py-4 ${isRTL ? "text-right" : "text-left"
+                  }`}
               >
                 {language === "en" ? "No recent activity" : "لا يوجد نشاط حديث"}
               </p>
@@ -432,21 +417,18 @@ export function PointWallet() {
                   initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`flex items-center justify-between p-3 bg-background rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center justify-between p-3 bg-background rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${isRTL ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div
-                    className={`flex items-center gap-3 ${
-                      isRTL ? "flex-row-reverse" : ""
-                    }`}
+                    className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                      }`}
                   >
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                        step.type === "influence"
+                      className={`w-8 h-8 rounded-full flex items-center justify-center ${step.type === "influence"
                           ? "bg-[#9375b5]/20 text-[#9375b5]"
                           : "bg-[#0ea5e9]/20 text-[#0ea5e9]"
-                      }`}
+                        }`}
                     >
                       <Icon className="w-4 h-4" />
                     </div>

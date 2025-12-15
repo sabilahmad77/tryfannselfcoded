@@ -1,8 +1,9 @@
+import { ROUTES } from "@/routes/paths";
 import { useLoginMutation } from "@/services/api/authApi";
 import {
   setAccessToken,
-  setTokens,
   setPersona,
+  setTokens,
   type UserProfileData,
 } from "@/store/authSlice";
 import {
@@ -23,7 +24,6 @@ import { Oval } from "react-loader-spinner";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { ROUTES } from "@/routes/paths";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { InputField, PasswordField } from "./ui/custom-form-elements";
@@ -290,18 +290,8 @@ export function SignIn({
 
       toast.success(successMessage);
 
-      // Navigation will be handled by PublicRoute based on profile_completed status
-      // If profile is completed, navigate to dashboard, otherwise onboarding
-      if (profileCompleted) {
-        // Navigate to dashboard if profile is completed
-        navigate(ROUTES.DASHBOARD);
-      } else {
-        // Navigate to onboarding if profile is not completed
-        const onboardingPath = persona
-          ? `${ROUTES.ONBOARDING}?persona=${encodeURIComponent(persona)}`
-          : ROUTES.DASHBOARD;
-        navigate(onboardingPath, { replace: true });
-      }
+      // Redirect to dashboard regardless of profile completion status
+      navigate(ROUTES.DASHBOARD, { replace: true });
     } catch {
       // Error toast is already shown by baseApi interceptor
       // No need to show duplicate toast here
@@ -547,8 +537,8 @@ export function SignIn({
                       onClick={handleFormSubmit(onSubmit)}
                       disabled={isLoading}
                       className={`w-full h-12 shadow-lg shadow-primary/30 transition-all group glow-gold btn-glow ${isLoading
-                          ? "cursor-not-allowed opacity-50"
-                          : "cursor-pointer"
+                        ? "cursor-not-allowed opacity-50"
+                        : "cursor-pointer"
                         }`}
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">

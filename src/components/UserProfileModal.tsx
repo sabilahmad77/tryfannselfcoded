@@ -1,16 +1,19 @@
 import { useLanguage } from '@/contexts/useLanguage';
-import { Award, CheckCircle, Facebook, Flame, Heart, Instagram, Linkedin, Share2, Shield, ShieldCheck, Target, TrendingUp, Twitter, UserCheck, UserPlus, Users, X } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
-import { useState, type ElementType } from 'react';
+import { Award, CheckCircle, Facebook, Flame, Heart, Instagram, Linkedin, Loader2, Share2, Shield, ShieldCheck, Target, TrendingUp, Twitter, UserCheck, UserPlus, Users, X } from 'lucide-react';
+import { motion } from 'motion/react';
+import { type ElementType } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
+import { CustomModal } from './ui/CustomModal';
+import { useGetUserProfileDetailsQuery } from '@/services/api/dashboardApi';
 
 interface UserProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
   user: {
+    id?: number;
     name: string;
     username: string;
     points: number;
@@ -18,7 +21,11 @@ interface UserProfileModalProps {
     type: string;
     avatar: string;
     rank: number;
+    is_follow?: boolean;
   } | null;
+  isFollowing?: boolean;
+  onToggleFollow?: () => void;
+  isFollowLoading?: boolean;
 }
 
 interface UserStats {
@@ -444,12 +451,75 @@ const getUserProfileData = (_username: string, userType: string): UserProfileDat
   }
 };
 
-export function UserProfileModal({ isOpen, onClose, user }: UserProfileModalProps) {
+export function UserProfileModal({
+  isOpen,
+  onClose,
+  user,
+  isFollowing: isFollowingProp,
+  onToggleFollow,
+  isFollowLoading,
+}: UserProfileModalProps) {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === 'ar';
-  const profileData = user ? getUserProfileData(user.username, user.type) : null;
-  const [isFollowing, setIsFollowing] = useState(false);
+
+  const userId = typeof user?.id === 'number' ? user.id : undefined;
+  const { data: userProfileResponse } = useGetUserProfileDetailsQuery(userId as number, {
+    skip: !userId,
+  });
+
+  const apiProfile = userProfileResponse?.data as Record<string, unknown> | undefined;
+
+  const baseProfileData = user ? getUserProfileData(user.username, user.type) : null;
+
+  const profileData: UserProfileData | null =
+    user && baseProfileData
+      ? {
+          ...baseProfileData,
+          bio: (() => {
+            if (!apiProfile) return baseProfileData.bio;
+            const rawBio =
+              (apiProfile.bio as string | undefined) ||
+              (apiProfile.artist_statement as string | undefined);
+            return rawBio && rawBio.trim().length > 0 ? rawBio : baseProfileData.bio;
+          })(),
+          kycStatus: (() => {
+            if (!apiProfile) return baseProfileData.kycStatus;
+            const rawStatus = (apiProfile.kyc_status as string | undefined) || '';
+            const isVerifiedFlag = (apiProfile.is_kyc_verified as boolean | undefined) === true;
+
+            if (isVerifiedFlag) {
+              return 'verified';
+            }
+
+            if (typeof rawStatus === 'string' && rawStatus.trim().length > 0) {
+              const s = rawStatus.toLowerCase();
+              if (s.includes('verify') || s === 'approved') return 'verified';
+              if (s.includes('pending')) return 'pending';
+              return 'notVerified';
+            }
+
+            return baseProfileData.kycStatus;
+          })() as UserProfileData['kycStatus'],
+          social: {
+            ...baseProfileData.social,
+            instagram:
+              (apiProfile?.instagram_handle as string | undefined) ||
+              baseProfileData.social.instagram,
+            twitter:
+              (apiProfile?.twitter_handle as string | undefined) ||
+              baseProfileData.social.twitter,
+            facebook:
+              (apiProfile?.facebook_handle as string | undefined) ||
+              baseProfileData.social.facebook,
+            linkedin:
+              (apiProfile?.linkedin_handle as string | undefined) ||
+              baseProfileData.social.linkedin,
+          },
+        }
+      : null;
+
+  const isFollowing = !!isFollowingProp;
 
   if (!user || !profileData) {
     return null;
@@ -491,592 +561,581 @@ export function UserProfileModal({ isOpen, onClose, user }: UserProfileModalProp
   const progress = (user.points / nextTierPoints) * 100;
   const pointsNeeded = nextTierPoints - user.points;
 
+  // Custom header for UserProfileModal
+  const customHeader = (
+    <div className="relative p-6 border-b border-[#4e4e4e78] shrink-0">
+      <div className={`flex items-start gap-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
+        {/* Avatar */}
+        <div className="relative">
+          <Avatar className="w-24 h-24 border-4 border-[#ffcc33]">
+            <AvatarImage src={user.avatar} alt={user.name} />
+            <AvatarFallback className="bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] text-[#020e27] text-2xl">
+              {user.name.substring(0, 2).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          {profileData.kycStatus === 'verified' && (
+            <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-[#020e27]">
+              <CheckCircle className="w-5 h-5 text-white" />
+            </div>
+          )}
+        </div>
+
+        {/* User Info */}
+        <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+          <div className={`flex items-start justify-between gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+            <div>
+              <h2 className="text-2xl text-[#ffffff] mb-1">{user.name}</h2>
+              <p className="text-[#808c99] mb-3">{user.username}</p>
+            </div>
+            <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              {/* Follow Button */}
+              {onToggleFollow && (
+                <Button
+                  onClick={onToggleFollow}
+                  size="sm"
+                  disabled={isFollowLoading || isFollowing}
+                  className={`${isFollowing
+                    ? 'bg-gradient-to-r from-[#45e3d3] to-[#3bc4b5] hover:from-[#3bc4b5] hover:to-[#45e3d3]'
+                    : 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffb54d] hover:to-[#ffcc33]'
+                    } text-[#020e27] transition-all duration-300`}
+                >
+                  {isFollowLoading ? (
+                    <>
+                      <Loader2 className={`w-4 h-4 animate-spin ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                      {language === 'en' ? 'Loading...' : 'جاري التحميل...'}
+                    </>
+                  ) : isFollowing ? (
+                    <>
+                      <UserCheck className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                      {t.following}
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                      {t.follow}
+                    </>
+                  )}
+                </Button>
+              )}
+              {/* Close Button */}
+              <Button
+                onClick={onClose}
+                variant="ghost"
+                size="icon"
+                className="text-[#808c99] hover:text-[#ffffff] hover:bg-[#1D112A] transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+
+          <div className={`flex items-center gap-3 flex-wrap ${isRTL ? 'flex-row-reverse' : ''}`}>
+            <Badge className={`bg-gradient-to-r ${getTierColor(user.tier)} text-[#020e27] border-0`}>
+              {user.tier}
+            </Badge>
+            <Badge variant="outline" className="border-[#4e4e4e78] text-[#808c99]">
+              {user.type}
+            </Badge>
+            {getKYCBadge(profileData.kycStatus)}
+            <Badge className="bg-gradient-to-r from-orange-500 to-amber-500 text-white border-0">
+              #{user.rank} {t.rank}
+            </Badge>
+          </div>
+        </div>
+      </div>
+
+      {/* Bio */}
+      {profileData.bio && (
+        <p className={`mt-4 text-[#808c99] text-sm ${isRTL ? 'text-right' : 'text-left'}`}>
+          {profileData.bio}
+        </p>
+      )}
+    </div>
+  );
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
-          />
+    <CustomModal
+      isOpen={isOpen}
+      onClose={onClose}
+      header={customHeader}
+      size="xl"
+      maxHeight="max-h-[85vh]"
+      showCloseButton={false}
+    >
+      <div className="p-6 space-y-6">
+        {/* Points Card */}
+        <motion.div
+          className="relative overflow-hidden rounded-xl p-6"
+          style={{
+            background: 'linear-gradient(135deg, #45e3d3 0%, #45e3d3 100%)',
+          }}
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-2xl" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full blur-xl" />
+          </div>
+          <div className={`relative z-10 ${isRTL ? 'text-right' : 'text-left'}`}>
+            <p className="text-[#020e27] opacity-80 text-sm mb-1">{t.totalPoints}</p>
+            <p className="text-5xl text-[#020e27] mb-4">{user.points.toLocaleString()}</p>
 
-          {/* Modal */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.2 }}
-              className="w-full max-w-4xl my-8"
-              onClick={(e) => e.stopPropagation()}
-              dir={isRTL ? 'rtl' : 'ltr'}
-            >
-              <div className="glass rounded-2xl overflow-hidden max-h-[85vh] flex flex-col">
-                {/* Header */}
-                <div className="relative p-6 border-b border-[#4e4e4e78] shrink-0">
-                  <div className={`flex items-start gap-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    {/* Avatar */}
-                    <div className="relative">
-                      <Avatar className="w-24 h-24 border-4 border-[#ffcc33]">
-                        <AvatarImage src={user.avatar} alt={user.name} />
-                        <AvatarFallback className="bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] text-[#020e27] text-2xl">
-                          {user.name.substring(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      {profileData.kycStatus === 'verified' && (
-                        <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-[#020e27]">
-                          <CheckCircle className="w-5 h-5 text-white" />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* User Info */}
-                    <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      <div className={`flex items-start justify-between gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <div>
-                          <h2 className="text-2xl text-[#ffffff] mb-1">{user.name}</h2>
-                          <p className="text-[#808c99] mb-3">{user.username}</p>
-                        </div>
-                        <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          {/* Follow Button */}
-                          <Button
-                            onClick={() => setIsFollowing(!isFollowing)}
-                            size="sm"
-                            className={`${isFollowing
-                                ? 'bg-gradient-to-r from-[#45e3d3] to-[#3bc4b5] hover:from-[#3bc4b5] hover:to-[#45e3d3]'
-                                : 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffb54d] hover:to-[#ffcc33]'
-                              } text-[#020e27] transition-all duration-300`}
-                          >
-                            {isFollowing ? (
-                              <>
-                                <UserCheck className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                                {t.following}
-                              </>
-                            ) : (
-                              <>
-                                <UserPlus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                                {t.follow}
-                              </>
-                            )}
-                          </Button>
-                          <Button
-                            onClick={onClose}
-                            variant="ghost"
-                            size="icon"
-                            className="text-[#808c99] hover:text-[#ffffff] hover:bg-[#1D112A]"
-                          >
-                            <X className="w-5 h-5" />
-                          </Button>
-                        </div>
-                      </div>
-
-                      <div className={`flex items-center gap-3 flex-wrap ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <Badge className={`bg-gradient-to-r ${getTierColor(user.tier)} text-[#020e27] border-0`}>
-                          {user.tier}
-                        </Badge>
-                        <Badge variant="outline" className="border-[#4e4e4e78] text-[#808c99]">
-                          {user.type}
-                        </Badge>
-                        {getKYCBadge(profileData.kycStatus)}
-                        <Badge className="bg-gradient-to-r from-orange-500 to-amber-500 text-white border-0">
-                          #{user.rank} {t.rank}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Bio */}
-                  {profileData.bio && (
-                    <p className={`mt-4 text-[#808c99] text-sm ${isRTL ? 'text-right' : 'text-left'}`}>
-                      {profileData.bio}
-                    </p>
-                  )}
-                </div>
-
-                {/* Content - Scrollable */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
-                  {/* Points Card */}
-                  <motion.div
-                    className="relative overflow-hidden rounded-xl p-6"
-                    style={{
-                      background: 'linear-gradient(135deg, #45e3d3 0%, #45e3d3 100%)',
-                    }}
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="absolute inset-0 opacity-20">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-2xl" />
-                      <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full blur-xl" />
-                    </div>
-                    <div className={`relative z-10 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      <p className="text-[#020e27] opacity-80 text-sm mb-1">{t.totalPoints}</p>
-                      <p className="text-5xl text-[#020e27] mb-4">{user.points.toLocaleString()}</p>
-
-                      {/* Progress to Next Tier */}
-                      <div>
-                        <div className={`flex items-center justify-between mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <span className="text-sm text-[#020e27] opacity-80">{t.nextTier}</span>
-                          <span className="text-sm text-[#020e27]">{pointsNeeded} {t.pointsNeeded}</span>
-                        </div>
-                        <Progress value={progress} className="h-2 bg-[#0f021c]" />
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Stats Grid */}
-                  <div>
-                    <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      {t.stats}
-                    </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        className="bg-gradient-to-br from-[#8b5cf6]/20 to-[#8b5cf6]/5 rounded-xl p-4 border border-[#8b5cf6]/30"
-                      >
-                        <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <Flame className="w-5 h-5 text-[#8b5cf6]" />
-                          <span className="text-xs text-[#808c99]">{t.influencePoints}</span>
-                        </div>
-                        <p className="text-2xl text-[#ffffff]">{profileData.stats.influencePoints}</p>
-                      </motion.div>
-
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        className="bg-gradient-to-br from-[#0ea5e9]/20 to-[#0ea5e9]/5 rounded-xl p-4 border border-[#0ea5e9]/30"
-                      >
-                        <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <Shield className="w-5 h-5 text-[#0ea5e9]" />
-                          <span className="text-xs text-[#808c99]">{t.provenancePoints}</span>
-                        </div>
-                        <p className="text-2xl text-[#ffffff]">{profileData.stats.provenancePoints}</p>
-                      </motion.div>
-
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        className="bg-gradient-to-br from-[#ec4899]/20 to-[#ec4899]/5 rounded-xl p-4 border border-[#ec4899]/30"
-                      >
-                        <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <Users className="w-5 h-5 text-[#ec4899]" />
-                          <span className="text-xs text-[#808c99]">{t.followers}</span>
-                        </div>
-                        <p className="text-2xl text-[#ffffff]">{profileData.stats.followers}</p>
-                      </motion.div>
-
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        className="bg-gradient-to-br from-[#f59e0b]/20 to-[#f59e0b]/5 rounded-xl p-4 border border-[#f59e0b]/30"
-                      >
-                        <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <TrendingUp className="w-5 h-5 text-[#f59e0b]" />
-                          <span className="text-xs text-[#808c99]">{t.referrals}</span>
-                        </div>
-                        <p className="text-2xl text-[#ffffff]">{profileData.stats.referrals}</p>
-                      </motion.div>
-                    </div>
-                  </div>
-
-                  {/* Social Media */}
-                  <div>
-                    <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      {t.socialMedia}
-                    </h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      {profileData.social.instagram && (
-                        <motion.a
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          href={`https://instagram.com/${profileData.social.instagram.replace('@', '')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#e4405f]/50 transition-all"
-                        >
-                          <div className="w-10 h-10 bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] rounded-lg flex items-center justify-center shrink-0">
-                            <Instagram className="w-5 h-5 text-white" />
-                          </div>
-                          <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                            <p className="text-xs text-[#808c99]">{t.instagram}</p>
-                            <p className="text-sm text-[#ffffff]">{profileData.social.instagram}</p>
-                          </div>
-                        </motion.a>
-                      )}
-                      {profileData.social.twitter && (
-                        <motion.a
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          href={`https://twitter.com/${profileData.social.twitter.replace('@', '')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1da1f2]/50 transition-all"
-                        >
-                          <div className="w-10 h-10 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] rounded-lg flex items-center justify-center shrink-0">
-                            <Twitter className="w-5 h-5 text-white" />
-                          </div>
-                          <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                            <p className="text-xs text-[#808c99]">{t.twitter}</p>
-                            <p className="text-sm text-[#ffffff]">{profileData.social.twitter}</p>
-                          </div>
-                        </motion.a>
-                      )}
-                      {profileData.social.facebook && (
-                        <motion.a
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          href={`https://facebook.com/${profileData.social.facebook}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1877f2]/50 transition-all"
-                        >
-                          <div className="w-10 h-10 bg-gradient-to-br from-[#1877f2] to-[#0e5fc6] rounded-lg flex items-center justify-center shrink-0">
-                            <Facebook className="w-5 h-5 text-white" />
-                          </div>
-                          <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                            <p className="text-xs text-[#808c99]">{t.facebook}</p>
-                            <p className="text-sm text-[#ffffff]">Facebook</p>
-                          </div>
-                        </motion.a>
-                      )}
-                      {profileData.social.linkedin && (
-                        <motion.a
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          href={`https://linkedin.com/in/${profileData.social.linkedin}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#0a66c2]/50 transition-all"
-                        >
-                          <div className="w-10 h-10 bg-gradient-to-br from-[#0a66c2] to-[#004182] rounded-lg flex items-center justify-center shrink-0">
-                            <Linkedin className="w-5 h-5 text-white" />
-                          </div>
-                          <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                            <p className="text-xs text-[#808c99]">{t.linkedin}</p>
-                            <p className="text-sm text-[#ffffff]">LinkedIn</p>
-                          </div>
-                        </motion.a>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Overview - Dynamic based on user type */}
-                  <div>
-                    <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      {t.overview}
-                    </h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      {/* Ambassador-specific stats */}
-                      {user.type === 'Ambassador' ? (
-                        <>
-                          <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
-                            <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <Users className="w-5 h-5 text-[#45e3d3]" />
-                              <span className="text-xs text-[#808c99]">{t.totalReach}</span>
-                            </div>
-                            <p className="text-2xl text-[#ffffff]">{profileData.stats.totalReach.toLocaleString()}</p>
-                          </div>
-                          <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
-                            <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <Heart className="w-5 h-5 text-[#ec4899]" />
-                              <span className="text-xs text-[#808c99]">{t.engagementRate}</span>
-                            </div>
-                            <p className="text-2xl text-[#ffffff]">{profileData.stats.engagementRate}%</p>
-                          </div>
-                          <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
-                            <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <Target className="w-5 h-5 text-[#10b981]" />
-                              <span className="text-xs text-[#808c99]">{t.conversions}</span>
-                            </div>
-                            <p className="text-2xl text-[#ffffff]">{profileData.stats.conversions}</p>
-                          </div>
-                          <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
-                            <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <Share2 className="w-5 h-5 text-[#8b5cf6]" />
-                              <span className="text-xs text-[#808c99]">{t.campaignsActive}</span>
-                            </div>
-                            <p className="text-2xl text-[#ffffff]">{profileData.stats.campaignsActive}</p>
-                          </div>
-                        </>
-                      ) : (
-                        /* Default stats for other user types */
-                        <>
-                          <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
-                            <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <Award className="w-5 h-5 text-[#ffcc33]" />
-                              <span className="text-xs text-[#808c99]">{t.artworksAdded}</span>
-                            </div>
-                            <p className="text-2xl text-[#ffffff]">{profileData.stats.artworksAdded}</p>
-                          </div>
-                          <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
-                            <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <TrendingUp className="w-5 h-5 text-[#45e3d3]" />
-                              <span className="text-xs text-[#808c99]">{t.videosWatched}</span>
-                            </div>
-                            <p className="text-2xl text-[#ffffff]">{profileData.stats.videosWatched}</p>
-                          </div>
-                          <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
-                            <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <Users className="w-5 h-5 text-[#8b5cf6]" />
-                              <span className="text-xs text-[#808c99]">{t.following}</span>
-                            </div>
-                            <p className="text-2xl text-[#ffffff]">{profileData.stats.following}</p>
-                          </div>
-                          <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
-                            <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <Flame className="w-5 h-5 text-[#f59e0b]" />
-                              <span className="text-xs text-[#808c99]">Streak Days</span>
-                            </div>
-                            <p className="text-2xl text-[#ffffff]">12</p>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Artworks Gallery - Artist Only */}
-                  {user.type === 'Artist' && profileData.artworks && profileData.artworks.length > 0 && (
-                    <div>
-                      <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
-                          {t.artworks}
-                        </h3>
-                        <span className="text-sm text-[#808c99]">
-                          {profileData.artworks.length} {language === 'en' ? 'pieces' : 'قطعة'}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {profileData.artworks.map((artwork: ArtworkItem) => (
-                          <motion.div
-                            key={artwork.id}
-                            whileHover={{ scale: 1.03, y: -5 }}
-                            className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
-                          >
-                            <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
-                              <img
-                                src={artwork.image}
-                                alt={artwork.title}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                              />
-                              <div className="absolute top-2 right-2 z-10">
-                                {artwork.status === 'featured' && (
-                                  <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 text-xs">
-                                    {t.featured}
-                                  </Badge>
-                                )}
-                                {artwork.status === 'sold' && (
-                                  <Badge className="bg-gradient-to-r from-red-500 to-rose-500 text-white border-0 text-xs">
-                                    {t.sold}
-                                  </Badge>
-                                )}
-                                {artwork.status === 'available' && (
-                                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 text-xs">
-                                    {t.available}
-                                  </Badge>
-                                )}
-                              </div>
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <div className="absolute bottom-0 left-0 right-0 p-3">
-                                  <h4 className="text-white text-sm mb-1">{artwork.title}</h4>
-                                  <p className="text-[#ffcc33] font-semibold">{artwork.price}</p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
-                              <h4 className="text-white text-sm mb-1 truncate">{artwork.title}</h4>
-                              <p className="text-[#ffcc33] text-xs">{artwork.price}</p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Exhibitions Gallery - Gallery Only */}
-                  {(user.type === 'Gallery' || user.type === 'Gallery/Museum') && profileData.exhibitions && profileData.exhibitions.length > 0 && (
-                    <div>
-                      <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
-                          {t.exhibitions}
-                        </h3>
-                        <span className="text-sm text-[#808c99]">
-                          {profileData.exhibitions.length} {language === 'en' ? 'shows' : 'معرض'}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {profileData.exhibitions.map((exhibition: ExhibitionItem) => (
-                          <motion.div
-                            key={exhibition.id}
-                            whileHover={{ scale: 1.03, y: -5 }}
-                            className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
-                          >
-                            <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
-                              <img
-                                src={exhibition.image}
-                                alt={exhibition.title}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                              />
-                              <div className="absolute top-2 right-2 z-10">
-                                {exhibition.status === 'active' && (
-                                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 text-xs">
-                                    {language === 'en' ? 'Active' : 'نشط'}
-                                  </Badge>
-                                )}
-                                {exhibition.status === 'upcoming' && (
-                                  <Badge className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 text-xs">
-                                    {language === 'en' ? 'Upcoming' : 'قادم'}
-                                  </Badge>
-                                )}
-                                {exhibition.status === 'past' && (
-                                  <Badge className="bg-gradient-to-r from-gray-500 to-gray-600 text-white border-0 text-xs">
-                                    {language === 'en' ? 'Past' : 'سابق'}
-                                  </Badge>
-                                )}
-                              </div>
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <div className="absolute bottom-0 left-0 right-0 p-3">
-                                  <h4 className="text-white text-sm mb-1">{exhibition.title}</h4>
-                                  <p className="text-[#ffcc33] text-xs">{exhibition.artists}</p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
-                              <h4 className="text-white text-sm mb-1 truncate">{exhibition.title}</h4>
-                              <p className="text-[#ffcc33] text-xs">{exhibition.artists}</p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Collection Gallery - Collector Only */}
-                  {user.type === 'Collector' && profileData.collection && profileData.collection.length > 0 && (
-                    <div>
-                      <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
-                          {t.collection}
-                        </h3>
-                        <span className="text-sm text-[#808c99]">
-                          {profileData.collection.length} {language === 'en' ? 'pieces' : 'قطعة'}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {profileData.collection.map((item: CollectionItem) => (
-                          <motion.div
-                            key={item.id}
-                            whileHover={{ scale: 1.03, y: -5 }}
-                            className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
-                          >
-                            <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
-                              <img
-                                src={item.image}
-                                alt={item.title}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <div className="absolute bottom-0 left-0 right-0 p-3">
-                                  <h4 className="text-white text-sm mb-1">{item.title}</h4>
-                                  <p className="text-[#808c99] text-xs mb-1">{item.artist}</p>
-                                  <p className="text-[#ffcc33] font-semibold text-xs">{item.value}</p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
-                              <h4 className="text-white text-sm mb-1 truncate">{item.title}</h4>
-                              <p className="text-[#808c99] text-xs mb-1">{item.artist}</p>
-                              <p className="text-[#ffcc33] text-xs">{item.value}</p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Social Media Performance - Ambassador Only */}
-                  {user.type === 'Ambassador' && profileData.socialMediaStats && profileData.socialMediaStats.length > 0 && (
-                    <div>
-                      <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
-                          {t.socialPerformance}
-                        </h3>
-                      </div>
-                      <div className="space-y-3">
-                        {profileData.socialMediaStats.map((stat: SocialMediaStat, index: number) => (
-                          <motion.div
-                            key={index}
-                            whileHover={{ scale: 1.02 }}
-                            className="glass rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all"
-                          >
-                            <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <div className={`w-12 h-12 rounded-lg ${stat.platform === 'Instagram' ? 'bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af]' :
-                                  stat.platform === 'Twitter' ? 'bg-gradient-to-br from-[#1da1f2] to-[#0c85d0]' :
-                                    'bg-gradient-to-br from-[#1877f2] to-[#0e5fc6]'
-                                } flex items-center justify-center shrink-0`}>
-                                {stat.platform === 'Instagram' && <Instagram className="w-6 h-6 text-white" />}
-                                {stat.platform === 'Twitter' && <Twitter className="w-6 h-6 text-white" />}
-                                {stat.platform === 'Facebook' && <Facebook className="w-6 h-6 text-white" />}
-                              </div>
-                              <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-3">
-                                <div className={isRTL ? 'text-right' : 'text-left'}>
-                                  <p className="text-xs text-[#808c99] mb-1">{t.platform}</p>
-                                  <p className="text-sm text-[#ffffff]">{stat.platform}</p>
-                                </div>
-                                <div className={isRTL ? 'text-right' : 'text-left'}>
-                                  <p className="text-xs text-[#808c99] mb-1">{t.followers}</p>
-                                  <p className="text-sm text-[#ffffff]">{stat.followers}</p>
-                                </div>
-                                <div className={isRTL ? 'text-right' : 'text-left'}>
-                                  <p className="text-xs text-[#808c99] mb-1">{t.engagementRate}</p>
-                                  <p className="text-sm text-[#ffffff]">{stat.engagement}</p>
-                                </div>
-                                <div className={isRTL ? 'text-right' : 'text-left'}>
-                                  <p className="text-xs text-[#808c99] mb-1">{t.posts}</p>
-                                  <p className="text-sm text-green-400 flex items-center gap-1">{stat.posts} <span className="text-xs">({stat.trend})</span></p>
-                                </div>
-                              </div>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Achievements */}
-                  <div>
-                    <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      {t.achievements}
-                    </h3>
-                    <div className="grid grid-cols-1 gap-3">
-                      {profileData.achievements.map((achievement, index) => {
-                        const Icon = achievement.icon;
-                        return (
-                          <motion.div
-                            key={index}
-                            whileHover={{ scale: 1.02 }}
-                            className="glass rounded-xl p-4 border border-[#ffcc33]/30"
-                          >
-                            <div className={`flex items-start gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                              <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] rounded-lg flex items-center justify-center shrink-0">
-                                <Icon className="w-6 h-6 text-[#020e27]" />
-                              </div>
-                              <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                                <p className="text-[#ffffff] mb-1">{achievement.title}</p>
-                                <p className="text-[#808c99] text-sm">{achievement.description}</p>
-                              </div>
-                            </div>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
+            {/* Progress to Next Tier */}
+            <div>
+              <div className={`flex items-center justify-between mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <span className="text-sm text-[#020e27] opacity-80">{t.nextTier}</span>
+                <span className="text-sm text-[#020e27]">{pointsNeeded} {t.pointsNeeded}</span>
               </div>
+              <Progress value={progress} className="h-2 bg-[#0f021c]" />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Stats Grid */}
+        <div>
+          <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+            {t.stats}
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="bg-gradient-to-br from-[#8b5cf6]/20 to-[#8b5cf6]/5 rounded-xl p-4 border border-[#8b5cf6]/30"
+            >
+              <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <Flame className="w-5 h-5 text-[#8b5cf6]" />
+                <span className="text-xs text-[#808c99]">{t.influencePoints}</span>
+              </div>
+              <p className="text-2xl text-[#ffffff]">{profileData.stats.influencePoints}</p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="bg-gradient-to-br from-[#0ea5e9]/20 to-[#0ea5e9]/5 rounded-xl p-4 border border-[#0ea5e9]/30"
+            >
+              <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <Shield className="w-5 h-5 text-[#0ea5e9]" />
+                <span className="text-xs text-[#808c99]">{t.provenancePoints}</span>
+              </div>
+              <p className="text-2xl text-[#ffffff]">{profileData.stats.provenancePoints}</p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="bg-gradient-to-br from-[#ec4899]/20 to-[#ec4899]/5 rounded-xl p-4 border border-[#ec4899]/30"
+            >
+              <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <Users className="w-5 h-5 text-[#ec4899]" />
+                <span className="text-xs text-[#808c99]">{t.followers}</span>
+              </div>
+              <p className="text-2xl text-[#ffffff]">{profileData.stats.followers}</p>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="bg-gradient-to-br from-[#f59e0b]/20 to-[#f59e0b]/5 rounded-xl p-4 border border-[#f59e0b]/30"
+            >
+              <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <TrendingUp className="w-5 h-5 text-[#f59e0b]" />
+                <span className="text-xs text-[#808c99]">{t.referrals}</span>
+              </div>
+              <p className="text-2xl text-[#ffffff]">{profileData.stats.referrals}</p>
             </motion.div>
           </div>
-        </>
-      )}
-    </AnimatePresence>
+        </div>
+
+        {/* Social Media */}
+        <div>
+          <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+            {t.socialMedia}
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            {profileData.social.instagram && (
+              <motion.a
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href={`https://instagram.com/${profileData.social.instagram.replace('@', '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#e4405f]/50 transition-all"
+              >
+                <div className="w-10 h-10 bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] rounded-lg flex items-center justify-center shrink-0">
+                  <Instagram className="w-5 h-5 text-white" />
+                </div>
+                <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <p className="text-xs text-[#808c99]">{t.instagram}</p>
+                  <p className="text-sm text-[#ffffff]">{profileData.social.instagram}</p>
+                </div>
+              </motion.a>
+            )}
+            {profileData.social.twitter && (
+              <motion.a
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href={`https://twitter.com/${profileData.social.twitter.replace('@', '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1da1f2]/50 transition-all"
+              >
+                <div className="w-10 h-10 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] rounded-lg flex items-center justify-center shrink-0">
+                  <Twitter className="w-5 h-5 text-white" />
+                </div>
+                <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <p className="text-xs text-[#808c99]">{t.twitter}</p>
+                  <p className="text-sm text-[#ffffff]">{profileData.social.twitter}</p>
+                </div>
+              </motion.a>
+            )}
+            {profileData.social.facebook && (
+              <motion.a
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href={`https://facebook.com/${profileData.social.facebook}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1877f2]/50 transition-all"
+              >
+                <div className="w-10 h-10 bg-gradient-to-br from-[#1877f2] to-[#0e5fc6] rounded-lg flex items-center justify-center shrink-0">
+                  <Facebook className="w-5 h-5 text-white" />
+                </div>
+                <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <p className="text-xs text-[#808c99]">{t.facebook}</p>
+                  <p className="text-sm text-[#ffffff]">Facebook</p>
+                </div>
+              </motion.a>
+            )}
+            {profileData.social.linkedin && (
+              <motion.a
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href={`https://linkedin.com/in/${profileData.social.linkedin}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#0a66c2]/50 transition-all"
+              >
+                <div className="w-10 h-10 bg-gradient-to-br from-[#0a66c2] to-[#004182] rounded-lg flex items-center justify-center shrink-0">
+                  <Linkedin className="w-5 h-5 text-white" />
+                </div>
+                <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <p className="text-xs text-[#808c99]">{t.linkedin}</p>
+                  <p className="text-sm text-[#ffffff]">LinkedIn</p>
+                </div>
+              </motion.a>
+            )}
+          </div>
+        </div>
+
+        {/* Overview - Dynamic based on user type */}
+        <div>
+          <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+            {t.overview}
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            {/* Ambassador-specific stats */}
+            {user.type === 'Ambassador' ? (
+              <>
+                <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Users className="w-5 h-5 text-[#45e3d3]" />
+                    <span className="text-xs text-[#808c99]">{t.totalReach}</span>
+                  </div>
+                  <p className="text-2xl text-[#ffffff]">{profileData.stats.totalReach.toLocaleString()}</p>
+                </div>
+                <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Heart className="w-5 h-5 text-[#ec4899]" />
+                    <span className="text-xs text-[#808c99]">{t.engagementRate}</span>
+                  </div>
+                  <p className="text-2xl text-[#ffffff]">{profileData.stats.engagementRate}%</p>
+                </div>
+                <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Target className="w-5 h-5 text-[#10b981]" />
+                    <span className="text-xs text-[#808c99]">{t.conversions}</span>
+                  </div>
+                  <p className="text-2xl text-[#ffffff]">{profileData.stats.conversions}</p>
+                </div>
+                <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Share2 className="w-5 h-5 text-[#8b5cf6]" />
+                    <span className="text-xs text-[#808c99]">{t.campaignsActive}</span>
+                  </div>
+                  <p className="text-2xl text-[#ffffff]">{profileData.stats.campaignsActive}</p>
+                </div>
+              </>
+            ) : (
+              /* Default stats for other user types */
+              <>
+                <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Award className="w-5 h-5 text-[#ffcc33]" />
+                    <span className="text-xs text-[#808c99]">{t.artworksAdded}</span>
+                  </div>
+                  <p className="text-2xl text-[#ffffff]">{profileData.stats.artworksAdded}</p>
+                </div>
+                <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <TrendingUp className="w-5 h-5 text-[#45e3d3]" />
+                    <span className="text-xs text-[#808c99]">{t.videosWatched}</span>
+                  </div>
+                  <p className="text-2xl text-[#ffffff]">{profileData.stats.videosWatched}</p>
+                </div>
+                <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Users className="w-5 h-5 text-[#8b5cf6]" />
+                    <span className="text-xs text-[#808c99]">{t.following}</span>
+                  </div>
+                  <p className="text-2xl text-[#ffffff]">{profileData.stats.following}</p>
+                </div>
+                <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Flame className="w-5 h-5 text-[#f59e0b]" />
+                    <span className="text-xs text-[#808c99]">Streak Days</span>
+                  </div>
+                  <p className="text-2xl text-[#ffffff]">12</p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Artworks Gallery - Artist Only */}
+        {user.type === 'Artist' && profileData.artworks && profileData.artworks.length > 0 && (
+          <div>
+            <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
+                {t.artworks}
+              </h3>
+              <span className="text-sm text-[#808c99]">
+                {profileData.artworks.length} {language === 'en' ? 'pieces' : 'قطعة'}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {profileData.artworks.map((artwork: ArtworkItem) => (
+                <motion.div
+                  key={artwork.id}
+                  whileHover={{ scale: 1.03, y: -5 }}
+                  className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
+                >
+                  <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
+                    <img
+                      src={artwork.image}
+                      alt={artwork.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute top-2 right-2 z-10">
+                      {artwork.status === 'featured' && (
+                        <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 text-xs">
+                          {t.featured}
+                        </Badge>
+                      )}
+                      {artwork.status === 'sold' && (
+                        <Badge className="bg-gradient-to-r from-red-500 to-rose-500 text-white border-0 text-xs">
+                          {t.sold}
+                        </Badge>
+                      )}
+                      {artwork.status === 'available' && (
+                        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 text-xs">
+                          {t.available}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute bottom-0 left-0 right-0 p-3">
+                        <h4 className="text-white text-sm mb-1">{artwork.title}</h4>
+                        <p className="text-[#ffcc33] font-semibold">{artwork.price}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
+                    <h4 className="text-white text-sm mb-1 truncate">{artwork.title}</h4>
+                    <p className="text-[#ffcc33] text-xs">{artwork.price}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Exhibitions Gallery - Gallery Only */}
+        {(user.type === 'Gallery' || user.type === 'Gallery/Museum') && profileData.exhibitions && profileData.exhibitions.length > 0 && (
+          <div>
+            <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
+                {t.exhibitions}
+              </h3>
+              <span className="text-sm text-[#808c99]">
+                {profileData.exhibitions.length} {language === 'en' ? 'shows' : 'معرض'}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {profileData.exhibitions.map((exhibition: ExhibitionItem) => (
+                <motion.div
+                  key={exhibition.id}
+                  whileHover={{ scale: 1.03, y: -5 }}
+                  className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
+                >
+                  <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
+                    <img
+                      src={exhibition.image}
+                      alt={exhibition.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute top-2 right-2 z-10">
+                      {exhibition.status === 'active' && (
+                        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 text-xs">
+                          {language === 'en' ? 'Active' : 'نشط'}
+                        </Badge>
+                      )}
+                      {exhibition.status === 'upcoming' && (
+                        <Badge className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 text-xs">
+                          {language === 'en' ? 'Upcoming' : 'قادم'}
+                        </Badge>
+                      )}
+                      {exhibition.status === 'past' && (
+                        <Badge className="bg-gradient-to-r from-gray-500 to-gray-600 text-white border-0 text-xs">
+                          {language === 'en' ? 'Past' : 'سابق'}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute bottom-0 left-0 right-0 p-3">
+                        <h4 className="text-white text-sm mb-1">{exhibition.title}</h4>
+                        <p className="text-[#ffcc33] text-xs">{exhibition.artists}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
+                    <h4 className="text-white text-sm mb-1 truncate">{exhibition.title}</h4>
+                    <p className="text-[#ffcc33] text-xs">{exhibition.artists}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Collection Gallery - Collector Only */}
+        {user.type === 'Collector' && profileData.collection && profileData.collection.length > 0 && (
+          <div>
+            <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
+                {t.collection}
+              </h3>
+              <span className="text-sm text-[#808c99]">
+                {profileData.collection.length} {language === 'en' ? 'pieces' : 'قطعة'}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {profileData.collection.map((item: CollectionItem) => (
+                <motion.div
+                  key={item.id}
+                  whileHover={{ scale: 1.03, y: -5 }}
+                  className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
+                >
+                  <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute bottom-0 left-0 right-0 p-3">
+                        <h4 className="text-white text-sm mb-1">{item.title}</h4>
+                        <p className="text-[#808c99] text-xs mb-1">{item.artist}</p>
+                        <p className="text-[#ffcc33] font-semibold text-xs">{item.value}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
+                    <h4 className="text-white text-sm mb-1 truncate">{item.title}</h4>
+                    <p className="text-[#808c99] text-xs mb-1">{item.artist}</p>
+                    <p className="text-[#ffcc33] text-xs">{item.value}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Social Media Performance - Ambassador Only */}
+        {user.type === 'Ambassador' && profileData.socialMediaStats && profileData.socialMediaStats.length > 0 && (
+          <div>
+            <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
+                {t.socialPerformance}
+              </h3>
+            </div>
+            <div className="space-y-3">
+              {profileData.socialMediaStats.map((stat: SocialMediaStat, index: number) => (
+                <motion.div
+                  key={index}
+                  whileHover={{ scale: 1.02 }}
+                  className="glass rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all"
+                >
+                  <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className={`w-12 h-12 rounded-lg ${stat.platform === 'Instagram' ? 'bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af]' :
+                      stat.platform === 'Twitter' ? 'bg-gradient-to-br from-[#1da1f2] to-[#0c85d0]' :
+                        'bg-gradient-to-br from-[#1877f2] to-[#0e5fc6]'
+                      } flex items-center justify-center shrink-0`}>
+                      {stat.platform === 'Instagram' && <Instagram className="w-6 h-6 text-white" />}
+                      {stat.platform === 'Twitter' && <Twitter className="w-6 h-6 text-white" />}
+                      {stat.platform === 'Facebook' && <Facebook className="w-6 h-6 text-white" />}
+                    </div>
+                    <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <div className={isRTL ? 'text-right' : 'text-left'}>
+                        <p className="text-xs text-[#808c99] mb-1">{t.platform}</p>
+                        <p className="text-sm text-[#ffffff]">{stat.platform}</p>
+                      </div>
+                      <div className={isRTL ? 'text-right' : 'text-left'}>
+                        <p className="text-xs text-[#808c99] mb-1">{t.followers}</p>
+                        <p className="text-sm text-[#ffffff]">{stat.followers}</p>
+                      </div>
+                      <div className={isRTL ? 'text-right' : 'text-left'}>
+                        <p className="text-xs text-[#808c99] mb-1">{t.engagementRate}</p>
+                        <p className="text-sm text-[#ffffff]">{stat.engagement}</p>
+                      </div>
+                      <div className={isRTL ? 'text-right' : 'text-left'}>
+                        <p className="text-xs text-[#808c99] mb-1">{t.posts}</p>
+                        <p className="text-sm text-green-400 flex items-center gap-1">{stat.posts} <span className="text-xs">({stat.trend})</span></p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Achievements */}
+        <div>
+          <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+            {t.achievements}
+          </h3>
+          <div className="grid grid-cols-1 gap-3">
+            {profileData.achievements.map((achievement, index) => {
+              const Icon = achievement.icon;
+              return (
+                <motion.div
+                  key={index}
+                  whileHover={{ scale: 1.02 }}
+                  className="glass rounded-xl p-4 border border-[#ffcc33]/30"
+                >
+                  <div className={`flex items-start gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] rounded-lg flex items-center justify-center shrink-0">
+                      <Icon className="w-6 h-6 text-[#020e27]" />
+                    </div>
+                    <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                      <p className="text-[#ffffff] mb-1">{achievement.title}</p>
+                      <p className="text-[#808c99] text-sm">{achievement.description}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </CustomModal>
   );
 }
 

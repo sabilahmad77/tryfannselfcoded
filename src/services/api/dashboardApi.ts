@@ -66,6 +66,36 @@ export interface LeaderboardEntry {
   created_at?: string;
 }
 
+// User Profile Details - /market_final/view_user_profile/{id}/
+export interface UserProfileDetailsResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data: {
+    id: number;
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    username?: string | null;
+    role?: string | null;
+    profile_image?: string | null;
+    points?: string | number | null;
+    tier?: string | null;
+    // KYC + profile details
+    kyc_status?: string | null;
+    is_kyc_verified?: boolean;
+    bio?: string | null;
+    artist_statement?: string | null;
+    // Social handles
+    instagram_handle?: string | null;
+    twitter_handle?: string | null;
+    facebook_handle?: string | null;
+    linkedin_handle?: string | null;
+    // Allow any additional fields without breaking the UI
+    [key: string]: unknown;
+  };
+}
+
 // Public Leaderboard Response (market_final/leaderboard)
 export interface LeaderboardResponse {
     all_page: number;
@@ -521,6 +551,15 @@ export const dashboardApi = baseApi.injectEndpoints({
       providesTags: ["User"],
     }),
 
+    // Get User Profile Details - GET /api/market_final/view_user_profile/{id}/
+    getUserProfileDetails: builder.query<UserProfileDetailsResponse, number>({
+      query: (userId) => ({
+        url: `/market_final/view_user_profile/${userId}/`,
+        method: "GET",
+      }),
+      providesTags: (_result, _error, userId) => [{ type: "User", id: userId }],
+    }),
+
     // Get User Leaderboard - GET /api/market_final/user_leaderboard (authenticated, after login)
     getUserLeaderboard: builder.query<UserLeaderboardResponse, LeaderboardQueryParams | undefined>({
       query: (params) => {
@@ -708,6 +747,7 @@ export const {
   useGetProgressionQuery,
   useGetDashboardStatsGalleryQuery,
   useGetDashboardStatsAmbassadorQuery,
+  useGetUserProfileDetailsQuery,
   useGetUserLeaderboardQuery,
   useGetArtistRoasterQuery,
   useGetArtistRoasterByIdQuery,

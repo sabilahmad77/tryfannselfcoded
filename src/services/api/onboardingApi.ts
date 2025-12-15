@@ -60,6 +60,8 @@ export interface KYCVerificationRequest {
   nationality: string;
   city: string;
   postal_code: string;
+  street_address?: string;
+  id_type?: string;
   gov_issued_id?: File;
   proof_address?: File;
 }
@@ -94,6 +96,7 @@ export interface RewardsResponse {
 export interface DropdownOption {
   id?: number;
   name?: string;
+  range?: string;
   value?: string;
   label?: string;
   [key: string]: unknown;
@@ -216,6 +219,12 @@ export const onboardingApi = baseApi.injectEndpoints({
         body.append("nationality", formData.nationality);
         body.append("city", formData.city);
         body.append("postal_code", formData.postal_code);
+        if (formData.street_address) {
+          body.append("street_address", formData.street_address);
+        }
+        if (formData.id_type) {
+          body.append("id_type", formData.id_type);
+        }
 
         // Only append files if they are provided
         if (formData.gov_issued_id) {
@@ -278,6 +287,16 @@ export const onboardingApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    // Get Artist Price Range Options - matches Postman: GET /api/market_final/artist_price_range
+    // Expected API shape (per collection):
+    // { success, status_code, message, data: [{ id, range, ... }] }
+    getArtistPriceRangeOptions: builder.query<DropdownOptionsResponse, void>({
+      query: () => ({
+        url: "/market_final/artist_price_range",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -291,4 +310,5 @@ export const {
   useGetTwitterFollowerOptionsQuery,
   useGetYoutubeSubscriberOptionsQuery,
   useGetPrimaryPlatformOptionsQuery,
+  useGetArtistPriceRangeOptionsQuery,
 } = onboardingApi;

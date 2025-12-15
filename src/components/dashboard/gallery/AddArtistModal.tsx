@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { createPortal } from "react-dom";
-import { motion } from "motion/react";
-import { X, Loader2, User, Briefcase, Award, Image, Mail } from "lucide-react";
+import { Loader2, User, Briefcase, Award, Image, Mail } from "lucide-react";
 import { Button } from "../../ui/button";
 import { useLanguage } from "@/contexts/useLanguage";
 import { InputField, SelectField } from "../../ui/custom-form-elements";
+import { CustomModal } from "../../ui/CustomModal";
 
 export interface Artist {
   name: string;
@@ -106,33 +105,43 @@ export function AddArtistModal({
     });
   };
 
-  if (!isOpen) return null;
-
-  return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto border border-[#4e4e4e78] shadow-2xl"
+  const footer = (
+    <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+      <Button
+        onClick={onClose}
+        variant="outline"
+        className="flex-1 transition-all duration-200 cursor-pointer"
       >
-        {/* Modal Header */}
-        <div
-          className={`flex items-center justify-between mb-6 ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
-        >
-          <h3 className="text-2xl text-[#ffffff]">{t.addNewArtist}</h3>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="text-[#808c99] hover:text-[#ffffff] transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </Button>
-        </div>
+        {t.cancel}
+      </Button>
+      <Button
+        onClick={handleSave}
+        disabled={
+          !formData.name.trim() || !formData.email.trim() || !formData.specialty.trim() || isLoading
+        }
+        className="flex-1 bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffcc33]/90 hover:to-[#ffb54d]/90 hover:shadow-lg hover:shadow-[#ffcc33]/50 text-[#0F021C] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'} animate-spin text-[#0F021C]`} />
+            {language === "en" ? "Saving..." : "جاري الحفظ..."}
+          </>
+        ) : (
+          t.save
+        )}
+      </Button>
+    </div>
+  );
 
+  return (
+    <CustomModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t.addNewArtist}
+      size="md"
+      footer={footer}
+    >
+      <div className="p-6">
         {/* Form */}
         <div className="space-y-4">
           {/* Artist Name */}
@@ -234,35 +243,7 @@ export function AddArtistModal({
             isRTL={isRTL}
           />
         </div>
-
-        {/* Action Buttons */}
-        <div className={`flex gap-3 mt-6 ${isRTL ? "flex-row-reverse" : ""}`}>
-          <Button
-            onClick={onClose}
-            variant="outline"
-            className="flex-1 transition-all duration-200 cursor-pointer"
-          >
-            {t.cancel}
-          </Button>
-          <Button
-            onClick={handleSave}
-            disabled={
-              !formData.name.trim() || !formData.email.trim() || !formData.specialty.trim() || isLoading
-            }
-            className="flex-1 bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffcc33]/90 hover:to-[#ffb54d]/90 hover:shadow-lg hover:shadow-[#ffcc33]/50 text-[#0F021C] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'} animate-spin text-[#0F021C]`} />
-                {language === "en" ? "Saving..." : "جاري الحفظ..."}
-              </>
-            ) : (
-              t.save
-            )}
-          </Button>
-        </div>
-      </motion.div>
-    </div>,
-    document.body
+      </div>
+    </CustomModal>
   );
 }

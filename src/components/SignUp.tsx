@@ -35,7 +35,6 @@ import {
   SelectField,
 } from "./ui/custom-form-elements";
 import { Label } from "./ui/label";
-import { cn } from "./ui/utils";
 
 interface SignUpProps {
   language: "en" | "ar";
@@ -983,8 +982,6 @@ export function SignUp({
                         isRTL={isRTL}
                         required
                         error={errors.fullName?.message}
-                        inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                        labelClassName="text-white/80 text-sm"
                       />
 
                       {/* Email */}
@@ -1009,8 +1006,6 @@ export function SignUp({
                         isRTL={isRTL}
                         required
                         error={errors.email?.message}
-                        inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                        labelClassName="text-white/80 text-sm"
                       />
 
                       {/* Password Fields */}
@@ -1038,8 +1033,6 @@ export function SignUp({
                           onShowPasswordChange={setShowPassword}
                           required
                           error={errors.password?.message}
-                          inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                          labelClassName="text-white/80 text-sm"
                         />
 
                         <div className="relative">
@@ -1064,15 +1057,6 @@ export function SignUp({
                             onShowPasswordChange={setShowConfirmPassword}
                             required
                             error={errors.confirmPassword?.message}
-                            inputClassName={cn(
-                              "bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20",
-                              passwordsMatch &&
-                              !errors.confirmPassword &&
-                              "border-green-500/50 focus:border-green-500/50",
-                              passwordsMismatch &&
-                              "border-red-500/50 focus:border-red-500/50"
-                            )}
-                            labelClassName="text-white/80 text-sm"
                           />
                           {/* Password match indicator */}
                           {confirmPassword && (
@@ -1115,10 +1099,6 @@ export function SignUp({
                               });
                             }}
                             isRTL={isRTL}
-                            inputClassName="bg-white/5 border-white/10 text-white focus:border-primary/50 focus:ring-primary/20"
-                            labelClassName="text-white/80 text-sm"
-                            contentClassName="bg-[#1D112A] border-white/10"
-                            itemClassName="text-white focus:bg-primary/10 focus:text-primary"
                           />
                         </div>
 
@@ -1132,12 +1112,6 @@ export function SignUp({
                           icon={Gift}
                           isRTL={isRTL}
                           disabled={!!initialReferralCode}
-                          inputClassName={
-                            initialReferralCode
-                              ? "bg-white/5 border-white/10 text-white/60 placeholder:text-white/30 cursor-not-allowed opacity-60"
-                              : "bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-primary/50 focus:ring-primary/20"
-                          }
-                          labelClassName="text-white/80 text-sm"
                         />
                       </div>
 

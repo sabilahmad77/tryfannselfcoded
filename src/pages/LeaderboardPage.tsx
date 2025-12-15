@@ -63,7 +63,7 @@ const content = {
       collector: "Collectors",
       ambassador: "Ambassadors",
     },
-    columns: ["Rank", "User", "Points", "Tier", ""],
+    columns: ["Rank", "User", "Role", "Tier", "Points", ""],
     follow: "Follow",
     following: "Following",
     stats: {
@@ -103,7 +103,7 @@ const content = {
       collector: "الجامعون",
       ambassador: "السفيراء",
     },
-    columns: ["الترتيب", "المستخدم", "النقاط", "المستوى", ""],
+    columns: ["الترتيب", "المستخدم", "الدور", "المستوى", "النقاط", ""],
     follow: "متابعة",
     following: "متابع",
     stats: {
@@ -351,25 +351,48 @@ export function LeaderboardPage() {
       : null;
 
   // Map API data to component format
+  type EntryWithRoleHints = LeaderboardEntry & {
+    role?: string | null;
+    role_name?: string | null;
+    user_type?: string | null;
+    persona?: string | null;
+  };
+
   const mapApiDataToLeaders = (entries: LeaderboardEntry[]) => {
-    return entries.map((entry) => ({
-      id: entry.id, // Include id for follow API
-      rank: entry.rank || 0,
-      name:
-        `${entry.first_name || ""} ${entry.last_name || ""}`.trim() ||
-        entry.email ||
-        "Unknown",
-      username: entry.username || `@${entry.email?.split("@")[0] || "user"}`,
-      points: entry.points ? parseInt(entry.points, 10) : 0,
-      tier: entry.tier || "Explorer",
-      avatar:
-        entry.profile_image ||
-        `https://api.dicebear.com/7.x/avataaars/svg?seed=${
-          entry.first_name || entry.email || entry.id
-        }`,
-      type: entry.tier || "Collector", // Default type based on tier or use a field from API if available
-      is_follow: entry.is_follow || false,
-    }));
+    return entries.map((entry) => {
+      // Try to derive a human-readable role from common API fields
+      const withHints = entry as EntryWithRoleHints;
+      const rawRole =
+        withHints.role ||
+        withHints.role_name ||
+        withHints.user_type ||
+        withHints.persona ||
+        "";
+
+      const role =
+        typeof rawRole === "string" && rawRole.trim().length > 0
+          ? rawRole
+          : "Collector";
+
+      return {
+        id: entry.id, // Include id for follow API
+        rank: entry.rank || 0,
+        name:
+          `${entry.first_name || ""} ${entry.last_name || ""}`.trim() ||
+          entry.email ||
+          "Unknown",
+        username: entry.username || `@${entry.email?.split("@")[0] || "user"}`,
+        points: entry.points ? parseInt(entry.points, 10) : 0,
+        tier: entry.tier || "Explorer",
+        avatar:
+          entry.profile_image ||
+          `https://api.dicebear.com/7.x/avataaars/svg?seed=${
+            entry.first_name || entry.email || entry.id
+          }`,
+        type: role,
+        is_follow: entry.is_follow || false,
+      };
+    });
   };
 
   // Get leaders from API data (server-side filtering and pagination handled by API)
@@ -1094,31 +1117,28 @@ export function LeaderboardPage() {
                                 </span>
                               </>
                             )}
-                            <Badge
-                              variant="outline"
-                              className={`${getPersonaBadgeColor(
-                                leader.type
-                              )} border text-xs`}
-                            >
-                              <span
-                                className={`flex items-center gap-1 ${
-                                  isRTL ? "flex-row-reverse" : ""
-                                }`}
-                              >
-                                {getPersonaIcon(leader.type)}
-                                {leader.type}
-                              </span>
-                            </Badge>
                           </div>
                         </div>
                       </div>
                     </td>
 
-                    {/* Points */}
+                    {/* Role */}
                     <td className="px-6 py-4">
-                      <span className="text-transparent bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] bg-clip-text text-lg">
-                        {leader.points.toLocaleString()}
-                      </span>
+                      <Badge
+                        variant="outline"
+                        className={`${getPersonaBadgeColor(
+                          leader.type
+                        )} border text-xs`}
+                      >
+                        <span
+                          className={`flex items-center gap-1 ${
+                            isRTL ? "flex-row-reverse" : ""
+                          }`}
+                        >
+                          {getPersonaIcon(leader.type)}
+                          {leader.type}
+                        </span>
+                      </Badge>
                     </td>
 
                     {/* Tier */}
@@ -1129,6 +1149,13 @@ export function LeaderboardPage() {
                       >
                         {leader.tier}
                       </Badge>
+                    </td>
+
+                    {/* Points */}
+                    <td className="px-6 py-4">
+                      <span className="text-transparent bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] bg-clip-text text-lg">
+                        {leader.points.toLocaleString()}
+                      </span>
                     </td>
 
                     {/* Follow Button - Only show when authenticated */}
@@ -1225,8 +1252,18 @@ export function LeaderboardPage() {
       {selectedUser && (
         <UserProfileModal
           isOpen={isProfileModalOpen}
-          user={selectedUser}
           onClose={handleCloseProfile}
+          user={selectedUser}
+          isFollowing={
+            isAuthenticated &&
+            (isFollowing(selectedUser.username) || selectedUser.is_follow === true)
+          }
+          isFollowLoading={loadingUserId === selectedUser.id}
+          onToggleFollow={
+            isAuthenticated && selectedUser.id
+              ? () => toggleFollow(selectedUser.id as number, selectedUser.username)
+              : undefined
+          }
         />
       )}
     </>

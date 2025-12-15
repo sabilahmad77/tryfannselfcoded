@@ -27,7 +27,7 @@ export function CompleteProfile({
   const isRTL = language === 'ar';
 
   // Don't render if profile is already completed
-  if (profileCompleted) {
+  if (!profileCompleted) {
     return null;
   }
 

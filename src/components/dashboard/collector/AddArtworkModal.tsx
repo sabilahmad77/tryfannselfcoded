@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
-import { motion } from "motion/react";
 import {
-  X,
   Loader2,
   Image,
   User,
@@ -14,6 +11,7 @@ import { Button } from "../../ui/button";
 import { useLanguage } from "@/contexts/useLanguage";
 import { InputField, SelectField } from "../../ui/custom-form-elements";
 import { formatDateForInput } from "@/utils/dateUtils";
+import { CustomModal } from "../../ui/CustomModal";
 
 export interface Artwork {
   id?: number;
@@ -163,35 +161,51 @@ export function AddArtworkModal({
     });
   };
 
-  if (!isOpen) return null;
-
-  return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-2xl border border-[#ffcc33]/30 p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
+  const footer = (
+    <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
+      <Button
+        onClick={onClose}
+        variant="outline"
+        className="flex-1 transition-all duration-200 cursor-pointer"
       >
-        {/* Modal Header */}
-        <div
-          className={`flex items-center justify-between mb-6 ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
-        >
-          <h2 className="text-2xl text-[#ffffff]">
-            {isEditMode ? t.editArtworkTitle : t.addArtworkTitle}
-          </h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="text-[#808c99] hover:text-[#ffffff] transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </Button>
-        </div>
+        {t.cancel}
+      </Button>
+      <Button
+        onClick={handleSave}
+        disabled={
+          !formData.title || !formData.artist || !formData.year || isLoading
+        }
+        className="flex-1 bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#e6b800] hover:to-[#e6b800] hover:shadow-lg hover:shadow-[#ffcc33]/50 text-[#0F021C] border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            {language === "en"
+              ? isEditMode
+                ? "Updating..."
+                : "Adding..."
+              : isEditMode
+                ? "جاري التحديث..."
+                : "جاري الإضافة..."}
+          </>
+        ) : isEditMode ? (
+          t.updateArtwork
+        ) : (
+          t.addToCollection
+        )}
+      </Button>
+    </div>
+  );
 
+  return (
+    <CustomModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isEditMode ? t.editArtworkTitle : t.addArtworkTitle}
+      size="lg"
+      footer={footer}
+    >
+      <div className="p-6">
         {/* Form */}
         <div className="space-y-4">
           {/* Artwork Title */}
@@ -308,43 +322,7 @@ export function AddArtworkModal({
             />
           </div>
         </div>
-
-        {/* Modal Actions */}
-        <div className={`flex gap-3 mt-6 ${isRTL ? "flex-row-reverse" : ""}`}>
-          <Button
-            onClick={onClose}
-            variant="outline"
-            className="flex-1 transition-all duration-200 cursor-pointer"
-          >
-            {t.cancel}
-          </Button>
-          <Button
-            onClick={handleSave}
-            disabled={
-              !formData.title || !formData.artist || !formData.year || isLoading
-            }
-            className="flex-1 bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#e6b800] hover:to-[#e6b800] hover:shadow-lg hover:shadow-[#ffcc33]/50 text-[#0F021C] border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                {language === "en"
-                  ? isEditMode
-                    ? "Updating..."
-                    : "Adding..."
-                  : isEditMode
-                    ? "جاري التحديث..."
-                    : "جاري الإضافة..."}
-              </>
-            ) : isEditMode ? (
-              t.updateArtwork
-            ) : (
-              t.addToCollection
-            )}
-          </Button>
-        </div>
-      </motion.div>
-    </div>,
-    document.body
+      </div>
+    </CustomModal>
   );
 }

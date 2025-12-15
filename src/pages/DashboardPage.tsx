@@ -7,6 +7,7 @@ import { DashboardLayout } from "@/components/dashboard/shared/DashboardLayout";
 import { DashboardWelcome } from "@/components/dashboard/shared/DashboardWelcome";
 import { PointWallet } from "@/components/dashboard/shared/PointWallet";
 import { RedemptionCodes } from "@/components/dashboard/shared/RedemptionCodes";
+import { TierProgress } from "@/components/dashboard/shared/TierProgress";
 import { URLEncoder } from "@/components/dashboard/shared/URLEncoder";
 import { WatchVideos } from "@/components/dashboard/shared/WatchVideos";
 import { useLanguage } from "@/contexts/useLanguage";
@@ -133,33 +134,20 @@ export function DashboardPage() {
 
       {/* Widgets Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        {/* My Artworks - Takes full width on mobile, half on desktop */}
+        {/* Point Wallet */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="lg:col-span-2"
-        >
-          <AddArtwork
-            profileCompleted={profileCompleted ?? false}
-            onCompleteProfile={handleCompleteProfile}
-          />
-        </motion.div>
-
-        {/* Point Wallet - Takes full width on mobile, half on desktop */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <PointWallet />
         </motion.div>
 
-        {/* URL Encoder */}
+        {/* Referral Link Generator (URL Encoder) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <URLEncoder />
         </motion.div>
@@ -168,18 +156,41 @@ export function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           <RedemptionCodes />
         </motion.div>
 
-        {/* Watch Videos */}
+        {/* Watch & Earn Videos */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <WatchVideos />
+        </motion.div>
+
+        {/* My Artworks - Full width */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
+          className="lg:col-span-2"
         >
-          <WatchVideos />
+          <AddArtwork
+            profileCompleted={profileCompleted ?? false}
+            onCompleteProfile={handleCompleteProfile}
+          />
+        </motion.div>
+
+        {/* Tier Progress - Full width for visual symmetry */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="lg:col-span-2"
+        >
+          <TierProgress />
         </motion.div>
       </div>
     </DashboardLayout>

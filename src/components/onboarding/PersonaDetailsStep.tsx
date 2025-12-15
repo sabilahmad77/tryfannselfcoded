@@ -3,8 +3,12 @@ import {
   FileUploadField,
   InputField,
   TextareaField,
+  SelectField,
 } from "@/components/ui/custom-form-elements";
-import { useProfileSetupMutation } from "@/services/api/onboardingApi";
+import {
+  useProfileSetupMutation,
+  useGetArtistPriceRangeOptionsQuery,
+} from "@/services/api/onboardingApi";
 import { extractErrorMessage } from "@/utils/errorMessages";
 import {
   ArrowRight,
@@ -48,6 +52,21 @@ interface PersonaDetailsFormData {
   focus: string;
   years_of_experience: string;
   profile_image: File | null;
+  // Shared extra fields across personas
+  location: string;
+  phone_number: string;
+  // Artist-specific fields
+  price_range: string;
+  preferred_commission_rate: string;
+  shipping_preference: string;
+  studio_address: string;
+  education: string;
+  award_artist: string;
+  artist_statement: string;
+  // Gallery-specific fields
+  organization_email: string;
+  organization_main_contact_name: string;
+  organization_name: string;
 }
 
 export function PersonaDetailsStep({
@@ -71,6 +90,9 @@ export function PersonaDetailsStep({
   );
   const [profileSetup, { isLoading }] = useProfileSetupMutation();
 
+  // Artist price range options from API
+  const { data: artistPriceRangeData } = useGetArtistPriceRangeOptionsQuery();
+
   // Load initial values from Redux
   const savedData = (data.personaDetails ||
     {}) as Partial<PersonaDetailsFormData>;
@@ -82,6 +104,20 @@ export function PersonaDetailsStep({
     focus: (savedData.focus as string) || "",
     years_of_experience: (savedData.years_of_experience as string) || "",
     profile_image: (savedData.profile_image as File | null) || null,
+    location: (savedData.location as string) || "",
+    phone_number: (savedData.phone_number as string) || "",
+    price_range: (savedData.price_range as string) || "",
+    preferred_commission_rate:
+      (savedData.preferred_commission_rate as string) || "",
+    shipping_preference: (savedData.shipping_preference as string) || "",
+    studio_address: (savedData.studio_address as string) || "",
+    education: (savedData.education as string) || "",
+    award_artist: (savedData.award_artist as string) || "",
+    artist_statement: (savedData.artist_statement as string) || "",
+    organization_email: (savedData.organization_email as string) || "",
+    organization_main_contact_name:
+      (savedData.organization_main_contact_name as string) || "",
+    organization_name: (savedData.organization_name as string) || "",
   };
 
   const {
@@ -132,6 +168,20 @@ export function PersonaDetailsStep({
       years_of_experience: (savedData.years_of_experience as string) || "",
       profile_image:
         (savedProfileImage instanceof File ? savedProfileImage : null) || null,
+      location: (savedData.location as string) || "",
+      phone_number: (savedData.phone_number as string) || "",
+      price_range: (savedData.price_range as string) || "",
+      preferred_commission_rate:
+        (savedData.preferred_commission_rate as string) || "",
+      shipping_preference: (savedData.shipping_preference as string) || "",
+      studio_address: (savedData.studio_address as string) || "",
+      education: (savedData.education as string) || "",
+      award_artist: (savedData.award_artist as string) || "",
+      artist_statement: (savedData.artist_statement as string) || "",
+      organization_email: (savedData.organization_email as string) || "",
+      organization_main_contact_name:
+        (savedData.organization_main_contact_name as string) || "",
+      organization_name: (savedData.organization_name as string) || "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.personaDetails]);
@@ -163,7 +213,31 @@ export function PersonaDetailsStep({
       (currentValues.focus?.trim() || "") ===
         ((submitted.focus as string) || "") &&
       (currentValues.years_of_experience?.trim() || "") ===
-        ((submitted.years_of_experience as string) || "");
+        ((submitted.years_of_experience as string) || "") &&
+      (currentValues.location?.trim() || "") ===
+        ((submitted.location as string) || "") &&
+      (currentValues.phone_number?.trim() || "") ===
+        ((submitted.phone_number as string) || "") &&
+      (currentValues.price_range?.trim() || "") ===
+        ((submitted.price_range as string) || "") &&
+      (currentValues.preferred_commission_rate?.trim() || "") ===
+        ((submitted.preferred_commission_rate as string) || "") &&
+      (currentValues.shipping_preference?.trim() || "") ===
+        ((submitted.shipping_preference as string) || "") &&
+      (currentValues.studio_address?.trim() || "") ===
+        ((submitted.studio_address as string) || "") &&
+      (currentValues.education?.trim() || "") ===
+        ((submitted.education as string) || "") &&
+      (currentValues.award_artist?.trim() || "") ===
+        ((submitted.award_artist as string) || "") &&
+      (currentValues.artist_statement?.trim() || "") ===
+        ((submitted.artist_statement as string) || "") &&
+      (currentValues.organization_email?.trim() || "") ===
+        ((submitted.organization_email as string) || "") &&
+      (currentValues.organization_main_contact_name?.trim() || "") ===
+        ((submitted.organization_main_contact_name as string) || "") &&
+      (currentValues.organization_name?.trim() || "") ===
+        ((submitted.organization_name as string) || "");
 
     // Profile image comparison - check if both are null or both are files
     const imageMatch =
@@ -188,6 +262,7 @@ export function PersonaDetailsStep({
         displayNamePlaceholder: "Your professional name",
         bio: "Artist Bio",
         bioPlaceholder: "Tell us about your artistic journey and style...",
+        // reverted label and placeholder to original wording
         specialization: "Art Medium/Style",
         specializationPlaceholder: "e.g., Contemporary, Abstract, Digital Art",
         experience: "Years of Experience",
@@ -216,31 +291,15 @@ export function PersonaDetailsStep({
         experience: "Years Collecting",
         experiencePlaceholder: "7",
       },
-      curator: {
-        displayName: "Professional Name",
-        displayNamePlaceholder: "Your curatorial name",
-        bio: "Curatorial Statement",
-        bioPlaceholder: "Share your curatorial approach and philosophy...",
-        specialization: "Curatorial Expertise",
-        specializationPlaceholder: "e.g., Contemporary Art, Cultural Heritage",
-        experience: "Years of Experience",
-        experiencePlaceholder: "8",
-      },
-      investor: {
-        displayName: "Name/Organization",
-        displayNamePlaceholder: "Your name or company",
-        bio: "Investment Philosophy",
-        bioPlaceholder: "What guides your art investment decisions?...",
-        specialization: "Investment Focus",
-        specializationPlaceholder: "e.g., Emerging Artists, Blue-chip Art",
-        experience: "Years Investing",
-        experiencePlaceholder: "5",
-      },
       common: {
         website: "Website",
         websitePlaceholder: "https://yourwebsite.com",
         instagram: "Instagram Handle",
         instagramPlaceholder: "@yourusername",
+        location: "Location",
+        locationPlaceholder: "City, Country",
+        phone: "Phone Number",
+        phonePlaceholder: "+971 50 123 4567",
         uploadPhoto: "Upload Profile Photo",
         optional: "(Optional)",
         required: "Required fields",
@@ -286,31 +345,15 @@ export function PersonaDetailsStep({
         experience: "سنوات الجمع",
         experiencePlaceholder: "7",
       },
-      curator: {
-        displayName: "الاسم المهني",
-        displayNamePlaceholder: "اسمك التنسيقي",
-        bio: "البيان التنسيقي",
-        bioPlaceholder: "شارك نهجك وفلسفتك التنسيقية...",
-        specialization: "الخبرة التنسيقية",
-        specializationPlaceholder: "مثلاً: الفن المعاصر، التراث الثقافي",
-        experience: "سنوات الخبرة",
-        experiencePlaceholder: "8",
-      },
-      investor: {
-        displayName: "الاسم/المؤسسة",
-        displayNamePlaceholder: "اسمك أو شركتك",
-        bio: "فلسفة الاستثمار",
-        bioPlaceholder: "ما الذي يوجه قرارات استثمارك الفني؟...",
-        specialization: "تركيز الاستثمار",
-        specializationPlaceholder: "مثلاً: الفنانون الناشئون، الفن الممتاز",
-        experience: "سنوات الاستثمار",
-        experiencePlaceholder: "5",
-      },
       common: {
         website: "الموقع الإلكتروني",
         websitePlaceholder: "https://yourwebsite.com",
         instagram: "حساب إنستغرام",
         instagramPlaceholder: "@yourusername",
+        location: "الموقع",
+        locationPlaceholder: "المدينة، الدولة",
+        phone: "رقم الهاتف",
+        phonePlaceholder: "+971 50 123 4567",
         uploadPhoto: "تحميل صورة الملف الشخصي",
         optional: "(اختياري)",
         required: "الحقول المطلوبة",
@@ -322,9 +365,58 @@ export function PersonaDetailsStep({
   };
 
   const content = t[language];
+  // Transform artist price range API response into SelectField options
+  const priceRangeOptions: Array<{ value: string; label: string }> = (() => {
+    if (!artistPriceRangeData) return [];
+    try {
+      const response = artistPriceRangeData as {
+        data?: Array<{
+          id?: number;
+          range?: string;
+          name?: string;
+          value?: string;
+          label?: string;
+        }> | string[];
+      };
+      if (!response.data) return [];
+
+      const { data } = response;
+
+      if (Array.isArray(data)) {
+        if (data.length > 0 && typeof data[0] === "string") {
+          return (data as string[]).map((opt) => ({
+            value: opt,
+            label: opt,
+          }));
+        }
+
+        if (data.length > 0 && typeof data[0] === "object") {
+          return (data as Array<{
+            id?: number;
+            range?: string;
+            name?: string;
+            value?: string;
+            label?: string;
+          }>).map((item) => {
+            const label =
+              item.range || item.name || item.value || item.label || "";
+            const id = item.id ?? label;
+            return {
+              value: String(id),
+              label: label,
+            };
+          });
+        }
+      }
+      return [];
+    } catch (e) {
+      console.error("Failed to transform artist price range options", e);
+      return [];
+    }
+  })();
   const personaContent =
     data.persona && typeof data.persona === "string" && data.persona in content
-      ? (content[data.persona as keyof typeof content] as typeof content.artist)
+      ? (content[data.persona as keyof typeof content] as (typeof content)["artist"])
       : content.artist;
 
   const icons = {
@@ -336,6 +428,8 @@ export function PersonaDetailsStep({
   };
 
   const Icon = icons[data.persona as keyof typeof icons] || Palette;
+  const isArtist = data.persona === "artist";
+  const isGallery = data.persona === "gallery";
 
   const onSubmit = async (formData: PersonaDetailsFormData) => {
     // If step was already submitted and no changes, just proceed without API call
@@ -355,6 +449,41 @@ export function PersonaDetailsStep({
           ? Number(formData.years_of_experience)
           : undefined,
         profile_image: profileImage || undefined,
+        // Shared extra fields
+        location: formData.location?.trim() || undefined,
+        phone_number: formData.phone_number?.trim() || undefined,
+        // Artist-specific
+        price_range: isArtist
+          ? formData.price_range?.trim() || undefined
+          : undefined,
+        preferred_commission_rate: isArtist
+          ? formData.preferred_commission_rate?.trim() || undefined
+          : undefined,
+        shipping_preference: isArtist
+          ? formData.shipping_preference?.trim() || undefined
+          : undefined,
+        studio_address: isArtist
+          ? formData.studio_address?.trim() || undefined
+          : undefined,
+        education: isArtist
+          ? formData.education?.trim() || undefined
+          : undefined,
+        award_artist: isArtist
+          ? formData.award_artist?.trim() || undefined
+          : undefined,
+        artist_statement: isArtist
+          ? formData.artist_statement?.trim() || undefined
+          : undefined,
+        // Gallery-specific
+        organization_email: isGallery
+          ? formData.organization_email?.trim() || undefined
+          : undefined,
+        organization_main_contact_name: isGallery
+          ? formData.organization_main_contact_name?.trim() || undefined
+          : undefined,
+        organization_name: isGallery
+          ? formData.organization_name?.trim() || undefined
+          : undefined,
       };
 
       const result = await profileSetup(profileData).unwrap();
@@ -433,6 +562,10 @@ export function PersonaDetailsStep({
                   years_of_experience: formData.years_of_experience
                     ? Number(formData.years_of_experience)
                     : userData.years_of_experience || null,
+                  location:
+                    formData.location?.trim() || userData.location || null,
+                  phone_number:
+                    formData.phone_number?.trim() || userData.phone_number || null,
                   // profile_image is already included from userData spread above
                 };
 
@@ -455,6 +588,10 @@ export function PersonaDetailsStep({
                   years_of_experience: formData.years_of_experience
                     ? Number(formData.years_of_experience)
                     : userData.years_of_experience || null,
+                  location:
+                    formData.location?.trim() || userData.location || null,
+                  phone_number:
+                    formData.phone_number?.trim() || userData.phone_number || null,
                   // profile_image is already included from userData spread above
                 };
 
@@ -609,8 +746,6 @@ export function PersonaDetailsStep({
               isRTL={isRTL}
               required
               error={errors.title?.message}
-              inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-              labelClassName="text-white/80 text-sm"
             />
           </motion.div>
 
@@ -639,8 +774,6 @@ export function PersonaDetailsStep({
               isRTL={isRTL}
               required
               error={errors.bio?.message}
-              inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-              labelClassName="text-white/80 text-sm"
             />
           </motion.div>
 
@@ -658,8 +791,6 @@ export function PersonaDetailsStep({
                 placeholder={personaContent.specializationPlaceholder}
                 isRTL={isRTL}
                 error={errors.focus?.message}
-                inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
               />
             </motion.div>
 
@@ -684,8 +815,49 @@ export function PersonaDetailsStep({
                 placeholder={personaContent.experiencePlaceholder}
                 isRTL={isRTL}
                 error={errors.years_of_experience?.message}
-                inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
+              />
+            </motion.div>
+          </div>
+
+          {/* Location & Phone */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Location */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55 }}
+            >
+              <InputField
+                {...register("location")}
+                label={
+                  isGallery
+                    ? content.gallery.location
+                    : content.common.location
+                }
+                placeholder={
+                  isGallery
+                    ? content.gallery.locationPlaceholder
+                    : content.common.locationPlaceholder
+                }
+                icon={Globe}
+                isRTL={isRTL}
+                error={errors.location?.message}
+              />
+            </motion.div>
+
+            {/* Phone Number */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <InputField
+                {...register("phone_number")}
+                label={content.common.phone}
+                type="tel"
+                placeholder={content.common.phonePlaceholder}
+                isRTL={isRTL}
+                error={errors.phone_number?.message}
               />
             </motion.div>
           </div>
@@ -714,8 +886,6 @@ export function PersonaDetailsStep({
                 icon={Globe}
                 isRTL={isRTL}
                 error={errors.website?.message}
-                inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
               />
             </motion.div>
 
@@ -732,11 +902,198 @@ export function PersonaDetailsStep({
                 icon={Instagram}
                 isRTL={isRTL}
                 error={errors.instagram_handle?.message}
-                inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
               />
             </motion.div>
           </div>
+
+          {/* Artist extra fields */}
+          {isArtist && (
+            <div className="space-y-6 mt-2">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75 }}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <SelectField
+                    label={language === "en" ? "Price Range" : "نطاق الأسعار"}
+                    placeholder={
+                      language === "en"
+                        ? "Select price range"
+                        : "اختر نطاق الأسعار"
+                    }
+                    options={priceRangeOptions}
+                    value={watch("price_range")}
+                    onValueChange={(value) =>
+                      setValue("price_range", value, { shouldValidate: true })
+                    }
+                    isRTL={isRTL}
+                    error={errors.price_range?.message}
+                  />
+                  <InputField
+                    {...register("preferred_commission_rate")}
+                    label={
+                      language === "en"
+                        ? "Preferred Commission Rate (%)"
+                        : "نسبة العمولة المفضلة (%)"
+                    }
+                    type="number"
+                    placeholder={language === "en" ? "10" : "10"}
+                    isRTL={isRTL}
+                    error={errors.preferred_commission_rate?.message}
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <InputField
+                    {...register("shipping_preference")}
+                    label={
+                      language === "en"
+                        ? "Shipping Preference"
+                        : "تفضيلات الشحن"
+                    }
+                    placeholder={
+                      language === "en"
+                        ? "e.g. Local, International, Both"
+                        : "مثال: محلي، دولي، كلاهما"
+                    }
+                    isRTL={isRTL}
+                    error={errors.shipping_preference?.message}
+                  />
+                  <InputField
+                    {...register("studio_address")}
+                    label={
+                      language === "en"
+                        ? "Studio Address"
+                        : "عنوان الاستوديو"
+                    }
+                    placeholder={language === "en" ? "Studio address" : "عنوان الاستوديو"}
+                    isRTL={isRTL}
+                    error={errors.studio_address?.message}
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.85 }}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <InputField
+                    {...register("education")}
+                    label={language === "en" ? "Education" : "التعليم"}
+                    placeholder={
+                      language === "en" ? "Art education or background" : "التعليم أو الخلفية الفنية"
+                    }
+                    isRTL={isRTL}
+                    error={errors.education?.message}
+                  />
+                  <InputField
+                    {...register("award_artist")}
+                    label={language === "en" ? "Awards / Honors" : "الجوائز / التكريم"}
+                    placeholder={
+                      language === "en" ? "Key awards or recognitions" : "الجوائز أو التكريمات البارزة"
+                    }
+                    isRTL={isRTL}
+                    error={errors.award_artist?.message}
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 }}
+              >
+                <TextareaField
+                  {...register("artist_statement")}
+                  label={
+                    language === "en"
+                      ? "Artist Statement"
+                      : "بيان الفنان"
+                  }
+                  placeholder={
+                    language === "en"
+                      ? "Share your artistic philosophy or statement..."
+                      : "شارك فلسفتك أو بيانك الفني..."
+                  }
+                  isRTL={isRTL}
+                  error={errors.artist_statement?.message}
+                />
+              </motion.div>
+            </div>
+          )}
+
+          {/* Gallery extra organization fields */}
+          {isGallery && (
+            <div className="space-y-6 mt-2">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75 }}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <InputField
+                    {...register("organization_name")}
+                    label={
+                      language === "en"
+                        ? "Organization Name"
+                        : "اسم المؤسسة"
+                    }
+                    placeholder={
+                      language === "en" ? "Gallery organization name" : "اسم مؤسسة المعرض"
+                    }
+                    isRTL={isRTL}
+                    error={errors.organization_name?.message}
+                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                  />
+                  <InputField
+                    {...register("organization_email")}
+                    label={
+                      language === "en"
+                        ? "Organization Email"
+                        : "البريد الإلكتروني للمؤسسة"
+                    }
+                    type="email"
+                    placeholder="org@example.com"
+                    isRTL={isRTL}
+                    error={errors.organization_email?.message}
+                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <InputField
+                  {...register("organization_main_contact_name")}
+                  label={
+                    language === "en"
+                      ? "Main Contact Name"
+                      : "اسم جهة الاتصال الرئيسية"
+                  }
+                  placeholder={
+                    language === "en"
+                      ? "Primary contact person"
+                      : "الشخص الأساسي للتواصل"
+                  }
+                  isRTL={isRTL}
+                  error={errors.organization_main_contact_name?.message}
+                  inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
+                />
+              </motion.div>
+            </div>
+          )}
 
           {/* Action Buttons */}
           <motion.div

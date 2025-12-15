@@ -1,7 +1,7 @@
-import { Navigate, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
 import { ROUTES } from "@/routes/paths";
+import type { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
+import { Navigate, useLocation } from "react-router-dom";
 
 interface PublicRouteProps {
   children: React.ReactNode;
@@ -12,25 +12,16 @@ interface PublicRouteProps {
  * Routes accessible without token (before token is set)
  *
  * Public routes are accessible BEFORE token is set
- * If token is set (user is authenticated), redirects based on profile completion:
- *   - If profile_completed is true → redirects to dashboard
- *   - If profile_completed is false/null → redirects to onboarding
+ * If token is set (user is authenticated), redirects to dashboard regardless of profile completion
  * Uses Redux store to check authentication status (persisted via redux-persist)
- *
- * Note: Onboarding requires persona parameter, so we include it if available in Redux state
- * 
  * Exception: Leaderboard route is accessible to both authenticated and unauthenticated users
  */
 export function PublicRoute({ children }: PublicRouteProps) {
   const location = useLocation();
-  // Get authentication status, persona, and profile completion from Redux store
+  // Get authentication status from Redux store
   // This will be true if tokens exist (persisted via redux-persist)
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
-  );
-  const persona = useSelector((state: RootState) => state.auth.persona);
-  const profileCompleted = useSelector(
-    (state: RootState) => state.auth.profileCompleted
   );
 
   // Leaderboard is accessible to both authenticated and unauthenticated users
@@ -39,20 +30,10 @@ export function PublicRoute({ children }: PublicRouteProps) {
     return <>{children}</>;
   }
 
-  // If user is authenticated (token is set), redirect to appropriate private route
+  // If user is authenticated (token is set), redirect to dashboard
   // User must logout/clear token to access public routes again
   if (isAuthenticated) {
-    // If profile is completed, redirect to dashboard
-    if (profileCompleted === true) {
-      return <Navigate to={ROUTES.DASHBOARD} replace />;
-    }
-
-    // Otherwise, redirect to onboarding (profile not completed or status unknown)
-    // Onboarding requires persona parameter, include it if available
-    const onboardingPath = persona
-      ? `${ROUTES.ONBOARDING}?persona=${encodeURIComponent(persona)}`
-      : ROUTES.DASHBOARD;
-    return <Navigate to={onboardingPath} replace />;
+    return <Navigate to={ROUTES.DASHBOARD} replace />;
   }
 
   // If not authenticated, allow access to public route

@@ -8,7 +8,9 @@ import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
 import { CompleteProfile } from "../shared/CompleteProfile";
 import { PointWallet } from "../shared/PointWallet";
+import { RedemptionCodes } from "../shared/RedemptionCodes";
 import { TierProgress } from "../shared/TierProgress";
+import { WatchVideos } from "../shared/WatchVideos";
 import { ArtistRoster } from "./ArtistRoster";
 import { ROUTES } from "@/routes/paths";
 
@@ -86,11 +88,28 @@ export function GalleryDashboard() {
           <ArtistRoster />
         </motion.div>
 
-        {/* Row 2: Tier Progress */}
+        {/* Row 2: Redemption Codes + Watch & Earn */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <RedemptionCodes />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <WatchVideos />
+        </motion.div>
+
+        {/* Row 3: Tier Progress (same width as other cards) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
         >
           <TierProgress />
         </motion.div>

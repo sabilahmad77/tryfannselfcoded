@@ -5,19 +5,14 @@ import {
   InputField,
   SelectField,
 } from "@/components/ui/custom-form-elements";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { CustomModal } from "@/components/ui/CustomModal";
 import { Label } from "@/components/ui/label";
 import {
   useKycVerificationMutation,
   type KYCVerificationRequest,
 } from "@/services/api/onboardingApi";
-import type { RootState } from "@/store/store";
 import { updateUser } from "@/store/authSlice";
+import type { RootState } from "@/store/store";
 import { extractErrorMessage } from "@/utils/errorMessages";
 import {
   AlertCircle,
@@ -57,6 +52,8 @@ interface KYCFormData {
   nationality: string;
   city: string;
   postal_code: string;
+  street_address: string;
+  id_type: string;
   gov_issued_id: File | null;
   proof_address: File | null;
 }
@@ -87,6 +84,8 @@ export function EditKYC({
       nationality: initialData?.nationality || "",
       city: initialData?.city || "",
       postal_code: initialData?.postal_code || "",
+      street_address: "",
+      id_type: "",
       gov_issued_id: null,
       proof_address: null,
     }),
@@ -113,6 +112,8 @@ export function EditKYC({
         nationality: initialData.nationality || "",
         city: initialData.city || "",
         postal_code: initialData.postal_code || "",
+        street_address: "",
+        id_type: "",
         gov_issued_id: null,
         proof_address: null,
       });
@@ -222,6 +223,19 @@ export function EditKYC({
       cityPlaceholder: "Your city",
       postalCode: "Postal Code",
       postalCodePlaceholder: "Postal/ZIP code",
+      streetAddress: "Street Address",
+      streetAddressPlaceholder: "Street and building",
+      idType: {
+        label: "ID Type",
+        placeholder: "Select ID type",
+        options: [
+          { value: "Passport", label: "Passport" },
+          { value: "National ID", label: "National ID" },
+          { value: "Emirates ID", label: "Emirates ID" },
+          { value: "Iqama (Saudi Residency)", label: "Iqama (Saudi Residency)" },
+          { value: "Driver's License", label: "Driver's License" },
+        ],
+      },
       documents: {
         title: "Upload Documents",
         idDocument: {
@@ -285,6 +299,22 @@ export function EditKYC({
       cityPlaceholder: "مدينتك",
       postalCode: "الرمز البريدي",
       postalCodePlaceholder: "الرمز البريدي",
+      streetAddress: "عنوان الشارع",
+      streetAddressPlaceholder: "الشارع والمبنى",
+      idType: {
+        label: "نوع الهوية",
+        placeholder: "اختر نوع الهوية",
+        options: [
+          { value: "Passport", label: "جواز السفر" },
+          { value: "National ID", label: "الهوية الوطنية" },
+          { value: "Emirates ID", label: "هوية الإمارات" },
+          {
+            value: "Iqama (Saudi Residency)",
+            label: "الإقامة (إقامة سعودية)",
+          },
+          { value: "Driver's License", label: "رخصة القيادة" },
+        ],
+      },
       documents: {
         title: "تحميل المستندات",
         idDocument: {
@@ -341,6 +371,8 @@ export function EditKYC({
         nationality: formData.nationality.trim(),
         city: formData.city.trim(),
         postal_code: formData.postal_code.trim(),
+        street_address: formData.street_address.trim(),
+        id_type: formData.id_type.trim(),
       };
 
       // Only include document fields if files are attached
@@ -490,415 +522,436 @@ export function EditKYC({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent
-        className="max-w-5xl max-h-[95vh] overflow-y-auto custom-scrollbar glass border border-white/10 bg-[#0F021C] p-8"
-        dir={isRTL ? "rtl" : "ltr"}
-      >
-        <DialogHeader>
-          <DialogTitle className="text-white text-2xl">
-            {content.title}
-          </DialogTitle>
-        </DialogHeader>
+    <CustomModal
+      isOpen={open}
+      onClose={onClose}
+      title={content.title}
+      headerIcon={Shield}
+      size="xl"
+      maxHeight="max-h-[95vh]"
+      contentClassName="p-8"
+    >
+      <div className="max-w-3xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <p className="text-white/60">{content.subtitle}</p>
+        </motion.div>
 
-        <div className="mt-4">
-          <div className="max-w-3xl mx-auto">
-            {/* Header */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-8"
-            >
-              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center">
-                <Shield className="w-8 h-8 text-amber-400" />
-              </div>
-              <h2 className="text-3xl text-white mb-2">{content.title}</h2>
-              <p className="text-white/60">{content.subtitle}</p>
-            </motion.div>
-
-            {/* Notice */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="mb-8 p-6 rounded-xl bg-blue-500/10 border border-blue-500/30"
-            >
-              <div className="flex items-start gap-3 mb-4">
-                <AlertCircle className="w-5 h-5 text-blue-400 mt-0.5 shrink-0" />
-                <h3 className="text-blue-400">{content.notice.title}</h3>
-              </div>
-              <ul className="space-y-2 ml-8">
-                {content.notice.points.map((point, index) => (
-                  <li
-                    key={index}
-                    className="text-white/60 text-sm flex items-start gap-2"
-                  >
-                    <CheckCircle className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            {/* Form */}
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* ID Number & Date of Birth */}
-              <div className="grid md:grid-cols-2 gap-6">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <InputField
-                    {...register("id_number", {
-                      required:
-                        language === "en"
-                          ? "ID number is required"
-                          : "رقم الهوية مطلوب",
-                    })}
-                    label={content.idNumber}
-                    placeholder={content.idNumberPlaceholder}
-                    icon={Hash}
-                    isRTL={isRTL}
-                    required
-                    error={errors.id_number?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                    labelClassName="text-white/80 text-sm"
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <InputField
-                    {...register("dob", {
-                      required:
-                        language === "en"
-                          ? "Date of birth is required"
-                          : "تاريخ الميلاد مطلوب",
-                    })}
-                    label={content.dateOfBirth}
-                    type="date"
-                    icon={Calendar}
-                    isRTL={isRTL}
-                    required
-                    error={errors.dob?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
-                    labelClassName="text-white/80 text-sm"
-                  />
-                </motion.div>
-              </div>
-
-              {/* Nationality & City */}
-              <div className="grid md:grid-cols-2 gap-6">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <SelectField
-                    label={content.nationality.label}
-                    placeholder={content.nationality.placeholder}
-                    options={nationalityOptions}
-                    value={watch("nationality")}
-                    onValueChange={(value) => {
-                      setValue("nationality", value, { shouldValidate: true });
-                    }}
-                    isRTL={isRTL}
-                    required
-                    error={errors.nationality?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
-                    labelClassName="text-white/80 text-sm"
-                    contentClassName="bg-[#1D112A] border-white/10"
-                    itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <InputField
-                    {...register("city", {
-                      required:
-                        language === "en"
-                          ? "City is required"
-                          : "المدينة مطلوبة",
-                    })}
-                    label={content.city}
-                    placeholder={content.cityPlaceholder}
-                    icon={MapPin}
-                    isRTL={isRTL}
-                    required
-                    error={errors.city?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                    labelClassName="text-white/80 text-sm"
-                  />
-                </motion.div>
-              </div>
-
-              {/* Postal Code */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                <InputField
-                  {...register("postal_code", {
-                    required:
-                      language === "en"
-                        ? "Postal code is required"
-                        : "الرمز البريدي مطلوب",
-                  })}
-                  label={content.postalCode}
-                  placeholder={content.postalCodePlaceholder}
-                  icon={Hash}
-                  isRTL={isRTL}
-                  required
-                  error={errors.postal_code?.message}
-                  inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                  labelClassName="text-white/80 text-sm"
-                />
-              </motion.div>
-
-              {/* Document Uploads */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-                className="space-y-4"
-              >
-                <h3 className="text-white text-lg flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-amber-400" />
-                  {content.documents.title}
-                </h3>
-
-                {/* ID Document */}
-                <div className="p-6 rounded-xl glass border border-white/10">
-                  <FileUploadField
-                    label={content.documents.idDocument.label}
-                    helperText={content.documents.idDocument.desc}
-                    accept=".pdf,.png,.jpg,.jpeg"
-                    maxSize={10 * 1024 * 1024} // 10MB
-                    value={idDocument}
-                    onFileChange={(file) => {
-                      // Cleanup old preview URL if it was a blob URL
-                      if (
-                        idDocumentPreview &&
-                        idDocumentPreview.startsWith("blob:")
-                      ) {
-                        URL.revokeObjectURL(idDocumentPreview);
-                      }
-
-                      setIdDocument(file);
-                      setValue("gov_issued_id", file || null);
-
-                      // Create preview URL for new file
-                      if (file) {
-                        const previewUrl = URL.createObjectURL(file);
-                        setIdDocumentPreview(previewUrl);
-                      } else {
-                        setIdDocumentPreview(null);
-                      }
-                    }}
-                    isRTL={isRTL}
-                    formatText={content.documents.formats}
-                    buttonText={content.documents.uploadButton}
-                    buttonClassName="border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
-                    labelClassName="text-white/80 text-sm"
-                  />
-                  {/* Show current document preview if exists and no new file selected */}
-                  {idDocumentPreview && !idDocument && (
-                    <div className="mt-4 space-y-2">
-                      <p className="text-xs text-white/60">
-                        {language === "en"
-                          ? "Current document"
-                          : "المستند الحالي"}
-                      </p>
-                      <div className="flex items-center gap-2 p-3 bg-[#1D112A]/50 rounded-lg border border-white/10">
-                        <FileText className="w-5 h-5 text-[#45e3d3] shrink-0" />
-                        <span className="text-sm text-[#ffffff] flex-1 truncate">
-                          {idDocumentPreview.includes("/") ||
-                          idDocumentPreview.startsWith("http")
-                            ? idDocumentPreview.split("/").pop() || "Document"
-                            : idDocumentPreview}
-                        </span>
-                      </div>
-                      <p className="text-xs text-white/40">
-                        {language === "en"
-                          ? "Upload new document to replace"
-                          : "قم بتحميل مستند جديد للاستبدال"}
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Proof of Address */}
-                <div className="p-6 rounded-xl glass border border-white/10">
-                  <FileUploadField
-                    label={content.documents.proofOfAddress.label}
-                    helperText={content.documents.proofOfAddress.desc}
-                    accept=".pdf,.png,.jpg,.jpeg"
-                    maxSize={10 * 1024 * 1024} // 10MB
-                    value={proofOfAddress}
-                    onFileChange={(file) => {
-                      // Cleanup old preview URL if it was a blob URL
-                      if (
-                        proofOfAddressPreview &&
-                        proofOfAddressPreview.startsWith("blob:")
-                      ) {
-                        URL.revokeObjectURL(proofOfAddressPreview);
-                      }
-
-                      setProofOfAddress(file);
-                      setValue("proof_address", file || null);
-
-                      // Create preview URL for new file
-                      if (file) {
-                        const previewUrl = URL.createObjectURL(file);
-                        setProofOfAddressPreview(previewUrl);
-                      } else {
-                        setProofOfAddressPreview(null);
-                      }
-                    }}
-                    isRTL={isRTL}
-                    formatText={content.documents.formats}
-                    buttonText={content.documents.uploadButton}
-                    buttonClassName="border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
-                    labelClassName="text-white/80 text-sm"
-                  />
-                  {/* Show current document preview if exists and no new file selected */}
-                  {proofOfAddressPreview && !proofOfAddress && (
-                    <div className="mt-4 space-y-2">
-                      <p className="text-xs text-white/60">
-                        {language === "en"
-                          ? "Current document"
-                          : "المستند الحالي"}
-                      </p>
-                      <div className="flex items-center gap-2 p-3 bg-[#1D112A]/50 rounded-lg border border-white/10">
-                        <FileText className="w-5 h-5 text-[#45e3d3] shrink-0" />
-                        <span className="text-sm text-[#ffffff] flex-1 truncate">
-                          {proofOfAddressPreview.includes("/") ||
-                          proofOfAddressPreview.startsWith("http")
-                            ? proofOfAddressPreview.split("/").pop() ||
-                              "Document"
-                            : proofOfAddressPreview}
-                        </span>
-                      </div>
-                      <p className="text-xs text-white/40">
-                        {language === "en"
-                          ? "Upload new document to replace"
-                          : "قم بتحميل مستند جديد للاستبدال"}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-
-              {/* Security Features */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-                className="p-6 rounded-xl bg-green-500/10 border border-green-500/30"
-              >
-                <div className="flex items-center gap-2 mb-4">
-                  <Shield className="w-5 h-5 text-green-400" />
-                  <h3 className="text-green-400">{content.security.title}</h3>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {content.security.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-400" />
-                      <span className="text-white/60 text-sm">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Compliance Checkbox */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 }}
-                className="p-6 rounded-xl glass border border-white/10"
-              >
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="compliance"
-                    checked={acceptedCompliance}
-                    onCheckedChange={(checked: boolean) =>
-                      setAcceptedCompliance(checked)
-                    }
-                    className="mt-0.5 border-white/20 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
-                  />
-                  <div>
-                    <Label
-                      htmlFor="compliance"
-                      className="text-white/80 cursor-pointer mb-1 block"
-                    >
-                      {content.compliance.title}
-                    </Label>
-                    <p className="text-white/60 text-sm leading-relaxed">
-                      {content.compliance.text}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Action Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.0 }}
-                className="flex gap-4 pt-6"
-              >
-                <Button
-                  type="button"
-                  onClick={onClose}
-                  variant="outline"
-                  disabled={isLoading}
-                  className="flex-1 h-12 border-white/20 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  {content.cancel}
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={isLoading || !acceptedCompliance}
-                  className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    {isLoading ? (
-                      <>
-                        <Oval
-                          height={20}
-                          width={20}
-                          color="#0F021C"
-                          ariaLabel="loading"
-                          visible={true}
-                        />
-                        {content.saving}
-                      </>
-                    ) : (
-                      <>
-                        {content.save}
-                        <ArrowRight
-                          className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
-                            isRTL ? "rotate-180" : ""
-                          }`}
-                        />
-                      </>
-                    )}
-                  </span>
-                </Button>
-              </motion.div>
-            </form>
+        {/* Notice */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-8 p-6 rounded-xl bg-blue-500/10 border border-blue-500/30"
+        >
+          <div className="flex items-start gap-3 mb-4">
+            <AlertCircle className="w-5 h-5 text-blue-400 mt-0.5 shrink-0" />
+            <h3 className="text-blue-400">{content.notice.title}</h3>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+          <ul className="space-y-2 ml-8">
+            {content.notice.points.map((point, index) => (
+              <li
+                key={index}
+                className="text-white/60 text-sm flex items-start gap-2"
+              >
+                <CheckCircle className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
+                <span>{point}</span>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* ID Number & Date of Birth */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <InputField
+                {...register("id_number", {
+                  required:
+                    language === "en"
+                      ? "ID number is required"
+                      : "رقم الهوية مطلوب",
+                })}
+                label={content.idNumber}
+                placeholder={content.idNumberPlaceholder}
+                icon={Hash}
+                isRTL={isRTL}
+                required
+                error={errors.id_number?.message}
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <InputField
+                {...register("dob", {
+                  required:
+                    language === "en"
+                      ? "Date of birth is required"
+                      : "تاريخ الميلاد مطلوب",
+                })}
+                label={content.dateOfBirth}
+                type="date"
+                icon={Calendar}
+                isRTL={isRTL}
+                required
+                error={errors.dob?.message}
+              />
+            </motion.div>
+          </div>
+
+          {/* Nationality & City */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <SelectField
+                label={content.nationality.label}
+                placeholder={content.nationality.placeholder}
+                options={nationalityOptions}
+                value={watch("nationality")}
+                onValueChange={(value) => {
+                  setValue("nationality", value, { shouldValidate: true });
+                }}
+                isRTL={isRTL}
+                required
+                error={errors.nationality?.message}
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <InputField
+                {...register("city", {
+                  required:
+                    language === "en"
+                      ? "City is required"
+                      : "المدينة مطلوبة",
+                })}
+                label={content.city}
+                placeholder={content.cityPlaceholder}
+                icon={MapPin}
+                isRTL={isRTL}
+                required
+                error={errors.city?.message}
+              />
+            </motion.div>
+          </div>
+
+          {/* Street Address & Postal Code */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <InputField
+                {...register("street_address", {
+                  required:
+                    language === "en"
+                      ? "Street address is required"
+                      : "عنوان الشارع مطلوب",
+                })}
+                label={content.streetAddress}
+                placeholder={content.streetAddressPlaceholder}
+                icon={MapPin}
+                isRTL={isRTL}
+                required
+                error={errors.street_address?.message}
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.65 }}
+            >
+              <InputField
+                {...register("postal_code", {
+                  required:
+                    language === "en"
+                      ? "Postal code is required"
+                      : "الرمز البريدي مطلوب",
+                })}
+                label={content.postalCode}
+                placeholder={content.postalCodePlaceholder}
+                icon={Hash}
+                isRTL={isRTL}
+                required
+                error={errors.postal_code?.message}
+              />
+            </motion.div>
+          </div>
+
+          {/* ID Type */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+          >
+            <SelectField
+              label={content.idType.label}
+              placeholder={content.idType.placeholder}
+              options={content.idType.options}
+              value={watch("id_type")}
+              onValueChange={(value) => {
+                setValue("id_type", value, { shouldValidate: true });
+              }}
+              isRTL={isRTL}
+              required
+              error={errors.id_type?.message}
+            />
+          </motion.div>
+
+          {/* Document Uploads */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="space-y-4"
+          >
+            <h3 className="text-white text-lg flex items-center gap-2">
+              <FileText className="w-5 h-5 text-amber-400" />
+              {content.documents.title}
+            </h3>
+
+            {/* ID Document */}
+            <div className="p-6 rounded-xl glass border border-white/10">
+              <FileUploadField
+                label={content.documents.idDocument.label}
+                helperText={content.documents.idDocument.desc}
+                accept=".pdf,.png,.jpg,.jpeg"
+                maxSize={10 * 1024 * 1024} // 10MB
+                value={idDocument}
+                onFileChange={(file) => {
+                  // Cleanup old preview URL if it was a blob URL
+                  if (
+                    idDocumentPreview &&
+                    idDocumentPreview.startsWith("blob:")
+                  ) {
+                    URL.revokeObjectURL(idDocumentPreview);
+                  }
+
+                  setIdDocument(file);
+                  setValue("gov_issued_id", file || null);
+
+                  // Create preview URL for new file
+                  if (file) {
+                    const previewUrl = URL.createObjectURL(file);
+                    setIdDocumentPreview(previewUrl);
+                  } else {
+                    setIdDocumentPreview(null);
+                  }
+                }}
+                isRTL={isRTL}
+                formatText={content.documents.formats}
+                buttonText={content.documents.uploadButton}
+                buttonClassName="border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
+                labelClassName="text-white/80 text-sm"
+              />
+              {/* Show current document preview if exists and no new file selected */}
+              {idDocumentPreview && !idDocument && (
+                <div className="mt-4 space-y-2">
+                  <p className="text-xs text-white/60">
+                    {language === "en"
+                      ? "Current document"
+                      : "المستند الحالي"}
+                  </p>
+                  <div className="flex items-center gap-2 p-3 bg-background/50 rounded-lg border border-white/10">
+                    <FileText className="w-5 h-5 text-[#45e3d3] shrink-0" />
+                    <span className="text-sm text-[#ffffff] flex-1 truncate">
+                      {idDocumentPreview.includes("/") ||
+                        idDocumentPreview.startsWith("http")
+                        ? idDocumentPreview.split("/").pop() || "Document"
+                        : idDocumentPreview}
+                    </span>
+                  </div>
+                  <p className="text-xs text-white/40">
+                    {language === "en"
+                      ? "Upload new document to replace"
+                      : "قم بتحميل مستند جديد للاستبدال"}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Proof of Address */}
+            <div className="p-6 rounded-xl glass border border-white/10">
+              <FileUploadField
+                label={content.documents.proofOfAddress.label}
+                helperText={content.documents.proofOfAddress.desc}
+                accept=".pdf,.png,.jpg,.jpeg"
+                maxSize={10 * 1024 * 1024} // 10MB
+                value={proofOfAddress}
+                onFileChange={(file) => {
+                  // Cleanup old preview URL if it was a blob URL
+                  if (
+                    proofOfAddressPreview &&
+                    proofOfAddressPreview.startsWith("blob:")
+                  ) {
+                    URL.revokeObjectURL(proofOfAddressPreview);
+                  }
+
+                  setProofOfAddress(file);
+                  setValue("proof_address", file || null);
+
+                  // Create preview URL for new file
+                  if (file) {
+                    const previewUrl = URL.createObjectURL(file);
+                    setProofOfAddressPreview(previewUrl);
+                  } else {
+                    setProofOfAddressPreview(null);
+                  }
+                }}
+                isRTL={isRTL}
+                formatText={content.documents.formats}
+                buttonText={content.documents.uploadButton}
+                buttonClassName="border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
+                labelClassName="text-white/80 text-sm"
+              />
+              {/* Show current document preview if exists and no new file selected */}
+              {proofOfAddressPreview && !proofOfAddress && (
+                <div className="mt-4 space-y-2">
+                  <p className="text-xs text-white/60">
+                    {language === "en"
+                      ? "Current document"
+                      : "المستند الحالي"}
+                  </p>
+                  <div className="flex items-center gap-2 p-3 bg-background/50 rounded-lg border border-white/10">
+                    <FileText className="w-5 h-5 text-[#45e3d3] shrink-0" />
+                    <span className="text-sm text-[#ffffff] flex-1 truncate">
+                      {proofOfAddressPreview.includes("/") ||
+                        proofOfAddressPreview.startsWith("http")
+                        ? proofOfAddressPreview.split("/").pop() ||
+                        "Document"
+                        : proofOfAddressPreview}
+                    </span>
+                  </div>
+                  <p className="text-xs text-white/40">
+                    {language === "en"
+                      ? "Upload new document to replace"
+                      : "قم بتحميل مستند جديد للاستبدال"}
+                  </p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Security Features */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="p-6 rounded-xl bg-green-500/10 border border-green-500/30"
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <Shield className="w-5 h-5 text-green-400" />
+              <h3 className="text-green-400">{content.security.title}</h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {content.security.features.map((feature, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-400" />
+                  <span className="text-white/60 text-sm">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Compliance Checkbox */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+            className="p-6 rounded-xl glass border border-white/10"
+          >
+            <div className="flex items-start gap-3">
+              <Checkbox
+                id="compliance"
+                checked={acceptedCompliance}
+                onCheckedChange={(checked: boolean) =>
+                  setAcceptedCompliance(checked)
+                }
+                className="mt-0.5 border-white/20 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+              />
+              <div>
+                <Label
+                  htmlFor="compliance"
+                  className="text-white/80 cursor-pointer mb-1 block"
+                >
+                  {content.compliance.title}
+                </Label>
+                <p className="text-white/60 text-sm leading-relaxed">
+                  {content.compliance.text}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0 }}
+            className="flex gap-4 pt-6"
+          >
+            <Button
+              type="button"
+              onClick={onClose}
+              variant="outline"
+              disabled={isLoading}
+              className="flex-1 h-12 border-white/20 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              {content.cancel}
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoading || !acceptedCompliance}
+              className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {isLoading ? (
+                  <>
+                    <Oval
+                      height={20}
+                      width={20}
+                      color="#0F021C"
+                      ariaLabel="loading"
+                      visible={true}
+                    />
+                    {content.saving}
+                  </>
+                ) : (
+                  <>
+                    {content.save}
+                    <ArrowRight
+                      className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
+                        }`}
+                    />
+                  </>
+                )}
+              </span>
+            </Button>
+          </motion.div>
+        </form>
+      </div>
+    </CustomModal>
   );
 }

@@ -49,6 +49,8 @@ interface KYCFormData {
   nationality: string;
   city: string;
   postal_code: string;
+  street_address: string;
+  id_type: string;
   gov_issued_id: File | null;
   proof_address: File | null;
 }
@@ -70,6 +72,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
     nationality: (savedData.nationality as string) || "",
     city: (savedData.city as string) || "",
     postal_code: (savedData.postal_code as string) || "",
+    street_address: (savedData.street_address as string) || "",
+    id_type: (savedData.id_type as string) || "",
     gov_issued_id: (savedData.gov_issued_id as File | null) || null,
     proof_address: (savedData.proof_address as File | null) || null,
   };
@@ -165,6 +169,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       nationality: (savedData.nationality as string) || "",
       city: (savedData.city as string) || "",
       postal_code: (savedData.postal_code as string) || "",
+      street_address: (savedData.street_address as string) || "",
+      id_type: (savedData.id_type as string) || "",
       gov_issued_id: savedIdDoc instanceof File ? savedIdDoc : null,
       proof_address: savedProof instanceof File ? savedProof : null,
     });
@@ -189,7 +195,11 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       (currentValues.city?.trim() || "") ===
         ((submitted.city as string) || "") &&
       (currentValues.postal_code?.trim() || "") ===
-        ((submitted.postal_code as string) || "");
+        ((submitted.postal_code as string) || "") &&
+      (currentValues.street_address?.trim() || "") ===
+        ((submitted.street_address as string) || "") &&
+      (currentValues.id_type?.trim() || "") ===
+        ((submitted.id_type as string) || "");
 
     // File comparison - check if both are null or both have files with same name
     const idDocMatch =
@@ -253,6 +263,19 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       cityPlaceholder: "Your city",
       postalCode: "Postal Code",
       postalCodePlaceholder: "Postal/ZIP code",
+      streetAddress: "Street Address",
+      streetAddressPlaceholder: "Street and building",
+      idType: {
+        label: "ID Type",
+        placeholder: "Select ID type",
+        options: [
+          { value: "Passport", label: "Passport" },
+          { value: "National ID", label: "National ID" },
+          { value: "Emirates ID", label: "Emirates ID" },
+          { value: "Iqama (Saudi Residency)", label: "Iqama (Saudi Residency)" },
+          { value: "Driver's License", label: "Driver's License" },
+        ],
+      },
       documents: {
         title: "Upload Documents",
         idDocument: {
@@ -317,6 +340,22 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       cityPlaceholder: "مدينتك",
       postalCode: "الرمز البريدي",
       postalCodePlaceholder: "الرمز البريدي",
+      streetAddress: "عنوان الشارع",
+      streetAddressPlaceholder: "الشارع والمبنى",
+      idType: {
+        label: "نوع الهوية",
+        placeholder: "اختر نوع الهوية",
+        options: [
+          { value: "Passport", label: "جواز السفر" },
+          { value: "National ID", label: "الهوية الوطنية" },
+          { value: "Emirates ID", label: "هوية الإمارات" },
+          {
+            value: "Iqama (Saudi Residency)",
+            label: "الإقامة (إقامة سعودية)",
+          },
+          { value: "Driver's License", label: "رخصة القيادة" },
+        ],
+      },
       documents: {
         title: "تحميل المستندات",
         idDocument: {
@@ -366,6 +405,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         nationality: formData.nationality,
         city: formData.city,
         postal_code: formData.postal_code,
+        street_address: formData.street_address,
+        id_type: formData.id_type,
         gov_issued_id: idDocument?.name || "",
         proof_address: proofOfAddress?.name || "",
         acceptedCompliance: acceptedCompliance, // Include compliance checkbox state
@@ -389,6 +430,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         nationality: formData.nationality.trim(),
         city: formData.city.trim(),
         postal_code: formData.postal_code.trim(),
+        street_address: formData.street_address.trim(),
+        id_type: formData.id_type.trim(),
       };
 
       // Only include document fields if files are attached
@@ -442,17 +485,19 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
 
         toast.success(successMessage);
 
-        // Mark step as submitted in Redux
-        const stepData = {
-          id_number: formData.id_number,
-          dob: formData.dob,
-          nationality: formData.nationality,
-          city: formData.city,
-          postal_code: formData.postal_code,
-          gov_issued_id: idDocument?.name || "",
-          proof_address: proofOfAddress?.name || "",
-          acceptedCompliance: acceptedCompliance, // Save compliance checkbox state
-        };
+      // Mark step as submitted in Redux
+      const stepData = {
+        id_number: formData.id_number,
+        dob: formData.dob,
+        nationality: formData.nationality,
+        city: formData.city,
+        postal_code: formData.postal_code,
+        street_address: formData.street_address,
+        id_type: formData.id_type,
+        gov_issued_id: idDocument?.name || "",
+        proof_address: proofOfAddress?.name || "",
+        acceptedCompliance: acceptedCompliance, // Save compliance checkbox state
+      };
 
         dispatch(
           markStepAsSubmitted({
@@ -541,8 +586,6 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 isRTL={isRTL}
                 required
                 error={errors.id_number?.message}
-                inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
               />
             </motion.div>
 
@@ -564,8 +607,6 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 isRTL={isRTL}
                 required
                 error={errors.dob?.message}
-                inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
               />
             </motion.div>
           </div>
@@ -588,10 +629,6 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 isRTL={isRTL}
                 required
                 error={errors.nationality?.message}
-                inputClassName="bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
-                contentClassName="bg-[#1D112A] border-white/10"
-                itemClassName="text-white focus:bg-amber-500/10 focus:text-amber-400"
               />
             </motion.div>
 
@@ -611,33 +648,72 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 isRTL={isRTL}
                 required
                 error={errors.city?.message}
-                inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                labelClassName="text-white/80 text-sm"
               />
             </motion.div>
           </div>
 
-          {/* Postal Code */}
+          {/* Street Address & Postal Code */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <InputField
+                {...register("street_address", {
+                  required:
+                    language === "en"
+                      ? "Street address is required"
+                      : "عنوان الشارع مطلوب",
+                })}
+                label={content.streetAddress}
+                placeholder={content.streetAddressPlaceholder}
+                icon={MapPin}
+                isRTL={isRTL}
+                required
+                error={errors.street_address?.message}
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.65 }}
+            >
+              <InputField
+                {...register("postal_code", {
+                  required:
+                    language === "en"
+                      ? "Postal code is required"
+                      : "الرمز البريدي مطلوب",
+                })}
+                label={content.postalCode}
+                placeholder={content.postalCodePlaceholder}
+                icon={Hash}
+                isRTL={isRTL}
+                required
+                error={errors.postal_code?.message}
+              />
+            </motion.div>
+          </div>
+
+          {/* ID Type */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.7 }}
           >
-            <InputField
-              {...register("postal_code", {
-                required:
-                  language === "en"
-                    ? "Postal code is required"
-                    : "الرمز البريدي مطلوب",
-              })}
-              label={content.postalCode}
-              placeholder={content.postalCodePlaceholder}
-              icon={Hash}
+            <SelectField
+              label={content.idType.label}
+              placeholder={content.idType.placeholder}
+              options={content.idType.options}
+              value={watch("id_type")}
+              onValueChange={(value) => {
+                setValue("id_type", value, { shouldValidate: true });
+              }}
               isRTL={isRTL}
               required
-              error={errors.postal_code?.message}
-              inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-              labelClassName="text-white/80 text-sm"
+              error={errors.id_type?.message}
             />
           </motion.div>
 

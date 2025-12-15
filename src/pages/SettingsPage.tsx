@@ -587,7 +587,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1D112A]/50"
+                switchWrapperClassName="bg-background/50"
               />
 
               {/* Push Notifications */}
@@ -600,7 +600,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1D112A]/50"
+                switchWrapperClassName="bg-background/50"
               />
 
               <Separator className="bg-[#4e4e4e78]" />
@@ -615,7 +615,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1D112A]/30"
+                switchWrapperClassName="bg-background/30"
               />
 
               <SwitchField
@@ -627,7 +627,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1D112A]/30"
+                switchWrapperClassName="bg-background/30"
               />
 
               <SwitchField
@@ -639,7 +639,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1D112A]/30"
+                switchWrapperClassName="bg-background/30"
               />
 
               <SwitchField
@@ -651,7 +651,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1D112A]/30"
+                switchWrapperClassName="bg-background/30"
               />
             </div>
           </motion.div>
@@ -684,7 +684,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1D112A]/50"
+                switchWrapperClassName="bg-background/50"
               />
 
               <Separator className="bg-[#4e4e4e78]" />
@@ -698,7 +698,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1D112A]/30"
+                switchWrapperClassName="bg-background/30"
               />
 
               <SwitchField
@@ -709,7 +709,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1D112A]/30"
+                switchWrapperClassName="bg-background/30"
               />
 
               <SwitchField
@@ -720,7 +720,7 @@ export function SettingsPage() {
                 }
                 disabled={isSavingSettings}
                 isRTL={isRTL}
-                switchWrapperClassName="bg-[#1D112A]/30"
+                switchWrapperClassName="bg-background/30"
               />
 
               {/* <Separator className="bg-[#4e4e4e78]" /> */}
