@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/store/store";
 import { ROUTES } from "@/routes/paths";
 import { useTokenExpired } from "@/contexts/useTokenExpired";
+import { AmbassadorVerificationModal } from "@/components/auth/AmbassadorVerificationModal";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -31,6 +32,7 @@ export function PrivateRoute({ children }: PrivateRouteProps) {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const user = useSelector((state: RootState) => state.auth.user);
 
   // Check if token expiration is being handled (dialog is open)
   // This prevents immediate redirect so dialog can be shown first
@@ -48,6 +50,19 @@ export function PrivateRoute({ children }: PrivateRouteProps) {
   // If token expiration dialog is open, don't redirect yet - let the dialog handle navigation
   if (!isAuthenticated && !isHandlingExpiration) {
     return <Navigate to={ROUTES.SIGN_IN} replace />;
+  }
+
+  // Ambassador verification gate:
+  // If the user is an ambassador and their account is not verified yet,
+  // block access to all private routes (dashboard, onboarding, profile, etc.)
+  // and show a consistent, professional modal explaining the pending status.
+  const isAmbassador =
+    user?.role === "Ambassador" ||
+    user?.role?.toLowerCase?.() === "ambassador";
+  const isPendingVerification = isAmbassador && user?.is_verify === false;
+
+  if (isPendingVerification) {
+    return <AmbassadorVerificationModal />;
   }
 
   return <>{children}</>;

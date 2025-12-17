@@ -17,6 +17,7 @@ import {
 } from "@/store/onboardingSlice";
 import type { RootState } from "@/store/store";
 import { extractErrorMessage } from "@/utils/errorMessages";
+import { setUser, type UserProfileData } from "@/store/authSlice";
 import {
   AlertCircle,
   ArrowRight,
@@ -63,6 +64,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
   const submittedData = useSelector((state: RootState) =>
     selectSubmittedData(state, "kyc")
   );
+  const storedUser = useSelector((state: RootState) => state.auth.user);
 
   // Load initial values from Redux
   const savedData = (data.kyc || {}) as Partial<KYCFormData>;
@@ -485,19 +487,58 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
 
         toast.success(successMessage);
 
-      // Mark step as submitted in Redux
-      const stepData = {
-        id_number: formData.id_number,
-        dob: formData.dob,
-        nationality: formData.nationality,
-        city: formData.city,
-        postal_code: formData.postal_code,
-        street_address: formData.street_address,
-        id_type: formData.id_type,
-        gov_issued_id: idDocument?.name || "",
-        proof_address: proofOfAddress?.name || "",
-        acceptedCompliance: acceptedCompliance, // Save compliance checkbox state
-      };
+        // Check if API response includes updated user data (profile_step may be updated)
+        if (apiResponse.data) {
+          try {
+            const responseData = apiResponse.data as { user?: UserProfileData };
+
+            if (
+              responseData.user &&
+              typeof responseData.user === "object" &&
+              "id" in responseData.user
+            ) {
+              const userData = responseData.user as UserProfileData;
+
+              // Merge with existing storedUser if available
+              if (storedUser) {
+                const mergedUserData: UserProfileData = {
+                  ...storedUser,
+                  ...userData, // API response takes precedence
+                };
+                dispatch(setUser(mergedUserData));
+              } else {
+                dispatch(setUser(userData));
+              }
+            } else if (
+              apiResponse.data &&
+              typeof apiResponse.data === "object" &&
+              "id" in apiResponse.data
+            ) {
+              // Fallback: API response data might be the user object directly
+              const userData = apiResponse.data as unknown as UserProfileData;
+              dispatch(setUser(userData));
+            }
+          } catch (error) {
+            console.error(
+              "Failed to parse user data from KYC verification response:",
+              error
+            );
+          }
+        }
+
+        // Mark step as submitted in Redux
+        const stepData = {
+          id_number: formData.id_number,
+          dob: formData.dob,
+          nationality: formData.nationality,
+          city: formData.city,
+          postal_code: formData.postal_code,
+          street_address: formData.street_address,
+          id_type: formData.id_type,
+          gov_issued_id: idDocument?.name || "",
+          proof_address: proofOfAddress?.name || "",
+          acceptedCompliance: acceptedCompliance, // Save compliance checkbox state
+        };
 
         dispatch(
           markStepAsSubmitted({

@@ -30,6 +30,13 @@ export function PublicRoute({ children }: PublicRouteProps) {
     return <>{children}</>;
   }
 
+  // Allow access to signup even if the user is already authenticated.
+  // This is important so that the signup flow can redirect to the onboarding
+  // welcome screen instead of being forced back to the dashboard immediately.
+  if (location.pathname === ROUTES.SIGN_UP) {
+    return <>{children}</>;
+  }
+
   // If user is authenticated (token is set), redirect to dashboard
   // User must logout/clear token to access public routes again
   if (isAuthenticated) {

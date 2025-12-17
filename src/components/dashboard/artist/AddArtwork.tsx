@@ -269,13 +269,12 @@ export function AddArtwork({
             </div>
           </div>
 
-          {/* Add Button - match style to primary CTA / copy-link style */}
+          {/* Add Button - match primary CTA styling and cursor behavior */}
           <Button
             type="button"
             onClick={handleAddClick}
             disabled={!profileCompleted}
-            className={`relative overflow-hidden bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#020e27] px-4 py-2 rounded-xl hover:opacity-90 transition-all group ${!profileCompleted ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+            className="relative overflow-hidden bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#020e27] px-4 py-2 rounded-xl hover:opacity-90 transition-all group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span
               className={`relative flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""
@@ -463,6 +462,9 @@ export function AddArtwork({
               dimensions: selectedArtwork.dimensions,
             }
             : undefined
+        }
+        existingImageUrl={
+          modalMode === "edit" && selectedArtwork ? selectedArtwork.image : undefined
         }
         onClose={handleModalClose}
         onSubmit={modalMode === "create" ? handleCreateSubmit : handleEditSubmit}

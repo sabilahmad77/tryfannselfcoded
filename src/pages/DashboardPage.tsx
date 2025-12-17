@@ -6,7 +6,6 @@ import { CompleteProfile } from "@/components/dashboard/shared/CompleteProfile";
 import { DashboardLayout } from "@/components/dashboard/shared/DashboardLayout";
 import { DashboardWelcome } from "@/components/dashboard/shared/DashboardWelcome";
 import { PointWallet } from "@/components/dashboard/shared/PointWallet";
-import { RedemptionCodes } from "@/components/dashboard/shared/RedemptionCodes";
 import { TierProgress } from "@/components/dashboard/shared/TierProgress";
 import { URLEncoder } from "@/components/dashboard/shared/URLEncoder";
 import { WatchVideos } from "@/components/dashboard/shared/WatchVideos";
@@ -150,15 +149,6 @@ export function DashboardPage() {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <URLEncoder />
-        </motion.div>
-
-        {/* Redemption Codes */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
-          <RedemptionCodes />
         </motion.div>
 
         {/* Watch & Earn Videos */}

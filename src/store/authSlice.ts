@@ -47,6 +47,35 @@ export interface UserProfileData {
   show_email?: boolean;
   show_phone?: boolean;
   show_location?: boolean;
+  // Social media fields
+  tiktok_handle?: string | null;
+  youtube_handle?: string | null;
+  twitter_handle?: string | null;
+  instagram_follower?: string | null;
+  tiktok_follower?: string | null;
+  youtube_subscribers?: string | null;
+  twitter_follower?: string | null;
+  primary_platform?: string | null;
+  content_niche?: string | null;
+  // Artist-specific fields
+  price_range?: string | null;
+  preferred_commission_rate?: string | null;
+  shipping_preference?: string | null;
+  studio_address?: string | null;
+  education?: string | null;
+  award_artist?: string | null;
+  artist_statement?: string | null;
+  // Gallery-specific fields
+  organization_email?: string | null;
+  organization_main_contact_name?: string | null;
+  // Other fields
+  profile_partial_completed?: boolean;
+  influence_points?: number;
+  fann_2fa?: boolean;
+  fann_2fa_otp?: string | null;
+  fann_2fa_otp_created?: string | null;
+  is_deleted?: boolean;
+  user_contract?: unknown | null;
 }
 
 interface AuthState {

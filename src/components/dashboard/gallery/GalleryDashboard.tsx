@@ -8,8 +8,8 @@ import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
 import { CompleteProfile } from "../shared/CompleteProfile";
 import { PointWallet } from "../shared/PointWallet";
-import { RedemptionCodes } from "../shared/RedemptionCodes";
 import { TierProgress } from "../shared/TierProgress";
+import { URLEncoder } from "../shared/URLEncoder";
 import { WatchVideos } from "../shared/WatchVideos";
 import { ArtistRoster } from "./ArtistRoster";
 import { ROUTES } from "@/routes/paths";
@@ -88,13 +88,13 @@ export function GalleryDashboard() {
           <ArtistRoster />
         </motion.div>
 
-        {/* Row 2: Redemption Codes + Watch & Earn */}
+        {/* Row 2: Referral Link Generator (URL Encoder) + Watch & Earn */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <RedemptionCodes />
+          <URLEncoder />
         </motion.div>
 
         <motion.div

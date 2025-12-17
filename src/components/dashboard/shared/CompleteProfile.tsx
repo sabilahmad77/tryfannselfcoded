@@ -18,19 +18,19 @@ const content = {
   }
 };
 
-export function CompleteProfile({ 
-  profileCompleted = false, 
-  onCompleteProfile 
+export function CompleteProfile({
+  profileCompleted = false,
+  onCompleteProfile
 }: CompleteProfileProps) {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === 'ar';
 
   // Don't render if profile is already completed
-  if (!profileCompleted) {
-    return null;
-  }
-
+  // if (!profileCompleted) {
+  //   return null;
+  // }
+  console.log(profileCompleted);
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -44,7 +44,7 @@ export function CompleteProfile({
         <p className={`text-[#808c99] text-sm flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
           {t.profileIncomplete}
         </p>
-        <button 
+        <button
           className={`text-[#ffcc33] hover:text-[#ffb54d] underline text-sm transition-colors flex-shrink-0 ${isRTL ? 'mr-3' : 'ml-3'}`}
           onClick={onCompleteProfile}
         >

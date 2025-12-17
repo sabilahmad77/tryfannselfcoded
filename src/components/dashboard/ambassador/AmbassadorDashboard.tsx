@@ -23,8 +23,8 @@ import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
 import { CompleteProfile } from "../shared/CompleteProfile";
 import { PointWallet } from "../shared/PointWallet";
-import { RedemptionCodes } from "../shared/RedemptionCodes";
 import { TierProgress } from "../shared/TierProgress";
+import { URLEncoder } from "../shared/URLEncoder";
 import { WatchVideos } from "../shared/WatchVideos";
 import { useLanguage } from "@/contexts/useLanguage";
 import { useSelector } from "react-redux";
@@ -358,7 +358,7 @@ export function AmbassadorDashboard() {
         </Card>
       </motion.div>
 
-      {/* Point Wallet & Redemption Codes */}
+      {/* Point Wallet & Referral Link Generator (URL Encoder) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -373,7 +373,7 @@ export function AmbassadorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
         >
-          <RedemptionCodes />
+          <URLEncoder />
         </motion.div>
       </div>
 

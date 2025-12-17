@@ -21,6 +21,7 @@ interface ProfileCompletionProps {
   selectedPersona: string;
   onComplete: () => void;
   onCancel?: () => void;
+  initialStep?: number; // Optional initial step based on profile_step
 }
 
 export function ProfileCompletion({
@@ -28,20 +29,22 @@ export function ProfileCompletion({
   selectedPersona,
   onComplete,
   onCancel,
+  initialStep,
 }: ProfileCompletionProps) {
   const dispatch = useDispatch();
   const currentStep = useSelector(selectCurrentStep);
   const onboardingData = useSelector(selectOnboardingData);
 
-  // Initialize onboarding with persona and reset step to 0 for ProfileCompletion
+  // Initialize onboarding with persona and set initial step
   useEffect(() => {
     if (!onboardingData.persona || onboardingData.persona !== selectedPersona) {
       dispatch(initializeOnboarding({ persona: selectedPersona }));
     }
-    // Reset to step 0 when entering ProfileCompletion
-    // Step components use their own step indices (1, 2, 3, 4) for submission tracking
-    // This ensures ProfileCompletion always starts from the first step
-    dispatch(setCurrentStep(0));
+    // Use initialStep if provided (based on profile_step), otherwise start at step 0
+    // This only affects where user starts when ProfileCompletion first loads
+    // All existing Next/Back navigation logic remains unchanged
+    const startingStep = initialStep !== undefined ? initialStep : 0;
+    dispatch(setCurrentStep(startingStep));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run once on mount to initialize
 

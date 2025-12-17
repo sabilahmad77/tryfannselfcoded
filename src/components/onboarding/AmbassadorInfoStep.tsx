@@ -91,11 +91,26 @@ export function AmbassadorInfoStep({
   const { data: youtubeSubscriberData } = useGetYoutubeSubscriberOptionsQuery();
   const { data: primaryPlatformData } = useGetPrimaryPlatformOptionsQuery();
 
+  // Get full name from stored user (first_name + last_name) for initial title value
+  const getFullNameFromUser = (): string => {
+    if (storedUser?.first_name && storedUser?.last_name) {
+      return `${storedUser.first_name} ${storedUser.last_name}`.trim();
+    }
+    if (storedUser?.first_name) {
+      return storedUser.first_name;
+    }
+    return "";
+  };
+
   // Load initial values from Redux
   const savedData = (data.personaDetails ||
     {}) as Partial<AmbassadorInfoFormData>;
+
+  // Get initial title: use saved data if exists, otherwise use full name from user, otherwise empty
+  const initialTitle = (savedData.title as string) || getFullNameFromUser() || "";
+
   const initialValues: AmbassadorInfoFormData = {
-    title: (savedData.title as string) || "",
+    title: initialTitle,
     bio: (savedData.bio as string) || "",
     profile_image: (savedData.profile_image as File | null) || null,
     instagram_handle: (savedData.instagram_handle as string) || "",
@@ -145,8 +160,10 @@ export function AmbassadorInfoStep({
       setValue("profile_image", null);
     }
 
+    // For title: use saved data if exists, otherwise use full name from user (only if not already set)
+    const titleValue = (savedData.title as string) || getFullNameFromUser() || "";
     reset({
-      title: (savedData.title as string) || "",
+      title: titleValue,
       bio: (savedData.bio as string) || "",
       profile_image:
         (savedProfileImage instanceof File ? savedProfileImage : null) || null,
@@ -162,7 +179,7 @@ export function AmbassadorInfoStep({
       content_niche: (savedData.content_niche as string) || "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.personaDetails]);
+  }, [data.personaDetails, storedUser]);
 
   // Cleanup preview URL on unmount
   useEffect(() => {
@@ -181,28 +198,28 @@ export function AmbassadorInfoStep({
 
     const textFieldsMatch =
       (currentValues.title?.trim() || "") ===
-        ((submitted.title as string) || "") &&
+      ((submitted.title as string) || "") &&
       (currentValues.bio?.trim() || "") === ((submitted.bio as string) || "") &&
       (currentValues.instagram_handle?.trim() || "") ===
-        ((submitted.instagram_handle as string) || "") &&
+      ((submitted.instagram_handle as string) || "") &&
       (currentValues.instagram_followers?.trim() || "") ===
-        ((submitted.instagram_followers as string) || "") &&
+      ((submitted.instagram_followers as string) || "") &&
       (currentValues.tiktok_handle?.trim() || "") ===
-        ((submitted.tiktok_handle as string) || "") &&
+      ((submitted.tiktok_handle as string) || "") &&
       (currentValues.tiktok_followers?.trim() || "") ===
-        ((submitted.tiktok_followers as string) || "") &&
+      ((submitted.tiktok_followers as string) || "") &&
       (currentValues.youtube_handle?.trim() || "") ===
-        ((submitted.youtube_handle as string) || "") &&
+      ((submitted.youtube_handle as string) || "") &&
       (currentValues.youtube_subscribers?.trim() || "") ===
-        ((submitted.youtube_subscribers as string) || "") &&
+      ((submitted.youtube_subscribers as string) || "") &&
       (currentValues.twitter_handle?.trim() || "") ===
-        ((submitted.twitter_handle as string) || "") &&
+      ((submitted.twitter_handle as string) || "") &&
       (currentValues.twitter_followers?.trim() || "") ===
-        ((submitted.twitter_followers as string) || "") &&
+      ((submitted.twitter_followers as string) || "") &&
       (currentValues.primary_platform?.trim() || "") ===
-        ((submitted.primary_platform as string) || "") &&
+      ((submitted.primary_platform as string) || "") &&
       (currentValues.content_niche?.trim() || "") ===
-        ((submitted.content_niche as string) || "");
+      ((submitted.content_niche as string) || "");
 
     const imageMatch =
       (!profileImage && !submitted.profile_image) ||
@@ -420,13 +437,13 @@ export function AmbassadorInfoStep({
   const onSubmit = async (formData: AmbassadorInfoFormData) => {
     // At least one complete social media entry is required (handle + follower/subscriber count)
     // Check if at least one platform has both handle and follower/subscriber count
-    const hasInstagram = 
+    const hasInstagram =
       formData.instagram_handle?.trim() && formData.instagram_followers?.trim();
-    const hasTikTok = 
+    const hasTikTok =
       formData.tiktok_handle?.trim() && formData.tiktok_followers?.trim();
-    const hasYouTube = 
+    const hasYouTube =
       formData.youtube_handle?.trim() && formData.youtube_subscribers?.trim();
-    const hasTwitter = 
+    const hasTwitter =
       formData.twitter_handle?.trim() && formData.twitter_followers?.trim();
 
     const hasCompleteSocialMedia = hasInstagram || hasTikTok || hasYouTube || hasTwitter;
@@ -519,33 +536,60 @@ export function AmbassadorInfoStep({
             ) {
               const userData = responseData.user as UserProfileData;
 
-              if (storedUser) {
-                const mergedUserData: UserProfileData = {
-                  ...userData,
-                  title: formData.title.trim() || userData.title || null,
-                  bio: formData.bio.trim() || userData.bio || null,
-                  instagram_handle:
-                    formData.instagram_handle?.trim() ||
-                    userData.instagram_handle ||
-                    null,
-                  focus: formData.content_niche?.trim() || userData.focus || null,
-                };
+              // Merge all fields from form data with API response
+              const mergedUserData: UserProfileData = {
+                ...userData,
+                // Basic profile fields
+                title: formData.title.trim() || userData.title || null,
+                bio: formData.bio.trim() || userData.bio || null,
+                // Social media handles
+                instagram_handle:
+                  formData.instagram_handle?.trim() ||
+                  userData.instagram_handle ||
+                  null,
+                tiktok_handle:
+                  formData.tiktok_handle?.trim() ||
+                  userData.tiktok_handle ||
+                  null,
+                youtube_handle:
+                  formData.youtube_handle?.trim() ||
+                  userData.youtube_handle ||
+                  null,
+                twitter_handle:
+                  formData.twitter_handle?.trim() ||
+                  userData.twitter_handle ||
+                  null,
+                // Social media follower/subscriber counts (map form plural to API singular)
+                instagram_follower:
+                  formData.instagram_followers?.trim() ||
+                  userData.instagram_follower ||
+                  null,
+                tiktok_follower:
+                  formData.tiktok_followers?.trim() ||
+                  userData.tiktok_follower ||
+                  null,
+                youtube_subscribers:
+                  formData.youtube_subscribers?.trim() ||
+                  userData.youtube_subscribers ||
+                  null,
+                twitter_follower:
+                  formData.twitter_followers?.trim() ||
+                  userData.twitter_follower ||
+                  null,
+                // Ambassador-specific fields
+                content_niche:
+                  formData.content_niche?.trim() ||
+                  userData.content_niche ||
+                  null,
+                focus: formData.content_niche?.trim() || userData.focus || null, // Also update focus for backward compatibility
+                primary_platform:
+                  formData.primary_platform?.trim() ||
+                  userData.primary_platform ||
+                  null,
+                // profile_image is already included from userData spread above
+              };
 
-                dispatch(setUser(mergedUserData));
-              } else {
-                const mergedUserData: UserProfileData = {
-                  ...userData,
-                  title: formData.title.trim() || userData.title || null,
-                  bio: formData.bio.trim() || userData.bio || null,
-                  instagram_handle:
-                    formData.instagram_handle?.trim() ||
-                    userData.instagram_handle ||
-                    null,
-                  focus: formData.content_niche?.trim() || userData.focus || null,
-                };
-
-                dispatch(setUser(mergedUserData));
-              }
+              dispatch(setUser(mergedUserData));
             } else if (
               apiResponse.data &&
               typeof apiResponse.data === "object" &&
@@ -590,13 +634,13 @@ export function AmbassadorInfoStep({
   };
 
   // Form validation: at least one complete social media entry is required (handle + follower/subscriber count)
-  const hasInstagram = 
+  const hasInstagram =
     watch("instagram_handle")?.trim() && watch("instagram_followers")?.trim();
-  const hasTikTok = 
+  const hasTikTok =
     watch("tiktok_handle")?.trim() && watch("tiktok_followers")?.trim();
-  const hasYouTube = 
+  const hasYouTube =
     watch("youtube_handle")?.trim() && watch("youtube_subscribers")?.trim();
-  const hasTwitter = 
+  const hasTwitter =
     watch("twitter_handle")?.trim() && watch("twitter_followers")?.trim();
 
   const hasCompleteSocialMedia = hasInstagram || hasTikTok || hasYouTube || hasTwitter;
@@ -1012,9 +1056,8 @@ export function AmbassadorInfoStep({
                 <>
                   {shouldShowNext ? content.next : content.continue}
                   <ArrowRight
-                    className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
-                      isRTL ? "rotate-180" : ""
-                    }`}
+                    className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
+                      }`}
                   />
                 </>
               )}

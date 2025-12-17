@@ -8,8 +8,8 @@ import { CompleteProfile } from "../shared/CompleteProfile";
 import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
 import { PointWallet } from "../shared/PointWallet";
-import { RedemptionCodes } from "../shared/RedemptionCodes";
 import { TierProgress } from "../shared/TierProgress";
+import { URLEncoder } from "../shared/URLEncoder";
 import { WatchVideos } from "../shared/WatchVideos";
 import { MyCollection } from "./MyCollection";
 import { MarketInsights } from "./MarketInsights";
@@ -83,20 +83,20 @@ export function CollectorDashboard() {
           <MyCollection />
         </motion.div>
 
-        {/* Redemption Codes */}
+        {/* Referral Link Generator (URL Encoder) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <RedemptionCodes />
+          <URLEncoder />
         </motion.div>
 
         {/* Watch & Earn Videos */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
         >
           <WatchVideos />
         </motion.div>
@@ -105,7 +105,7 @@ export function CollectorDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
         >
           <TierProgress />
         </motion.div>
@@ -114,7 +114,7 @@ export function CollectorDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
         >
           <MarketInsights />
         </motion.div>

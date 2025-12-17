@@ -76,7 +76,9 @@ export function URLEncoder() {
     useLazyGenerateReferralCodeQuery();
 
   // Use API data or fallback to empty
-  const referralLink = statsData?.data?.referral_link || "";
+  // Check if referral_link contains "ref/None" - if so, treat as empty
+  const rawReferralLink = statsData?.data?.referral_link || "";
+  const referralLink = rawReferralLink.includes("ref/None") ? "" : rawReferralLink;
   const isReferralCode = statsData?.data?.is_referral_code || false;
   const stats = {
     clicks: statsData?.data?.total_referral_clicks || 0,
@@ -123,6 +125,14 @@ export function URLEncoder() {
   };
 
   const handleShare = (platform: string) => {
+    if (!referralLink) {
+      toast.error(
+        language === "en"
+          ? "No referral link available"
+          : "لا يوجد رابط إحالة متاح"
+      );
+      return;
+    }
     const encodedUrl = encodeURIComponent(referralLink);
     const shareUrls: { [key: string]: string } = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
@@ -261,24 +271,26 @@ export function URLEncoder() {
         <p className="text-sm text-[#808c99] mb-3">{t.shareOn}</p>
         <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
           <motion.button
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={referralLink ? { scale: 1.1, rotate: 5 } : {}}
+            whileTap={referralLink ? { scale: 0.95 } : {}}
             onClick={() => handleShare("facebook")}
-            className="w-12 h-12 bg-gradient-to-br from-[#1877f2] to-[#0c63d4] hover:from-[#0c63d4] hover:to-[#1877f2] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1877f2]/50 transition-all cursor-pointer"
+            disabled={!referralLink}
+            className="w-12 h-12 bg-gradient-to-br from-[#1877f2] to-[#0c63d4] hover:from-[#0c63d4] hover:to-[#1877f2] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1877f2]/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Facebook className="w-6 h-6 text-white" />
           </motion.button>
           <motion.button
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={referralLink ? { scale: 1.1, rotate: 5 } : {}}
+            whileTap={referralLink ? { scale: 0.95 } : {}}
             onClick={() => handleShare("twitter")}
-            className="w-12 h-12 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] hover:from-[#0c85d0] hover:to-[#1da1f2] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1da1f2]/50 transition-all cursor-pointer"
+            disabled={!referralLink}
+            className="w-12 h-12 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] hover:from-[#0c85d0] hover:to-[#1da1f2] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1da1f2]/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Twitter className="w-6 h-6 text-white" />
           </motion.button>
           <motion.button
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={referralLink ? { scale: 1.1, rotate: 5 } : {}}
+            whileTap={referralLink ? { scale: 0.95 } : {}}
             onClick={() => {
               // Instagram doesn't support direct URL sharing, so copy link instead
               if (referralLink) {
@@ -288,17 +300,25 @@ export function URLEncoder() {
                     ? "Link copied! Paste it in your Instagram post."
                     : "تم نسخ الرابط! الصقه في منشورك على إنستغرام."
                 );
+              } else {
+                toast.error(
+                  language === "en"
+                    ? "No referral link available"
+                    : "لا يوجد رابط إحالة متاح"
+                );
               }
             }}
-            className="w-12 h-12 bg-gradient-to-br from-[#e4405f] to-[#c13584] hover:from-[#c13584] hover:to-[#e4405f] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#e4405f]/50 transition-all cursor-pointer"
+            disabled={!referralLink}
+            className="w-12 h-12 bg-gradient-to-br from-[#e4405f] to-[#c13584] hover:from-[#c13584] hover:to-[#e4405f] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#e4405f]/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Instagram className="w-6 h-6 text-white" />
           </motion.button>
           <motion.button
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={referralLink ? { scale: 1.1, rotate: 5 } : {}}
+            whileTap={referralLink ? { scale: 0.95 } : {}}
             onClick={() => handleShare("email")}
-            className="w-12 h-12 bg-primary hover:bg-primary/90 rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-primary/50 transition-all cursor-pointer"
+            disabled={!referralLink}
+            className="w-12 h-12 bg-primary hover:bg-primary/90 rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-primary/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Mail className="w-6 h-6 text-[#0F021C]" />
           </motion.button>

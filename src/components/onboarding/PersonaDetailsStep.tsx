@@ -93,11 +93,30 @@ export function PersonaDetailsStep({
   // Artist price range options from API
   const { data: artistPriceRangeData } = useGetArtistPriceRangeOptionsQuery();
 
+  // Get full name from stored user (first_name + last_name) for initial title value
+  const getFullNameFromUser = (): string => {
+    if (storedUser?.first_name && storedUser?.last_name) {
+      return `${storedUser.first_name} ${storedUser.last_name}`.trim();
+    }
+    if (storedUser?.first_name) {
+      return storedUser.first_name;
+    }
+    return "";
+  };
+
   // Load initial values from Redux
   const savedData = (data.personaDetails ||
     {}) as Partial<PersonaDetailsFormData>;
+
+  // Determine if title should be disabled (only for artist role)
+  const isArtist = data.persona === "artist";
+  const isTitleDisabled = isArtist;
+
+  // Get initial title: use saved data if exists, otherwise use full name from user, otherwise empty
+  const initialTitle = (savedData.title as string) || getFullNameFromUser() || "";
+
   const initialValues: PersonaDetailsFormData = {
-    title: (savedData.title as string) || "",
+    title: initialTitle,
     bio: (savedData.bio as string) || "",
     website: (savedData.website as string) || "",
     instagram_handle: (savedData.instagram_handle as string) || "",
@@ -159,8 +178,10 @@ export function PersonaDetailsStep({
     }
 
     // Reset form with saved values
+    // For title: use saved data if exists, otherwise use full name from user (only if not already set)
+    const titleValue = (savedData.title as string) || getFullNameFromUser() || "";
     reset({
-      title: (savedData.title as string) || "",
+      title: titleValue,
       bio: (savedData.bio as string) || "",
       website: (savedData.website as string) || "",
       instagram_handle: (savedData.instagram_handle as string) || "",
@@ -184,7 +205,7 @@ export function PersonaDetailsStep({
       organization_name: (savedData.organization_name as string) || "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.personaDetails]);
+  }, [data.personaDetails, storedUser]);
 
   // Cleanup preview URL on unmount
   useEffect(() => {
@@ -204,40 +225,40 @@ export function PersonaDetailsStep({
     // Compare text fields (ignore profile_image for comparison as File objects can't be compared)
     const textFieldsMatch =
       (currentValues.title?.trim() || "") ===
-        ((submitted.title as string) || "") &&
+      ((submitted.title as string) || "") &&
       (currentValues.bio?.trim() || "") === ((submitted.bio as string) || "") &&
       (currentValues.website?.trim() || "") ===
-        ((submitted.website as string) || "") &&
+      ((submitted.website as string) || "") &&
       (currentValues.instagram_handle?.trim() || "") ===
-        ((submitted.instagram_handle as string) || "") &&
+      ((submitted.instagram_handle as string) || "") &&
       (currentValues.focus?.trim() || "") ===
-        ((submitted.focus as string) || "") &&
+      ((submitted.focus as string) || "") &&
       (currentValues.years_of_experience?.trim() || "") ===
-        ((submitted.years_of_experience as string) || "") &&
+      ((submitted.years_of_experience as string) || "") &&
       (currentValues.location?.trim() || "") ===
-        ((submitted.location as string) || "") &&
+      ((submitted.location as string) || "") &&
       (currentValues.phone_number?.trim() || "") ===
-        ((submitted.phone_number as string) || "") &&
+      ((submitted.phone_number as string) || "") &&
       (currentValues.price_range?.trim() || "") ===
-        ((submitted.price_range as string) || "") &&
+      ((submitted.price_range as string) || "") &&
       (currentValues.preferred_commission_rate?.trim() || "") ===
-        ((submitted.preferred_commission_rate as string) || "") &&
+      ((submitted.preferred_commission_rate as string) || "") &&
       (currentValues.shipping_preference?.trim() || "") ===
-        ((submitted.shipping_preference as string) || "") &&
+      ((submitted.shipping_preference as string) || "") &&
       (currentValues.studio_address?.trim() || "") ===
-        ((submitted.studio_address as string) || "") &&
+      ((submitted.studio_address as string) || "") &&
       (currentValues.education?.trim() || "") ===
-        ((submitted.education as string) || "") &&
+      ((submitted.education as string) || "") &&
       (currentValues.award_artist?.trim() || "") ===
-        ((submitted.award_artist as string) || "") &&
+      ((submitted.award_artist as string) || "") &&
       (currentValues.artist_statement?.trim() || "") ===
-        ((submitted.artist_statement as string) || "") &&
+      ((submitted.artist_statement as string) || "") &&
       (currentValues.organization_email?.trim() || "") ===
-        ((submitted.organization_email as string) || "") &&
+      ((submitted.organization_email as string) || "") &&
       (currentValues.organization_main_contact_name?.trim() || "") ===
-        ((submitted.organization_main_contact_name as string) || "") &&
+      ((submitted.organization_main_contact_name as string) || "") &&
       (currentValues.organization_name?.trim() || "") ===
-        ((submitted.organization_name as string) || "");
+      ((submitted.organization_name as string) || "");
 
     // Profile image comparison - check if both are null or both are files
     const imageMatch =
@@ -428,7 +449,6 @@ export function PersonaDetailsStep({
   };
 
   const Icon = icons[data.persona as keyof typeof icons] || Palette;
-  const isArtist = data.persona === "artist";
   const isGallery = data.persona === "gallery";
 
   const onSubmit = async (formData: PersonaDetailsFormData) => {
@@ -543,60 +563,73 @@ export function PersonaDetailsStep({
             ) {
               const userData = responseData.user as UserProfileData;
 
-              // If storedUser exists, merge with form values; otherwise use API data directly
-              if (storedUser) {
-                // Merge API user data with form values to ensure form updates are preserved
-                const mergedUserData: UserProfileData = {
-                  ...userData,
-                  // Override with form values to ensure they're up to date
-                  title: formData.title.trim() || userData.title || null,
-                  bio: formData.bio.trim() || userData.bio || null,
-                  website: formData.website?.trim()
-                    ? (formData.website.trim() as string | string[])
-                    : userData.website,
-                  instagram_handle:
-                    formData.instagram_handle?.trim() ||
-                    userData.instagram_handle ||
+              // Merge all fields from form data with API response
+              const mergedUserData: UserProfileData = {
+                ...userData,
+                // Common profile fields
+                title: formData.title.trim() || userData.title || null,
+                bio: formData.bio.trim() || userData.bio || null,
+                website: formData.website?.trim()
+                  ? (formData.website.trim() as string | string[])
+                  : userData.website,
+                instagram_handle:
+                  formData.instagram_handle?.trim() ||
+                  userData.instagram_handle ||
+                  null,
+                focus: formData.focus?.trim() || userData.focus || null,
+                years_of_experience: formData.years_of_experience
+                  ? Number(formData.years_of_experience)
+                  : userData.years_of_experience || null,
+                location:
+                  formData.location?.trim() || userData.location || null,
+                phone_number:
+                  formData.phone_number?.trim() || userData.phone_number || null,
+                // Artist-specific fields (only if persona is artist)
+                ...(isArtist && {
+                  price_range:
+                    formData.price_range?.trim() ||
+                    userData.price_range ||
                     null,
-                  focus: formData.focus?.trim() || userData.focus || null,
-                  years_of_experience: formData.years_of_experience
-                    ? Number(formData.years_of_experience)
-                    : userData.years_of_experience || null,
-                  location:
-                    formData.location?.trim() || userData.location || null,
-                  phone_number:
-                    formData.phone_number?.trim() || userData.phone_number || null,
-                  // profile_image is already included from userData spread above
-                };
-
-                dispatch(setUser(mergedUserData));
-              } else {
-                // No storedUser (e.g., during onboarding), merge form values with API data
-                const mergedUserData: UserProfileData = {
-                  ...userData,
-                  // Override with form values to ensure they're up to date
-                  title: formData.title.trim() || userData.title || null,
-                  bio: formData.bio.trim() || userData.bio || null,
-                  website: formData.website?.trim()
-                    ? (formData.website.trim() as string | string[])
-                    : userData.website,
-                  instagram_handle:
-                    formData.instagram_handle?.trim() ||
-                    userData.instagram_handle ||
+                  preferred_commission_rate:
+                    formData.preferred_commission_rate?.trim() ||
+                    userData.preferred_commission_rate ||
                     null,
-                  focus: formData.focus?.trim() || userData.focus || null,
-                  years_of_experience: formData.years_of_experience
-                    ? Number(formData.years_of_experience)
-                    : userData.years_of_experience || null,
-                  location:
-                    formData.location?.trim() || userData.location || null,
-                  phone_number:
-                    formData.phone_number?.trim() || userData.phone_number || null,
-                  // profile_image is already included from userData spread above
-                };
+                  shipping_preference:
+                    formData.shipping_preference?.trim() ||
+                    userData.shipping_preference ||
+                    null,
+                  studio_address:
+                    formData.studio_address?.trim() ||
+                    userData.studio_address ||
+                    null,
+                  education:
+                    formData.education?.trim() || userData.education || null,
+                  award_artist:
+                    formData.award_artist?.trim() || userData.award_artist || null,
+                  artist_statement:
+                    formData.artist_statement?.trim() ||
+                    userData.artist_statement ||
+                    null,
+                }),
+                // Gallery-specific fields (only if persona is gallery)
+                ...(isGallery && {
+                  organization_email:
+                    formData.organization_email?.trim() ||
+                    userData.organization_email ||
+                    null,
+                  organization_main_contact_name:
+                    formData.organization_main_contact_name?.trim() ||
+                    userData.organization_main_contact_name ||
+                    null,
+                  organization_name:
+                    formData.organization_name?.trim() ||
+                    userData.organization_name ||
+                    null,
+                }),
+                // profile_image is already included from userData spread above
+              };
 
-                dispatch(setUser(mergedUserData));
-              }
+              dispatch(setUser(mergedUserData));
             } else if (
               apiResponse.data &&
               typeof apiResponse.data === "object" &&
@@ -745,6 +778,7 @@ export function PersonaDetailsStep({
               icon={User}
               isRTL={isRTL}
               required
+              disabled={isTitleDisabled}
               error={errors.title?.message}
             />
           </motion.div>
@@ -1138,9 +1172,8 @@ export function PersonaDetailsStep({
                   <>
                     {shouldShowNext ? content.next : content.continue}
                     <ArrowRight
-                      className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
-                        isRTL ? "rotate-180" : ""
-                      }`}
+                      className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
+                        }`}
                     />
                   </>
                 )}

@@ -666,7 +666,7 @@ export function ProfilePage() {
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <div className="w-12 h-12 bg-[#1D112A] rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#1D112A] border border-[#ffcc33]/30 rounded-xl flex items-center justify-center">
                     <Mail className="w-6 h-6 text-[#ffcc33]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
@@ -683,7 +683,7 @@ export function ProfilePage() {
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <div className="w-12 h-12 bg-[#1D112A] rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#1D112A] border border-[#45e3d3]/30 rounded-xl flex items-center justify-center">
                     <Phone className="w-6 h-6 text-[#45e3d3]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
@@ -700,7 +700,7 @@ export function ProfilePage() {
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <div className="w-12 h-12 bg-[#1D112A] rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#1D112A] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
                     <MapPin className="w-6 h-6 text-[#9375b5]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
@@ -715,7 +715,7 @@ export function ProfilePage() {
                   isRTL ? "flex-row-reverse" : ""
                 }`}
               >
-                <div className="w-12 h-12 bg-[#1D112A] rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
                   <Globe className="w-6 h-6 text-[#0ea5e9]" />
                 </div>
                 <div className={isRTL ? "text-right" : "text-left"}>
@@ -729,7 +729,7 @@ export function ProfilePage() {
                   isRTL ? "flex-row-reverse" : ""
                 }`}
               >
-                <div className="w-12 h-12 bg-[#1D112A] rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#1D112A] border border-[#ffb54d]/30 rounded-xl flex items-center justify-center">
                   <Briefcase className="w-6 h-6 text-[#ffb54d]" />
                 </div>
                 <div className={isRTL ? "text-right" : "text-left"}>
@@ -743,7 +743,7 @@ export function ProfilePage() {
                   isRTL ? "flex-row-reverse" : ""
                 }`}
               >
-                <div className="w-12 h-12 bg-[#1D112A] rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#1D112A] border border-[#fface3]/30 rounded-xl flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-[#fface3]" />
                 </div>
                 <div className={isRTL ? "text-right" : "text-left"}>
@@ -769,7 +769,7 @@ export function ProfilePage() {
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <div className="w-12 h-12 bg-[#1D112A] rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#1D112A] border border-[#45e3d3]/30 rounded-xl flex items-center justify-center">
                     <Shield className="w-6 h-6 text-[#45e3d3]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
@@ -826,7 +826,7 @@ export function ProfilePage() {
                           isRTL ? "flex-row-reverse" : ""
                         }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#1D112A] border border-[#ffcc33]/30 rounded-xl flex items-center justify-center">
                           <Hash className="w-6 h-6 text-[#ffcc33]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -845,7 +845,7 @@ export function ProfilePage() {
                           isRTL ? "flex-row-reverse" : ""
                         }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#1D112A] border border-[#fface3]/30 rounded-xl flex items-center justify-center">
                           <Calendar className="w-6 h-6 text-[#fface3]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -883,7 +883,7 @@ export function ProfilePage() {
                           isRTL ? "flex-row-reverse" : ""
                         }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
                           <Globe className="w-6 h-6 text-[#0ea5e9]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -904,7 +904,7 @@ export function ProfilePage() {
                           isRTL ? "flex-row-reverse" : ""
                         }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#1D112A] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
                           <MapPin className="w-6 h-6 text-[#9375b5]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -936,7 +936,7 @@ export function ProfilePage() {
                               isRTL ? "flex-row-reverse" : ""
                             }`}
                           >
-                            <div className="w-10 h-10 bg-[#1D112A] rounded-lg flex items-center justify-center">
+                            <div className="w-10 h-10 bg-[#1D112A] border border-[#45e3d3]/30 rounded-lg flex items-center justify-center">
                               <FileText className="w-5 h-5 text-[#45e3d3]" />
                             </div>
                             <div className={isRTL ? "text-right" : "text-left"}>
@@ -957,7 +957,7 @@ export function ProfilePage() {
                               isRTL ? "flex-row-reverse" : ""
                             }`}
                           >
-                            <div className="w-10 h-10 bg-[#1D112A] rounded-lg flex items-center justify-center">
+                            <div className="w-10 h-10 bg-[#1D112A] border border-[#45e3d3]/30 rounded-lg flex items-center justify-center">
                               <FileText className="w-5 h-5 text-[#45e3d3]" />
                             </div>
                             <div className={isRTL ? "text-right" : "text-left"}>

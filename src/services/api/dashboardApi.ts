@@ -535,19 +535,25 @@ export const dashboardApi = baseApi.injectEndpoints({
 
     // Get Dashboard Stats Gallery - GET /api/market_final/dashboard_stats_gallery
     getDashboardStatsGallery: builder.query<DashboardStatsGalleryResponse, void>({
-      query: () => ({
-        url: "/market_final/dashboard_stats_gallery",
-        method: "GET",
-      }),
+      query: () => {
+        const currentUrl = typeof window !== "undefined" ? window.location.origin : "";
+        return {
+          url: `/market_final/dashboard_stats_gallery${currentUrl ? `?url=${encodeURIComponent(currentUrl)}` : ""}`,
+          method: "GET",
+        };
+      },
       providesTags: ["User", "Gallery"],
     }),
 
     // Get Dashboard Stats Ambassador - GET /api/market_final/dashboard_stats_ambassador
     getDashboardStatsAmbassador: builder.query<DashboardStatsAmbassadorResponse, void>({
-      query: () => ({
-        url: "/market_final/dashboard_stats_ambassador",
-        method: "GET",
-      }),
+      query: () => {
+        const currentUrl = typeof window !== "undefined" ? window.location.origin : "";
+        return {
+          url: `/market_final/dashboard_stats_ambassador${currentUrl ? `?url=${encodeURIComponent(currentUrl)}` : ""}`,
+          method: "GET",
+        };
+      },
       providesTags: ["User"],
     }),
 

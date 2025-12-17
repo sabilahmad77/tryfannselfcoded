@@ -205,7 +205,6 @@ export function AddArtistModal({
             placeholder={language === "en" ? "Select status" : "اختر الحالة"}
             icon={Award}
             isRTL={isRTL}
-            disableClear
             contentClassName="z-[10000]"
           />
 
