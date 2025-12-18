@@ -88,6 +88,47 @@ interface SocialMediaStat {
   trend: string;
 }
 
+// API Response Types
+interface ApiUserStats {
+  influence_points?: number;
+  provenance_points?: number;
+  followers?: number;
+  following?: number;
+  referral_count?: number;
+  artworks_added_count?: number;
+  video_watched?: number;
+  is_follow?: boolean;
+  user_rank?: number;
+  tier?: {
+    current_tier?: string;
+    progress_percent?: number;
+    points_needed?: number;
+  };
+}
+
+interface ApiArtwork {
+  id?: number;
+  title?: string;
+  image?: string;
+  price?: string | number;
+}
+
+interface ApiProfile {
+  role?: string;
+  bio?: string;
+  artist_statement?: string;
+  kyc_status?: string;
+  is_kyc_verified?: boolean;
+  is_verify?: boolean;
+  instagram_handle?: string;
+  twitter_handle?: string;
+  facebook_handle?: string;
+  linkedin_handle?: string;
+  points?: number | string;
+  artworks?: ApiArtwork[];
+  user_stats?: ApiUserStats;
+}
+
 interface UserProfileData {
   bio: string;
   kycStatus: 'verified' | 'notVerified' | 'pending';
@@ -489,9 +530,9 @@ export function UserProfileModal({
     skip: !userId,
   });
 
-  // Cast to any so we can safely access nested API fields with optional chaining
-  const apiProfile = userProfileResponse?.data as any | undefined;
-  const apiUserStats = apiProfile?.user_stats as any | undefined;
+  // Type-safe API response access
+  const apiProfile = userProfileResponse?.data as ApiProfile | undefined;
+  const apiUserStats = apiProfile?.user_stats as ApiUserStats | undefined;
 
   const baseProfileData = user ? getUserProfileData(user.username, user.type) : null;
 
@@ -585,7 +626,7 @@ export function UserProfileModal({
           },
           // Artworks come only from API; if none, show an empty state (no mock data)
           artworks: (() => {
-            const apiArtworks = apiProfile?.artworks as any[] | undefined;
+            const apiArtworks = apiProfile?.artworks as ApiArtwork[] | undefined;
 
             if (!Array.isArray(apiArtworks) || apiArtworks.length === 0) {
               return [];
