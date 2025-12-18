@@ -1,5 +1,6 @@
 import { ROUTES } from "@/routes/paths";
 import { useLoginMutation } from "@/services/api/authApi";
+import { baseApi } from "@/services/api/baseApi";
 import {
   setAccessToken,
   setPersona,
@@ -246,6 +247,9 @@ export function SignIn({
           : undefined;
 
       if (accessToken) {
+        // Clear RTK Query cache when user logs in/relogins to ensure fresh data
+        dispatch(baseApi.util.resetApiState());
+
         // Store tokens in Redux (persisted via redux-persist)
         if (refreshToken) {
           dispatch(

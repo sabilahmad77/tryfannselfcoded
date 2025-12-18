@@ -11,8 +11,6 @@ import {
   Trash2,
   Pencil,
   Upload,
-  Users,
-  Building2,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
@@ -31,6 +29,8 @@ import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 interface AddArtworkProps {
   profileCompleted?: boolean;
   onCompleteProfile?: () => void;
+  /** User type to use for artworks (Artist, Gallery, or Collector) */
+  userType?: "Artist" | "Gallery" | "Collector";
 }
 
 const content = {
@@ -119,6 +119,7 @@ const content = {
 export function AddArtwork({
   profileCompleted,
   onCompleteProfile,
+  userType = "Artist",
 }: AddArtworkProps) {
   const { language } = useLanguage();
   const t = content[language];
@@ -166,7 +167,7 @@ export function AddArtwork({
         medium: values.medium,
         dimensions: values.dimensions,
         image: values.imageFile as File,
-        user_type: values.user_type,
+        user_type: userType,
         no_artist: values.no_artist || undefined,
       }).unwrap();
 
@@ -193,7 +194,7 @@ export function AddArtwork({
         medium: values.medium,
         dimensions: values.dimensions,
         image: values.imageFile ?? undefined,
-        user_type: values.user_type,
+        user_type: userType,
         no_artist: values.no_artist || undefined,
       }).unwrap();
 
@@ -449,46 +450,6 @@ export function AddArtwork({
                           <span className="text-xs text-[#ffcc33] truncate">{artwork.medium}</span>
                         </div>
                       </div>
-
-                      {/* Second Row: User Type and Number of Artists (if Gallery) */}
-                      <div
-                        className={`flex items-center gap-2 flex-wrap ${isRTL ? "flex-row-reverse" : ""
-                          }`}
-                      >
-                        {/* User Type Badge */}
-                        <div className={`flex items-center gap-1 px-2 py-1 rounded-lg ${
-                          artwork.user_type === "Gallery"
-                            ? "bg-purple-500/10 border border-purple-500/30"
-                            : "bg-blue-500/10 border border-blue-500/30"
-                        }`}>
-                          {artwork.user_type === "Gallery" ? (
-                            <Building2 className={`w-3 h-3 ${
-                              artwork.user_type === "Gallery"
-                                ? "text-purple-400"
-                                : "text-blue-400"
-                            }`} />
-                          ) : (
-                            <Users className="w-3 h-3 text-blue-400" />
-                          )}
-                          <span className={`text-xs ${
-                            artwork.user_type === "Gallery"
-                              ? "text-purple-400"
-                              : "text-blue-400"
-                          }`}>
-                            {artwork.user_type === "Gallery" ? t.gallery : t.artist}
-                          </span>
-                        </div>
-
-                        {/* Number of Artists (only if Gallery) */}
-                        {artwork.user_type === "Gallery" && artwork.no_artist && (
-                          <div className="flex items-center gap-1 px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-                            <Users className="w-3 h-3 text-purple-400" />
-                            <span className="text-xs text-purple-400">
-                              {artwork.no_artist} {t.noOfArtists}
-                            </span>
-                          </div>
-                        )}
-                      </div>
                     </div>
 
                     {/* Glow Effect on Hover */}
@@ -507,6 +468,7 @@ export function AddArtwork({
       <ArtworkModal
         isOpen={isModalOpen}
         mode={modalMode}
+        defaultUserType={userType}
         initialValues={
           modalMode === "edit" && selectedArtwork
             ? {
@@ -515,7 +477,7 @@ export function AddArtwork({
               price: selectedArtwork.price,
               medium: selectedArtwork.medium,
               dimensions: selectedArtwork.dimensions,
-              user_type: selectedArtwork.user_type || "Artist",
+              user_type: selectedArtwork.user_type || userType,
               no_artist: selectedArtwork.no_artist || "",
             }
             : undefined

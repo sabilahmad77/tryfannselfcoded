@@ -7,7 +7,10 @@ import {
 } from "@/components/ui/custom-form-elements";
 import { ImagePreviewList } from "@/components/ui/image-preview-list";
 import { CustomModal } from "@/components/ui/CustomModal";
-import { useProfileSetupMutation } from "@/services/api/onboardingApi";
+import {
+  useProfileSetupMutation,
+  useGetArtistPriceRangeOptionsQuery,
+} from "@/services/api/onboardingApi";
 import type { UserProfileData } from "@/store/authSlice";
 import { setUser, updateUser } from "@/store/authSlice";
 import type { RootState } from "@/store/store";
@@ -120,6 +123,12 @@ export function EditProfile({
   const isGallery = persona === "gallery" || initialData?.persona === "gallery";
   const isCollector =
     persona === "collector" || initialData?.persona === "collector";
+
+  // Artist price range options from API (for artist and collector personas)
+  const { data: artistPriceRangeData } = useGetArtistPriceRangeOptionsQuery(
+    undefined,
+    { skip: !isArtist && !isCollector }
+  );
 
   const initialValues: EditProfileFormData = {
     title: initialData?.title || "",
@@ -455,6 +464,56 @@ export function EditProfile({
   };
 
   const Icon = icons[personaType] || Palette;
+
+  // Transform artist price range API response into SelectField options
+  const priceRangeOptions: Array<{ value: string; label: string }> = (() => {
+    if (!artistPriceRangeData) return [];
+    try {
+      const response = artistPriceRangeData as {
+        data?: Array<{
+          id?: number;
+          range?: string;
+          name?: string;
+          value?: string;
+          label?: string;
+        }> | string[];
+      };
+      if (!response.data) return [];
+
+      const { data } = response;
+
+      if (Array.isArray(data)) {
+        if (data.length > 0 && typeof data[0] === "string") {
+          return (data as string[]).map((opt) => ({
+            value: opt,
+            label: opt,
+          }));
+        }
+
+        if (data.length > 0 && typeof data[0] === "object") {
+          return (data as Array<{
+            id?: number;
+            range?: string;
+            name?: string;
+            value?: string;
+            label?: string;
+          }>).map((item) => {
+            const label =
+              item.range || item.name || item.value || item.label || "";
+            const id = item.id ?? label;
+            return {
+              value: String(id),
+              label: label,
+            };
+          });
+        }
+      }
+      return [];
+    } catch (e) {
+      console.error("Failed to transform artist price range options", e);
+      return [];
+    }
+  })();
 
   const onSubmit = async (formData: EditProfileFormData) => {
     try {
@@ -938,7 +997,7 @@ export function EditProfile({
                         ? content.common.priceRangeCollectorPlaceholder
                         : content.common.priceRangeArtistPlaceholder
                     }
-                    options={[]}
+                    options={priceRangeOptions}
                     value={watchedPriceRange}
                     onValueChange={(value) =>
                       setValue("price_range", value, { shouldValidate: true })

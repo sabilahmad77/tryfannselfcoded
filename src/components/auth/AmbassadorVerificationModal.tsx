@@ -1,5 +1,6 @@
 import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
+import { baseApi } from "@/services/api/baseApi";
 import { clearAuth } from "@/store/authSlice";
 import type { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,11 +41,15 @@ export function AmbassadorVerificationModal() {
   const t = content[language];
 
   const handleSignOut = () => {
+    // Clear RTK Query cache to remove all cached API data
+    dispatch(baseApi.util.resetApiState());
     dispatch(clearAuth());
     navigate(ROUTES.SIGN_IN, { replace: true });
   };
 
   const handleBackHome = () => {
+    // Clear RTK Query cache to remove all cached API data
+    dispatch(baseApi.util.resetApiState());
     dispatch(clearAuth());
     navigate(ROUTES.HOME, { replace: true });
   };

@@ -12,6 +12,7 @@ import { TierProgress } from "../shared/TierProgress";
 import { URLEncoder } from "../shared/URLEncoder";
 import { WatchVideos } from "../shared/WatchVideos";
 import { ArtistRoster } from "./ArtistRoster";
+import { AddArtwork } from "../artist/AddArtwork";
 import { ROUTES } from "@/routes/paths";
 
 const content = {
@@ -87,13 +88,17 @@ export function GalleryDashboard() {
           <ArtistRoster />
         </motion.div>
 
-        {/* Row 2: Referral Link Generator (URL Encoder) + Watch & Earn */}
+        {/* Row 2: Add Artwork + Referral Link Generator (URL Encoder) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <URLEncoder />
+          <AddArtwork
+            profileCompleted={profileCompleted}
+            onCompleteProfile={handleCompleteProfile}
+            userType="Gallery"
+          />
         </motion.div>
 
         <motion.div
@@ -101,14 +106,22 @@ export function GalleryDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <WatchVideos />
+          <URLEncoder />
         </motion.div>
 
-        {/* Row 3: Tier Progress (same width as other cards) */}
+        {/* Row 3: Watch & Earn + Tier Progress */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <WatchVideos />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
         >
           <TierProgress />
         </motion.div>

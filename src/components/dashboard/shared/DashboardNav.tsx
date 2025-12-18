@@ -20,6 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { ImageWithFallback } from "../../figma/ImageWithFallback";
 import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
+import { baseApi } from "@/services/api/baseApi";
 import { clearAuth } from "@/store/authSlice";
 import { persistor } from "@/store/store";
 import type { RootState } from "@/store/store";
@@ -215,6 +216,9 @@ export function DashboardNav({
   ];
 
   const handleLogout = async () => {
+    // Clear RTK Query cache to remove all cached API data
+    dispatch(baseApi.util.resetApiState());
+
     // Clear Redux auth state
     dispatch(clearAuth());
 

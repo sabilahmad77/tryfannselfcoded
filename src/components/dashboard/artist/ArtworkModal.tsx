@@ -31,6 +31,8 @@ interface ArtworkModalProps {
   isSubmitting?: boolean;
   /** Existing image URL to show when editing (backend image) */
   existingImageUrl?: string;
+  /** Default user type to use (hides user type select when provided) */
+  defaultUserType?: "Artist" | "Gallery" | "Collector";
 }
 
 const modalContent = {
@@ -92,6 +94,7 @@ export function ArtworkModal({
   onSubmit,
   isSubmitting = false,
   existingImageUrl,
+  defaultUserType,
 }: ArtworkModalProps) {
   const { language } = useLanguage();
   const t = modalContent[language];
@@ -104,7 +107,7 @@ export function ArtworkModal({
     medium: "",
     dimensions: "",
     imageFile: null,
-    user_type: "Artist",
+    user_type: defaultUserType || "Artist",
     no_artist: "",
   });
   const [initialSnapshot, setInitialSnapshot] = useState<
@@ -128,7 +131,8 @@ export function ArtworkModal({
       const initialPrice = initialValues?.price ?? "";
       const initialMedium = initialValues?.medium ?? "";
       const initialDimensions = initialValues?.dimensions ?? "";
-      const initialUserType = initialValues?.user_type ?? "Artist";
+      // Always use defaultUserType if provided, otherwise use initialValues or default to "Artist"
+      const initialUserType = defaultUserType ?? initialValues?.user_type ?? "Artist";
       const initialNoArtist = initialValues?.no_artist ?? "";
 
       setValues({
@@ -153,7 +157,7 @@ export function ArtworkModal({
         hasNewImage: false,
       });
     }
-  }, [isOpen, initialValues]);
+  }, [isOpen, initialValues, defaultUserType]);
 
   const handleSubmit = async () => {
     const isDirty =
@@ -222,6 +226,7 @@ export function ArtworkModal({
       !!values.imageFile !== initialSnapshot.hasNewImage);
 
   const isGallery = values.user_type === "Gallery";
+  const showUserTypeSelect = !defaultUserType; // Hide select when defaultUserType is provided
 
   return (
     <CustomModal
@@ -328,26 +333,30 @@ export function ArtworkModal({
             placeholder={t.dimensionsPlaceholder}
           />
 
-          <SelectField
-            label={t.userType}
-            required
-            isRTL={isRTL}
-            value={values.user_type}
-            onValueChange={(value) =>
-              setValues((prev) => ({
-                ...prev,
-                user_type: value,
-                // Clear no_artist when switching back to Artist
-                no_artist: value === "Artist" ? "" : prev.no_artist,
-              }))
-            }
-            placeholder={t.userTypePlaceholder}
-            options={[
-              { value: "Artist", label: language === "en" ? "Artist" : "فنان" },
-              { value: "Gallery", label: language === "en" ? "Gallery" : "معرض" },
-            ]}
-          />
+          {/* User Type Select - only show when defaultUserType is not provided */}
+          {showUserTypeSelect && (
+            <SelectField
+              label={t.userType}
+              required
+              isRTL={isRTL}
+              value={values.user_type}
+              onValueChange={(value) =>
+                setValues((prev) => ({
+                  ...prev,
+                  user_type: value,
+                  // Clear no_artist when switching back to Artist
+                  no_artist: value === "Artist" ? "" : prev.no_artist,
+                }))
+              }
+              placeholder={t.userTypePlaceholder}
+              options={[
+                { value: "Artist", label: language === "en" ? "Artist" : "فنان" },
+                { value: "Gallery", label: language === "en" ? "Gallery" : "معرض" },
+              ]}
+            />
+          )}
 
+          {/* Number of Artists field - show when Gallery is selected (either via select or defaultUserType) */}
           {isGallery && (
             <InputField
               label={t.noOfArtists}

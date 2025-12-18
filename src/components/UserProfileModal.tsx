@@ -1,5 +1,5 @@
 import { useLanguage } from '@/contexts/useLanguage';
-import { Award, CheckCircle, Facebook, Flame, Heart, Instagram, Linkedin, Loader2, Share2, Shield, ShieldCheck, Target, TrendingUp, Twitter, UserCheck, UserPlus, Users, X } from 'lucide-react';
+import { Award, BarChart3, CheckCircle, Facebook, Flame, Heart, Instagram, Linkedin, Loader2, Share2, Shield, ShieldCheck, Target, TrendingUp, Twitter, UserCheck, UserPlus, Users, Video, X, Youtube } from 'lucide-react';
 import { motion } from 'motion/react';
 import { type ElementType } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -89,6 +89,21 @@ interface SocialMediaStat {
 }
 
 // API Response Types
+interface ApiSocialData {
+  instagram_follower?: string | null;
+  instagram_engagement?: number | null;
+  instagram_post?: number | null;
+  tiktok_follower?: string | null;
+  tiktok_engagement?: number | null;
+  tiktok_post?: number | null;
+  youtube_subscriber?: string | null;
+  youtube_engagement?: number | null;
+  youtube_post?: number | null;
+  twitter_follower?: string | null;
+  twitter_engagement?: number | null;
+  twitter_post?: number | null;
+}
+
 interface ApiUserStats {
   influence_points?: number;
   provenance_points?: number;
@@ -99,6 +114,7 @@ interface ApiUserStats {
   video_watched?: number;
   is_follow?: boolean;
   user_rank?: number;
+  social_data?: ApiSocialData;
   tier?: {
     current_tier?: string;
     progress_percent?: number;
@@ -208,6 +224,8 @@ const content = {
     posts: "Posts",
     trend: "Trend",
     follow: "Follow",
+    noSocialMedia: "No social media links available",
+    noSocialPerformance: "No social media performance data available",
   },
   ar: {
     close: "إغلاق",
@@ -270,6 +288,8 @@ const content = {
     posts: "المنشورات",
     trend: "الاتجاه",
     follow: "تابع",
+    noSocialMedia: "لا توجد روابط وسائل التواصل الاجتماعي متاحة",
+    noSocialPerformance: "لا توجد بيانات أداء وسائل التواصل الاجتماعي متاحة",
   }
 };
 
@@ -623,6 +643,16 @@ export function UserProfileModal({
                   ? apiUserStats.video_watched
                   : baseProfileData.stats.videosWatched,
             }),
+            // Ambassador-specific stats: These fields (total_reach, engagement_rate, conversation, campaignsActive)
+            // are NOT available in the view_user_profile endpoint's user_stats object.
+            // They are only available in the dashboard_stats_ambassador endpoint.
+            // Set to 0 for ambassadors to avoid showing mock data from baseProfileData
+            ...(resolvedRole === 'ambassador' && {
+              totalReach: 0,
+              engagementRate: 0,
+              conversions: 0,
+              campaignsActive: 0,
+            }),
           },
           // Artworks come only from API; if none, show an empty state (no mock data)
           artworks: (() => {
@@ -950,80 +980,87 @@ export function UserProfileModal({
           <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
             {t.socialMedia}
           </h3>
-          <div className="grid grid-cols-2 gap-3">
-            {profileData.social.instagram && (
-              <motion.a
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href={`https://instagram.com/${profileData.social.instagram.replace('@', '')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#e4405f]/50 transition-all"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] rounded-lg flex items-center justify-center shrink-0">
-                  <Instagram className="w-5 h-5 text-white" />
-                </div>
-                <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <p className="text-xs text-[#808c99]">{t.instagram}</p>
-                  <p className="text-sm text-[#ffffff]">{profileData.social.instagram}</p>
-                </div>
-              </motion.a>
-            )}
-            {profileData.social.twitter && (
-              <motion.a
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href={`https://twitter.com/${profileData.social.twitter.replace('@', '')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1da1f2]/50 transition-all"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] rounded-lg flex items-center justify-center shrink-0">
-                  <Twitter className="w-5 h-5 text-white" />
-                </div>
-                <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <p className="text-xs text-[#808c99]">{t.twitter}</p>
-                  <p className="text-sm text-[#ffffff]">{profileData.social.twitter}</p>
-                </div>
-              </motion.a>
-            )}
-            {profileData.social.facebook && (
-              <motion.a
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href={`https://facebook.com/${profileData.social.facebook}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1877f2]/50 transition-all"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-[#1877f2] to-[#0e5fc6] rounded-lg flex items-center justify-center shrink-0">
-                  <Facebook className="w-5 h-5 text-white" />
-                </div>
-                <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <p className="text-xs text-[#808c99]">{t.facebook}</p>
-                  <p className="text-sm text-[#ffffff]">Facebook</p>
-                </div>
-              </motion.a>
-            )}
-            {profileData.social.linkedin && (
-              <motion.a
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href={`https://linkedin.com/in/${profileData.social.linkedin}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#0a66c2]/50 transition-all"
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-[#0a66c2] to-[#004182] rounded-lg flex items-center justify-center shrink-0">
-                  <Linkedin className="w-5 h-5 text-white" />
-                </div>
-                <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                  <p className="text-xs text-[#808c99]">{t.linkedin}</p>
-                  <p className="text-sm text-[#ffffff]">LinkedIn</p>
-                </div>
-              </motion.a>
-            )}
-          </div>
+          {hasAnySocial ? (
+            <div className="grid grid-cols-2 gap-3">
+              {profileData.social.instagram && (
+                <motion.a
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  href={`https://instagram.com/${profileData.social.instagram.replace('@', '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#e4405f]/50 transition-all"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] rounded-lg flex items-center justify-center shrink-0">
+                    <Instagram className="w-5 h-5 text-white" />
+                  </div>
+                  <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                    <p className="text-xs text-[#808c99]">{t.instagram}</p>
+                    <p className="text-sm text-[#ffffff]">{profileData.social.instagram}</p>
+                  </div>
+                </motion.a>
+              )}
+              {profileData.social.twitter && (
+                <motion.a
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  href={`https://twitter.com/${profileData.social.twitter.replace('@', '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1da1f2]/50 transition-all"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] rounded-lg flex items-center justify-center shrink-0">
+                    <Twitter className="w-5 h-5 text-white" />
+                  </div>
+                  <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                    <p className="text-xs text-[#808c99]">{t.twitter}</p>
+                    <p className="text-sm text-[#ffffff]">{profileData.social.twitter}</p>
+                  </div>
+                </motion.a>
+              )}
+              {profileData.social.facebook && (
+                <motion.a
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  href={`https://facebook.com/${profileData.social.facebook}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1877f2]/50 transition-all"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#1877f2] to-[#0e5fc6] rounded-lg flex items-center justify-center shrink-0">
+                    <Facebook className="w-5 h-5 text-white" />
+                  </div>
+                  <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                    <p className="text-xs text-[#808c99]">{t.facebook}</p>
+                    <p className="text-sm text-[#ffffff]">Facebook</p>
+                  </div>
+                </motion.a>
+              )}
+              {profileData.social.linkedin && (
+                <motion.a
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  href={`https://linkedin.com/in/${profileData.social.linkedin}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#0a66c2]/50 transition-all"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#0a66c2] to-[#004182] rounded-lg flex items-center justify-center shrink-0">
+                    <Linkedin className="w-5 h-5 text-white" />
+                  </div>
+                  <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                    <p className="text-xs text-[#808c99]">{t.linkedin}</p>
+                    <p className="text-sm text-[#ffffff]">LinkedIn</p>
+                  </div>
+                </motion.a>
+              )}
+            </div>
+          ) : (
+            <div className="border border-dashed border-[#4e4e4e78] rounded-xl p-8 text-center">
+              <Share2 className={`w-12 h-12 text-[#808c99] mx-auto mb-3 ${isRTL ? 'ml-auto mr-auto' : ''}`} />
+              <p className="text-[#808c99] text-sm">{t.noSocialMedia}</p>
+            </div>
+          )}
         </div>
         )}
 
@@ -1094,8 +1131,8 @@ export function UserProfileModal({
           </div>
         </div>
 
-        {/* Artworks Gallery - Artist Only (dynamic, no dummy data) */}
-        {resolvedRole === 'artist' && (
+        {/* Artworks Gallery - Artist, Gallery, and Collector (dynamic, no dummy data) */}
+        {(resolvedRole === 'artist' || resolvedRole === 'gallery' || resolvedRole === 'collector') && (
           <div>
             <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
               <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
@@ -1159,155 +1196,145 @@ export function UserProfileModal({
           </div>
         )}
 
-        {/* Exhibitions Gallery - Gallery Only */}
-        {resolvedRole === 'gallery' && profileData.exhibitions && profileData.exhibitions.length > 0 && (
-          <div>
-            <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-              <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
-                {t.exhibitions}
-              </h3>
-              <span className="text-sm text-[#808c99]">
-                {profileData.exhibitions.length} {language === 'en' ? 'shows' : 'معرض'}
-              </span>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {profileData.exhibitions.map((exhibition: ExhibitionItem) => (
-                <motion.div
-                  key={exhibition.id}
-                  whileHover={{ scale: 1.03, y: -5 }}
-                  className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
-                >
-                  <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
-                    <img
-                      src={exhibition.image}
-                      alt={exhibition.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute top-2 right-2 z-10">
-                      {exhibition.status === 'active' && (
-                        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 text-xs">
-                          {language === 'en' ? 'Active' : 'نشط'}
-                        </Badge>
-                      )}
-                      {exhibition.status === 'upcoming' && (
-                        <Badge className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 text-xs">
-                          {language === 'en' ? 'Upcoming' : 'قادم'}
-                        </Badge>
-                      )}
-                      {exhibition.status === 'past' && (
-                        <Badge className="bg-gradient-to-r from-gray-500 to-gray-600 text-white border-0 text-xs">
-                          {language === 'en' ? 'Past' : 'سابق'}
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="absolute bottom-0 left-0 right-0 p-3">
-                        <h4 className="text-white text-sm mb-1">{exhibition.title}</h4>
-                        <p className="text-[#ffcc33] text-xs">{exhibition.artists}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
-                    <h4 className="text-white text-sm mb-1 truncate">{exhibition.title}</h4>
-                    <p className="text-[#ffcc33] text-xs">{exhibition.artists}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Collection Gallery - Collector Only */}
-        {resolvedRole === 'collector' && profileData.collection && profileData.collection.length > 0 && (
-          <div>
-            <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-              <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
-                {t.collection}
-              </h3>
-              <span className="text-sm text-[#808c99]">
-                {profileData.collection.length} {language === 'en' ? 'pieces' : 'قطعة'}
-              </span>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {profileData.collection.map((item: CollectionItem) => (
-                <motion.div
-                  key={item.id}
-                  whileHover={{ scale: 1.03, y: -5 }}
-                  className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
-                >
-                  <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="absolute bottom-0 left-0 right-0 p-3">
-                        <h4 className="text-white text-sm mb-1">{item.title}</h4>
-                        <p className="text-[#808c99] text-xs mb-1">{item.artist}</p>
-                        <p className="text-[#ffcc33] font-semibold text-xs">{item.value}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
-                    <h4 className="text-white text-sm mb-1 truncate">{item.title}</h4>
-                    <p className="text-[#808c99] text-xs mb-1">{item.artist}</p>
-                    <p className="text-[#ffcc33] text-xs">{item.value}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Social Media Performance - Ambassador Only */}
-        {resolvedRole === 'ambassador' && profileData.socialMediaStats && profileData.socialMediaStats.length > 0 && (
-          <div>
-            <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-              <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
-                {t.socialPerformance}
-              </h3>
+        {resolvedRole === 'ambassador' && (() => {
+          // Build social media data from API
+          const socialStatsData = apiUserStats?.social_data;
+          const socialStats = [
+            {
+              platform: "Instagram",
+              icon: Instagram,
+              bgClass: "bg-gradient-to-br from-[#8134af] via-[#dd2a7b] via-[#f58529] to-[#feda75]",
+              iconColor: "text-white",
+              followers: socialStatsData?.instagram_follower || "N/A",
+              engagement: socialStatsData?.instagram_engagement
+                ? `${socialStatsData.instagram_engagement}%`
+                : "—",
+              posts: socialStatsData?.instagram_post || 0,
+              trend: "+12%", // Mock trend data
+            },
+            {
+              platform: "TikTok",
+              icon: Video,
+              bgClass: "bg-[#000000]",
+              iconColor: "text-white",
+              followers: socialStatsData?.tiktok_follower || "N/A",
+              engagement: socialStatsData?.tiktok_engagement
+                ? `${socialStatsData.tiktok_engagement}%`
+                : "—",
+              posts: socialStatsData?.tiktok_post || 0,
+              trend: "+24%", // Mock trend data
+            },
+            {
+              platform: "YouTube",
+              icon: Youtube,
+              bgClass: "bg-[#FF0000]",
+              iconColor: "text-white",
+              followers: socialStatsData?.youtube_subscriber || "N/A",
+              engagement: socialStatsData?.youtube_engagement
+                ? `${socialStatsData.youtube_engagement}%`
+                : "—",
+              posts: socialStatsData?.youtube_post || 0,
+              trend: "+8%", // Mock trend data
+            },
+            {
+              platform: "Twitter",
+              icon: Twitter,
+              bgClass: "bg-[#1DA1F2]",
+              iconColor: "text-white",
+              followers: socialStatsData?.twitter_follower || "N/A",
+              engagement: socialStatsData?.twitter_engagement
+                ? `${socialStatsData.twitter_engagement}%`
+                : "—",
+              posts: socialStatsData?.twitter_post || 0,
+              trend: "+5%", // Mock trend data
+            },
+          ].filter((stat) => {
+            // Show platform if it has followers data (not null/N/A) or has posts
+            const hasFollowers = stat.followers && stat.followers !== "N/A";
+            const hasPosts = stat.posts > 0;
+            return hasFollowers || hasPosts;
+          }); // Only show platforms with data
+
+          return (
+            <div>
+              <div className={`flex items-center gap-2 mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <BarChart3 className="w-6 h-6 text-cyan-400" />
+                <h3 className={`text-2xl text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
+                  {t.socialPerformance}
+                </h3>
+                <span className={`ml-auto text-[#808c99] text-sm ${isRTL ? 'mr-auto ml-0' : ''}`}>
+                  {language === 'en' ? 'Last updated 2 hours ago' : 'آخر تحديث منذ ساعتين'}
+                </span>
+              </div>
+
+              {socialStats.length > 0 ? (
+                <div className="grid grid-cols-1 gap-4">
+                  {socialStats.map((stat, index) => {
+                    const Icon = stat.icon;
+                    return (
+                      <motion.div
+                        key={stat.platform}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="p-5 rounded-lg glass border border-[#ffcc33]/10 hover:border-[#ffcc33]/30 transition-all bg-gradient-to-br from-[#0F021C]/50 to-[#1D112A]/50"
+                      >
+                        {/* Header Row */}
+                        <div className={`flex items-center gap-3 mb-4 pb-3 border-b border-[#ffcc33]/10 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          <div
+                            className={`w-12 h-12 rounded-xl ${stat.bgClass} flex items-center justify-center`}
+                          >
+                            <Icon className={`w-6 h-6 ${stat.iconColor}`} />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className={`text-[#ffffff] text-lg ${isRTL ? 'text-right' : 'text-left'}`}>
+                              {stat.platform}
+                            </h4>
+                            <p className={`text-[#808c99] text-xs ${isRTL ? 'text-right' : 'text-left'}`}>
+                              {stat.followers}
+                            </p>
+                          </div>
+                          <div className={`flex items-center gap-1 text-green-400 text-sm px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <TrendingUp className="w-3 h-3" />
+                            <span>{stat.trend}</span>
+                          </div>
+                        </div>
+
+                        {/* Metrics Grid - Tile Layout */}
+                        <div className="grid grid-cols-3 gap-3">
+                          <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
+                            <p className="text-[#808c99] text-xs mb-1">{t.followers}</p>
+                            <p className="text-[#ffffff]">{stat.followers}</p>
+                          </div>
+
+                          <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
+                            <p className="text-[#808c99] text-xs mb-1">
+                              {t.engagementRate}
+                            </p>
+                            <p className="text-[#ffffff]">{stat.engagement}</p>
+                          </div>
+
+                          <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
+                            <p className="text-[#808c99] text-xs mb-1">
+                              {t.posts}
+                            </p>
+                            <p className="text-[#ffffff]">{stat.posts}</p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="border border-dashed border-[#4e4e4e78] rounded-xl p-8 text-center">
+                  <BarChart3 className={`w-12 h-12 text-[#808c99] mx-auto mb-3 ${isRTL ? 'ml-auto mr-auto' : ''}`} />
+                  <p className="text-[#808c99] text-sm">{t.noSocialPerformance}</p>
+                </div>
+              )}
             </div>
-            <div className="space-y-3">
-              {profileData.socialMediaStats.map((stat: SocialMediaStat, index: number) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ scale: 1.02 }}
-                  className="glass rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all"
-                >
-                  <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className={`w-12 h-12 rounded-lg ${stat.platform === 'Instagram' ? 'bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af]' :
-                      stat.platform === 'Twitter' ? 'bg-gradient-to-br from-[#1da1f2] to-[#0c85d0]' :
-                        'bg-gradient-to-br from-[#1877f2] to-[#0e5fc6]'
-                      } flex items-center justify-center shrink-0`}>
-                      {stat.platform === 'Instagram' && <Instagram className="w-6 h-6 text-white" />}
-                      {stat.platform === 'Twitter' && <Twitter className="w-6 h-6 text-white" />}
-                      {stat.platform === 'Facebook' && <Facebook className="w-6 h-6 text-white" />}
-                    </div>
-                    <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <div className={isRTL ? 'text-right' : 'text-left'}>
-                        <p className="text-xs text-[#808c99] mb-1">{t.platform}</p>
-                        <p className="text-sm text-[#ffffff]">{stat.platform}</p>
-                      </div>
-                      <div className={isRTL ? 'text-right' : 'text-left'}>
-                        <p className="text-xs text-[#808c99] mb-1">{t.followers}</p>
-                        <p className="text-sm text-[#ffffff]">{stat.followers}</p>
-                      </div>
-                      <div className={isRTL ? 'text-right' : 'text-left'}>
-                        <p className="text-xs text-[#808c99] mb-1">{t.engagementRate}</p>
-                        <p className="text-sm text-[#ffffff]">{stat.engagement}</p>
-                      </div>
-                      <div className={isRTL ? 'text-right' : 'text-left'}>
-                        <p className="text-xs text-[#808c99] mb-1">{t.posts}</p>
-                        <p className="text-sm text-green-400 flex items-center gap-1">{stat.posts} <span className="text-xs">({stat.trend})</span></p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Achievements */}
         <div>

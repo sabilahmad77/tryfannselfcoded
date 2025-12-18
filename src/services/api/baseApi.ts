@@ -158,6 +158,9 @@ const handleTokenExpiration = async (
       window.dispatchEvent(event);
     }
 
+    // Clear RTK Query cache to remove all cached API data
+    api.dispatch(baseApi.util.resetApiState());
+
     // Clear tokens from Redux store using api.dispatch AFTER setting flag
     // Dynamically import to avoid circular dependencies
     const { clearAuth } = await import("@/store/authSlice");

@@ -12,6 +12,7 @@ import { PointWallet } from "../shared/PointWallet";
 import { TierProgress } from "../shared/TierProgress";
 import { URLEncoder } from "../shared/URLEncoder";
 import { WatchVideos } from "../shared/WatchVideos";
+import { AddArtwork } from "../artist/AddArtwork";
 import { MyCollection } from "./MyCollection";
 import { MarketInsights } from "./MarketInsights";
 
@@ -87,11 +88,24 @@ export function CollectorDashboard() {
           <MyCollection />
         </motion.div>
 
-        {/* Referral Link Generator (URL Encoder) */}
+        {/* Add Artwork */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <AddArtwork
+            profileCompleted={profileCompleted}
+            onCompleteProfile={handleCompleteProfile}
+            userType="Collector"
+          />
+        </motion.div>
+
+        {/* Referral Link Generator (URL Encoder) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
         >
           <URLEncoder />
         </motion.div>
@@ -100,26 +114,22 @@ export function CollectorDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
         >
           <WatchVideos />
         </motion.div>
 
-        {/* Tier Progress */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-        >
-          <TierProgress />
-        </motion.div>
-
-        {/* Market Insights */}
+        {/* Tier Progress and Market Insights - Stacked in one column */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
+          className="flex flex-col gap-6"
         >
+          {/* Tier Progress */}
+          <TierProgress />
+
+          {/* Market Insights */}
           <MarketInsights />
         </motion.div>
       </div>
