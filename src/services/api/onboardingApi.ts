@@ -98,8 +98,8 @@ export interface KYCVerificationResponse {
 // ============================================================================
 
 export interface RewardsRequest {
-  goal_type: string;
-  points_reward?: string;
+  goal_type: string | string[];
+  points_reward?: string | string[];
 }
 
 export interface RewardsResponse {
@@ -322,6 +322,7 @@ export const onboardingApi = baseApi.injectEndpoints({
     }),
 
     // Rewards/Gamification - matches Postman: POST /api/market_final/reward
+    // Supports both single goal and multiple goals (array)
     rewards: builder.mutation<RewardsResponse, RewardsRequest>({
       query: (data) => ({
         url: "/market_final/reward",

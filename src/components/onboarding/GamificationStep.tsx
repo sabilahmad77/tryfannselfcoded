@@ -16,6 +16,7 @@ import {
   Target,
   Trophy,
   Users,
+  ArrowRightCircle,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -47,34 +48,77 @@ export function GamificationStep({
 
   // Load initial values from Redux
   const savedData = (data.gamification || {}) as {
-    selectedGoal?: string;
-    goal_type?: string;
-    points_reward?: string;
+    selectedGoals?: string[];
+    selectedGoal?: string; // Legacy support
+    goal_type?: string | string[];
+    points_reward?: string | string[];
   };
 
-  const [selectedGoal, setSelectedGoal] = useState<string>(
-    savedData.selectedGoal || ""
+  // Support both legacy single selection and new multi-select
+  const [selectedGoals, setSelectedGoals] = useState<string[]>(
+    savedData.selectedGoals || 
+    (savedData.selectedGoal ? [savedData.selectedGoal] : [])
   );
   const [rewards, { isLoading }] = useRewardsMutation();
 
   // Restore state from saved data when component mounts or data changes
   useEffect(() => {
     const gamificationData = (data.gamification || {}) as {
-      selectedGoal?: string;
-      goal_type?: string;
-      points_reward?: string;
+      selectedGoals?: string[];
+      selectedGoal?: string; // Legacy support
+      goal_type?: string | string[];
+      points_reward?: string | string[];
     };
-    setSelectedGoal(gamificationData.selectedGoal || "");
+    if (gamificationData.selectedGoals) {
+      setSelectedGoals(gamificationData.selectedGoals);
+    } else if (gamificationData.selectedGoal) {
+      // Legacy: convert single selection to array
+      setSelectedGoals([gamificationData.selectedGoal]);
+    } else {
+      setSelectedGoals([]);
+    }
   }, [data.gamification]);
 
   // Compare current selection with submitted data
   const hasChanges = () => {
     if (!isStepSubmitted || !submittedData) return true;
-    const submitted = submittedData as { selectedGoal?: string };
-    return selectedGoal !== (submitted.selectedGoal || "");
+    const submitted = submittedData as { 
+      selectedGoals?: string[];
+      selectedGoal?: string; // Legacy support
+    };
+    const submittedGoals = submitted.selectedGoals || 
+      (submitted.selectedGoal ? [submitted.selectedGoal] : []);
+    
+    // Compare arrays
+    if (selectedGoals.length !== submittedGoals.length) return true;
+    return !selectedGoals.every(goal => submittedGoals.includes(goal));
   };
 
   const shouldShowNext = isStepSubmitted && !hasChanges();
+  
+  const MAX_SELECTIONS = 2;
+  
+  const handleGoalToggle = (goalId: string) => {
+    if (isLoading) return;
+    
+    setSelectedGoals((prev) => {
+      if (prev.includes(goalId)) {
+        // Deselect
+        return prev.filter((id) => id !== goalId);
+      } else {
+        // Select (max 2)
+        if (prev.length >= MAX_SELECTIONS) {
+          toast.error(
+            language === "en"
+              ? `You can select a maximum of ${MAX_SELECTIONS} goals`
+              : `يمكنك اختيار حد أقصى ${MAX_SELECTIONS} أهداف`
+          );
+          return prev;
+        }
+        return [...prev, goalId];
+      }
+    });
+  };
 
   const isRTL = language === "ar";
 
@@ -165,6 +209,7 @@ export function GamificationStep({
       back: "Back",
       continue: "Start My Journey",
       next: "Next",
+      skip: "Skip for now",
     },
     ar: {
       title: "حدد هدفك الأول",
@@ -252,40 +297,47 @@ export function GamificationStep({
       back: "رجوع",
       continue: "ابدأ رحلتي",
       next: "التالي",
+      skip: "تخطي الآن",
     },
   };
 
   const content = t[language];
 
+  const handleSkip = () => {
+    onNext({ skipped: true });
+  };
+
   const handleSubmit = async () => {
     // If step was already submitted and no changes, just proceed without API call
     if (shouldShowNext) {
-      const selectedGoalData = content.goals.options.find(
-        (goal) => goal.id === selectedGoal
+      const selectedGoalsData = content.goals.options.filter((goal) =>
+        selectedGoals.includes(goal.id)
       );
-      if (selectedGoalData) {
+      if (selectedGoalsData.length > 0) {
         onNext({
-          selectedGoal,
-          goal_type: selectedGoalData.goal_type,
-          points_reward: selectedGoalData.points_reward,
+          selectedGoals,
+          goal_type: selectedGoalsData.map((g) => g.goal_type),
+          points_reward: selectedGoalsData.map((g) => g.points_reward),
         });
       }
       return;
     }
 
-    if (!selectedGoal) {
+    if (selectedGoals.length === 0) {
       toast.error(
-        language === "en" ? "Please select a goal" : "يرجى اختيار هدف"
+        language === "en" 
+          ? "Please select at least one goal" 
+          : "يرجى اختيار هدف واحد على الأقل"
       );
       return;
     }
 
     try {
-      const selectedGoalData = content.goals.options.find(
-        (goal) => goal.id === selectedGoal
+      const selectedGoalsData = content.goals.options.filter((goal) =>
+        selectedGoals.includes(goal.id)
       );
 
-      if (!selectedGoalData) {
+      if (selectedGoalsData.length === 0) {
         toast.error(
           language === "en" ? "Invalid goal selected" : "هدف غير صحيح"
         );
@@ -293,8 +345,8 @@ export function GamificationStep({
       }
 
       const rewardsData = {
-        goal_type: selectedGoalData.goal_type,
-        points_reward: selectedGoalData.points_reward,
+        goal_type: selectedGoalsData.map((g) => g.goal_type),
+        points_reward: selectedGoalsData.map((g) => g.points_reward),
       };
 
       const result = await rewards(rewardsData).unwrap();
@@ -342,9 +394,9 @@ export function GamificationStep({
 
         // Mark step as submitted in Redux
         const stepData = {
-          selectedGoal,
-          goal_type: selectedGoalData.goal_type,
-          points_reward: selectedGoalData.points_reward,
+          selectedGoals,
+          goal_type: selectedGoalsData.map((g) => g.goal_type),
+          points_reward: selectedGoalsData.map((g) => g.points_reward),
         };
 
         dispatch(
@@ -430,28 +482,45 @@ export function GamificationStep({
             <p className="text-white/60">{content.goals.subtitle}</p>
           </div>
 
+          <div className="mb-4 text-center">
+            <p className="text-white/60 text-sm">
+              {language === "en"
+                ? `Select up to ${MAX_SELECTIONS} goals (${selectedGoals.length}/${MAX_SELECTIONS} selected)`
+                : `اختر حتى ${MAX_SELECTIONS} أهداف (${selectedGoals.length}/${MAX_SELECTIONS} محدد)`}
+            </p>
+          </div>
           <div className="grid md:grid-cols-2 gap-4">
             {content.goals.options.map((goal, index) => {
               const Icon = goal.icon;
-              const isSelected = selectedGoal === goal.id;
+              const isSelected = selectedGoals.includes(goal.id);
+              const isDisabled = !isSelected && selectedGoals.length >= MAX_SELECTIONS;
 
               return (
                 <motion.button
                   key={goal.id}
                   type="button"
-                  onClick={() => setSelectedGoal(goal.id)}
+                  onClick={() => handleGoalToggle(goal.id)}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  disabled={isLoading}
-                  className={`p-6 rounded-xl border transition-all text-left ${
+                  whileHover={!isDisabled ? { scale: 1.02 } : {}}
+                  whileTap={!isDisabled ? { scale: 0.98 } : {}}
+                  disabled={isLoading || isDisabled}
+                  className={`p-6 rounded-xl border transition-all text-left relative ${
                     isSelected
                       ? `bg-gradient-to-br ${goal.color} border-${goal.borderColor}`
+                      : isDisabled
+                      ? "glass border-white/5 opacity-50"
                       : "glass border-white/10 hover:border-amber-500/30"
                   } disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer`}
                 >
+                  {isSelected && (
+                    <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-amber-400 flex items-center justify-center">
+                      <span className="text-xs font-bold text-black">
+                        {selectedGoals.indexOf(goal.id) + 1}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex items-start gap-4">
                     <div
                       className={`w-14 h-14 rounded-xl bg-gradient-to-br ${goal.color} border border-${goal.borderColor} flex items-center justify-center shrink-0`}
@@ -522,7 +591,7 @@ export function GamificationStep({
           <Button
             type="button"
             onClick={handleSubmit}
-            disabled={isLoading || !selectedGoal}
+            disabled={isLoading || selectedGoals.length === 0}
             className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50"
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
@@ -550,6 +619,27 @@ export function GamificationStep({
                 </>
               )}
             </span>
+          </Button>
+        </motion.div>
+
+        {/* Skip Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2 }}
+          className="mt-4 text-center"
+        >
+          <Button
+            type="button"
+            onClick={handleSkip}
+            disabled={isLoading}
+            variant="ghost"
+            className="text-white/60 hover:text-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <ArrowRightCircle
+              className={`w-4 h-4 mr-2 ${isRTL ? "rotate-180" : ""}`}
+            />
+            {content.skip}
           </Button>
         </motion.div>
       </div>

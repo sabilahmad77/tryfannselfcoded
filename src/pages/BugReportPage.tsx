@@ -4,8 +4,9 @@ import { FileUploadField, InputField, TextareaField } from '@/components/ui/cust
 import { useLanguage } from '@/contexts/useLanguage';
 import { AlertCircle, AlertTriangle, Bug, CheckCircle, Info, Monitor } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { toast } from 'sonner';
+import { useReportBugMutation } from '@/services/api/dashboardApi';
 
 const content = {
   en: {
@@ -33,11 +34,11 @@ const content = {
     titlePlaceholder: "Brief description of the bug",
     descriptionLabel: "Bug Description",
     descriptionPlaceholder: "Please describe the bug in detail. Include what you were doing, what happened, and what you expected to happen...",
-    deviceLabel: "Device/Browser Info",
+    deviceLabel: "Device/Browser Info (Optional)",
     devicePlaceholder: "e.g., Chrome 120, iPhone 14, Windows 11",
-    screenshotLabel: "Screenshot",
+    screenshotLabel: "Screenshot (Optional)",
     screenshotButton: "Upload Screenshot",
-    emailLabel: "Email for Follow-up",
+    emailLabel: "Email for Follow-up (Optional)",
     emailPlaceholder: "your.email@example.com",
     submitButton: "Submit Bug Report",
     submitting: "Submitting...",
@@ -60,7 +61,7 @@ const content = {
     lowDesc: "مشكلة بسيطة",
     categoryLabel: "فئة الخلل",
     categories: {
-      ui: "مشكلة واجهة المستخدم",
+      ui: "مشكلة واجهة/تجربة المستخدم",
       performance: "الأداء",
       functionality: "الوظائف",
       security: "الأمان",
@@ -71,11 +72,11 @@ const content = {
     titlePlaceholder: "وصف موجز للخلل",
     descriptionLabel: "وصف الخلل",
     descriptionPlaceholder: "يرجى وصف الخلل بالتفصيل. قم بتضمين ما كنت تفعله، وما حدث، وما كنت تتوقع أن يحدث...",
-    deviceLabel: "معلومات الجهاز/المتصفح",
+    deviceLabel: "معلومات الجهاز/المتصفح (اختياري)",
     devicePlaceholder: "مثال: Chrome 120، iPhone 14، Windows 11",
-    screenshotLabel: "لقطة الشاشة",
+    screenshotLabel: "لقطة الشاشة (اختياري)",
     screenshotButton: "رفع لقطة الشاشة",
-    emailLabel: "البريد الإلكتروني للمتابعة",
+    emailLabel: "البريد الإلكتروني للمتابعة (اختياري)",
     emailPlaceholder: "your.email@example.com",
     submitButton: "إرسال تقرير الخلل",
     submitting: "جاري الإرسال...",
@@ -98,6 +99,8 @@ export function BugReportPage() {
   const [deviceInfo, setDeviceInfo] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
+  const [reportBug, { isLoading: isReportingBug }] = useReportBugMutation();
 
   const severityLevels = [
     {
@@ -134,7 +137,7 @@ export function BugReportPage() {
     },
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!severity || !category || !bugTitle.trim() || !description.trim()) {
@@ -142,25 +145,25 @@ export function BugReportPage() {
       return;
     }
 
-    setIsSubmitting(true);
+    const severityLabel =
+      severityLevels.find((level) => level.value === severity)?.label || severity;
+    const categoryLabel =
+      t.categories[category as keyof typeof t.categories] || category;
 
-    // Simulate API call
-    setTimeout(() => {
-      const bugReportData = {
-        severity,
-        category,
-        bugTitle,
-        description,
-        deviceInfo: deviceInfo || null,
-        email: email || null,
-        language,
-        timestamp: new Date().toISOString(),
-        userAgent: navigator.userAgent,
-      };
+    const payload = {
+      title: bugTitle.trim(),
+      severity: severityLabel,
+      description: description.trim(),
+      bug_category: categoryLabel,
+      device_info: deviceInfo.trim() || undefined,
+      email: email.trim() || undefined,
+      bug_image: screenshotFile || undefined,
+    };
 
-      console.log('Bug report submitted:', bugReportData);
+    try {
+      setIsSubmitting(true);
+      await reportBug(payload).unwrap();
 
-      // Show success toast
       toast.success(t.successTitle, {
         description: t.successMessage,
       });
@@ -172,8 +175,13 @@ export function BugReportPage() {
       setDescription('');
       setDeviceInfo('');
       setEmail('');
+      setScreenshotFile(null);
+    } catch (error) {
+      console.error('Bug report submission failed:', error);
+      toast.error(t.errorMessage);
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -303,11 +311,8 @@ export function BugReportPage() {
             <FileUploadField
               label={t.screenshotLabel}
               accept="image/*"
-              onFileChange={(file) => {
-                if (file) {
-                  toast.info(language === 'en' ? 'Screenshot upload coming soon!' : 'رفع لقطة الشاشة قريباً!');
-                }
-              }}
+              onFileChange={(file) => setScreenshotFile(file)}
+              value={screenshotFile}
               buttonText={t.screenshotButton}
               isRTL={isRTL}
             />
@@ -326,11 +331,11 @@ export function BugReportPage() {
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isReportingBug}
                 className={`w-full bg-gradient-to-r from-[#ef4444] to-[#f97316] text-white hover:opacity-90 transition-opacity h-12 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${isRTL ? 'flex-row-reverse' : ''
                   }`}
               >
-                {isSubmitting ? (
+                {isSubmitting || isReportingBug ? (
                   <span>{t.submitting}</span>
                 ) : (
                   <>

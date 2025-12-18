@@ -125,18 +125,26 @@ export function InterestsStep({
     };
 
     // Compare arrays (order doesn't matter)
-    const arraysEqual = (a: string[], b: string[] = []) => {
+    const arraysEqual = (a: string[] = [], b: string[] = []) => {
       if (a.length !== b.length) return false;
+      if (a.length === 0 && b.length === 0) return true;
       const sortedA = [...a].sort();
       const sortedB = [...b].sort();
       return sortedA.every((val, idx) => val === sortedB[idx]);
     };
 
+    // Normalize price range for comparison
+    // Convert submitted price_interset (display string) back to option value for comparison
+    const submittedPriceRangeNormalized = reverseMapPriceRange(
+      submitted.price_interset || ""
+    );
+    const currentPriceRangeNormalized = selectedPriceRange || "";
+
     return (
       !arraysEqual(selectedStyles, submitted.art_style) ||
       !arraysEqual(selectedRegions, submitted.geographic_interset) ||
       !arraysEqual(selectedPeriods, submitted.preferred_time_periods) ||
-      selectedPriceRange !== (submitted.price_interset || "")
+      currentPriceRangeNormalized !== submittedPriceRangeNormalized
     );
   };
 

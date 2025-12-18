@@ -24,7 +24,7 @@ import {
   cleanupPreviewUrls,
   getFullImageUrl,
 } from "@/utils/filePreviewHelpers";
-import { setUser, type UserProfileData } from "@/store/authSlice";
+import { setUser, updateUser, type UserProfileData } from "@/store/authSlice";
 import {
   AlertCircle,
   ArrowRight,
@@ -75,8 +75,32 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
   );
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
-  // Load initial values from Redux
-  const savedData = (data.kyc || {}) as Partial<
+  // Load initial values from Redux onboarding slice and merge with storedUser KYC fields
+  // Check storedUser for KYC fields (kyc_id_type, kyc_gov_issued_id, etc.) when page reloads
+  const kycDataFromUser = storedUser
+    ? ({
+        id_number: (storedUser as { kyc_id_number?: string }).kyc_id_number,
+        dob: (storedUser as { kyc_dob?: string }).kyc_dob,
+        nationality: (storedUser as { kyc_nationality?: string }).kyc_nationality,
+        city: (storedUser as { kyc_city?: string }).kyc_city,
+        postal_code: (storedUser as { kyc_postal_code?: string }).kyc_postal_code,
+        street_address: (storedUser as { kyc_street_address?: string }).kyc_street_address,
+        id_type: (storedUser as { kyc_id_type?: string }).kyc_id_type,
+        gov_issued_id: (storedUser as { kyc_gov_issued_id?: string | string[] | null }).kyc_gov_issued_id,
+        proof_address: (storedUser as { kyc_proof_address?: string | null }).kyc_proof_address,
+      } as Partial<
+        KYCFormData & {
+          gov_issued_id?: File | File[] | string | string[] | null;
+          proof_address?: File | string | null;
+        }
+      >)
+    : {};
+
+  // Merge onboarding data with user KYC data (user data takes precedence)
+  const savedData = {
+    ...(data.kyc || {}),
+    ...kycDataFromUser,
+  } as Partial<
     KYCFormData & {
       gov_issued_id?: File | File[] | string | string[] | null;
       acceptedCompliance?: boolean;
@@ -129,9 +153,82 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
 
   // Load document files and form values from saved data when component mounts or data changes
   useEffect(() => {
-    const savedIdDoc = savedData.gov_issued_id;
-    const savedProof = savedData.proof_address;
-    const savedComplianceState = savedData.acceptedCompliance;
+    // Recompute savedData inside useEffect to react to storedUser changes
+    const kycDataFromUser = storedUser
+      ? ({
+          id_number: (storedUser as { kyc_id_number?: string }).kyc_id_number,
+          dob: (storedUser as { kyc_dob?: string }).kyc_dob,
+          nationality: (storedUser as { kyc_nationality?: string }).kyc_nationality,
+          city: (storedUser as { kyc_city?: string }).kyc_city,
+          postal_code: (storedUser as { kyc_postal_code?: string }).kyc_postal_code,
+          street_address: (storedUser as { kyc_street_address?: string }).kyc_street_address,
+          id_type: (storedUser as { kyc_id_type?: string }).kyc_id_type,
+          gov_issued_id: (storedUser as { kyc_gov_issued_id?: string | string[] | null }).kyc_gov_issued_id,
+          proof_address: (storedUser as { kyc_proof_address?: string | null }).kyc_proof_address,
+        } as Partial<
+          KYCFormData & {
+            gov_issued_id?: File | File[] | string | string[] | null;
+            proof_address?: File | string | null;
+          }
+        >)
+      : {};
+
+    // Merge onboarding data with user KYC data (user data takes precedence when defined)
+    const onboardingKyc = (data.kyc || {}) as Partial<
+      KYCFormData & {
+        gov_issued_id?: File | File[] | string | string[] | null;
+        acceptedCompliance?: boolean;
+      }
+    >;
+
+    const currentSavedData: Partial<
+      KYCFormData & {
+        gov_issued_id?: File | File[] | string | string[] | null;
+        acceptedCompliance?: boolean;
+      }
+    > = {
+      acceptedCompliance: onboardingKyc.acceptedCompliance,
+      id_number:
+        kycDataFromUser.id_number !== undefined
+          ? kycDataFromUser.id_number
+          : onboardingKyc.id_number,
+      dob:
+        kycDataFromUser.dob !== undefined
+          ? kycDataFromUser.dob
+          : onboardingKyc.dob,
+      nationality:
+        kycDataFromUser.nationality !== undefined
+          ? kycDataFromUser.nationality
+          : onboardingKyc.nationality,
+      city:
+        kycDataFromUser.city !== undefined
+          ? kycDataFromUser.city
+          : onboardingKyc.city,
+      postal_code:
+        kycDataFromUser.postal_code !== undefined
+          ? kycDataFromUser.postal_code
+          : onboardingKyc.postal_code,
+      street_address:
+        kycDataFromUser.street_address !== undefined
+          ? kycDataFromUser.street_address
+          : onboardingKyc.street_address,
+      id_type:
+        kycDataFromUser.id_type !== undefined
+          ? kycDataFromUser.id_type
+          : onboardingKyc.id_type,
+      gov_issued_id:
+        kycDataFromUser.gov_issued_id !== undefined
+          ? kycDataFromUser.gov_issued_id
+          : onboardingKyc.gov_issued_id,
+      proof_address:
+        kycDataFromUser.proof_address !== undefined
+          ? kycDataFromUser.proof_address
+          : onboardingKyc.proof_address,
+    };
+
+    const savedIdDoc = currentSavedData.gov_issued_id;
+    const savedProof = currentSavedData.proof_address;
+    const savedComplianceState = currentSavedData.acceptedCompliance;
 
     // Restore compliance checkbox
     if (savedComplianceState !== undefined) {
@@ -231,21 +328,28 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       }
     }
     
+    const idTypeValue = (currentSavedData.id_type as string) || "";
+    
     reset({
-      id_number: (savedData.id_number as string) || "",
-      dob: (savedData.dob as string) || "",
-      nationality: (savedData.nationality as string) || "",
-      city: (savedData.city as string) || "",
-      postal_code: (savedData.postal_code as string) || "",
-      street_address: (savedData.street_address as string) || "",
-      id_type: (savedData.id_type as string) || "",
+      id_number: (currentSavedData.id_number as string) || "",
+      dob: (currentSavedData.dob as string) || "",
+      nationality: (currentSavedData.nationality as string) || "",
+      city: (currentSavedData.city as string) || "",
+      postal_code: (currentSavedData.postal_code as string) || "",
+      street_address: (currentSavedData.street_address as string) || "",
+      id_type: idTypeValue,
       gov_issued_id: null,
       gov_issued_id_front: frontFile,
       gov_issued_id_back: backFile,
       proof_address: savedProof instanceof File ? savedProof : null,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.kyc]);
+    
+    // Explicitly set id_type to ensure SelectField updates properly
+    // This is needed because SelectField uses controlled value and needs explicit update
+    if (idTypeValue) {
+      setValue("id_type", idTypeValue, { shouldValidate: false });
+    }
+  }, [data.kyc, storedUser, reset, setValue]);
 
   // Cleanup preview URLs on unmount
   useEffect(() => {
@@ -564,7 +668,24 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         success?: boolean;
         status_code?: number;
         message?: string | Record<string, unknown>;
-        data?: unknown;
+        data?: {
+          kyc_verification?: {
+            id?: number;
+            id_number?: string;
+            dob?: string;
+            nationality?: string;
+            city?: string;
+            postal_code?: string;
+            street_address?: string;
+            id_type?: string;
+            gov_issued_id?: string | null; // Legacy single file
+            gov_issued_id_front?: string | null; // Front of ID
+            gov_issued_id_back?: string | null; // Back of ID
+            proof_address?: string | null;
+          };
+          user?: unknown;
+          [key: string]: unknown;
+        };
       };
 
       const isSuccess =
@@ -599,6 +720,117 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         }
 
         toast.success(successMessage);
+
+        // Update user data in Redux with KYC information from API response
+        if (storedUser && apiResponse.data?.kyc_verification) {
+          const kycVerification = apiResponse.data.kyc_verification as {
+            id?: number;
+            id_number?: string;
+            dob?: string;
+            nationality?: string;
+            city?: string;
+            postal_code?: string;
+            street_address?: string;
+            id_type?: string;
+            gov_issued_id?: string | null; // Legacy single file
+            gov_issued_id_front?: string | null; // Front of ID
+            gov_issued_id_back?: string | null; // Back of ID
+            proof_address?: string | null;
+            [key: string]: unknown;
+          };
+
+          // Combine front and back into array for storage, or use legacy single file
+          let govIdUrls: string[] | string | null = null;
+          if (kycVerification.gov_issued_id_front || kycVerification.gov_issued_id_back) {
+            const urls: string[] = [];
+            if (kycVerification.gov_issued_id_front) urls.push(kycVerification.gov_issued_id_front);
+            if (kycVerification.gov_issued_id_back) urls.push(kycVerification.gov_issued_id_back);
+            govIdUrls = urls.length === 1 ? urls[0] : urls;
+          } else if (kycVerification.gov_issued_id) {
+            govIdUrls = kycVerification.gov_issued_id;
+          }
+
+          dispatch(
+            updateUser({
+              // Store KYC data as additional properties in user object
+              // Using type assertion since KYC fields aren't in UserProfileData interface
+              ...({
+                kyc_id_number:
+                  kycVerification.id_number || formData.id_number.trim(),
+                kyc_dob: kycVerification.dob || formData.dob,
+                kyc_nationality:
+                  kycVerification.nationality || formData.nationality.trim(),
+                kyc_city: kycVerification.city || formData.city.trim(),
+                kyc_postal_code:
+                  kycVerification.postal_code || formData.postal_code.trim(),
+                kyc_id_type: kycVerification.id_type || formData.id_type.trim(),
+                kyc_gov_issued_id: govIdUrls,
+                kyc_proof_address: kycVerification.proof_address || null,
+              } as Partial<typeof storedUser>),
+            })
+          );
+        } else if (storedUser) {
+          // Fallback: if API response doesn't have kyc_verification, use form data
+          // Check if API response contains document URLs in alternative format
+          let govIdUrl: string | string[] | null = null;
+          if (idDocumentFront || idDocumentBack) {
+            // If we uploaded new files, use their names (they'll be uploaded)
+            // Note: The actual files will be uploaded, so we store placeholder names
+            // The API will return the actual URLs after upload
+            const urls: string[] = [];
+            if (idDocumentFront) urls.push(idDocumentFront.name);
+            if (idDocumentBack) urls.push(idDocumentBack.name);
+            govIdUrl = urls.length === 1 ? urls[0] : urls.length > 0 ? urls : null;
+          }
+          
+          let proofUrl = proofOfAddress?.name || null;
+
+          // If API response has document data in alternative format
+          if (apiResponse.data) {
+            try {
+              const responseData = apiResponse.data as {
+                gov_issued_id?: string | string[];
+                gov_issued_id_front?: string;
+                gov_issued_id_back?: string;
+                proof_address?: string;
+                [key: string]: unknown;
+              };
+              if (responseData.gov_issued_id_front || responseData.gov_issued_id_back) {
+                const urls: string[] = [];
+                if (responseData.gov_issued_id_front) urls.push(responseData.gov_issued_id_front);
+                if (responseData.gov_issued_id_back) urls.push(responseData.gov_issued_id_back);
+                govIdUrl = urls.length === 1 ? urls[0] : urls;
+              } else if (responseData.gov_issued_id) {
+                govIdUrl = responseData.gov_issued_id;
+              }
+              if (responseData.proof_address) {
+                proofUrl = responseData.proof_address;
+              }
+            } catch (error) {
+              console.error(
+                "Failed to parse document URLs from response:",
+                error
+              );
+            }
+          }
+
+          dispatch(
+            updateUser({
+              // Store KYC data as additional properties in user object
+              // Using type assertion since KYC fields aren't in UserProfileData interface
+              ...({
+                kyc_id_number: formData.id_number.trim(),
+                kyc_dob: formData.dob,
+                kyc_nationality: formData.nationality.trim(),
+                kyc_city: formData.city.trim(),
+                kyc_postal_code: formData.postal_code.trim(),
+                kyc_id_type: formData.id_type.trim(),
+                kyc_gov_issued_id: govIdUrl,
+                kyc_proof_address: proofUrl,
+              } as Partial<typeof storedUser>),
+            })
+          );
+        }
 
         // Check if API response includes updated user data (profile_step may be updated)
         if (apiResponse.data) {
@@ -640,25 +872,106 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         }
 
         // Mark step as submitted in Redux
-        const savedIdDocs: string[] = [];
-        if (idDocumentFront?.name) savedIdDocs.push(idDocumentFront.name);
-        if (idDocumentBack?.name) savedIdDocs.push(idDocumentBack.name);
+        // Use document URLs from API response if available, otherwise use file names
+        // Initialize all KYC fields with formData values as fallback
+        let savedIdType: string = formData.id_type;
+        let savedIdNumber: string = formData.id_number;
+        let savedDob: string = formData.dob;
+        let savedNationality: string = formData.nationality;
+        let savedCity: string = formData.city;
+        let savedPostalCode: string = formData.postal_code;
+        let savedStreetAddress: string = formData.street_address;
+        let savedIdDocs: string[] = [];
+        let savedProofAddress: string = "";
+        
+        if (apiResponse.data?.kyc_verification) {
+          const kycVerification = apiResponse.data.kyc_verification;
+          // Extract all KYC fields from kyc_verification object
+          if (kycVerification.id_type) savedIdType = kycVerification.id_type;
+          if (kycVerification.id_number) savedIdNumber = kycVerification.id_number;
+          if (kycVerification.dob) savedDob = kycVerification.dob;
+          if (kycVerification.nationality) savedNationality = kycVerification.nationality;
+          if (kycVerification.city) savedCity = kycVerification.city;
+          if (kycVerification.postal_code) savedPostalCode = kycVerification.postal_code;
+          if (kycVerification.street_address) savedStreetAddress = kycVerification.street_address;
+          // Extract document URLs
+          if (kycVerification.gov_issued_id_front) savedIdDocs.push(kycVerification.gov_issued_id_front);
+          if (kycVerification.gov_issued_id_back) savedIdDocs.push(kycVerification.gov_issued_id_back);
+          if (savedIdDocs.length === 0 && kycVerification.gov_issued_id) {
+            // Legacy single file
+            savedIdDocs = Array.isArray(kycVerification.gov_issued_id) 
+              ? kycVerification.gov_issued_id 
+              : [kycVerification.gov_issued_id];
+          }
+          if (kycVerification.proof_address) {
+            savedProofAddress = kycVerification.proof_address;
+          }
+        } else if (apiResponse.data) {
+          // Check alternative format in response data
+          try {
+            const responseData = apiResponse.data as {
+              id_type?: string;
+              id_number?: string;
+              dob?: string;
+              nationality?: string;
+              city?: string;
+              postal_code?: string;
+              street_address?: string;
+              gov_issued_id?: string | string[];
+              gov_issued_id_front?: string;
+              gov_issued_id_back?: string;
+              proof_address?: string;
+              [key: string]: unknown;
+            };
+            // Extract all KYC fields from alternative format
+            if (responseData.id_type) savedIdType = responseData.id_type;
+            if (responseData.id_number) savedIdNumber = responseData.id_number;
+            if (responseData.dob) savedDob = responseData.dob;
+            if (responseData.nationality) savedNationality = responseData.nationality;
+            if (responseData.city) savedCity = responseData.city;
+            if (responseData.postal_code) savedPostalCode = responseData.postal_code;
+            if (responseData.street_address) savedStreetAddress = responseData.street_address;
+            // Extract document URLs
+            if (responseData.gov_issued_id_front || responseData.gov_issued_id_back) {
+              if (responseData.gov_issued_id_front) savedIdDocs.push(responseData.gov_issued_id_front);
+              if (responseData.gov_issued_id_back) savedIdDocs.push(responseData.gov_issued_id_back);
+            } else if (responseData.gov_issued_id) {
+              savedIdDocs = Array.isArray(responseData.gov_issued_id)
+                ? responseData.gov_issued_id
+                : [responseData.gov_issued_id];
+            }
+            if (responseData.proof_address) {
+              savedProofAddress = responseData.proof_address;
+            }
+          } catch (error) {
+            console.error("Failed to parse document URLs from response for stepData:", error);
+          }
+        }
+        
+        // Fallback to file names if API didn't return URLs
+        if (savedIdDocs.length === 0) {
+          if (idDocumentFront?.name) savedIdDocs.push(idDocumentFront.name);
+          if (idDocumentBack?.name) savedIdDocs.push(idDocumentBack.name);
+        }
+        if (!savedProofAddress) {
+          savedProofAddress = proofOfAddress?.name || "";
+        }
 
         const stepData = {
-          id_number: formData.id_number,
-          dob: formData.dob,
-          nationality: formData.nationality,
-          city: formData.city,
-          postal_code: formData.postal_code,
-          street_address: formData.street_address,
-          id_type: formData.id_type,
+          id_number: savedIdNumber,
+          dob: savedDob,
+          nationality: savedNationality,
+          city: savedCity,
+          postal_code: savedPostalCode,
+          street_address: savedStreetAddress,
+          id_type: savedIdType,
           gov_issued_id:
             savedIdDocs.length === 1
               ? savedIdDocs[0]
               : savedIdDocs.length > 1
                 ? savedIdDocs
                 : "",
-          proof_address: proofOfAddress?.name || "",
+          proof_address: savedProofAddress,
           acceptedCompliance: acceptedCompliance, // Save compliance checkbox state
         };
 

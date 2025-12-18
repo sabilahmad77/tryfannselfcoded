@@ -21,9 +21,16 @@ interface CompletionStepProps {
   data: OnboardingData;
 }
 
-export function CompletionStep({ language }: CompletionStepProps) {
+export function CompletionStep({ language, data }: CompletionStepProps) {
   const navigate = useNavigate();
   const isRTL = language === "ar";
+  
+  // Get persona from data
+  const persona = (data?.persona as string)?.toLowerCase() || "artist";
+  const isArtist = persona === "artist";
+  const isCollector = persona === "collector";
+  const isGallery = persona === "gallery";
+  const isAmbassador = persona === "ambassador";
 
   const t = {
     en: {
@@ -84,9 +91,26 @@ export function CompletionStep({ language }: CompletionStepProps) {
       },
       stats: {
         title: "You're Now Part of",
-        community: "1,247 Early Adopters",
-        artworks: "3,456 Artworks",
-        galleries: "234 Galleries",
+        artist: {
+          stat1: "1,247 Artists",
+          stat2: "3,456 Artworks",
+          stat3: "856 Collectors",
+        },
+        collector: {
+          stat1: "856 Collectors",
+          stat2: "3,456 Artworks",
+          stat3: "1,247 Artists",
+        },
+        gallery: {
+          stat1: "234 Galleries",
+          stat2: "1,247 Artists",
+          stat3: "3,456 Artworks",
+        },
+        ambassador: {
+          stat1: "156 Ambassadors",
+          stat2: "1,247 Community",
+          stat3: "2,500+ Referrals",
+        },
       },
       achievements: {
         title: "Achievements Unlocked",
@@ -153,9 +177,26 @@ export function CompletionStep({ language }: CompletionStepProps) {
       },
       stats: {
         title: "أنت الآن جزء من",
-        community: "1,247 من المتبنين الأوائل",
-        artworks: "3,456 عمل فني",
-        galleries: "234 معرض",
+        artist: {
+          stat1: "1,247 فنان",
+          stat2: "3,456 عمل فني",
+          stat3: "856 جامع",
+        },
+        collector: {
+          stat1: "856 جامع",
+          stat2: "3,456 عمل فني",
+          stat3: "1,247 فنان",
+        },
+        gallery: {
+          stat1: "234 معرض",
+          stat2: "1,247 فنان",
+          stat3: "3,456 عمل فني",
+        },
+        ambassador: {
+          stat1: "156 سفير",
+          stat2: "1,247 مجتمع",
+          stat3: "2,500+ إحالة",
+        },
       },
       achievements: {
         title: "الإنجازات المفتوحة",
@@ -167,6 +208,14 @@ export function CompletionStep({ language }: CompletionStepProps) {
   };
 
   const content = t[language];
+  
+  // Get role-specific stats
+  const roleStats = 
+    (isArtist && content.stats.artist) ||
+    (isCollector && content.stats.collector) ||
+    (isGallery && content.stats.gallery) ||
+    (isAmbassador && content.stats.ambassador) ||
+    content.stats.artist; // Default to artist
 
   const handleComplete = () => {
     // Navigate to dashboard page
@@ -336,26 +385,26 @@ export function CompletionStep({ language }: CompletionStepProps) {
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
               <div className="text-2xl text-amber-400 mb-1">
-                {content.stats.community.split(" ")[0]}
+                {roleStats.stat1.split(" ")[0]}
               </div>
               <div className="text-xs text-white/60">
-                {content.stats.community.split(" ").slice(1).join(" ")}
+                {roleStats.stat1.split(" ").slice(1).join(" ")}
               </div>
             </div>
             <div className="text-center">
               <div className="text-2xl text-amber-400 mb-1">
-                {content.stats.artworks.split(" ")[0]}
+                {roleStats.stat2.split(" ")[0]}
               </div>
               <div className="text-xs text-white/60">
-                {content.stats.artworks.split(" ").slice(1).join(" ")}
+                {roleStats.stat2.split(" ").slice(1).join(" ")}
               </div>
             </div>
             <div className="text-center">
               <div className="text-2xl text-amber-400 mb-1">
-                {content.stats.galleries.split(" ")[0]}
+                {roleStats.stat3.split(" ")[0]}
               </div>
               <div className="text-xs text-white/60">
-                {content.stats.galleries.split(" ").slice(1).join(" ")}
+                {roleStats.stat3.split(" ").slice(1).join(" ")}
               </div>
             </div>
           </div>

@@ -114,7 +114,7 @@ export function ProfileCompletionPage() {
   if (isLoading && !hasProcessedRef.current) {
     return (
       <div className="min-h-screen bg-[#0F021C] flex items-center justify-center">
-        <div className="text-center">
+        <div className="flex flex-col items-center justify-center text-center">
           <Oval
             height={50}
             width={50}

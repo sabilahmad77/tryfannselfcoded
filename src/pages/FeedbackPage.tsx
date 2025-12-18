@@ -1,16 +1,29 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { motion } from 'motion/react';
-import { Star, Send, MessageSquare, Smile, Meh, Frown } from 'lucide-react';
+import {
+  Star,
+  Send,
+  MessageSquare,
+  Smile,
+  Meh,
+  Frown,
+  Lightbulb,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { InputField, TextareaField } from '@/components/ui/custom-form-elements';
 import { toast } from 'sonner';
 import { DashboardLayout } from '@/components/dashboard/shared/DashboardLayout';
 import { useLanguage } from '@/contexts/useLanguage';
+import { useSendFeedbackMutation } from '@/services/api/dashboardApi';
 
 const content = {
   en: {
     title: "Share Your Feedback",
     subtitle: "Help us improve FANN by sharing your thoughts and suggestions",
+    tabs: {
+      general: "General Feedback",
+      ideas: "Ideas & Suggestions",
+    },
     satisfactionLabel: "How satisfied are you with FANN?",
     veryDissatisfied: "Very Dissatisfied",
     dissatisfied: "Dissatisfied",
@@ -19,16 +32,31 @@ const content = {
     verySatisfied: "Very Satisfied",
     categoryLabel: "What would you like to give feedback about?",
     categories: {
-      platform: "Platform Experience",
-      features: "Features & Functionality",
-      design: "Design & Interface",
-      performance: "Performance & Speed",
-      support: "Customer Support",
+      performanceExperience: "Performance Experience",
+      featuresFunctionality: "Features & Functionality",
+      designInterface: "Design & Interface",
+      performanceSpeed: "Performance & Speed",
+      customerSupport: "Customer Support",
       other: "Other"
     },
     messageLabel: "Your Feedback",
     messagePlaceholder: "Tell us what you think, what we're doing well, or how we can improve...",
-    emailLabel: "Email",
+    ideasFeedback: {
+      titleLabel: "Idea Title",
+      titlePlaceholder: "Give your idea a clear, concise title",
+      descriptionLabel: "Describe Your Idea",
+      descriptionPlaceholder: "Share your idea in detail. What problem does it solve? How would it improve the FANN experience?",
+      categoryLabel: "What would you like to give feedback about?",
+      categories: {
+        newFeature: "New Feature",
+        improvement: "Improvement",
+        integration: "Integration",
+        userExperience: "User Experience",
+        communityFeatures: "Community Features",
+        other: "Other"
+      }
+    },
+    emailLabel: "Email (Optional)",
     emailPlaceholder: "your.email@example.com",
     submitButton: "Submit Feedback",
     submitting: "Submitting...",
@@ -40,6 +68,10 @@ const content = {
   ar: {
     title: "شارك ملاحظاتك",
     subtitle: "ساعدنا في تحسين FANN من خلال مشاركة أفكارك واقتراحاتك",
+    tabs: {
+      general: "ملاحظات عامة",
+      ideas: "أفكار واقتراحات",
+    },
     satisfactionLabel: "ما مدى رضاك عن FANN؟",
     veryDissatisfied: "غير راضٍ جداً",
     dissatisfied: "غير راضٍ",
@@ -48,16 +80,31 @@ const content = {
     verySatisfied: "راضٍ جداً",
     categoryLabel: "ما الذي تود إبداء ملاحظاتك عنه؟",
     categories: {
-      platform: "تجربة المنصة",
-      features: "الميزات والوظائف",
-      design: "التصميم والواجهة",
-      performance: "الأداء والسرعة",
-      support: "دعم العملاء",
+      performanceExperience: "تجربة الأداء",
+      featuresFunctionality: "الميزات والوظائف",
+      designInterface: "التصميم والواجهة",
+      performanceSpeed: "الأداء والسرعة",
+      customerSupport: "دعم العملاء",
       other: "أخرى"
     },
     messageLabel: "ملاحظاتك",
     messagePlaceholder: "أخبرنا برأيك، ما نقوم به بشكل جيد، أو كيف يمكننا التحسين...",
-    emailLabel: "البريد الإلكتروني",
+    ideasFeedback: {
+      titleLabel: "عنوان الفكرة",
+      titlePlaceholder: "أعطِ فكرتك عنواناً واضحاً ومختصراً",
+      descriptionLabel: "وصف فكرتك",
+      descriptionPlaceholder: "شارك فكرتك بالتفصيل. ما المشكلة التي تحلها؟ كيف ستحسن تجربة FANN؟",
+      categoryLabel: "ما الذي تود إبداء ملاحظاتك عنه؟",
+      categories: {
+        newFeature: "ميزة جديدة",
+        improvement: "تحسين",
+        integration: "تكامل",
+        userExperience: "تجربة المستخدم",
+        communityFeatures: "ميزات المجتمع",
+        other: "أخرى"
+      }
+    },
+    emailLabel: "البريد الإلكتروني (اختياري)",
     emailPlaceholder: "your.email@example.com",
     submitButton: "إرسال الملاحظات",
     submitting: "جاري الإرسال...",
@@ -68,16 +115,23 @@ const content = {
   }
 };
 
+type FeedbackTab = 'general' | 'ideas';
+
 export function FeedbackPage() {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === 'ar';
 
+  const [activeTab, setActiveTab] = useState<FeedbackTab>('general');
   const [satisfaction, setSatisfaction] = useState<number>(0);
   const [category, setCategory] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [ideaTitle, setIdeaTitle] = useState<string>('');
+  const [ideaDescription, setIdeaDescription] = useState<string>('');
+  const [ideaCategory, setIdeaCategory] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sendFeedback, { isLoading: isSendingFeedback }] = useSendFeedbackMutation();
 
   const satisfactionLevels = [
     { value: 1, label: t.veryDissatisfied, icon: Frown, color: '#ef4444' },
@@ -87,41 +141,80 @@ export function FeedbackPage() {
     { value: 5, label: t.verySatisfied, icon: Smile, color: '#10b981' },
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!satisfaction || !category || !message.trim()) {
-      toast.error(t.requiredField);
-      return;
+    const isGeneral = activeTab === 'general';
+
+    if (isGeneral) {
+      if (!satisfaction || !category || !message.trim()) {
+        toast.error(t.requiredField);
+        return;
+      }
+    } else {
+      if (!ideaTitle.trim() || !ideaDescription.trim() || !ideaCategory) {
+        toast.error(t.requiredField);
+        return;
+      }
     }
 
-    setIsSubmitting(true);
+    const generalCategoryLabel =
+      t.categories[category as keyof typeof t.categories] || category || t.categoryLabel;
 
-    // Simulate API call
-    setTimeout(() => {
-      const feedbackData = {
-        satisfaction,
-        category,
-        message,
-        email: email || null,
-        language,
-        timestamp: new Date().toISOString(),
-      };
+    const ideaCategoryLabel =
+      t.ideasFeedback.categories[ideaCategory as keyof typeof t.ideasFeedback.categories] ||
+      ideaCategory ||
+      t.ideasFeedback.categoryLabel;
 
-      console.log('Feedback submitted:', feedbackData);
+  const sentimentLabel = isGeneral
+    ? satisfactionLevels.find((level) => level.value === satisfaction)?.label || t.neutral
+    : t.neutral;
 
-      // Show success toast
+    const payload = isGeneral
+      ? {
+          title: `Feedback - ${generalCategoryLabel}`,
+          describe_idea: message.trim(),
+          feedback: message.trim(),
+          email: email.trim() || undefined,
+          feedback_category: generalCategoryLabel, // matches general category options
+          feedback_about: language === 'ar' ? 'أخرى' : 'Other', // fallback for about when only general category is chosen
+          sentiment: sentimentLabel,
+        }
+      : {
+          title: ideaTitle.trim(),
+          describe_idea: ideaDescription.trim(),
+          feedback: ideaDescription.trim(),
+          email: email.trim() || undefined,
+          feedback_category: ideaCategoryLabel, // aligns with provided feedback category options list
+          feedback_about: ideaCategoryLabel, // aligns with provided feedback about options list
+          sentiment: sentimentLabel,
+        };
+
+    try {
+      setIsSubmitting(true);
+      await sendFeedback(payload).unwrap();
+
       toast.success(t.successTitle, {
         description: t.successMessage,
       });
 
       // Reset form
-      setSatisfaction(0);
-      setCategory('');
-      setMessage('');
       setEmail('');
+      if (isGeneral) {
+        setSatisfaction(0);
+        setCategory('');
+        setMessage('');
+      } else {
+        setIdeaTitle('');
+        setIdeaDescription('');
+        setIdeaCategory('');
+      }
+    } catch (error) {
+      console.error('Feedback submission failed:', error);
+      toast.error(t.errorMessage);
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -131,13 +224,34 @@ export function FeedbackPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className={`mb-8 ${isRTL ? 'text-right' : 'text-left'}`}
+        className={`mb-6 ${isRTL ? 'text-right' : 'text-left'}`}
       >
         <h1 className="text-4xl md:text-5xl mb-2 text-[#ffffff]">
           {t.title}
         </h1>
         <p className="text-[#808c99] text-lg">{t.subtitle}</p>
       </motion.div>
+
+      {/* Tabs */}
+      <div className={`glass rounded-2xl p-2 mb-6 flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+        {(['general', 'ideas'] as FeedbackTab[]).map((tab) => {
+          const isActive = activeTab === tab;
+          return (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 px-4 py-3 rounded-xl text-sm md:text-base transition-all ${
+                isActive
+                  ? 'bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] text-[#0f021c] shadow-lg shadow-[#fbbf24]/30'
+                  : 'text-[#808c99] hover:text-[#ffffff]'
+              }`}
+            >
+              {t.tabs[tab]}
+            </button>
+          );
+        })}
+      </div>
 
       <div className="space-y-6">
         {/* Feedback Form */}
@@ -148,78 +262,134 @@ export function FeedbackPage() {
           className="glass rounded-2xl p-6 shadow-2xl"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Satisfaction Rating */}
-            <div>
-              <label className={`block text-[#ffffff] mb-4 ${isRTL ? 'text-right' : 'text-left'}`}>
-                {t.satisfactionLabel} <span className="text-[#ef4444]">*</span>
-              </label>
-              <div className={`grid grid-cols-5 gap-3`}>
-                {satisfactionLevels.map((level) => {
-                  const Icon = level.icon;
-                  const isSelected = satisfaction === level.value;
-                  return (
-                    <motion.button
-                      key={level.value}
-                      type="button"
-                      onClick={() => setSatisfaction(level.value)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`p-4 rounded-xl transition-all cursor-pointer ${isSelected
-                        ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10'
-                        : 'bg-[#0f021c] border border-[#4e4e4e78]'
-                        }`}
-                    >
-                      <Icon
-                        className={`w-8 h-8 mx-auto mb-2 transition-colors`}
-                        style={{ color: isSelected ? level.color : '#808c99' }}
-                      />
-                      <p className={`text-xs text-center ${isSelected ? 'text-[#ffffff]' : 'text-[#808c99]'
-                        }`}>
-                        {level.label}
-                      </p>
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </div>
+            {activeTab === 'general' ? (
+              <>
+                {/* Satisfaction Rating */}
+                <div>
+                  <label className={`block text-[#ffffff] mb-4 ${isRTL ? 'text-right' : 'text-left'}`}>
+                    {t.satisfactionLabel} <span className="text-[#ef4444]">*</span>
+                  </label>
+                  <div className={`grid grid-cols-5 gap-3`}>
+                    {satisfactionLevels.map((level) => {
+                      const Icon = level.icon;
+                      const isSelected = satisfaction === level.value;
+                      return (
+                        <motion.button
+                          key={level.value}
+                          type="button"
+                          onClick={() => setSatisfaction(level.value)}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`p-4 rounded-xl transition-all cursor-pointer ${isSelected
+                            ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10'
+                            : 'bg-[#0f021c] border border-[#4e4e4e78]'
+                            }`}
+                        >
+                          <Icon
+                            className={`w-8 h-8 mx-auto mb-2 transition-colors`}
+                            style={{ color: isSelected ? level.color : '#808c99' }}
+                          />
+                          <p className={`text-xs text-center ${isSelected ? 'text-[#ffffff]' : 'text-[#808c99]'
+                            }`}>
+                            {level.label}
+                          </p>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-            {/* Category Selection */}
-            <div>
-              <label className={`block text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
-                {t.categoryLabel} <span className="text-[#ef4444]">*</span>
-              </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {Object.entries(t.categories).map(([key, label]) => {
-                  const isSelected = category === key;
-                  return (
-                    <motion.button
-                      key={key}
-                      type="button"
-                      onClick={() => setCategory(key)}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`p-3 rounded-lg transition-all cursor-pointer ${isSelected
-                        ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10 text-[#ffffff]'
-                        : 'bg-[#0f021c] border border-[#4e4e4e78] text-[#808c99] hover:border-[#ffcc33]/30'
-                        } ${isRTL ? 'text-right' : 'text-left'}`}
-                    >
-                      <span className="text-sm">{label}</span>
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </div>
+                {/* Category Selection */}
+                <div>
+                  <label className={`block text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+                    {t.categoryLabel} <span className="text-[#ef4444]">*</span>
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {Object.entries(t.categories).map(([key, label]) => {
+                      const isSelected = category === key;
+                      return (
+                        <motion.button
+                          key={key}
+                          type="button"
+                          onClick={() => setCategory(key)}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={`p-3 rounded-lg transition-all cursor-pointer ${isSelected
+                            ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10 text-[#ffffff]'
+                            : 'bg-[#0f021c] border border-[#4e4e4e78] text-[#808c99] hover:border-[#ffcc33]/30'
+                            } ${isRTL ? 'text-right' : 'text-left'}`}
+                        >
+                          <span className="text-sm">{label}</span>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-            {/* Message */}
-            <TextareaField
-              label={t.messageLabel}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder={t.messagePlaceholder}
-              rows={6}
-              required
-              isRTL={isRTL}
-            />
+                {/* Message */}
+                <TextareaField
+                  label={t.messageLabel}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder={t.messagePlaceholder}
+                  rows={6}
+                  required
+                  isRTL={isRTL}
+                />
+              </>
+            ) : (
+              <>
+                {/* Idea Title */}
+                <InputField
+                  label={t.ideasFeedback.titleLabel}
+                  type="text"
+                  value={ideaTitle}
+                  onChange={(e) => setIdeaTitle(e.target.value)}
+                  placeholder={t.ideasFeedback.titlePlaceholder}
+                  required
+                  isRTL={isRTL}
+                  icon={Lightbulb}
+                />
+
+                {/* Idea Description */}
+                <TextareaField
+                  label={t.ideasFeedback.descriptionLabel}
+                  value={ideaDescription}
+                  onChange={(e) => setIdeaDescription(e.target.value)}
+                  placeholder={t.ideasFeedback.descriptionPlaceholder}
+                  rows={5}
+                  required
+                  isRTL={isRTL}
+                />
+
+                {/* Idea Category */}
+                <div>
+                  <label className={`block text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+                    {t.ideasFeedback.categoryLabel} <span className="text-[#ef4444]">*</span>
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {Object.entries(t.ideasFeedback.categories).map(([key, label]) => {
+                      const isSelected = ideaCategory === key;
+                      return (
+                        <motion.button
+                          key={key}
+                          type="button"
+                          onClick={() => setIdeaCategory(key)}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={`p-3 rounded-lg transition-all cursor-pointer ${isSelected
+                            ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10 text-[#ffffff]'
+                            : 'bg-[#0f021c] border border-[#4e4e4e78] text-[#808c99] hover:border-[#ffcc33]/30'
+                            } ${isRTL ? 'text-right' : 'text-left'}`}
+                        >
+                          <span className="text-sm">{label}</span>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
+            )}
 
             {/* Email */}
             <InputField
@@ -235,11 +405,11 @@ export function FeedbackPage() {
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isSendingFeedback}
                 className={`w-full h-12 shadow-lg shadow-primary/30 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${isRTL ? 'flex-row-reverse' : ''
                   }`}
               >
-                {isSubmitting ? (
+                {isSubmitting || isSendingFeedback ? (
                   <span>{t.submitting}</span>
                 ) : (
                   <>

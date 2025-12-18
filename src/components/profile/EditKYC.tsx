@@ -443,6 +443,7 @@ export function EditKYC({
             nationality?: string;
             city?: string;
             postal_code?: string;
+            id_type?: string;
             gov_issued_id?: string | null; // Legacy single file
             gov_issued_id_front?: string | null; // Front of ID
             gov_issued_id_back?: string | null; // Back of ID
@@ -495,6 +496,7 @@ export function EditKYC({
             nationality?: string;
             city?: string;
             postal_code?: string;
+            id_type?: string;
             gov_issued_id?: string | null; // Legacy single file
             gov_issued_id_front?: string | null; // Front of ID
             gov_issued_id_back?: string | null; // Back of ID
@@ -526,6 +528,7 @@ export function EditKYC({
                 kyc_city: kycVerification.city || formData.city.trim(),
                 kyc_postal_code:
                   kycVerification.postal_code || formData.postal_code.trim(),
+                kyc_id_type: kycVerification.id_type || formData.id_type.trim(),
                 kyc_gov_issued_id: govIdUrls,
                 kyc_proof_address: kycVerification.proof_address || null,
               } as Partial<typeof storedUser>),
@@ -600,6 +603,7 @@ export function EditKYC({
                 kyc_nationality: formData.nationality.trim(),
                 kyc_city: formData.city.trim(),
                 kyc_postal_code: formData.postal_code.trim(),
+                kyc_id_type: formData.id_type.trim(),
                 kyc_gov_issued_id: govIdUrl,
                 kyc_proof_address: proofUrl,
               } as Partial<typeof storedUser>),

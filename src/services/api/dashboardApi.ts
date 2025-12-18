@@ -219,6 +219,41 @@ export interface ProgressionResponse {
   data: ProgressionTier[];
 }
 
+// Feedback & Bug Report Types
+export interface UserFeedbackRequest {
+  title: string;
+  describe_idea: string;
+  feedback: string;
+  email?: string;
+  feedback_category: string;
+  feedback_about: string;
+  sentiment?: string;
+}
+
+export interface UserFeedbackResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data?: Record<string, unknown>;
+}
+
+export interface UserReportBugRequest {
+  title: string;
+  severity: string;
+  description: string;
+  bug_category: string;
+  device_info?: string;
+  email?: string;
+  bug_image?: File;
+}
+
+export interface UserReportBugResponse {
+  success: boolean;
+  status_code: number;
+  message: Record<string, unknown> | string;
+  data?: Record<string, unknown>;
+}
+
 // Artist Roaster Types
 export interface ArtistRoaster {
   id?: number;
@@ -750,6 +785,41 @@ export const dashboardApi = baseApi.injectEndpoints({
       invalidatesTags: ["User", "Leaderboard"],
     }),
 
+    // Send User Feedback - POST /api/market_final/user_feedback
+    sendFeedback: builder.mutation<UserFeedbackResponse, UserFeedbackRequest>({
+      query: (body) => ({
+        url: "/market_final/user_feedback",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    // Report Bug - POST /api/market_final/user_report_bug
+    reportBug: builder.mutation<UserReportBugResponse, UserReportBugRequest>({
+      query: (body) => {
+        const formData = new FormData();
+        formData.append("title", body.title);
+        formData.append("severity", body.severity);
+        formData.append("description", body.description);
+        formData.append("bug_category", body.bug_category);
+        if (body.device_info) {
+          formData.append("device_info", body.device_info);
+        }
+        if (body.email) {
+          formData.append("email", body.email);
+        }
+        if (body.bug_image) {
+          formData.append("bug_image", body.bug_image);
+        }
+
+        return {
+          url: "/market_final/user_report_bug",
+          method: "POST",
+          body: formData,
+        };
+      },
+    }),
+
   }),
 });
 
@@ -783,4 +853,6 @@ export const {
   useUpdateArtworkCollectionMutation,
     useDeleteArtworkCollectionMutation,
     useFollowUserMutation,
+  useSendFeedbackMutation,
+  useReportBugMutation,
 } = dashboardApi;

@@ -130,6 +130,11 @@ export function EditProfile({
     { skip: !isArtist && !isCollector }
   );
 
+  const normalizedInitialPriceRange =
+    initialData?.price_range !== undefined && initialData?.price_range !== null
+      ? String(initialData.price_range)
+      : "";
+
   const initialValues: EditProfileFormData = {
     title: initialData?.title || "",
     bio: initialData?.bio || "",
@@ -140,7 +145,7 @@ export function EditProfile({
     profile_image: null,
     location: initialData?.location || "",
     phone_number: initialData?.phone_number || "",
-    price_range: initialData?.price_range || "",
+    price_range: normalizedInitialPriceRange,
     preferred_commission_rate: initialData?.preferred_commission_rate || "",
     shipping_preference: initialData?.shipping_preference || "",
     studio_address: initialData?.studio_address || "",
@@ -173,6 +178,11 @@ export function EditProfile({
   // Load initial values when dialog opens or initialData changes
   useEffect(() => {
     if (open && initialData) {
+      const resetPriceRange =
+        initialData.price_range !== undefined && initialData.price_range !== null
+          ? String(initialData.price_range)
+          : "";
+
       reset({
         title: initialData.title || "",
         bio: initialData.bio || "",
@@ -183,7 +193,7 @@ export function EditProfile({
         profile_image: null,
         location: initialData.location || "",
         phone_number: initialData.phone_number || "",
-        price_range: initialData.price_range || "",
+        price_range: resetPriceRange,
         preferred_commission_rate: initialData.preferred_commission_rate || "",
         shipping_preference: initialData.shipping_preference || "",
         studio_address: initialData.studio_address || "",
@@ -223,6 +233,10 @@ export function EditProfile({
         setProfileImage(null);
         setProfileImagePreviews([]);
         setValue("profile_image", null);
+      }
+      // Ensure SelectField sees the normalized value
+      if (resetPriceRange) {
+        setValue("price_range", resetPriceRange, { shouldValidate: false });
       }
     }
   }, [open, initialData, reset, setValue]);
