@@ -837,8 +837,6 @@ export interface FileUploadFieldProps
   value?: File | null;
   /** Currently selected files (multiple file mode) */
   files?: File[];
-  /** Initial URLs for existing files */
-  initialUrls?: string[];
   /** Whether to allow multiple file selection */
   multiple?: boolean;
   /** Maximum number of files allowed (only applies when multiple=true) */
@@ -893,7 +891,6 @@ export const FileUploadField = React.forwardRef<
       onPreviewChange,
       value,
       files,
-      initialUrls = [],
       multiple = false,
       maxFiles,
       showPreview,
