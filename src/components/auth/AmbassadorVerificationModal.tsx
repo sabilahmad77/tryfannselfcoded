@@ -71,17 +71,19 @@ export function AmbassadorVerificationModal() {
               {t.subtitle}
             </p>
 
-            <p className="text-white/60 text-sm md:text-sm leading-relaxed mt-2">
+            <p className="text-white/60 text-sm leading-relaxed mt-2 max-w-xl">
               {t.body}
             </p>
 
-            <div className="mt-3 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs md:text-sm flex items-center gap-2">
-              <span className="inline-flex h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-              <span>{t.pendingLabel}</span>
+            <div className="mt-4 w-full max-w-md px-4 py-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs md:text-sm">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+                <span className="font-medium">{t.pendingLabel}</span>
+              </div>
               {user?.email && (
-                <span className="text-amber-200/80 truncate max-w-[55%]">
-                  · {user.email}
-                </span>
+                <p className="mt-1 text-amber-200/80 text-[0.7rem] md:text-xs break-all opacity-90">
+                  {user.email}
+                </p>
               )}
             </div>
 

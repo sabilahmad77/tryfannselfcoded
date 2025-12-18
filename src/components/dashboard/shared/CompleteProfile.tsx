@@ -27,10 +27,11 @@ export function CompleteProfile({
   const isRTL = language === 'ar';
 
   // Don't render if profile is already completed
-  // if (!profileCompleted) {
-  //   return null;
-  // }
-  console.log(profileCompleted);
+  // Show component only when profile is NOT completed (profileCompleted === false)
+  if (profileCompleted === true) {
+    return null;
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}

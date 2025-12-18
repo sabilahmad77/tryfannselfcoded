@@ -11,6 +11,7 @@ import { URLEncoder } from "@/components/dashboard/shared/URLEncoder";
 import { WatchVideos } from "@/components/dashboard/shared/WatchVideos";
 import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
+import { useGetDashboardStatsQuery } from "@/services/api/dashboardApi";
 import type { RootState } from "@/store/store";
 import { motion } from "motion/react";
 import { useSelector } from "react-redux";
@@ -59,9 +60,14 @@ export function DashboardPage() {
   // Get user role/persona - check role field first, then persona
   const userRole = storedUser?.role?.toLowerCase() || null;
   const persona = useSelector((state: RootState) => state.auth.persona);
-  const profileCompleted = useSelector(
-    (state: RootState) => state.auth.profileCompleted
-  );
+
+  // Fetch dashboard stats to get profile_complete from API
+  const { data: dashboardStatsData } = useGetDashboardStatsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  // Get profile_complete from API response
+  const profileCompleted = dashboardStatsData?.data?.profile_complete ?? false;
 
   // Determine which dashboard to show based on role
   // Role can be: "artist", "gallery", "collector" (case-insensitive)
@@ -127,7 +133,7 @@ export function DashboardPage() {
 
       {/* Complete Profile Section */}
       <CompleteProfile
-        profileCompleted={profileCompleted ?? false}
+        profileCompleted={profileCompleted}
         onCompleteProfile={handleCompleteProfile}
       />
 
@@ -155,29 +161,28 @@ export function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           <WatchVideos />
         </motion.div>
 
-        {/* My Artworks - Full width */}
+        {/* My Artworks */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="lg:col-span-2"
+          transition={{ duration: 0.6, delay: 0.4 }}
         >
           <AddArtwork
-            profileCompleted={profileCompleted ?? false}
+            profileCompleted={profileCompleted}
             onCompleteProfile={handleCompleteProfile}
           />
         </motion.div>
 
-        {/* Tier Progress - Full width for visual symmetry */}
+        {/* Tier Progress - Full width */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
           className="lg:col-span-2"
         >
           <TierProgress />

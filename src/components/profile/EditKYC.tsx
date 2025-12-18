@@ -5,6 +5,7 @@ import {
   InputField,
   SelectField,
 } from "@/components/ui/custom-form-elements";
+import { ImagePreviewList } from "@/components/ui/image-preview-list";
 import { CustomModal } from "@/components/ui/CustomModal";
 import { Label } from "@/components/ui/label";
 import {
@@ -14,6 +15,12 @@ import {
 import { updateUser } from "@/store/authSlice";
 import type { RootState } from "@/store/store";
 import { extractErrorMessage } from "@/utils/errorMessages";
+import {
+  type PreviewItem,
+  normalizeToPreviewItems,
+  cleanupPreviewUrls,
+  getFullImageUrl,
+} from "@/utils/filePreviewHelpers";
 import {
   AlertCircle,
   ArrowRight,
@@ -41,7 +48,9 @@ interface EditKYCProps {
     nationality?: string;
     city?: string;
     postal_code?: string;
-    gov_issued_id?: File | string | null;
+    street_address?: string;
+    id_type?: string;
+    gov_issued_id?: File | File[] | string | string[] | null;
     proof_address?: File | string | null;
   };
 }
@@ -54,7 +63,9 @@ interface KYCFormData {
   postal_code: string;
   street_address: string;
   id_type: string;
-  gov_issued_id: File | null;
+  gov_issued_id: File | File[] | null; // For form state only
+  gov_issued_id_front: File | null; // Front of ID
+  gov_issued_id_back: File | null; // Back of ID
   proof_address: File | null;
 }
 
@@ -66,14 +77,11 @@ export function EditKYC({
 }: EditKYCProps) {
   const dispatch = useDispatch();
   const storedUser = useSelector((state: RootState) => state.auth.user);
-  const [idDocument, setIdDocument] = useState<File | null>(null);
+  const [idDocumentFront, setIdDocumentFront] = useState<File | null>(null);
+  const [idDocumentBack, setIdDocumentBack] = useState<File | null>(null);
   const [proofOfAddress, setProofOfAddress] = useState<File | null>(null);
-  const [idDocumentPreview, setIdDocumentPreview] = useState<string | null>(
-    null
-  );
-  const [proofOfAddressPreview, setProofOfAddressPreview] = useState<
-    string | null
-  >(null);
+  const [idDocumentPreviews, setIdDocumentPreviews] = useState<PreviewItem[]>([]);
+  const [proofOfAddressPreviews, setProofOfAddressPreviews] = useState<PreviewItem[]>([]);
   const [acceptedCompliance, setAcceptedCompliance] = useState(false);
   const [kycVerification, { isLoading }] = useKycVerificationMutation();
 
@@ -84,9 +92,11 @@ export function EditKYC({
       nationality: initialData?.nationality || "",
       city: initialData?.city || "",
       postal_code: initialData?.postal_code || "",
-      street_address: "",
-      id_type: "",
+      street_address: initialData?.street_address || "",
+      id_type: initialData?.id_type || "",
       gov_issued_id: null,
+      gov_issued_id_front: null,
+      gov_issued_id_back: null,
       proof_address: null,
     }),
     [initialData]
@@ -112,51 +122,86 @@ export function EditKYC({
         nationality: initialData.nationality || "",
         city: initialData.city || "",
         postal_code: initialData.postal_code || "",
-        street_address: "",
-        id_type: "",
+        street_address: initialData.street_address || "",
+        id_type: initialData.id_type || "",
         gov_issued_id: null,
+        gov_issued_id_front: null,
+        gov_issued_id_back: null,
         proof_address: null,
       });
 
-      // Handle ID document - similar to profile image in EditProfile
+      // Handle ID documents - support front and back separately
+      // API can return: single string, array of strings, or separate front/back fields
       if (initialData.gov_issued_id) {
-        if (initialData.gov_issued_id instanceof File) {
-          // If it's a File object (from current session), use it
-          setIdDocument(initialData.gov_issued_id);
-          setValue("gov_issued_id", initialData.gov_issued_id);
-          // Create preview URL for File
-          const previewUrl = URL.createObjectURL(initialData.gov_issued_id);
-          setIdDocumentPreview(previewUrl);
-        } else if (typeof initialData.gov_issued_id === "string") {
-          // If it's a string (URL or filename), show it but don't set as File
-          setIdDocumentPreview(initialData.gov_issued_id);
-          setIdDocument(null);
-          setValue("gov_issued_id", null);
+        // Normalize to array for handling
+        const idDocs = Array.isArray(initialData.gov_issued_id)
+          ? initialData.gov_issued_id
+          : [initialData.gov_issued_id];
+        
+        const fileDocs: File[] = [];
+        const urlDocs: string[] = [];
+        
+        idDocs.forEach((doc) => {
+          if (doc instanceof File) {
+            fileDocs.push(doc);
+          } else if (typeof doc === "string" && doc) {
+            urlDocs.push(doc);
+          }
+        });
+
+        if (fileDocs.length > 0) {
+          // Map files: first = front, second = back
+          setIdDocumentFront(fileDocs[0] || null);
+          setIdDocumentBack(fileDocs[1] || null);
+          setValue("gov_issued_id_front", fileDocs[0] || null);
+          setValue("gov_issued_id_back", fileDocs[1] || null);
+          const previews = normalizeToPreviewItems(fileDocs, ["Front", "Back"]);
+          setIdDocumentPreviews(previews);
+        } else if (urlDocs.length > 0) {
+          // Map URLs: first = front, second = back
+          setIdDocumentFront(null);
+          setIdDocumentBack(null);
+          setValue("gov_issued_id_front", null);
+          setValue("gov_issued_id_back", null);
+          const fullUrls = urlDocs.map((url) => getFullImageUrl(url)).filter((url): url is string => !!url);
+          const previews = normalizeToPreviewItems(fullUrls, ["Front", "Back"]);
+          setIdDocumentPreviews(previews);
+        } else {
+          setIdDocumentFront(null);
+          setIdDocumentBack(null);
+          setIdDocumentPreviews([]);
+          setValue("gov_issued_id_front", null);
+          setValue("gov_issued_id_back", null);
         }
       } else {
-        setIdDocument(null);
-        setIdDocumentPreview(null);
-        setValue("gov_issued_id", null);
+        setIdDocumentFront(null);
+        setIdDocumentBack(null);
+        setIdDocumentPreviews([]);
+        setValue("gov_issued_id_front", null);
+        setValue("gov_issued_id_back", null);
       }
 
-      // Handle proof of address - similar to profile image in EditProfile
+      // Handle proof of address - single file
       if (initialData.proof_address) {
         if (initialData.proof_address instanceof File) {
-          // If it's a File object (from current session), use it
           setProofOfAddress(initialData.proof_address);
           setValue("proof_address", initialData.proof_address);
-          // Create preview URL for File
-          const previewUrl = URL.createObjectURL(initialData.proof_address);
-          setProofOfAddressPreview(previewUrl);
+          const previews = normalizeToPreviewItems(initialData.proof_address);
+          setProofOfAddressPreviews(previews);
         } else if (typeof initialData.proof_address === "string") {
-          // If it's a string (URL or filename), show it but don't set as File
-          setProofOfAddressPreview(initialData.proof_address);
+          const fullUrl = getFullImageUrl(initialData.proof_address);
+          if (fullUrl) {
+            const previews = normalizeToPreviewItems(fullUrl);
+            setProofOfAddressPreviews(previews);
+          } else {
+            setProofOfAddressPreviews([]);
+          }
           setProofOfAddress(null);
           setValue("proof_address", null);
         }
       } else {
         setProofOfAddress(null);
-        setProofOfAddressPreview(null);
+        setProofOfAddressPreviews([]);
         setValue("proof_address", null);
       }
 
@@ -167,10 +212,11 @@ export function EditKYC({
     } else if (open) {
       // Reset form if no initial data
       reset(initialValues);
-      setIdDocument(null);
+      setIdDocumentFront(null);
+      setIdDocumentBack(null);
       setProofOfAddress(null);
-      setIdDocumentPreview(null);
-      setProofOfAddressPreview(null);
+      setIdDocumentPreviews([]);
+      setProofOfAddressPreviews([]);
       setAcceptedCompliance(false);
     }
   }, [open, initialData, initialValues, reset, setValue]);
@@ -178,14 +224,10 @@ export function EditKYC({
   // Cleanup preview URLs on unmount
   useEffect(() => {
     return () => {
-      if (idDocumentPreview && idDocumentPreview.startsWith("blob:")) {
-        URL.revokeObjectURL(idDocumentPreview);
-      }
-      if (proofOfAddressPreview && proofOfAddressPreview.startsWith("blob:")) {
-        URL.revokeObjectURL(proofOfAddressPreview);
-      }
+      cleanupPreviewUrls(idDocumentPreviews);
+      cleanupPreviewUrls(proofOfAddressPreviews);
     };
-  }, [idDocumentPreview, proofOfAddressPreview]);
+  }, [idDocumentPreviews, proofOfAddressPreviews]);
 
   const isRTL = language === "ar";
 
@@ -375,9 +417,12 @@ export function EditKYC({
         id_type: formData.id_type.trim(),
       };
 
-      // Only include document fields if files are attached
-      if (idDocument) {
-        kycData.gov_issued_id = idDocument;
+      // Handle ID documents - send front and back separately
+      if (idDocumentFront) {
+        kycData.gov_issued_id_front = idDocumentFront;
+      }
+      if (idDocumentBack) {
+        kycData.gov_issued_id_back = idDocumentBack;
       }
       if (proofOfAddress) {
         kycData.proof_address = proofOfAddress;
@@ -398,7 +443,9 @@ export function EditKYC({
             nationality?: string;
             city?: string;
             postal_code?: string;
-            gov_issued_id?: string | null;
+            gov_issued_id?: string | null; // Legacy single file
+            gov_issued_id_front?: string | null; // Front of ID
+            gov_issued_id_back?: string | null; // Back of ID
             proof_address?: string | null;
           };
           user?: unknown;
@@ -441,7 +488,30 @@ export function EditKYC({
 
         // Update user data in Redux with KYC information from API response
         if (storedUser && apiResponse.data?.kyc_verification) {
-          const kycVerification = apiResponse.data.kyc_verification;
+          const kycVerification = apiResponse.data.kyc_verification as {
+            id?: number;
+            id_number?: string;
+            dob?: string;
+            nationality?: string;
+            city?: string;
+            postal_code?: string;
+            gov_issued_id?: string | null; // Legacy single file
+            gov_issued_id_front?: string | null; // Front of ID
+            gov_issued_id_back?: string | null; // Back of ID
+            proof_address?: string | null;
+            [key: string]: unknown;
+          };
+
+          // Combine front and back into array for storage, or use legacy single file
+          let govIdUrls: string[] | string | null = null;
+          if (kycVerification.gov_issued_id_front || kycVerification.gov_issued_id_back) {
+            const urls: string[] = [];
+            if (kycVerification.gov_issued_id_front) urls.push(kycVerification.gov_issued_id_front);
+            if (kycVerification.gov_issued_id_back) urls.push(kycVerification.gov_issued_id_back);
+            govIdUrls = urls.length === 1 ? urls[0] : urls;
+          } else if (kycVerification.gov_issued_id) {
+            govIdUrls = kycVerification.gov_issued_id;
+          }
 
           dispatch(
             updateUser({
@@ -456,7 +526,7 @@ export function EditKYC({
                 kyc_city: kycVerification.city || formData.city.trim(),
                 kyc_postal_code:
                   kycVerification.postal_code || formData.postal_code.trim(),
-                kyc_gov_issued_id: kycVerification.gov_issued_id || null,
+                kyc_gov_issued_id: govIdUrls,
                 kyc_proof_address: kycVerification.proof_address || null,
               } as Partial<typeof storedUser>),
             })
@@ -464,7 +534,30 @@ export function EditKYC({
         } else if (storedUser) {
           // Fallback: if API response doesn't have kyc_verification, use form data
           // Check if API response contains document URLs in alternative format
-          let govIdUrl = idDocument?.name || initialData?.gov_issued_id || null;
+          let govIdUrl: string | string[] | null = null;
+          if (idDocumentFront || idDocumentBack) {
+            // If we uploaded new files, use their names (they'll be uploaded)
+            // Note: The actual files will be uploaded, so we store placeholder names
+            // The API will return the actual URLs after upload
+            const urls: string[] = [];
+            if (idDocumentFront) urls.push(idDocumentFront.name);
+            if (idDocumentBack) urls.push(idDocumentBack.name);
+            govIdUrl = urls.length === 1 ? urls[0] : urls.length > 0 ? urls : null;
+          } else {
+            // Use existing data from initialData (only strings/URLs, not File objects)
+            if (initialData?.gov_issued_id) {
+              if (Array.isArray(initialData.gov_issued_id)) {
+                // Filter out File objects, keep only strings
+                const stringUrls = initialData.gov_issued_id.filter(
+                  (item): item is string => typeof item === "string"
+                );
+                govIdUrl = stringUrls.length === 1 ? stringUrls[0] : stringUrls.length > 0 ? stringUrls : null;
+              } else if (typeof initialData.gov_issued_id === "string") {
+                govIdUrl = initialData.gov_issued_id;
+              }
+            }
+          }
+          
           let proofUrl =
             proofOfAddress?.name || initialData?.proof_address || null;
 
@@ -472,11 +565,18 @@ export function EditKYC({
           if (apiResponse.data) {
             try {
               const responseData = apiResponse.data as {
-                gov_issued_id?: string;
+                gov_issued_id?: string | string[];
+                gov_issued_id_front?: string;
+                gov_issued_id_back?: string;
                 proof_address?: string;
                 [key: string]: unknown;
               };
-              if (responseData.gov_issued_id) {
+              if (responseData.gov_issued_id_front || responseData.gov_issued_id_back) {
+                const urls: string[] = [];
+                if (responseData.gov_issued_id_front) urls.push(responseData.gov_issued_id_front);
+                if (responseData.gov_issued_id_back) urls.push(responseData.gov_issued_id_back);
+                govIdUrl = urls.length === 1 ? urls[0] : urls;
+              } else if (responseData.gov_issued_id) {
                 govIdUrl = responseData.gov_issued_id;
               }
               if (responseData.proof_address) {
@@ -732,62 +832,108 @@ export function EditKYC({
               {content.documents.title}
             </h3>
 
-            {/* ID Document */}
+            {/* ID Document - Multiple files (Front & Back) */}
             <div className="p-6 rounded-xl glass border border-white/10">
               <FileUploadField
                 label={content.documents.idDocument.label}
                 helperText={content.documents.idDocument.desc}
                 accept=".pdf,.png,.jpg,.jpeg"
                 maxSize={10 * 1024 * 1024} // 10MB
-                value={idDocument}
-                onFileChange={(file) => {
-                  // Cleanup old preview URL if it was a blob URL
-                  if (
-                    idDocumentPreview &&
-                    idDocumentPreview.startsWith("blob:")
-                  ) {
-                    URL.revokeObjectURL(idDocumentPreview);
-                  }
+                multiple={true}
+                maxFiles={2}
+                files={[idDocumentFront, idDocumentBack].filter((f): f is File => f !== null)}
+                onFilesChange={(files) => {
+                  // Cleanup old preview URLs
+                  cleanupPreviewUrls(idDocumentPreviews);
 
-                  setIdDocument(file);
-                  setValue("gov_issued_id", file || null);
+                  // Map files: first = front, second = back
+                  const front = files[0] || null;
+                  const back = files[1] || null;
+                  
+                  setIdDocumentFront(front);
+                  setIdDocumentBack(back);
+                  setValue("gov_issued_id_front", front);
+                  setValue("gov_issued_id_back", back);
 
-                  // Create preview URL for new file
-                  if (file) {
-                    const previewUrl = URL.createObjectURL(file);
-                    setIdDocumentPreview(previewUrl);
+                  // Create preview items for new files
+                  if (files.length > 0) {
+                    const previews = normalizeToPreviewItems(files, ["Front", "Back"]);
+                    setIdDocumentPreviews(previews);
                   } else {
-                    setIdDocumentPreview(null);
+                    setIdDocumentPreviews([]);
                   }
                 }}
+                onPreviewChange={(items) => {
+                  setIdDocumentPreviews(items);
+                }}
+                showPreview={false}
                 isRTL={isRTL}
                 formatText={content.documents.formats}
                 buttonText={content.documents.uploadButton}
                 buttonClassName="border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
                 labelClassName="text-white/80 text-sm"
               />
-              {/* Show current document preview if exists and no new file selected */}
-              {idDocumentPreview && !idDocument && (
+              {/* Show current document previews if exist and no new files selected */}
+              {idDocumentPreviews.length > 0 && !idDocumentFront && !idDocumentBack && (
                 <div className="mt-4 space-y-2">
                   <p className="text-xs text-white/60">
                     {language === "en"
-                      ? "Current document"
-                      : "المستند الحالي"}
+                      ? "Current documents"
+                      : "المستندات الحالية"}
                   </p>
-                  <div className="flex items-center gap-2 p-3 bg-background/50 rounded-lg border border-white/10">
-                    <FileText className="w-5 h-5 text-[#45e3d3] shrink-0" />
-                    <span className="text-sm text-[#ffffff] flex-1 truncate">
-                      {idDocumentPreview.includes("/") ||
-                        idDocumentPreview.startsWith("http")
-                        ? idDocumentPreview.split("/").pop() || "Document"
-                        : idDocumentPreview}
-                    </span>
-                  </div>
+                  <ImagePreviewList
+                    items={idDocumentPreviews}
+                    onRemove={(item) => {
+                      // Remove from previews (read-only for existing documents)
+                      const newPreviews = idDocumentPreviews.filter((p) => p.id !== item.id);
+                      setIdDocumentPreviews(newPreviews);
+                      cleanupPreviewUrls([item]);
+                    }}
+                    size="md"
+                    gridCols={2}
+                    showNames={true}
+                    itemLabels={["Front", "Back"]}
+                    isRTL={isRTL}
+                  />
                   <p className="text-xs text-white/40">
                     {language === "en"
-                      ? "Upload new document to replace"
-                      : "قم بتحميل مستند جديد للاستبدال"}
+                      ? "Upload new documents to replace"
+                      : "قم بتحميل مستندات جديدة للاستبدال"}
                   </p>
+                </div>
+              )}
+              {/* Show previews for newly selected files */}
+              {idDocumentPreviews.length > 0 && (idDocumentFront || idDocumentBack) && (
+                <div className="mt-4 space-y-2">
+                  <p className="text-xs text-white/60">
+                    {language === "en"
+                      ? "Selected documents"
+                      : "المستندات المحددة"}
+                  </p>
+                  <ImagePreviewList
+                    items={idDocumentPreviews}
+                    onRemove={(item) => {
+                      // Find and remove the file
+                      const index = idDocumentPreviews.findIndex((p) => p.id === item.id);
+                      if (index === 0) {
+                        // Remove front
+                        setIdDocumentFront(null);
+                        setValue("gov_issued_id_front", null);
+                      } else if (index === 1) {
+                        // Remove back
+                        setIdDocumentBack(null);
+                        setValue("gov_issued_id_back", null);
+                      }
+                      const newPreviews = idDocumentPreviews.filter((p) => p.id !== item.id);
+                      setIdDocumentPreviews(newPreviews);
+                      cleanupPreviewUrls([item]);
+                    }}
+                    size="md"
+                    gridCols={2}
+                    showNames={true}
+                    itemLabels={["Front", "Back"]}
+                    isRTL={isRTL}
+                  />
                 </div>
               )}
             </div>
@@ -801,24 +947,22 @@ export function EditKYC({
                 maxSize={10 * 1024 * 1024} // 10MB
                 value={proofOfAddress}
                 onFileChange={(file) => {
-                  // Cleanup old preview URL if it was a blob URL
-                  if (
-                    proofOfAddressPreview &&
-                    proofOfAddressPreview.startsWith("blob:")
-                  ) {
-                    URL.revokeObjectURL(proofOfAddressPreview);
-                  }
+                  // Cleanup old preview URLs
+                  cleanupPreviewUrls(proofOfAddressPreviews);
 
                   setProofOfAddress(file);
                   setValue("proof_address", file || null);
 
-                  // Create preview URL for new file
+                  // Create preview items for new file
                   if (file) {
-                    const previewUrl = URL.createObjectURL(file);
-                    setProofOfAddressPreview(previewUrl);
+                    const previews = normalizeToPreviewItems(file);
+                    setProofOfAddressPreviews(previews);
                   } else {
-                    setProofOfAddressPreview(null);
+                    setProofOfAddressPreviews([]);
                   }
+                }}
+                onPreviewChange={(items) => {
+                  setProofOfAddressPreviews(items);
                 }}
                 isRTL={isRTL}
                 formatText={content.documents.formats}
@@ -827,23 +971,19 @@ export function EditKYC({
                 labelClassName="text-white/80 text-sm"
               />
               {/* Show current document preview if exists and no new file selected */}
-              {proofOfAddressPreview && !proofOfAddress && (
+              {proofOfAddressPreviews.length > 0 && !proofOfAddress && (
                 <div className="mt-4 space-y-2">
                   <p className="text-xs text-white/60">
                     {language === "en"
                       ? "Current document"
                       : "المستند الحالي"}
                   </p>
-                  <div className="flex items-center gap-2 p-3 bg-background/50 rounded-lg border border-white/10">
-                    <FileText className="w-5 h-5 text-[#45e3d3] shrink-0" />
-                    <span className="text-sm text-[#ffffff] flex-1 truncate">
-                      {proofOfAddressPreview.includes("/") ||
-                        proofOfAddressPreview.startsWith("http")
-                        ? proofOfAddressPreview.split("/").pop() ||
-                        "Document"
-                        : proofOfAddressPreview}
-                    </span>
-                  </div>
+                  <ImagePreviewList
+                    items={proofOfAddressPreviews}
+                    size="md"
+                    showNames={true}
+                    isRTL={isRTL}
+                  />
                   <p className="text-xs text-white/40">
                     {language === "en"
                       ? "Upload new document to replace"

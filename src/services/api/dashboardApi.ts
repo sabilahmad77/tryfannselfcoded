@@ -18,6 +18,13 @@ export interface ReferralCodeValidateResponse {
   data: Record<string, unknown>;
 }
 
+export interface MarketInsight {
+  category: string;
+  description: string;
+  avg_price: number;
+  percentage: number;
+}
+
 export interface DashboardStatsResponse {
   success: boolean;
   status_code: number;
@@ -48,6 +55,14 @@ export interface DashboardStatsResponse {
     tier_min_points?: number;
     tier_max_points?: number;
     tier_progress_percentage?: number;
+    next_tier_need_points?: number;
+    next_tier_name?: string;
+    puzzle_completed?: boolean;
+    profile_complete?: boolean;
+    fann_platform_follower?: number;
+    fann_platform_following?: number;
+    total_clicks?: number;
+    market_insight?: MarketInsight[];
   };
 }
 
@@ -310,6 +325,7 @@ export interface DashboardStatsGalleryResponse {
     provenance_points?: number;
     fann_platform_follower?: number;
     profile_completed?: number;
+    profile_complete?: boolean;
     referral_joined?: number;
     first_login?: number;
     tier_name?: string;
@@ -351,6 +367,7 @@ export interface DashboardStatsAmbassadorResponse {
     influence_points?: number;
     provenance_points?: number;
     profile_completed?: number;
+    profile_complete?: boolean;
     referral_joined?: number;
     first_login?: number;
     conversation?: number; // This is conversions

@@ -232,6 +232,27 @@ const content = {
   }
 };
 
+// Generic helper to build absolute image URLs from API responses
+const API_BASE_URL = 'http://apifann.globaltechserivce.com';
+
+const buildImageUrl = (path: string | undefined): string => {
+  if (!path) return '';
+
+  const trimmed = path.trim();
+
+  // Already an absolute URL
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return trimmed;
+  }
+
+  // Ensure we don't end up with double slashes
+  if (trimmed.startsWith('/')) {
+    return `${API_BASE_URL}${trimmed}`;
+  }
+
+  return `${API_BASE_URL}/${trimmed}`;
+};
+
 // Mock data for user profile (in a real app, this would come from an API)
 const getUserProfileData = (_username: string, userType: string): UserProfileData => {
   const baseData: UserProfileData = {
@@ -468,9 +489,25 @@ export function UserProfileModal({
     skip: !userId,
   });
 
-  const apiProfile = userProfileResponse?.data as Record<string, unknown> | undefined;
+  // Cast to any so we can safely access nested API fields with optional chaining
+  const apiProfile = userProfileResponse?.data as any | undefined;
+  const apiUserStats = apiProfile?.user_stats as any | undefined;
 
   const baseProfileData = user ? getUserProfileData(user.username, user.type) : null;
+
+  // Normalize role from props/API to match dashboard role logic
+  const normalizeRole = (rawRole: string | undefined): 'artist' | 'collector' | 'gallery' | 'ambassador' => {
+    const value = (rawRole || '').toLowerCase();
+
+    if (value.includes('ambassador')) return 'ambassador';
+    if (value.includes('collector')) return 'collector';
+    if (value.includes('gallery')) return 'gallery';
+
+    // Fallback to artist for unknown/empty roles
+    return 'artist';
+  };
+
+  const resolvedRole = normalizeRole(user?.type || (apiProfile?.role as string | undefined));
 
   const profileData: UserProfileData | null =
     user && baseProfileData
@@ -486,7 +523,10 @@ export function UserProfileModal({
           kycStatus: (() => {
             if (!apiProfile) return baseProfileData.kycStatus;
             const rawStatus = (apiProfile.kyc_status as string | undefined) || '';
-            const isVerifiedFlag = (apiProfile.is_kyc_verified as boolean | undefined) === true;
+            // Backend now exposes `is_verify`; keep backwards-compatible support for `is_kyc_verified`
+            const isVerifiedFlag =
+              (apiProfile.is_kyc_verified as boolean | undefined) === true ||
+              (apiProfile.is_verify as boolean | undefined) === true;
 
             if (isVerifiedFlag) {
               return 'verified';
@@ -503,23 +543,115 @@ export function UserProfileModal({
           })() as UserProfileData['kycStatus'],
           social: {
             ...baseProfileData.social,
-            instagram:
-              (apiProfile?.instagram_handle as string | undefined) ||
-              baseProfileData.social.instagram,
-            twitter:
-              (apiProfile?.twitter_handle as string | undefined) ||
-              baseProfileData.social.twitter,
-            facebook:
-              (apiProfile?.facebook_handle as string | undefined) ||
-              baseProfileData.social.facebook,
-            linkedin:
-              (apiProfile?.linkedin_handle as string | undefined) ||
-              baseProfileData.social.linkedin,
+            // Use real API handles when present; otherwise leave empty so tiles are not clickable
+            instagram: (apiProfile?.instagram_handle as string | undefined) || '',
+            twitter: (apiProfile?.twitter_handle as string | undefined) || '',
+            facebook: (apiProfile?.facebook_handle as string | undefined) || '',
+            linkedin: (apiProfile?.linkedin_handle as string | undefined) || '',
           },
+          // Map numeric stats from the new `user_stats` block while keeping role-based defaults
+          stats: {
+            ...baseProfileData.stats,
+            ...(apiUserStats && {
+              influencePoints:
+                typeof apiUserStats.influence_points === 'number'
+                  ? apiUserStats.influence_points
+                  : baseProfileData.stats.influencePoints,
+              provenancePoints:
+                typeof apiUserStats.provenance_points === 'number'
+                  ? apiUserStats.provenance_points
+                  : baseProfileData.stats.provenancePoints,
+              followers:
+                typeof apiUserStats.followers === 'number'
+                  ? apiUserStats.followers
+                  : baseProfileData.stats.followers,
+              following:
+                typeof apiUserStats.following === 'number'
+                  ? apiUserStats.following
+                  : baseProfileData.stats.following,
+              referrals:
+                typeof apiUserStats.referral_count === 'number'
+                  ? apiUserStats.referral_count
+                  : baseProfileData.stats.referrals,
+              artworksAdded:
+                typeof apiUserStats.artworks_added_count === 'number'
+                  ? apiUserStats.artworks_added_count
+                  : baseProfileData.stats.artworksAdded,
+              videosWatched:
+                typeof apiUserStats.video_watched === 'number'
+                  ? apiUserStats.video_watched
+                  : baseProfileData.stats.videosWatched,
+            }),
+          },
+          // Artworks come only from API; if none, show an empty state (no mock data)
+          artworks: (() => {
+            const apiArtworks = apiProfile?.artworks as any[] | undefined;
+
+            if (!Array.isArray(apiArtworks) || apiArtworks.length === 0) {
+              return [];
+            }
+
+            return apiArtworks.map((artwork, index): ArtworkItem => {
+              const rawImage = artwork.image as string | undefined;
+              const image =
+                typeof rawImage === 'string' && rawImage.trim().length > 0
+                  ? buildImageUrl(rawImage)
+                  : '';
+
+              const rawPrice = artwork.price as string | number | undefined;
+              const price =
+                typeof rawPrice === 'number'
+                  ? `$${rawPrice}`
+                  : typeof rawPrice === 'string' && rawPrice.trim().length > 0
+                    ? rawPrice
+                    : '$0';
+
+              return {
+                id: typeof artwork.id === 'number' ? artwork.id : index,
+                title: (artwork.title as string | undefined) || 'Untitled',
+                image,
+                price,
+                // API does not expose artwork status on this endpoint yet
+                status: 'available',
+              };
+            });
+          })(),
         }
       : null;
 
-  const isFollowing = !!isFollowingProp;
+  // Prefer explicit prop, otherwise fall back to API `user_stats.is_follow`
+  const isFollowing =
+    typeof isFollowingProp === 'boolean'
+      ? isFollowingProp
+      : !!apiUserStats?.is_follow;
+
+  // Rank & points from props with API fallbacks
+  const apiRank =
+    typeof apiUserStats?.user_rank === 'number' ? apiUserStats.user_rank : null;
+
+  const displayedRank =
+    user && typeof user.rank === 'number' && user.rank > 0
+      ? user.rank
+      : apiRank ?? user?.rank;
+
+  const apiPointsRaw = apiProfile?.points;
+  const apiPoints =
+    typeof apiPointsRaw === 'number'
+      ? apiPointsRaw
+      : typeof apiPointsRaw === 'string'
+        ? Number(apiPointsRaw)
+        : NaN;
+
+  const displayedPointsCandidate =
+    user && typeof user.points === 'number' && user.points > 0
+      ? user.points
+      : !Number.isNaN(apiPoints)
+        ? apiPoints
+        : user?.points;
+
+  const displayedPoints = Number.isFinite(displayedPointsCandidate)
+    ? (displayedPointsCandidate as number)
+    : 0;
 
   if (!user || !profileData) {
     return null;
@@ -557,9 +689,37 @@ export function UserProfileModal({
     }
   };
 
+  // Tier / progress mapping from API (`user_stats.tier`) with sensible defaults
+  const displayedTier =
+    (apiUserStats?.tier?.current_tier as string | undefined) || user.tier;
+
   const nextTierPoints = 10000;
-  const progress = (user.points / nextTierPoints) * 100;
-  const pointsNeeded = nextTierPoints - user.points;
+  const backendProgress =
+    typeof apiUserStats?.tier?.progress_percent === 'number'
+      ? apiUserStats.tier.progress_percent
+      : null;
+  const backendPointsNeeded =
+    typeof apiUserStats?.tier?.points_needed === 'number'
+      ? apiUserStats.tier.points_needed
+      : null;
+
+  const progress =
+    backendProgress !== null
+      ? backendProgress
+      : (displayedPoints / nextTierPoints) * 100;
+
+  const pointsNeeded =
+    backendPointsNeeded !== null ? backendPointsNeeded : nextTierPoints - displayedPoints;
+
+  // Social media visibility (always for ambassador, otherwise only if data exists)
+  const hasAnySocial =
+    !!profileData &&
+    !!(
+      profileData.social.instagram ||
+      profileData.social.twitter ||
+      profileData.social.facebook ||
+      profileData.social.linkedin
+    );
 
   // Custom header for UserProfileModal
   const customHeader = (
@@ -630,15 +790,15 @@ export function UserProfileModal({
           </div>
 
           <div className={`flex items-center gap-3 flex-wrap ${isRTL ? 'flex-row-reverse' : ''}`}>
-            <Badge className={`bg-gradient-to-r ${getTierColor(user.tier)} text-[#020e27] border-0`}>
-              {user.tier}
+            <Badge className={`bg-gradient-to-r ${getTierColor(displayedTier)} text-[#020e27] border-0`}>
+              {displayedTier}
             </Badge>
             <Badge variant="outline" className="border-[#4e4e4e78] text-[#808c99]">
               {user.type}
             </Badge>
             {getKYCBadge(profileData.kycStatus)}
             <Badge className="bg-gradient-to-r from-orange-500 to-amber-500 text-white border-0">
-              #{user.rank} {t.rank}
+              #{displayedRank} {t.rank}
             </Badge>
           </div>
         </div>
@@ -678,7 +838,7 @@ export function UserProfileModal({
           </div>
           <div className={`relative z-10 ${isRTL ? 'text-right' : 'text-left'}`}>
             <p className="text-[#020e27] opacity-80 text-sm mb-1">{t.totalPoints}</p>
-            <p className="text-5xl text-[#020e27] mb-4">{user.points.toLocaleString()}</p>
+            <p className="text-5xl text-[#020e27] mb-4">{displayedPoints.toLocaleString()}</p>
 
             {/* Progress to Next Tier */}
             <div>
@@ -743,7 +903,8 @@ export function UserProfileModal({
           </div>
         </div>
 
-        {/* Social Media */}
+        {/* Social Media (role-aware) */}
+        {(resolvedRole === 'ambassador' || hasAnySocial) && (
         <div>
           <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
             {t.socialMedia}
@@ -823,6 +984,7 @@ export function UserProfileModal({
             )}
           </div>
         </div>
+        )}
 
         {/* Overview - Dynamic based on user type */}
         <div>
@@ -831,7 +993,7 @@ export function UserProfileModal({
           </h3>
           <div className="grid grid-cols-2 gap-3">
             {/* Ambassador-specific stats */}
-            {user.type === 'Ambassador' ? (
+            {resolvedRole === 'ambassador' ? (
               <>
                 <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
                   <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -886,29 +1048,24 @@ export function UserProfileModal({
                   </div>
                   <p className="text-2xl text-[#ffffff]">{profileData.stats.following}</p>
                 </div>
-                <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
-                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <Flame className="w-5 h-5 text-[#f59e0b]" />
-                    <span className="text-xs text-[#808c99]">Streak Days</span>
-                  </div>
-                  <p className="text-2xl text-[#ffffff]">12</p>
-                </div>
               </>
             )}
           </div>
         </div>
 
-        {/* Artworks Gallery - Artist Only */}
-        {user.type === 'Artist' && profileData.artworks && profileData.artworks.length > 0 && (
+        {/* Artworks Gallery - Artist Only (dynamic, no dummy data) */}
+        {resolvedRole === 'artist' && (
           <div>
             <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
               <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
                 {t.artworks}
               </h3>
               <span className="text-sm text-[#808c99]">
-                {profileData.artworks.length} {language === 'en' ? 'pieces' : 'قطعة'}
+                {(profileData.artworks?.length ?? 0)} {language === 'en' ? 'pieces' : 'قطعة'}
               </span>
             </div>
+
+            {profileData.artworks && profileData.artworks.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {profileData.artworks.map((artwork: ArtworkItem) => (
                 <motion.div
@@ -953,11 +1110,16 @@ export function UserProfileModal({
                 </motion.div>
               ))}
             </div>
+            ) : (
+              <div className="border border-dashed border-[#4e4e4e78] rounded-xl p-6 text-center text-[#808c99] text-sm">
+                {t.noArtworks}
+              </div>
+            )}
           </div>
         )}
 
         {/* Exhibitions Gallery - Gallery Only */}
-        {(user.type === 'Gallery' || user.type === 'Gallery/Museum') && profileData.exhibitions && profileData.exhibitions.length > 0 && (
+        {resolvedRole === 'gallery' && profileData.exhibitions && profileData.exhibitions.length > 0 && (
           <div>
             <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
               <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
@@ -1015,7 +1177,7 @@ export function UserProfileModal({
         )}
 
         {/* Collection Gallery - Collector Only */}
-        {user.type === 'Collector' && profileData.collection && profileData.collection.length > 0 && (
+        {resolvedRole === 'collector' && profileData.collection && profileData.collection.length > 0 && (
           <div>
             <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
               <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
@@ -1058,7 +1220,7 @@ export function UserProfileModal({
         )}
 
         {/* Social Media Performance - Ambassador Only */}
-        {user.type === 'Ambassador' && profileData.socialMediaStats && profileData.socialMediaStats.length > 0 && (
+        {resolvedRole === 'ambassador' && profileData.socialMediaStats && profileData.socialMediaStats.length > 0 && (
           <div>
             <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
               <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>

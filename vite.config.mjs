@@ -77,6 +77,7 @@ export default defineConfig({
     open: true,
     allowedHosts: [
       'tryfann.globaltechserivce.com',
+      'tryfann.com',
     ],
   },
   preview: {
@@ -84,6 +85,7 @@ export default defineConfig({
     port: 4173,
     allowedHosts: [
       'tryfann.globaltechserivce.com',
+      'tryfann.com',
     ],
   },
 });

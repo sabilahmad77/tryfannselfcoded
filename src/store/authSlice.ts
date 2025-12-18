@@ -76,6 +76,12 @@ export interface UserProfileData {
   fann_2fa_otp_created?: string | null;
   is_deleted?: boolean;
   user_contract?: unknown | null;
+  // Gallery extended fields
+  organization_type?: string | null;
+  founded_year?: string | null;
+  exhibition_count?: number | null;
+  // Ambassador-specific fields
+  promotion_plan?: string | null;
 }
 
 interface AuthState {

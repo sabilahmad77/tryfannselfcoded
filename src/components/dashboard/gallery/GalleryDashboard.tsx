@@ -31,19 +31,18 @@ export function GalleryDashboard() {
   const navigate = useNavigate();
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
-  // Get profile completion status from Redux
-  const profileCompleted = useSelector(
-    (state: RootState) => state.auth.profileCompleted
-  );
-
   // Handler to navigate to profile completion
   const handleCompleteProfile = () => {
     navigate(ROUTES.PROFILE_COMPLETION);
   };
 
-  // Fetch gallery-specific dashboard stats (for future use)
-  const { data: _galleryStatsData, isLoading: _isLoadingStats } =
-    useGetDashboardStatsGalleryQuery();
+  // Fetch gallery-specific dashboard stats
+  const { data: galleryStatsData } = useGetDashboardStatsGalleryQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  // Get profile_complete from API response
+  const profileCompleted = galleryStatsData?.data?.profile_complete ?? false;
 
   // Get user name from stored data
   const galleryName = storedUser
@@ -65,7 +64,7 @@ export function GalleryDashboard() {
 
       {/* Complete Profile Section */}
       <CompleteProfile
-        profileCompleted={profileCompleted ?? false}
+        profileCompleted={profileCompleted}
         onCompleteProfile={handleCompleteProfile}
       />
 

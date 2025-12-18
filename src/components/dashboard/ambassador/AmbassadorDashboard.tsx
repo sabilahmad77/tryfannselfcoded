@@ -114,11 +114,6 @@ export function AmbassadorDashboard() {
   const navigate = useNavigate();
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
-  // Get profile completion status from Redux
-  const profileCompleted = useSelector(
-    (state: RootState) => state.auth.profileCompleted
-  );
-
   // Handler to navigate to profile completion
   const handleCompleteProfile = () => {
     navigate(ROUTES.PROFILE_COMPLETION);
@@ -136,7 +131,12 @@ export function AmbassadorDashboard() {
 
   // Fetch API data
   const { data: ambassadorStatsData, isLoading: isLoadingAmbassadorStats } =
-    useGetDashboardStatsAmbassadorQuery();
+    useGetDashboardStatsAmbassadorQuery(undefined, {
+      refetchOnMountOrArgChange: true,
+    });
+
+  // Get profile_complete from API response
+  const profileCompleted = ambassadorStatsData?.data?.profile_complete ?? false;
 
   const { data: referralCodeData } = useGenerateReferralCodeQuery();
 
@@ -484,9 +484,8 @@ export function AmbassadorDashboard() {
           <Card className="glass border-[#ffcc33]/20 p-6 bg-gradient-to-br from-[#1D112A]/80 to-[#0F021C]/80 h-full">
             {/* Header */}
             <div
-              className={`flex items-center gap-2 mb-6 ${
-                isRTL ? "flex-row-reverse" : ""
-              }`}
+              className={`flex items-center gap-2 mb-6 ${isRTL ? "flex-row-reverse" : ""
+                }`}
             >
               <Share2 className="w-6 h-6 text-purple-400" />
               <h2 className="text-2xl text-[#ffffff]">{t.referrals.title}</h2>

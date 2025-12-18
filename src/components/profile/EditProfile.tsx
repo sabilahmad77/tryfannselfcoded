@@ -3,13 +3,21 @@ import {
   FileUploadField,
   InputField,
   TextareaField,
+  SelectField,
 } from "@/components/ui/custom-form-elements";
+import { ImagePreviewList } from "@/components/ui/image-preview-list";
 import { CustomModal } from "@/components/ui/CustomModal";
 import { useProfileSetupMutation } from "@/services/api/onboardingApi";
 import type { UserProfileData } from "@/store/authSlice";
 import { setUser, updateUser } from "@/store/authSlice";
 import type { RootState } from "@/store/store";
 import { extractErrorMessage } from "@/utils/errorMessages";
+import {
+  type PreviewItem,
+  normalizeToPreviewItems,
+  cleanupPreviewUrls,
+  getFullImageUrl,
+} from "@/utils/filePreviewHelpers";
 import {
   ArrowRight,
   Building2,
@@ -45,6 +53,22 @@ interface EditProfileProps {
     persona?: string;
     location?: string;
     phone_number?: string;
+    // Artist & Collector shared field
+    price_range?: string;
+    // Artist-specific fields
+    preferred_commission_rate?: string;
+    shipping_preference?: string;
+    studio_address?: string;
+    education?: string;
+    award_artist?: string;
+    artist_statement?: string;
+    // Gallery-specific fields
+    organization_email?: string;
+    organization_main_contact_name?: string;
+    organization_name?: string;
+    organization_type?: string;
+    founded_year?: string;
+    exhibition_count?: string;
   };
 }
 
@@ -58,6 +82,22 @@ interface EditProfileFormData {
   profile_image: File | null;
   location: string;
   phone_number: string;
+  // Artist & Collector shared field
+  price_range: string;
+  // Artist-specific fields
+  preferred_commission_rate: string;
+  shipping_preference: string;
+  studio_address: string;
+  education: string;
+  award_artist: string;
+  artist_statement: string;
+  // Gallery-specific fields
+  organization_email: string;
+  organization_main_contact_name: string;
+  organization_name: string;
+  organization_type: string;
+  founded_year: string;
+  exhibition_count: string;
 }
 
 export function EditProfile({
@@ -73,10 +113,13 @@ export function EditProfile({
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [profileImagePreview, setProfileImagePreview] = useState<string | null>(
-    null
-  );
+  const [profileImagePreviews, setProfileImagePreviews] = useState<PreviewItem[]>([]);
   const [profileSetup, { isLoading }] = useProfileSetupMutation();
+
+  const isArtist = persona === "artist" || initialData?.persona === "artist";
+  const isGallery = persona === "gallery" || initialData?.persona === "gallery";
+  const isCollector =
+    persona === "collector" || initialData?.persona === "collector";
 
   const initialValues: EditProfileFormData = {
     title: initialData?.title || "",
@@ -88,6 +131,20 @@ export function EditProfile({
     profile_image: null,
     location: initialData?.location || "",
     phone_number: initialData?.phone_number || "",
+    price_range: initialData?.price_range || "",
+    preferred_commission_rate: initialData?.preferred_commission_rate || "",
+    shipping_preference: initialData?.shipping_preference || "",
+    studio_address: initialData?.studio_address || "",
+    education: initialData?.education || "",
+    award_artist: initialData?.award_artist || "",
+    artist_statement: initialData?.artist_statement || "",
+    organization_email: initialData?.organization_email || "",
+    organization_main_contact_name:
+      initialData?.organization_main_contact_name || "",
+    organization_name: initialData?.organization_name || "",
+    organization_type: initialData?.organization_type || "",
+    founded_year: initialData?.founded_year || "",
+    exhibition_count: initialData?.exhibition_count || "",
   };
 
   const {
@@ -96,9 +153,13 @@ export function EditProfile({
     formState: { errors },
     setValue,
     reset,
+    watch,
   } = useForm<EditProfileFormData>({
     defaultValues: initialValues,
   });
+
+  const watchedPriceRange = watch("price_range");
+  const watchedOrganizationType = watch("organization_type");
 
   // Load initial values when dialog opens or initialData changes
   useEffect(() => {
@@ -113,6 +174,20 @@ export function EditProfile({
         profile_image: null,
         location: initialData.location || "",
         phone_number: initialData.phone_number || "",
+        price_range: initialData.price_range || "",
+        preferred_commission_rate: initialData.preferred_commission_rate || "",
+        shipping_preference: initialData.shipping_preference || "",
+        studio_address: initialData.studio_address || "",
+        education: initialData.education || "",
+        award_artist: initialData.award_artist || "",
+        artist_statement: initialData.artist_statement || "",
+        organization_email: initialData.organization_email || "",
+        organization_main_contact_name:
+          initialData.organization_main_contact_name || "",
+        organization_name: initialData.organization_name || "",
+        organization_type: initialData.organization_type || "",
+        founded_year: initialData.founded_year || "",
+        exhibition_count: initialData.exhibition_count || "",
       });
 
       // Handle profile image - could be a File, URL string, or null
@@ -120,31 +195,35 @@ export function EditProfile({
         if (initialData.profile_image instanceof File) {
           setProfileImage(initialData.profile_image);
           setValue("profile_image", initialData.profile_image);
-          // Create preview URL for File
-          const previewUrl = URL.createObjectURL(initialData.profile_image);
-          setProfileImagePreview(previewUrl);
+          // Create preview items from File
+          const previews = normalizeToPreviewItems(initialData.profile_image);
+          setProfileImagePreviews(previews);
         } else if (typeof initialData.profile_image === "string") {
           // It's a URL, show it but don't set as File
-          setProfileImagePreview(initialData.profile_image);
+          const fullUrl = getFullImageUrl(initialData.profile_image);
+          if (fullUrl) {
+            const previews = normalizeToPreviewItems(fullUrl);
+            setProfileImagePreviews(previews);
+          } else {
+            setProfileImagePreviews([]);
+          }
           setProfileImage(null);
           setValue("profile_image", null);
         }
       } else {
         setProfileImage(null);
-        setProfileImagePreview(null);
+        setProfileImagePreviews([]);
         setValue("profile_image", null);
       }
     }
   }, [open, initialData, reset, setValue]);
 
-  // Cleanup preview URL on unmount
+  // Cleanup preview URLs on unmount
   useEffect(() => {
     return () => {
-      if (profileImagePreview && profileImagePreview.startsWith("blob:")) {
-        URL.revokeObjectURL(profileImagePreview);
-      }
+      cleanupPreviewUrls(profileImagePreviews);
     };
-  }, [profileImagePreview]);
+  }, [profileImagePreviews]);
 
   const isRTL = language === "ar";
 
@@ -217,6 +296,35 @@ export function EditProfile({
         uploadPhoto: "Upload Profile Photo",
         optional: "(Optional)",
         required: "Required fields",
+        priceRangeArtist: "Price Range",
+        priceRangeCollector: "Budget Range",
+        priceRangeArtistPlaceholder: "Select price range",
+        priceRangeCollectorPlaceholder: "Select your typical budget range",
+        preferredCommissionRate: "Preferred Commission Rate (%)",
+        preferredCommissionRatePlaceholder: "10",
+        shippingPreference: "Shipping Preference",
+        shippingPreferencePlaceholder: "e.g. Local, International, Both",
+        studioAddress: "Studio Address",
+        studioAddressPlaceholder: "Studio address",
+        education: "Education",
+        educationPlaceholder: "Art education or background",
+        awardArtist: "Awards / Honors",
+        awardArtistPlaceholder: "Key awards or recognitions",
+        artistStatement: "Artist Statement",
+        artistStatementPlaceholder:
+          "Share your artistic philosophy or statement...",
+        organizationName: "Organization Name",
+        organizationNamePlaceholder: "Gallery or organization name",
+        organizationEmail: "Organization Email",
+        organizationEmailPlaceholder: "org@example.com",
+        mainContactName: "Main Contact Name",
+        mainContactNamePlaceholder: "Primary contact person",
+        organizationType: "Organization Type",
+        organizationTypePlaceholder: "Select organization type",
+        foundedYear: "Founded Year",
+        foundedYearPlaceholder: "e.g. 2005",
+        exhibitionCount: "Number of Exhibitions",
+        exhibitionCountPlaceholder: "e.g. 12",
       },
       cancel: "Cancel",
       save: "Save Changes",
@@ -291,6 +399,34 @@ export function EditProfile({
         uploadPhoto: "تحميل صورة الملف الشخصي",
         optional: "(اختياري)",
         required: "الحقول المطلوبة",
+        priceRangeArtist: "نطاق الأسعار",
+        priceRangeCollector: "نطاق الميزانية",
+        priceRangeArtistPlaceholder: "اختر نطاق الأسعار",
+        priceRangeCollectorPlaceholder: "اختر نطاق ميزانيتك المعتاد",
+        preferredCommissionRate: "نسبة العمولة المفضلة (%)",
+        preferredCommissionRatePlaceholder: "10",
+        shippingPreference: "تفضيلات الشحن",
+        shippingPreferencePlaceholder: "مثال: محلي، دولي، كلاهما",
+        studioAddress: "عنوان الاستوديو",
+        studioAddressPlaceholder: "عنوان الاستوديو",
+        education: "التعليم",
+        educationPlaceholder: "التعليم أو الخلفية الفنية",
+        awardArtist: "الجوائز / التكريم",
+        awardArtistPlaceholder: "الجوائز أو التكريمات البارزة",
+        artistStatement: "بيان الفنان",
+        artistStatementPlaceholder: "شارك فلسفتك أو بيانك الفني...",
+        organizationName: "اسم المؤسسة",
+        organizationNamePlaceholder: "اسم المعرض أو المؤسسة",
+        organizationEmail: "البريد الإلكتروني للمؤسسة",
+        organizationEmailPlaceholder: "org@example.com",
+        mainContactName: "اسم جهة الاتصال الرئيسية",
+        mainContactNamePlaceholder: "الشخص الأساسي للتواصل",
+        organizationType: "نوع المؤسسة / المعرض",
+        organizationTypePlaceholder: "اختر نوع المؤسسة",
+        foundedYear: "سنة التأسيس",
+        foundedYearPlaceholder: "مثال: 2005",
+        exhibitionCount: "عدد المعارض",
+        exhibitionCountPlaceholder: "مثال: 12",
       },
       cancel: "إلغاء",
       save: "حفظ التغييرات",
@@ -334,6 +470,49 @@ export function EditProfile({
         profile_image: profileImage || undefined,
         location: formData.location?.trim() || undefined,
         phone_number: formData.phone_number?.trim() || undefined,
+        // Artist & Collector: use price_range for both (artists = price, collectors = budget)
+        price_range:
+          (isArtist || isCollector) && formData.price_range?.trim()
+            ? formData.price_range.trim()
+            : undefined,
+        preferred_commission_rate: isArtist
+          ? formData.preferred_commission_rate?.trim() || undefined
+          : undefined,
+        shipping_preference: isArtist
+          ? formData.shipping_preference?.trim() || undefined
+          : undefined,
+        studio_address: isArtist
+          ? formData.studio_address?.trim() || undefined
+          : undefined,
+        education: isArtist
+          ? formData.education?.trim() || undefined
+          : undefined,
+        award_artist: isArtist
+          ? formData.award_artist?.trim() || undefined
+          : undefined,
+        artist_statement: isArtist
+          ? formData.artist_statement?.trim() || undefined
+          : undefined,
+        // Gallery-specific
+        organization_email: isGallery
+          ? formData.organization_email?.trim() || undefined
+          : undefined,
+        organization_main_contact_name: isGallery
+          ? formData.organization_main_contact_name?.trim() || undefined
+          : undefined,
+        organization_name: isGallery
+          ? formData.organization_name?.trim() || undefined
+          : undefined,
+        organization_type: isGallery
+          ? formData.organization_type?.trim() || undefined
+          : undefined,
+        founded_year: isGallery
+          ? formData.founded_year?.trim() || undefined
+          : undefined,
+        exhibition_count:
+          isGallery && formData.exhibition_count?.trim()
+            ? Number(formData.exhibition_count.trim())
+            : undefined,
       };
 
       const result = await profileSetup(profileData).unwrap();
@@ -506,24 +685,22 @@ export function EditProfile({
               maxSize={5 * 1024 * 1024} // 5MB
               value={profileImage}
               onFileChange={(file) => {
-                // Cleanup old preview URL if it was a blob URL
-                if (
-                  profileImagePreview &&
-                  profileImagePreview.startsWith("blob:")
-                ) {
-                  URL.revokeObjectURL(profileImagePreview);
-                }
+                // Cleanup old preview URLs
+                cleanupPreviewUrls(profileImagePreviews);
 
                 setProfileImage(file);
                 setValue("profile_image", file);
 
-                // Create preview URL for new file
+                // Create preview items for new file
                 if (file) {
-                  const previewUrl = URL.createObjectURL(file);
-                  setProfileImagePreview(previewUrl);
+                  const previews = normalizeToPreviewItems(file);
+                  setProfileImagePreviews(previews);
                 } else {
-                  setProfileImagePreview(null);
+                  setProfileImagePreviews([]);
                 }
+              }}
+              onPreviewChange={(items) => {
+                setProfileImagePreviews(items);
               }}
               isRTL={isRTL}
               formatText={
@@ -533,20 +710,19 @@ export function EditProfile({
               }
             />
             {/* Show current profile image preview if exists and no new file selected */}
-            {profileImagePreview && !profileImage && (
+            {profileImagePreviews.length > 0 && !profileImage && (
               <div className="mt-4 space-y-2">
                 <p className="text-xs text-white/60">
                   {language === "en"
                     ? "Current profile image"
                     : "صورة الملف الشخصي الحالية"}
                 </p>
-                <div className="relative w-32 h-32 rounded-lg overflow-hidden border border-white/10 bg-white/5">
-                  <img
-                    src={profileImagePreview}
-                    alt="Current profile"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+                <ImagePreviewList
+                  items={profileImagePreviews}
+                  size="md"
+                  showNames={false}
+                  isRTL={isRTL}
+                />
                 <p className="text-xs text-white/40">
                   {language === "en"
                     ? "Upload new image to replace"
@@ -741,6 +917,240 @@ export function EditProfile({
                 )}
               </div>
             )}
+
+          {/* Artist & Collector extra fields (price/budget range etc.) */}
+          {(isArtist || isCollector) && (
+            <div className="space-y-6 mt-2">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75 }}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <SelectField
+                    label={
+                      isCollector
+                        ? content.common.priceRangeCollector
+                        : content.common.priceRangeArtist
+                    }
+                    placeholder={
+                      isCollector
+                        ? content.common.priceRangeCollectorPlaceholder
+                        : content.common.priceRangeArtistPlaceholder
+                    }
+                    options={[]}
+                    value={watchedPriceRange}
+                    onValueChange={(value) =>
+                      setValue("price_range", value, { shouldValidate: true })
+                    }
+                    isRTL={isRTL}
+                    error={errors.price_range?.message}
+                  />
+                  {isArtist && (
+                    <InputField
+                      {...register("preferred_commission_rate")}
+                      label={content.common.preferredCommissionRate}
+                      type="number"
+                      placeholder={content.common.preferredCommissionRatePlaceholder}
+                      isRTL={isRTL}
+                      error={errors.preferred_commission_rate?.message}
+                    />
+                  )}
+                </div>
+              </motion.div>
+
+              {isArtist && (
+                <>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 }}
+                  >
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <InputField
+                        {...register("shipping_preference")}
+                        label={content.common.shippingPreference}
+                        placeholder={content.common.shippingPreferencePlaceholder}
+                        isRTL={isRTL}
+                        error={errors.shipping_preference?.message}
+                      />
+                      <InputField
+                        {...register("studio_address")}
+                        label={content.common.studioAddress}
+                        placeholder={content.common.studioAddressPlaceholder}
+                        isRTL={isRTL}
+                        error={errors.studio_address?.message}
+                      />
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.85 }}
+                  >
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <InputField
+                        {...register("education")}
+                        label={content.common.education}
+                        placeholder={content.common.educationPlaceholder}
+                        isRTL={isRTL}
+                        error={errors.education?.message}
+                      />
+                      <InputField
+                        {...register("award_artist")}
+                        label={content.common.awardArtist}
+                        placeholder={content.common.awardArtistPlaceholder}
+                        isRTL={isRTL}
+                        error={errors.award_artist?.message}
+                      />
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 }}
+                  >
+                    <TextareaField
+                      {...register("artist_statement")}
+                      label={content.common.artistStatement}
+                      placeholder={content.common.artistStatementPlaceholder}
+                      isRTL={isRTL}
+                      error={errors.artist_statement?.message}
+                    />
+                  </motion.div>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Gallery extra organization fields */}
+          {isGallery && (
+            <div className="space-y-6 mt-2">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75 }}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <InputField
+                    {...register("organization_name")}
+                    label={content.common.organizationName}
+                    placeholder={content.common.organizationNamePlaceholder}
+                    isRTL={isRTL}
+                    error={errors.organization_name?.message}
+                  />
+                  <InputField
+                    {...register("organization_email")}
+                    label={content.common.organizationEmail}
+                    type="email"
+                    placeholder={content.common.organizationEmailPlaceholder}
+                    isRTL={isRTL}
+                    error={errors.organization_email?.message}
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <InputField
+                    {...register("organization_main_contact_name")}
+                    label={content.common.mainContactName}
+                    placeholder={content.common.mainContactNamePlaceholder}
+                    isRTL={isRTL}
+                    error={errors.organization_main_contact_name?.message}
+                  />
+                  <SelectField
+                    label={content.common.organizationType}
+                    placeholder={content.common.organizationTypePlaceholder}
+                    options={[
+                      {
+                        value: "commercial",
+                        label:
+                          language === "en"
+                            ? "Commercial / For-profit"
+                            : "تجاري / هادف للربح",
+                      },
+                      {
+                        value: "non_profit",
+                        label: language === "en" ? "Non-profit" : "غير ربحي",
+                      },
+                      {
+                        value: "public_museum",
+                        label:
+                          language === "en" ? "Public Museum" : "متحف عام",
+                      },
+                      {
+                        value: "private_collection",
+                        label:
+                          language === "en"
+                            ? "Private Collection"
+                            : "مجموعة خاصة",
+                      },
+                      {
+                        value: "other",
+                        label: language === "en" ? "Other" : "أخرى",
+                      },
+                    ]}
+                    value={watchedOrganizationType}
+                    onValueChange={(value) =>
+                      setValue("organization_type", value, {
+                        shouldValidate: true,
+                      })
+                    }
+                    isRTL={isRTL}
+                    error={errors.organization_type?.message}
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.85 }}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <InputField
+                    {...register("founded_year", {
+                      pattern: {
+                        value: /^\d{4}$/,
+                        message:
+                          language === "en"
+                            ? "Enter a valid year (e.g. 2005)"
+                            : "أدخل سنة صحيحة (مثال: 2005)",
+                      },
+                    })}
+                    label={content.common.foundedYear}
+                    type="number"
+                    placeholder={content.common.foundedYearPlaceholder}
+                    isRTL={isRTL}
+                    error={errors.founded_year?.message}
+                  />
+                  <InputField
+                    {...register("exhibition_count", {
+                      pattern: {
+                        value: /^\d+$/,
+                        message:
+                          language === "en"
+                            ? "Please enter a valid number"
+                            : "يرجى إدخال رقم صحيح",
+                      },
+                    })}
+                    label={content.common.exhibitionCount}
+                    type="number"
+                    placeholder={content.common.exhibitionCountPlaceholder}
+                    isRTL={isRTL}
+                    error={errors.exhibition_count?.message}
+                  />
+                </div>
+              </motion.div>
+            </div>
+          )}
 
           {/* Action Buttons */}
           <motion.div

@@ -1,10 +1,11 @@
 import { useLanguage } from "@/contexts/useLanguage";
-import { Camera, DollarSign, Palette, Ruler, ArrowRight } from "lucide-react";
+import { Camera, DollarSign, Palette, Ruler, ArrowRight, Users } from "lucide-react";
 import { CustomModal } from "@/components/ui/CustomModal";
 import {
   InputField,
   TextareaField,
   FileUploadField,
+  SelectField,
 } from "@/components/ui/custom-form-elements";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
@@ -17,6 +18,8 @@ export type ArtworkFormValues = {
   medium: string;
   dimensions: string;
   imageFile: File | null;
+  user_type: string;
+  no_artist?: string;
 };
 
 interface ArtworkModalProps {
@@ -40,11 +43,15 @@ const modalContent = {
     price: "Price (AED)",
     medium: "Medium",
     dimensions: "Dimensions",
+    userType: "User Type",
+    noOfArtists: "Number of Artists",
     mediamPlaceholder: "Oil on Canvas, Digital...",
     dimensionsPlaceholder: "100 x 80 cm",
     titlePlaceholder: "Enter title",
     descriptionPlaceholder: "Describe your artwork...",
     pricePlaceholder: "0.00",
+    userTypePlaceholder: "Select user type",
+    noOfArtistsPlaceholder: "Enter number of artists",
     imageRequired: "Please upload an image",
     error: "Please fill all required fields",
     save: "Save Changes",
@@ -60,11 +67,15 @@ const modalContent = {
     price: "السعر (درهم)",
     medium: "الوسيط",
     dimensions: "الأبعاد",
+    userType: "نوع المستخدم",
+    noOfArtists: "عدد الفنانين",
     mediamPlaceholder: "زيت على قماش، رقمي...",
     dimensionsPlaceholder: "100 × 80 سم",
     titlePlaceholder: "أدخل العنوان",
     descriptionPlaceholder: "صف عملك الفني...",
     pricePlaceholder: "0.00",
+    userTypePlaceholder: "اختر نوع المستخدم",
+    noOfArtistsPlaceholder: "أدخل عدد الفنانين",
     imageRequired: "يرجى تحميل صورة",
     error: "يرجى ملء جميع الحقول",
     save: "حفظ التغييرات",
@@ -93,6 +104,8 @@ export function ArtworkModal({
     medium: "",
     dimensions: "",
     imageFile: null,
+    user_type: "Artist",
+    no_artist: "",
   });
   const [initialSnapshot, setInitialSnapshot] = useState<
     | {
@@ -101,6 +114,8 @@ export function ArtworkModal({
         price: string;
         medium: string;
         dimensions: string;
+        user_type: string;
+        no_artist: string;
         hasNewImage: boolean;
       }
     | null
@@ -113,6 +128,8 @@ export function ArtworkModal({
       const initialPrice = initialValues?.price ?? "";
       const initialMedium = initialValues?.medium ?? "";
       const initialDimensions = initialValues?.dimensions ?? "";
+      const initialUserType = initialValues?.user_type ?? "Artist";
+      const initialNoArtist = initialValues?.no_artist ?? "";
 
       setValues({
         title: initialTitle,
@@ -121,6 +138,8 @@ export function ArtworkModal({
         medium: initialMedium,
         dimensions: initialDimensions,
         imageFile: null,
+        user_type: initialUserType,
+        no_artist: initialNoArtist,
       });
 
       setInitialSnapshot({
@@ -129,6 +148,8 @@ export function ArtworkModal({
         price: initialPrice,
         medium: initialMedium,
         dimensions: initialDimensions,
+        user_type: initialUserType,
+        no_artist: initialNoArtist,
         hasNewImage: false,
       });
     }
@@ -142,6 +163,8 @@ export function ArtworkModal({
         values.price !== initialSnapshot.price ||
         values.medium !== initialSnapshot.medium ||
         values.dimensions !== initialSnapshot.dimensions ||
+        values.user_type !== initialSnapshot.user_type ||
+        values.no_artist !== initialSnapshot.no_artist ||
         !!values.imageFile !== initialSnapshot.hasNewImage);
 
     if (!isDirty) {
@@ -164,9 +187,20 @@ export function ArtworkModal({
       !values.description ||
       !values.price ||
       !values.medium ||
-      !values.dimensions
+      !values.dimensions ||
+      !values.user_type
     ) {
       toast.error(t.error);
+      return;
+    }
+
+    // Validate no_artist when Gallery is selected
+    if (values.user_type === "Gallery" && !values.no_artist) {
+      toast.error(
+        language === "en"
+          ? "Please enter the number of artists"
+          : "يرجى إدخال عدد الفنانين"
+      );
       return;
     }
 
@@ -183,7 +217,11 @@ export function ArtworkModal({
       values.price !== initialSnapshot.price ||
       values.medium !== initialSnapshot.medium ||
       values.dimensions !== initialSnapshot.dimensions ||
+      values.user_type !== initialSnapshot.user_type ||
+      values.no_artist !== initialSnapshot.no_artist ||
       !!values.imageFile !== initialSnapshot.hasNewImage);
+
+  const isGallery = values.user_type === "Gallery";
 
   return (
     <CustomModal
@@ -289,6 +327,44 @@ export function ArtworkModal({
             }
             placeholder={t.dimensionsPlaceholder}
           />
+
+          <SelectField
+            label={t.userType}
+            required
+            isRTL={isRTL}
+            value={values.user_type}
+            onValueChange={(value) =>
+              setValues((prev) => ({
+                ...prev,
+                user_type: value,
+                // Clear no_artist when switching back to Artist
+                no_artist: value === "Artist" ? "" : prev.no_artist,
+              }))
+            }
+            placeholder={t.userTypePlaceholder}
+            options={[
+              { value: "Artist", label: language === "en" ? "Artist" : "فنان" },
+              { value: "Gallery", label: language === "en" ? "Gallery" : "معرض" },
+            ]}
+          />
+
+          {isGallery && (
+            <InputField
+              label={t.noOfArtists}
+              required
+              isRTL={isRTL}
+              type="number"
+              icon={Users}
+              value={values.no_artist || ""}
+              onChange={(e) =>
+                setValues((prev) => ({
+                  ...prev,
+                  no_artist: e.target.value,
+                }))
+              }
+              placeholder={t.noOfArtistsPlaceholder}
+            />
+          )}
 
           <TextareaField
             label={t.description}

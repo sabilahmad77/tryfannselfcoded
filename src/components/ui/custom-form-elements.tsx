@@ -827,16 +827,30 @@ export interface FileUploadFieldProps
   accept?: string;
   /** Maximum file size in bytes */
   maxSize?: number;
-  /** Callback when file is selected */
+  /** Callback when file is selected (single file mode) */
   onFileChange?: (file: File | null) => void;
-  /** Currently selected file */
+  /** Callback when files are selected (multiple file mode) */
+  onFilesChange?: (files: File[]) => void;
+  /** Callback when preview items change */
+  onPreviewChange?: (items: Array<{ id: string; url: string; name: string; file?: File | null; sourceType: "local" | "existing" }>) => void;
+  /** Currently selected file (single file mode) */
   value?: File | null;
+  /** Currently selected files (multiple file mode) */
+  files?: File[];
+  /** Initial URLs for existing files */
+  initialUrls?: string[];
+  /** Whether to allow multiple file selection */
+  multiple?: boolean;
+  /** Maximum number of files allowed (only applies when multiple=true) */
+  maxFiles?: number;
   /** Custom className for upload button */
   buttonClassName?: string;
   /** Upload button text */
   buttonText?: string;
   /** Helper text showing accepted formats */
   formatText?: string;
+  /** Whether to show preview inline (default: true for single, false for multiple - use ImagePreviewList separately) */
+  showPreview?: boolean;
 }
 
 /**
@@ -875,7 +889,14 @@ export const FileUploadField = React.forwardRef<
       accept,
       maxSize,
       onFileChange,
+      onFilesChange,
+      onPreviewChange,
       value,
+      files,
+      initialUrls,
+      multiple = false,
+      maxFiles,
+      showPreview,
       id,
       ...inputProps
     },
@@ -886,8 +907,16 @@ export const FileUploadField = React.forwardRef<
     const [selectedFile, setSelectedFile] = React.useState<File | null>(
       value || null
     );
+    const [selectedFiles, setSelectedFiles] = React.useState<File[]>(
+      files || []
+    );
     const [fileError, setFileError] = React.useState<string>("");
     const hasError = !!error || !!fileError;
+
+    // Determine if we should show preview inline
+    const shouldShowPreview = showPreview !== undefined 
+      ? showPreview 
+      : !multiple; // Default: show for single, hide for multiple
 
     // Determine optional text based on isRTL
     const optionalText = isRTL ? "(اختياري)" : "(Optional)";
@@ -901,66 +930,190 @@ export const FileUploadField = React.forwardRef<
       formatText ||
       (isRTL ? "PDF، PNG، JPG حتى 10 ميجابايت" : "PDF, PNG, JPG up to 10MB");
 
+    // Sync with controlled value prop (single file mode)
     React.useEffect(() => {
-      if (value !== undefined) {
+      if (value !== undefined && !multiple) {
         setSelectedFile(value);
       }
-    }, [value]);
+    }, [value, multiple]);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0] || null;
-      setFileError("");
+    // Sync with controlled files prop (multiple file mode)
+    React.useEffect(() => {
+      if (files !== undefined && multiple) {
+        setSelectedFiles(files);
+      }
+    }, [files, multiple]);
 
-      if (file) {
-        // Validate file size
-        if (maxSize && file.size > maxSize) {
-          const maxSizeMB = (maxSize / (1024 * 1024)).toFixed(0);
-          const errorMsg = isRTL
-            ? `حجم الملف كبير جداً. الحد الأقصى ${maxSizeMB} ميجابايت`
-            : `File size too large. Maximum size is ${maxSizeMB}MB`;
-          setFileError(errorMsg);
-          e.target.value = ""; // Reset input
-          return;
-        }
-
-        // Validate file type
-        if (
-          accept &&
-          !accept.split(",").some((pattern) => {
-            const trimmed = pattern.trim();
-            if (trimmed.startsWith(".")) {
-              return file.name.toLowerCase().endsWith(trimmed.toLowerCase());
-            }
-            if (trimmed.includes("/*")) {
-              const baseType = trimmed.split("/")[0];
-              return file.type.startsWith(baseType);
-            }
-            return file.type === trimmed;
-          })
-        ) {
-          const errorMsg = isRTL
-            ? "نوع الملف غير مدعوم"
-            : "File type not supported";
-          setFileError(errorMsg);
-          e.target.value = ""; // Reset input
-          return;
-        }
+    // Validate a single file
+    const validateFile = (file: File): string | null => {
+      // Validate file size
+      if (maxSize && file.size > maxSize) {
+        const maxSizeMB = (maxSize / (1024 * 1024)).toFixed(0);
+        return isRTL
+          ? `حجم الملف كبير جداً. الحد الأقصى ${maxSizeMB} ميجابايت`
+          : `File size too large. Maximum size is ${maxSizeMB}MB`;
       }
 
-      setSelectedFile(file);
-      onFileChange?.(file);
+      // Validate file type
+      if (
+        accept &&
+        !accept.split(",").some((pattern) => {
+          const trimmed = pattern.trim();
+          if (trimmed.startsWith(".")) {
+            return file.name.toLowerCase().endsWith(trimmed.toLowerCase());
+          }
+          if (trimmed.includes("/*")) {
+            const baseType = trimmed.split("/")[0];
+            return file.type.startsWith(baseType);
+          }
+          return file.type === trimmed;
+        })
+      ) {
+        return isRTL
+          ? "نوع الملف غير مدعوم"
+          : "File type not supported";
+      }
+
+      return null;
     };
 
-    const handleRemoveFile = () => {
-      setSelectedFile(null);
+    // Create preview items from files
+    const createPreviewItems = (fileList: File[]): Array<{ id: string; url: string; name: string; file: File; sourceType: "local" }> => {
+      return fileList.map((file, index) => {
+        const previewUrl = URL.createObjectURL(file);
+        return {
+          id: `file-${Date.now()}-${index}-${file.name}`,
+          url: previewUrl,
+          name: file.name,
+          file,
+          sourceType: "local" as const,
+        };
+      });
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const inputFiles = Array.from(e.target.files || []);
       setFileError("");
-      onFileChange?.(null);
+
+      if (multiple) {
+        // Multiple file mode
+        let newFiles = [...selectedFiles];
+        
+        // Validate all new files
+        for (const file of inputFiles) {
+          const validationError = validateFile(file);
+          if (validationError) {
+            setFileError(validationError);
+            e.target.value = "";
+            return;
+          }
+        }
+
+        // Check maxFiles limit
+        if (maxFiles && newFiles.length + inputFiles.length > maxFiles) {
+          const errorMsg = isRTL
+            ? `يمكنك تحميل ${maxFiles} ملفات كحد أقصى`
+            : `You can upload up to ${maxFiles} files`;
+          setFileError(errorMsg);
+          e.target.value = "";
+          return;
+        }
+
+        // Add new files
+        newFiles = [...newFiles, ...inputFiles];
+        
+        // Enforce maxFiles limit (take first N files)
+        if (maxFiles && newFiles.length > maxFiles) {
+          newFiles = newFiles.slice(0, maxFiles);
+          const warningMsg = isRTL
+            ? `تم تحديد ${maxFiles} ملفات فقط`
+            : `Only ${maxFiles} files selected`;
+          setFileError(warningMsg);
+        }
+
+        setSelectedFiles(newFiles);
+        onFilesChange?.(newFiles);
+        
+        // Create preview items and notify
+        const previewItems = createPreviewItems(newFiles);
+        onPreviewChange?.(previewItems);
+      } else {
+        // Single file mode
+        const file = inputFiles[0] || null;
+        
+        if (file) {
+          const validationError = validateFile(file);
+          if (validationError) {
+            setFileError(validationError);
+            e.target.value = "";
+            return;
+          }
+        }
+
+        setSelectedFile(file);
+        onFileChange?.(file);
+        
+        // Create preview item and notify
+        if (file) {
+          const previewItems = createPreviewItems([file]);
+          onPreviewChange?.(previewItems);
+        } else {
+          onPreviewChange?.([]);
+        }
+      }
+    };
+
+    const handleRemoveFile = (index?: number) => {
+      if (multiple) {
+        // Remove file at index
+        const newFiles = index !== undefined 
+          ? selectedFiles.filter((_, i) => i !== index)
+          : [];
+        setSelectedFiles(newFiles);
+        onFilesChange?.(newFiles);
+        
+        // Cleanup blob URLs for removed files
+        if (index !== undefined) {
+          const removedFile = selectedFiles[index];
+          if (removedFile) {
+            // Note: blob URLs are cleaned up when component unmounts or when files change
+            // We rely on the cleanup in useEffect
+          }
+        }
+        
+        // Update preview
+        const previewItems = createPreviewItems(newFiles);
+        onPreviewChange?.(previewItems);
+      } else {
+        setSelectedFile(null);
+        setFileError("");
+        onFileChange?.(null);
+        onPreviewChange?.([]);
+      }
+      
       // Reset the input element
       const input = document.getElementById(fieldId) as HTMLInputElement;
       if (input) {
         input.value = "";
       }
     };
+
+    // Cleanup blob URLs on unmount or when files change
+    React.useEffect(() => {
+      return () => {
+        if (multiple) {
+          // Note: blob URLs are created in createPreviewItems, but we need to track them
+          // For now, we'll rely on the browser's garbage collection
+          // In a production app, you might want to track blob URLs explicitly
+          // The cleanup is handled by the ImagePreviewList component when items are removed
+        } else if (selectedFile) {
+          // Single file cleanup is handled by the preview component
+        }
+      };
+    }, [multiple, selectedFiles, selectedFile]);
+
+    const currentFiles = multiple ? selectedFiles : (selectedFile ? [selectedFile] : []);
+    const hasFiles = currentFiles.length > 0;
 
     return (
       <div className={cn("space-y-2", className)}>
@@ -979,6 +1132,11 @@ export const FileUploadField = React.forwardRef<
             ) : !hideOptional ? (
               <span className="opacity-50 text-xs ml-1">{optionalText}</span>
             ) : null}
+            {multiple && maxFiles && (
+              <span className="opacity-50 text-xs ml-1">
+                {isRTL ? `(حد أقصى ${maxFiles})` : `(max ${maxFiles})`}
+              </span>
+            )}
           </Label>
         )}
 
@@ -992,6 +1150,7 @@ export const FileUploadField = React.forwardRef<
                 type="file"
                 accept={accept}
                 onChange={handleFileChange}
+                multiple={multiple}
                 className="hidden"
                 {...(hasError && { "aria-invalid": "true" })}
                 aria-describedby={
@@ -1001,7 +1160,7 @@ export const FileUploadField = React.forwardRef<
                     ? `${fieldId}-helper`
                     : undefined
                 }
-                required={required && !selectedFile}
+                required={required && !hasFiles}
                 {...inputProps}
               />
               <label
@@ -1011,7 +1170,7 @@ export const FileUploadField = React.forwardRef<
                   "bg-background border-white/10 hover:border-amber-500/50 hover:bg-amber-500/10",
                   "text-white/70 hover:text-white",
                   hasError && "border-destructive",
-                  required && !selectedFile && "cursor-not-allowed opacity-50",
+                  required && !hasFiles && "cursor-not-allowed opacity-50",
                   buttonClassName
                 )}
               >
@@ -1024,56 +1183,69 @@ export const FileUploadField = React.forwardRef<
             )}
           </div>
 
-          {/* Selected File Preview */}
-              {selectedFile && (
+          {/* Selected File Preview (only for single file mode or when showPreview=true) */}
+          {shouldShowPreview && hasFiles && (
             <div className="space-y-2">
-              {/* Image Preview for image files */}
-                  {selectedFile.type.startsWith("image/") && (
+              {currentFiles.map((file, index) => (
+                <div key={`${file.name}-${index}`} className="space-y-2">
+                  {/* Image Preview for image files */}
+                  {file.type.startsWith("image/") && (
                     <div className="relative w-full max-w-xs mx-auto">
                       <div className="relative aspect-square rounded-lg overflow-hidden border border-white/10 bg-background">
-                    <img
-                      src={URL.createObjectURL(selectedFile)}
-                      alt={selectedFile.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleRemoveFile}
-                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors cursor-pointer"
-                      aria-label={isRTL ? "إزالة الصورة" : "Remove image"}
-                    >
-                      <X className="w-4 h-4 text-white" />
-                    </button>
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={file.name}
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveFile(multiple ? index : undefined)}
+                          className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors cursor-pointer"
+                          aria-label={isRTL ? "إزالة الصورة" : "Remove image"}
+                        >
+                          <X className="w-4 h-4 text-white" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* File Info */}
+                  <div className="p-3 rounded-lg bg-background border border-white/10 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <FileText className="w-4 h-4 text-white/60 shrink-0" />
+                      <span
+                        className="text-sm text-white/80 truncate"
+                        title={file.name}
+                      >
+                        {file.name}
+                      </span>
+                      <span className="text-xs text-white/40 shrink-0">
+                        ({(file.size / (1024 * 1024)).toFixed(2)} MB)
+                      </span>
+                    </div>
+                    {!file.type.startsWith("image/") && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFile(multiple ? index : undefined)}
+                        className="text-white/40 hover:text-white/70 transition-colors shrink-0 cursor-pointer"
+                        aria-label={isRTL ? "إزالة الملف" : "Remove file"}
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                 </div>
-              )}
-
-              {/* File Info */}
-              <div className="p-3 rounded-lg bg-background border border-white/10 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <FileText className="w-4 h-4 text-white/60 shrink-0" />
-                  <span
-                    className="text-sm text-white/80 truncate"
-                    title={selectedFile.name}
-                  >
-                    {selectedFile.name}
-                  </span>
-                  <span className="text-xs text-white/40 shrink-0">
-                    ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
-                  </span>
-                </div>
-                {!selectedFile.type.startsWith("image/") && (
-                  <button
-                    type="button"
-                    onClick={handleRemoveFile}
-                    className="text-white/40 hover:text-white/70 transition-colors shrink-0 cursor-pointer"
-                    aria-label={isRTL ? "إزالة الملف" : "Remove file"}
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
+              ))}
             </div>
+          )}
+
+          {/* File count indicator for multiple mode */}
+          {multiple && hasFiles && !shouldShowPreview && (
+            <p className="text-xs text-white/60">
+              {isRTL 
+                ? `${currentFiles.length} ملف${currentFiles.length > 1 ? "ات" : ""} محدد${currentFiles.length > 1 ? "ة" : ""}`
+                : `${currentFiles.length} file${currentFiles.length > 1 ? "s" : ""} selected`}
+            </p>
           )}
         </div>
 

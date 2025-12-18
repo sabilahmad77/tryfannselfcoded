@@ -23,6 +23,24 @@ export interface ProfileSetupRequest {
   primary_platform?: string;
   location?: string;
   phone_number?: string;
+  // Artist / Collector shared
+  price_range?: string;
+  // Artist-specific
+  preferred_commission_rate?: string;
+  shipping_preference?: string;
+  studio_address?: string;
+  education?: string;
+  award_artist?: string;
+  artist_statement?: string;
+  // Gallery-specific
+  organization_type?: string;
+  organization_email?: string;
+  organization_main_contact_name?: string;
+  organization_name?: string;
+  founded_year?: string | number;
+  exhibition_count?: string | number;
+  // Ambassador-specific
+  promotion_plan?: string;
 }
 
 export interface ProfileSetupResponse {
@@ -62,7 +80,9 @@ export interface KYCVerificationRequest {
   postal_code: string;
   street_address?: string;
   id_type?: string;
-  gov_issued_id?: File;
+  gov_issued_id?: File; // Legacy single file
+  gov_issued_id_front?: File; // Front of ID
+  gov_issued_id_back?: File; // Back of ID
   proof_address?: File;
 }
 
@@ -181,7 +201,58 @@ export const onboardingApi = baseApi.injectEndpoints({
         if (formData.phone_number) {
           body.append("phone_number", formData.phone_number);
         }
-
+        // Artist / Collector shared
+        if (formData.price_range) {
+          body.append("price_range", formData.price_range);
+        }
+        // Artist-specific
+        if (formData.preferred_commission_rate) {
+          body.append(
+            "preferred_commission_rate",
+            formData.preferred_commission_rate
+          );
+        }
+        if (formData.shipping_preference) {
+          body.append("shipping_preference", formData.shipping_preference);
+        }
+        if (formData.studio_address) {
+          body.append("studio_address", formData.studio_address);
+        }
+        if (formData.education) {
+          body.append("education", formData.education);
+        }
+        if (formData.award_artist) {
+          body.append("award_artist", formData.award_artist);
+        }
+        if (formData.artist_statement) {
+          body.append("artist_statement", formData.artist_statement);
+        }
+        // Gallery-specific
+        if (formData.organization_type) {
+          body.append("organization_type", formData.organization_type);
+        }
+        if (formData.organization_email) {
+          body.append("organization_email", formData.organization_email);
+        }
+        if (formData.organization_main_contact_name) {
+          body.append(
+            "organization_main_contact_name",
+            formData.organization_main_contact_name
+          );
+        }
+        if (formData.organization_name) {
+          body.append("organization_name", formData.organization_name);
+        }
+        if (formData.founded_year !== undefined && formData.founded_year !== null && formData.founded_year !== "") {
+          body.append("founded_year", String(formData.founded_year));
+        }
+        if (formData.exhibition_count !== undefined && formData.exhibition_count !== null && formData.exhibition_count !== "") {
+          body.append("exhibition_count", String(formData.exhibition_count));
+        }
+        // Ambassador-specific
+        if (formData.promotion_plan) {
+          body.append("promotion_plan", formData.promotion_plan);
+        }
         return {
           url: "/market_final/profile_setup",
           method: "POST",
@@ -227,8 +298,15 @@ export const onboardingApi = baseApi.injectEndpoints({
         }
 
         // Only append files if they are provided
+        // Support both legacy single file and new front/back format
         if (formData.gov_issued_id) {
           body.append("gov_issued_id", formData.gov_issued_id);
+        }
+        if (formData.gov_issued_id_front) {
+          body.append("gov_issued_id_front", formData.gov_issued_id_front);
+        }
+        if (formData.gov_issued_id_back) {
+          body.append("gov_issued_id_back", formData.gov_issued_id_back);
         }
         if (formData.proof_address) {
           body.append("proof_address", formData.proof_address);

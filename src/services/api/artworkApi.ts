@@ -10,6 +10,8 @@ export interface ArtworkItem {
   medium: string;
   description: string;
   status?: "available" | "sold" | "featured";
+  user_type?: string;
+  no_artist?: string;
 }
 
 export interface CreateArtworkRequest {

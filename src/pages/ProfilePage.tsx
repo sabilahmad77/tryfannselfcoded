@@ -4,6 +4,7 @@ import { EditProfile } from "@/components/profile/EditProfile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ImagePreviewList } from "@/components/ui/image-preview-list";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/contexts/useLanguage";
@@ -18,8 +19,13 @@ import { selectSubmittedData } from "@/store/onboardingSlice";
 import type { RootState } from "@/store/store";
 import { getTierInfo } from "@/utils/tierSystem";
 import {
+  normalizeToPreviewItems,
+  getFullImageUrl,
+} from "@/utils/filePreviewHelpers";
+import {
   Award,
   Briefcase,
+  Building2,
   Calendar,
   Crown,
   Edit2,
@@ -27,6 +33,7 @@ import {
   Flame,
   Globe,
   Hash,
+  IdCard,
   Mail,
   MapPin,
   Phone,
@@ -34,6 +41,7 @@ import {
   Shield,
   Star,
   TrendingUp,
+  User,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
@@ -71,6 +79,9 @@ const content = {
     idNumber: "ID Number",
     dateOfBirth: "Date of Birth",
     nationality: "Nationality",
+    kycCity: "City",
+    kycStreetAddress: "Street Address",
+    kycIdType: "ID Type",
     postalCode: "Postal Code",
     documents: "Documents",
     idDocument: "Government ID",
@@ -164,6 +175,9 @@ const content = {
     idNumber: "رقم الهوية",
     dateOfBirth: "تاريخ الميلاد",
     nationality: "الجنسية",
+    kycCity: "المدينة",
+    kycStreetAddress: "عنوان الشارع",
+    kycIdType: "نوع الهوية",
     postalCode: "الرمز البريدي",
     documents: "المستندات",
     idDocument: "هوية حكومية",
@@ -263,7 +277,11 @@ export function ProfilePage() {
             nationality?: string;
             city?: string;
             postal_code?: string;
-            gov_issued_id?: string | null;
+            street_address?: string;
+            id_type?: string;
+            gov_issued_id?: string | null; // Legacy single file
+            gov_issued_id_front?: string | null; // Front of ID
+            gov_issued_id_back?: string | null; // Back of ID
             proof_address?: string | null;
           };
           [key: string]: unknown;
@@ -280,6 +298,17 @@ export function ProfilePage() {
         const kycVerification = responseData.data.kyc_verification;
 
         // Merge KYC data into user object if it exists
+        // Combine front and back into array for storage, or use legacy single file
+        let govIdUrls: string | string[] | null = null;
+        if (kycVerification?.gov_issued_id_front || kycVerification?.gov_issued_id_back) {
+          const urls: string[] = [];
+          if (kycVerification.gov_issued_id_front) urls.push(kycVerification.gov_issued_id_front);
+          if (kycVerification.gov_issued_id_back) urls.push(kycVerification.gov_issued_id_back);
+          govIdUrls = urls.length === 1 ? urls[0] : urls;
+        } else if (kycVerification?.gov_issued_id) {
+          govIdUrls = kycVerification.gov_issued_id;
+        }
+
         const updatedUser: UserProfileData = {
           ...userData,
           // Add KYC fields to user object (using type assertion since they're not in the interface)
@@ -289,7 +318,9 @@ export function ProfilePage() {
             kyc_nationality: kycVerification?.nationality,
             kyc_city: kycVerification?.city,
             kyc_postal_code: kycVerification?.postal_code,
-            kyc_gov_issued_id: kycVerification?.gov_issued_id || null,
+            kyc_street_address: kycVerification?.street_address,
+            kyc_id_type: kycVerification?.id_type,
+            kyc_gov_issued_id: govIdUrls,
             kyc_proof_address: kycVerification?.proof_address || null,
           } as Partial<UserProfileData>),
         };
@@ -304,39 +335,46 @@ export function ProfilePage() {
   // Get KYC data from user object first, fallback to onboarding slice for backward compatibility
   const kycDataFromUser = storedUser
     ? ({
-        id_number: (storedUser as { kyc_id_number?: string }).kyc_id_number,
-        dob: (storedUser as { kyc_dob?: string }).kyc_dob,
-        nationality: (storedUser as { kyc_nationality?: string })
-          .kyc_nationality,
-        city: (storedUser as { kyc_city?: string }).kyc_city,
-        postal_code: (storedUser as { kyc_postal_code?: string })
-          .kyc_postal_code,
-        gov_issued_id: (storedUser as { kyc_gov_issued_id?: string | null })
-          .kyc_gov_issued_id,
-        proof_address: (storedUser as { kyc_proof_address?: string | null })
-          .kyc_proof_address,
-      } as {
-        id_number?: string;
-        dob?: string;
-        nationality?: string;
-        city?: string;
-        postal_code?: string;
-        gov_issued_id?: string | null;
-        proof_address?: string | null;
-      })
+      id_number: (storedUser as { kyc_id_number?: string }).kyc_id_number,
+      dob: (storedUser as { kyc_dob?: string }).kyc_dob,
+      nationality: (storedUser as { kyc_nationality?: string })
+        .kyc_nationality,
+      city: (storedUser as { kyc_city?: string }).kyc_city,
+      postal_code: (storedUser as { kyc_postal_code?: string })
+        .kyc_postal_code,
+      street_address: (storedUser as { kyc_street_address?: string })
+        .kyc_street_address,
+      id_type: (storedUser as { kyc_id_type?: string }).kyc_id_type,
+      gov_issued_id: (storedUser as { kyc_gov_issued_id?: string | null })
+        .kyc_gov_issued_id,
+      proof_address: (storedUser as { kyc_proof_address?: string | null })
+        .kyc_proof_address,
+    } as {
+      id_number?: string;
+      dob?: string;
+      nationality?: string;
+      city?: string;
+      postal_code?: string;
+      street_address?: string;
+      id_type?: string;
+      gov_issued_id?: string | null;
+      proof_address?: string | null;
+    })
     : undefined;
   const kycDataFromOnboarding = useSelector((state: RootState) =>
     selectSubmittedData(state, "kyc")
   ) as
     | {
-        id_number?: string;
-        dob?: string;
-        nationality?: string;
-        city?: string;
-        postal_code?: string;
-        gov_issued_id?: string;
-        proof_address?: string;
-      }
+      id_number?: string;
+      dob?: string;
+      nationality?: string;
+      city?: string;
+      postal_code?: string;
+      street_address?: string;
+      id_type?: string;
+      gov_issued_id?: string;
+      proof_address?: string;
+    }
     | undefined;
   // Use KYC data from user object if available, otherwise fallback to onboarding data
   const kycData =
@@ -442,67 +480,85 @@ export function ProfilePage() {
   // Use stored user data or fallback to mock data
   const userData = storedUser
     ? {
-        name:
-          `${storedUser.first_name || ""} ${
-            storedUser.last_name || ""
+      name:
+        `${storedUser.first_name || ""} ${storedUser.last_name || ""
           }`.trim() ||
-          storedUser.title ||
-          storedUser.email,
-        username: storedUser.email.split("@")[0] || "",
-        email: storedUser.email,
-        phone: storedUser.phone_number || "",
-        location: storedUser.location || "",
-        website: getWebsite(storedUser.website),
-        role: storedUser.role || "",
-        bio: storedUser.bio || "",
-        memberSince: formatDate(storedUser.date_joined),
-        totalPoints,
-        influencePoints:
-          dashboardStatsData?.data?.influence_points ??
-          Math.floor(parseInt(storedUser.points || "0", 10) * 0.6),
-        provenancePoints:
-          dashboardStatsData?.data?.provenance_points ??
-          Math.floor(parseInt(storedUser.points || "0", 10) * 0.4),
-        referrals:
-          dashboardStatsData?.data?.referral_count ??
-          storedUser.total_referral_clicks ??
-          0,
-        followers: dashboardStatsData?.data?.user_followers ?? 0,
-        artworksSaved: dashboardStatsData?.data?.artwork_count ?? 0,
-        collections: dashboardStatsData?.data?.collection_count ?? 0,
-        // Additional fields for edit profile
-        title: storedUser.title || "",
-        focus: storedUser.focus || "",
-        years_of_experience: storedUser.years_of_experience
-          ? String(storedUser.years_of_experience)
+        storedUser.title ||
+        storedUser.email,
+      username: storedUser.email.split("@")[0] || "",
+      email: storedUser.email,
+      phone: storedUser.phone_number || "",
+      location: storedUser.location || "",
+      website: getWebsite(storedUser.website),
+      role: storedUser.role || "",
+      bio: storedUser.bio || "",
+      memberSince: formatDate(storedUser.date_joined),
+      totalPoints,
+      influencePoints:
+        dashboardStatsData?.data?.influence_points ??
+        Math.floor(parseInt(storedUser.points || "0", 10) * 0.6),
+      provenancePoints:
+        dashboardStatsData?.data?.provenance_points ??
+        Math.floor(parseInt(storedUser.points || "0", 10) * 0.4),
+      referrals:
+        dashboardStatsData?.data?.referral_count ??
+        storedUser.total_referral_clicks ??
+        0,
+      followers: dashboardStatsData?.data?.user_followers ?? 0,
+      artworksSaved: dashboardStatsData?.data?.artwork_count ?? 0,
+      collections: dashboardStatsData?.data?.collection_count ?? 0,
+      // Additional fields for edit profile
+      title: storedUser.title || "",
+      focus: storedUser.focus || "",
+      years_of_experience: storedUser.years_of_experience
+        ? String(storedUser.years_of_experience)
+        : "",
+      instagram_handle: storedUser.instagram_handle || "",
+      profile_image: storedUser.profile_image,
+      // Persona-based fields
+      price_range: storedUser.price_range ?? "",
+      preferred_commission_rate: storedUser.preferred_commission_rate ?? "",
+      shipping_preference: storedUser.shipping_preference ?? "",
+      studio_address: storedUser.studio_address ?? "",
+      education: storedUser.education ?? "",
+      award_artist: storedUser.award_artist ?? "",
+      artist_statement: storedUser.artist_statement ?? "",
+      organization_email: storedUser.organization_email ?? "",
+      organization_main_contact_name:
+        storedUser.organization_main_contact_name ?? "",
+      organization_name: storedUser.organization_name ?? "",
+      organization_type: storedUser.organization_type ?? "",
+      founded_year: storedUser.founded_year ?? "",
+      exhibition_count:
+        storedUser.exhibition_count !== undefined &&
+          storedUser.exhibition_count !== null
+          ? String(storedUser.exhibition_count)
           : "",
-        instagram_handle: storedUser.instagram_handle || "",
-        profile_image: storedUser.profile_image,
-      }
+    }
     : {
-        // Fallback mock data if user is not loaded
-        name: "User",
-        username: "@user",
-        email: "",
-        phone: "",
-        location: "",
-        website: "",
-        role: "",
-        bio: "",
-        memberSince: "",
-        totalPoints: 0,
-        influencePoints: 0,
-        provenancePoints: 0,
-        referrals: 0,
-        followers: 0,
-        artworksSaved: 0,
-        collections: 0,
-        title: "",
-        focus: "",
-        years_of_experience: "",
-        instagram_handle: "",
-        profile_image: null,
-      };
+      // Fallback mock data if user is not loaded
+      name: "User",
+      username: "@user",
+      email: "",
+      phone: "",
+      location: "",
+      website: "",
+      role: "",
+      bio: "",
+      memberSince: "",
+      totalPoints: 0,
+      influencePoints: 0,
+      provenancePoints: 0,
+      referrals: 0,
+      followers: 0,
+      artworksSaved: 0,
+      collections: 0,
+      title: "",
+      focus: "",
+      years_of_experience: "",
+      instagram_handle: "",
+      profile_image: null,
+    };
 
   return (
     <DashboardLayout currentPage="profile">
@@ -513,9 +569,8 @@ export function ProfilePage() {
         className="glass rounded-2xl p-8 mb-6"
       >
         <div
-          className={`flex flex-col md:flex-row gap-6 ${
-            isRTL ? "md:flex-row-reverse" : ""
-          }`}
+          className={`flex flex-col md:flex-row gap-6 ${isRTL ? "md:flex-row-reverse" : ""
+            }`}
         >
           {/* Avatar */}
           <div className="relative">
@@ -538,9 +593,8 @@ export function ProfilePage() {
           {/* Profile Info */}
           <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
             <div
-              className={`flex items-start justify-between mb-4 ${
-                isRTL ? "flex-row-reverse" : ""
-              }`}
+              className={`flex items-start justify-between mb-4 ${isRTL ? "flex-row-reverse" : ""
+                }`}
             >
               <div>
                 <h1 className="text-3xl text-[#ffffff] mb-1">
@@ -570,9 +624,8 @@ export function ProfilePage() {
 
             {/* Quick Stats */}
             <div
-              className={`grid grid-cols-2 md:grid-cols-5 gap-4 ${
-                isRTL ? "text-right" : "text-left"
-              }`}
+              className={`grid grid-cols-2 md:grid-cols-5 gap-4 ${isRTL ? "text-right" : "text-left"
+                }`}
             >
               <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffcc33]">
@@ -609,9 +662,8 @@ export function ProfilePage() {
           {nextTierName ? (
             <>
               <div
-                className={`flex items-center justify-between mb-2 ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
+                className={`flex items-center justify-between mb-2 ${isRTL ? "flex-row-reverse" : ""
+                  }`}
               >
                 <span className="text-sm text-[#808c99]">
                   {t.progressToNext} {nextTierName}
@@ -625,9 +677,8 @@ export function ProfilePage() {
           ) : (
             <>
               <div
-                className={`flex items-center justify-between mb-2 ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
+                className={`flex items-center justify-between mb-2 ${isRTL ? "flex-row-reverse" : ""
+                  }`}
               >
                 <span className="text-sm text-[#808c99]">
                   {language === "en"
@@ -662,9 +713,8 @@ export function ProfilePage() {
               {/* Email - only show if show_email is true */}
               {storedUser?.show_email === true && (
                 <div
-                  className={`flex items-center gap-3 ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div className="w-12 h-12 bg-[#1D112A] border border-[#ffcc33]/30 rounded-xl flex items-center justify-center">
                     <Mail className="w-6 h-6 text-[#ffcc33]" />
@@ -679,9 +729,8 @@ export function ProfilePage() {
               {/* Phone - only show if show_phone is true */}
               {storedUser?.show_phone === true && (
                 <div
-                  className={`flex items-center gap-3 ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div className="w-12 h-12 bg-[#1D112A] border border-[#45e3d3]/30 rounded-xl flex items-center justify-center">
                     <Phone className="w-6 h-6 text-[#45e3d3]" />
@@ -696,9 +745,8 @@ export function ProfilePage() {
               {/* Location - only show if show_location is true */}
               {storedUser?.show_location === true && (
                 <div
-                  className={`flex items-center gap-3 ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div className="w-12 h-12 bg-[#1D112A] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
                     <MapPin className="w-6 h-6 text-[#9375b5]" />
@@ -711,9 +759,8 @@ export function ProfilePage() {
               )}
 
               <div
-                className={`flex items-center gap-3 ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
+                className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                  }`}
               >
                 <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
                   <Globe className="w-6 h-6 text-[#0ea5e9]" />
@@ -725,9 +772,8 @@ export function ProfilePage() {
               </div>
 
               <div
-                className={`flex items-center gap-3 ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
+                className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                  }`}
               >
                 <div className="w-12 h-12 bg-[#1D112A] border border-[#ffb54d]/30 rounded-xl flex items-center justify-center">
                   <Briefcase className="w-6 h-6 text-[#ffb54d]" />
@@ -739,9 +785,8 @@ export function ProfilePage() {
               </div>
 
               <div
-                className={`flex items-center gap-3 ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
+                className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                  }`}
               >
                 <div className="w-12 h-12 bg-[#1D112A] border border-[#fface3]/30 rounded-xl flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-[#fface3]" />
@@ -760,14 +805,12 @@ export function ProfilePage() {
               className="mt-8 pt-8 border-t border-[#4e4e4e78]"
             >
               <div
-                className={`flex items-center justify-between mb-6 ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
+                className={`flex items-center justify-between mb-6 ${isRTL ? "flex-row-reverse" : ""
+                  }`}
               >
                 <div
-                  className={`flex items-center gap-3 ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div className="w-12 h-12 bg-[#1D112A] border border-[#45e3d3]/30 rounded-xl flex items-center justify-center">
                     <Shield className="w-6 h-6 text-[#45e3d3]" />
@@ -793,9 +836,8 @@ export function ProfilePage() {
                 /* Empty State - No KYC Data */
                 <div className="p-6 rounded-xl bg-[#0f021c] border border-[#4e4e4e78]">
                   <div
-                    className={`flex flex-col items-center justify-center text-center ${
-                      isRTL ? "text-right" : "text-left"
-                    }`}
+                    className={`flex flex-col items-center justify-center text-center ${isRTL ? "text-right" : "text-left"
+                      }`}
                   >
                     <div className="w-16 h-16 mb-4 rounded-full bg-[#45e3d3]/10 flex items-center justify-center">
                       <Shield className="w-8 h-8 text-[#45e3d3]" />
@@ -822,9 +864,8 @@ export function ProfilePage() {
                     {/* ID Number */}
                     {kycData.id_number && (
                       <div
-                        className={`flex items-center gap-3 ${
-                          isRTL ? "flex-row-reverse" : ""
-                        }`}
+                        className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
                       >
                         <div className="w-12 h-12 bg-[#1D112A] border border-[#ffcc33]/30 rounded-xl flex items-center justify-center">
                           <Hash className="w-6 h-6 text-[#ffcc33]" />
@@ -841,9 +882,8 @@ export function ProfilePage() {
                     {/* Date of Birth */}
                     {kycData.dob && (
                       <div
-                        className={`flex items-center gap-3 ${
-                          isRTL ? "flex-row-reverse" : ""
-                        }`}
+                        className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
                       >
                         <div className="w-12 h-12 bg-[#1D112A] border border-[#fface3]/30 rounded-xl flex items-center justify-center">
                           <Calendar className="w-6 h-6 text-[#fface3]" />
@@ -879,9 +919,8 @@ export function ProfilePage() {
                     {/* Nationality */}
                     {kycData.nationality && (
                       <div
-                        className={`flex items-center gap-3 ${
-                          isRTL ? "flex-row-reverse" : ""
-                        }`}
+                        className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
                       >
                         <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
                           <Globe className="w-6 h-6 text-[#0ea5e9]" />
@@ -897,12 +936,31 @@ export function ProfilePage() {
                       </div>
                     )}
 
+                    {/* City */}
+                    {kycData.city && (
+                      <div
+                        className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
+                      >
+                        <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
+                          <MapPin className="w-6 h-6 text-[#0ea5e9]" />
+                        </div>
+                        <div className={isRTL ? "text-right" : "text-left"}>
+                          <p className="text-xs text-[#808c99]">
+                            {t.kycCity}
+                          </p>
+                          <p className="text-[#ffffff]">
+                            {kycData.city}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Postal Code */}
                     {kycData.postal_code && (
                       <div
-                        className={`flex items-center gap-3 ${
-                          isRTL ? "flex-row-reverse" : ""
-                        }`}
+                        className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
                       >
                         <div className="w-12 h-12 bg-[#1D112A] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
                           <MapPin className="w-6 h-6 text-[#9375b5]" />
@@ -917,59 +975,132 @@ export function ProfilePage() {
                         </div>
                       </div>
                     )}
+
+                    {/* Street Address */}
+                    {kycData.street_address && (
+                      <div
+                        className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
+                      >
+                        <div className="w-12 h-12 bg-[#1D112A] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
+                          <MapPin className="w-6 h-6 text-[#9375b5]" />
+                        </div>
+                        <div className={isRTL ? "text-right" : "text-left"}>
+                          <p className="text-xs text-[#808c99]">
+                            {t.kycStreetAddress}
+                          </p>
+                          <p className="text-[#ffffff]">
+                            {kycData.street_address}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ID Type */}
+                    {kycData.id_type && (
+                      <div
+                        className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
+                      >
+                        <div className="w-12 h-12 bg-[#1D112A] border border-[#ffcc33]/30 rounded-xl flex items-center justify-center">
+                          <IdCard className="w-6 h-6 text-[#ffcc33]" />
+                        </div>
+                        <div className={isRTL ? "text-right" : "text-left"}>
+                          <p className="text-xs text-[#808c99]">
+                            {t.kycIdType}
+                          </p>
+                          <p className="text-[#ffffff]">
+                            {kycData.id_type}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Documents Status */}
                   {(kycData.gov_issued_id || kycData.proof_address) && (
                     <div className="mt-6 pt-6 border-t border-[#4e4e4e78]">
                       <h4
-                        className={`text-sm text-[#808c99] mb-4 ${
-                          isRTL ? "text-right" : "text-left"
-                        }`}
+                        className={`text-sm text-[#808c99] mb-4 ${isRTL ? "text-right" : "text-left"
+                          }`}
                       >
                         {t.documents}
                       </h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Government ID Documents */}
                         {kycData.gov_issued_id && (
-                          <div
-                            className={`flex items-center gap-3 p-4 bg-[#0f021c] rounded-lg ${
-                              isRTL ? "flex-row-reverse" : ""
-                            }`}
-                          >
-                            <div className="w-10 h-10 bg-[#1D112A] border border-[#45e3d3]/30 rounded-lg flex items-center justify-center">
-                              <FileText className="w-5 h-5 text-[#45e3d3]" />
-                            </div>
-                            <div className={isRTL ? "text-right" : "text-left"}>
-                              <p className="text-xs text-[#808c99]">
-                                {t.idDocument}
-                              </p>
-                              <p className="text-sm text-[#ffffff]">
-                                {typeof kycData.gov_issued_id === "string"
-                                  ? kycData.gov_issued_id
-                                  : t.verified}
-                              </p>
-                            </div>
+                          <div>
+                            <p className={`text-xs text-[#808c99] mb-2 ${isRTL ? "text-right" : "text-left"}`}>
+                              {t.idDocument}
+                            </p>
+                            {(() => {
+                              // Normalize to array
+                              const idUrls = Array.isArray(kycData.gov_issued_id)
+                                ? kycData.gov_issued_id
+                                : [kycData.gov_issued_id];
+                              const fullUrls = idUrls
+                                .filter((url): url is string => typeof url === "string" && !!url)
+                                .map((url) => getFullImageUrl(url))
+                                .filter((url): url is string => !!url);
+
+                              if (fullUrls.length > 0) {
+                                const previews = normalizeToPreviewItems(fullUrls, ["Front", "Back"]);
+                                return (
+                                  <ImagePreviewList
+                                    items={previews}
+                                    layout="row"
+                                    size="md"
+                                    showNames={true}
+                                    itemLabels={["Front", "Back"]}
+                                    isRTL={isRTL}
+                                  />
+                                );
+                              }
+                              return (
+                                <div className={`flex items-center gap-3 p-4 bg-[#0f021c] rounded-lg ${isRTL ? "flex-row-reverse" : ""}`}>
+                                  <div className="w-10 h-10 bg-[#1D112A] border border-[#45e3d3]/30 rounded-lg flex items-center justify-center">
+                                    <FileText className="w-5 h-5 text-[#45e3d3]" />
+                                  </div>
+                                  <div className={isRTL ? "text-right" : "text-left"}>
+                                    <p className="text-sm text-[#ffffff]">{t.verified}</p>
+                                  </div>
+                                </div>
+                              );
+                            })()}
                           </div>
                         )}
+                        {/* Proof of Address */}
                         {kycData.proof_address && (
-                          <div
-                            className={`flex items-center gap-3 p-4 bg-[#0f021c] rounded-lg ${
-                              isRTL ? "flex-row-reverse" : ""
-                            }`}
-                          >
-                            <div className="w-10 h-10 bg-[#1D112A] border border-[#45e3d3]/30 rounded-lg flex items-center justify-center">
-                              <FileText className="w-5 h-5 text-[#45e3d3]" />
-                            </div>
-                            <div className={isRTL ? "text-right" : "text-left"}>
-                              <p className="text-xs text-[#808c99]">
-                                {t.proofOfAddress}
-                              </p>
-                              <p className="text-sm text-[#ffffff]">
-                                {typeof kycData.proof_address === "string"
-                                  ? kycData.proof_address
-                                  : t.verified}
-                              </p>
-                            </div>
+                          <div>
+                            <p className={`text-xs text-[#808c99] mb-2 ${isRTL ? "text-right" : "text-left"}`}>
+                              {t.proofOfAddress}
+                            </p>
+                            {(() => {
+                              if (typeof kycData.proof_address === "string") {
+                                const fullUrl = getFullImageUrl(kycData.proof_address);
+                                if (fullUrl) {
+                                  const previews = normalizeToPreviewItems(fullUrl);
+                                  return (
+                                    <ImagePreviewList
+                                      items={previews}
+                                      size="md"
+                                      showNames={true}
+                                      isRTL={isRTL}
+                                    />
+                                  );
+                                }
+                              }
+                              return (
+                                <div className={`flex items-center gap-3 p-4 bg-[#0f021c] rounded-lg ${isRTL ? "flex-row-reverse" : ""}`}>
+                                  <div className="w-10 h-10 bg-[#1D112A] border border-[#45e3d3]/30 rounded-lg flex items-center justify-center">
+                                    <FileText className="w-5 h-5 text-[#45e3d3]" />
+                                  </div>
+                                  <div className={isRTL ? "text-right" : "text-left"}>
+                                    <p className="text-sm text-[#ffffff]">{t.verified}</p>
+                                  </div>
+                                </div>
+                              );
+                            })()}
                           </div>
                         )}
                       </div>
@@ -995,14 +1126,12 @@ export function ProfilePage() {
                   initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`flex items-center justify-between p-4 bg-[#0f021c] rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center justify-between p-4 bg-[#0f021c] rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${isRTL ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div
-                    className={`flex items-center gap-4 ${
-                      isRTL ? "flex-row-reverse" : ""
-                    }`}
+                    className={`flex items-center gap-4 ${isRTL ? "flex-row-reverse" : ""
+                      }`}
                   >
                     <div className="w-10 h-10 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-full flex items-center justify-center">
                       <Star className="w-5 h-5 text-[#0F021C]" />
@@ -1037,30 +1166,26 @@ export function ProfilePage() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ scale: 1.05 }}
-                    className={`p-6 rounded-xl border transition-all ${
-                      achievement.unlocked
-                        ? "bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 border-[#ffcc33]/30"
-                        : "bg-[#0f021c] border-[#4e4e4e78] opacity-60"
-                    }`}
+                    className={`p-6 rounded-xl border transition-all ${achievement.unlocked
+                      ? "bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 border-[#ffcc33]/30"
+                      : "bg-[#0f021c] border-[#4e4e4e78] opacity-60"
+                      }`}
                   >
                     <div
-                      className={`flex items-center gap-3 mb-3 ${
-                        isRTL ? "flex-row-reverse" : ""
-                      }`}
+                      className={`flex items-center gap-3 mb-3 ${isRTL ? "flex-row-reverse" : ""
+                        }`}
                     >
                       <div
-                        className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                          achievement.unlocked
-                            ? "bg-gradient-to-br from-[#ffcc33] to-[#45e3d3]"
-                            : "bg-[#4e4e4e78]"
-                        }`}
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center ${achievement.unlocked
+                          ? "bg-gradient-to-br from-[#ffcc33] to-[#45e3d3]"
+                          : "bg-[#4e4e4e78]"
+                          }`}
                       >
                         <Icon
-                          className={`w-6 h-6 ${
-                            achievement.unlocked
-                              ? "text-[#0F021C]"
-                              : "text-[#808c99]"
-                          }`}
+                          className={`w-6 h-6 ${achievement.unlocked
+                            ? "text-[#0F021C]"
+                            : "text-[#808c99]"
+                            }`}
                         />
                       </div>
                       {achievement.unlocked && (
@@ -1070,16 +1195,14 @@ export function ProfilePage() {
                       )}
                     </div>
                     <h3
-                      className={`text-[#ffffff] mb-1 ${
-                        isRTL ? "text-right" : "text-left"
-                      }`}
+                      className={`text-[#ffffff] mb-1 ${isRTL ? "text-right" : "text-left"
+                        }`}
                     >
                       {achievement.name}
                     </h3>
                     <p
-                      className={`text-sm text-[#808c99] ${
-                        isRTL ? "text-right" : "text-left"
-                      }`}
+                      className={`text-sm text-[#808c99] ${isRTL ? "text-right" : "text-left"
+                        }`}
                     >
                       {achievement.desc}
                     </p>
@@ -1101,23 +1224,20 @@ export function ProfilePage() {
               {/* Point Distribution */}
               <div className="bg-[#0f021c] border border-primary/20 rounded-xl p-6">
                 <h3
-                  className={`text-xl text-[#ffffff] mb-4 ${
-                    isRTL ? "text-right" : "text-left"
-                  }`}
+                  className={`text-xl text-[#ffffff] mb-4 ${isRTL ? "text-right" : "text-left"
+                    }`}
                 >
                   {language === "en" ? "Point Distribution" : "توزيع النقاط"}
                 </h3>
                 <div className="space-y-4">
                   <div>
                     <div
-                      className={`flex items-center justify-between mb-2 ${
-                        isRTL ? "flex-row-reverse" : ""
-                      }`}
+                      className={`flex items-center justify-between mb-2 ${isRTL ? "flex-row-reverse" : ""
+                        }`}
                     >
                       <div
-                        className={`flex items-center gap-2 ${
-                          isRTL ? "flex-row-reverse" : ""
-                        }`}
+                        className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
                       >
                         <Flame className="w-5 h-5 text-[#9375b5]" />
                         <span className="text-[#808c99]">
@@ -1137,14 +1257,12 @@ export function ProfilePage() {
                   </div>
                   <div>
                     <div
-                      className={`flex items-center justify-between mb-2 ${
-                        isRTL ? "flex-row-reverse" : ""
-                      }`}
+                      className={`flex items-center justify-between mb-2 ${isRTL ? "flex-row-reverse" : ""
+                        }`}
                     >
                       <div
-                        className={`flex items-center gap-2 ${
-                          isRTL ? "flex-row-reverse" : ""
-                        }`}
+                        className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
                       >
                         <Shield className="w-5 h-5 text-[#0ea5e9]" />
                         <span className="text-[#808c99]">
@@ -1168,17 +1286,15 @@ export function ProfilePage() {
               {/* Engagement Stats */}
               <div className="bg-[#0f021c] border border-primary/20 rounded-xl p-6">
                 <h3
-                  className={`text-xl text-[#ffffff] mb-4 ${
-                    isRTL ? "text-right" : "text-left"
-                  }`}
+                  className={`text-xl text-[#ffffff] mb-4 ${isRTL ? "text-right" : "text-left"
+                    }`}
                 >
                   {language === "en" ? "Engagement" : "التفاعل"}
                 </h3>
                 <div className="space-y-4">
                   <div
-                    className={`flex items-center justify-between ${
-                      isRTL ? "flex-row-reverse" : ""
-                    }`}
+                    className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""
+                      }`}
                   >
                     <span className="text-[#808c99]">{t.referrals}</span>
                     <span className="text-2xl text-[#ffcc33]">
@@ -1186,9 +1302,8 @@ export function ProfilePage() {
                     </span>
                   </div>
                   <div
-                    className={`flex items-center justify-between ${
-                      isRTL ? "flex-row-reverse" : ""
-                    }`}
+                    className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""
+                      }`}
                   >
                     <span className="text-[#808c99]">{t.artworksSaved}</span>
                     <span className="text-2xl text-[#45e3d3]">
@@ -1196,9 +1311,8 @@ export function ProfilePage() {
                     </span>
                   </div>
                   <div
-                    className={`flex items-center justify-between ${
-                      isRTL ? "flex-row-reverse" : ""
-                    }`}
+                    className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""
+                      }`}
                   >
                     <span className="text-[#808c99]">
                       {t.collectionsCreated}
@@ -1235,6 +1349,20 @@ export function ProfilePage() {
           location: userData.location,
           phone_number: userData.phone,
           persona: persona || storedUser?.role?.toLowerCase() || "collector",
+          price_range: userData.price_range,
+          preferred_commission_rate: userData.preferred_commission_rate,
+          shipping_preference: userData.shipping_preference,
+          studio_address: userData.studio_address,
+          education: userData.education,
+          award_artist: userData.award_artist,
+          artist_statement: userData.artist_statement,
+          organization_email: userData.organization_email,
+          organization_main_contact_name:
+            userData.organization_main_contact_name,
+          organization_name: userData.organization_name,
+          organization_type: userData.organization_type,
+          founded_year: userData.founded_year,
+          exhibition_count: userData.exhibition_count,
         }}
       />
 
@@ -1246,20 +1374,24 @@ export function ProfilePage() {
         initialData={
           kycData
             ? {
-                id_number: kycData.id_number,
-                dob: kycData.dob,
-                nationality: kycData.nationality,
-                city: kycData.city,
-                postal_code: kycData.postal_code,
-                gov_issued_id:
-                  typeof kycData.gov_issued_id === "string"
-                    ? kycData.gov_issued_id
-                    : kycData.gov_issued_id || null,
-                proof_address:
-                  typeof kycData.proof_address === "string"
-                    ? kycData.proof_address
-                    : kycData.proof_address || null,
-              }
+              id_number: kycData.id_number,
+              dob: kycData.dob,
+              nationality: kycData.nationality,
+              city: kycData.city,
+              postal_code: kycData.postal_code,
+              street_address: kycData.street_address,
+              id_type: kycData.id_type,
+              // Support both single string and array of strings for gov_issued_id
+              gov_issued_id: kycData.gov_issued_id
+                ? (Array.isArray(kycData.gov_issued_id)
+                  ? kycData.gov_issued_id
+                  : [kycData.gov_issued_id])
+                : null,
+              proof_address:
+                typeof kycData.proof_address === "string"
+                  ? kycData.proof_address
+                  : kycData.proof_address || null,
+            }
             : undefined
         }
       />

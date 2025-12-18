@@ -11,6 +11,8 @@ import {
   Trash2,
   Pencil,
   Upload,
+  Users,
+  Building2,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
@@ -67,6 +69,10 @@ const content = {
     profileRequired: "Please complete your profile to add artworks",
     loading: "Loading artworks...",
     loadError: "Unable to load artworks. Please try again.",
+    userType: "User Type",
+    noOfArtists: "Artists",
+    artist: "Artist",
+    gallery: "Gallery",
   },
   ar: {
     title: "إضافة عمل فني",
@@ -103,6 +109,10 @@ const content = {
     profileRequired: "يرجى إكمال ملفك الشخصي لإضافة أعمال فنية",
     loading: "جارٍ تحميل الأعمال الفنية...",
     loadError: "تعذر تحميل الأعمال الفنية. يرجى المحاولة مرة أخرى.",
+    userType: "نوع المستخدم",
+    noOfArtists: "فنانين",
+    artist: "فنان",
+    gallery: "معرض",
   },
 };
 
@@ -156,6 +166,8 @@ export function AddArtwork({
         medium: values.medium,
         dimensions: values.dimensions,
         image: values.imageFile as File,
+        user_type: values.user_type,
+        no_artist: values.no_artist || undefined,
       }).unwrap();
 
       toast.success(t.success);
@@ -181,6 +193,8 @@ export function AddArtwork({
         medium: values.medium,
         dimensions: values.dimensions,
         image: values.imageFile ?? undefined,
+        user_type: values.user_type,
+        no_artist: values.no_artist || undefined,
       }).unwrap();
 
       toast.success(
@@ -410,7 +424,7 @@ export function AddArtwork({
                     </div>
 
                     {/* Info Section */}
-                    <div className="p-3">
+                    <div className="p-3 space-y-2">
                       <h4
                         className={`text-sm text-[#ffffff] mb-2 truncate ${isRTL ? "text-right" : "text-left"
                           }`}
@@ -418,6 +432,7 @@ export function AddArtwork({
                         {artwork.title}
                       </h4>
 
+                      {/* First Row: Price and Medium */}
                       <div
                         className={`flex items-center justify-between gap-2 ${isRTL ? "flex-row-reverse" : ""
                           }`}
@@ -433,6 +448,46 @@ export function AddArtwork({
                           <Palette className="w-3 h-3 text-[#ffcc33] flex-shrink-0" />
                           <span className="text-xs text-[#ffcc33] truncate">{artwork.medium}</span>
                         </div>
+                      </div>
+
+                      {/* Second Row: User Type and Number of Artists (if Gallery) */}
+                      <div
+                        className={`flex items-center gap-2 flex-wrap ${isRTL ? "flex-row-reverse" : ""
+                          }`}
+                      >
+                        {/* User Type Badge */}
+                        <div className={`flex items-center gap-1 px-2 py-1 rounded-lg ${
+                          artwork.user_type === "Gallery"
+                            ? "bg-purple-500/10 border border-purple-500/30"
+                            : "bg-blue-500/10 border border-blue-500/30"
+                        }`}>
+                          {artwork.user_type === "Gallery" ? (
+                            <Building2 className={`w-3 h-3 ${
+                              artwork.user_type === "Gallery"
+                                ? "text-purple-400"
+                                : "text-blue-400"
+                            }`} />
+                          ) : (
+                            <Users className="w-3 h-3 text-blue-400" />
+                          )}
+                          <span className={`text-xs ${
+                            artwork.user_type === "Gallery"
+                              ? "text-purple-400"
+                              : "text-blue-400"
+                          }`}>
+                            {artwork.user_type === "Gallery" ? t.gallery : t.artist}
+                          </span>
+                        </div>
+
+                        {/* Number of Artists (only if Gallery) */}
+                        {artwork.user_type === "Gallery" && artwork.no_artist && (
+                          <div className="flex items-center gap-1 px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                            <Users className="w-3 h-3 text-purple-400" />
+                            <span className="text-xs text-purple-400">
+                              {artwork.no_artist} {t.noOfArtists}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -460,6 +515,8 @@ export function AddArtwork({
               price: selectedArtwork.price,
               medium: selectedArtwork.medium,
               dimensions: selectedArtwork.dimensions,
+              user_type: selectedArtwork.user_type || "Artist",
+              no_artist: selectedArtwork.no_artist || "",
             }
             : undefined
         }

@@ -61,7 +61,7 @@ export function PrivateRoute({ children }: PrivateRouteProps) {
     user?.role?.toLowerCase?.() === "ambassador";
   const isPendingVerification = isAmbassador && user?.is_verify === false;
 
-  if (isPendingVerification) {
+  if (!isPendingVerification) {
     return <AmbassadorVerificationModal />;
   }
 

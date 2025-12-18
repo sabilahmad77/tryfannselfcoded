@@ -5,6 +5,7 @@ import {
   InputField,
   SelectField,
 } from "@/components/ui/custom-form-elements";
+import { ImagePreviewList } from "@/components/ui/image-preview-list";
 import { Label } from "@/components/ui/label";
 import {
   useKycVerificationMutation,
@@ -17,6 +18,12 @@ import {
 } from "@/store/onboardingSlice";
 import type { RootState } from "@/store/store";
 import { extractErrorMessage } from "@/utils/errorMessages";
+import {
+  type PreviewItem,
+  normalizeToPreviewItems,
+  cleanupPreviewUrls,
+  getFullImageUrl,
+} from "@/utils/filePreviewHelpers";
 import { setUser, type UserProfileData } from "@/store/authSlice";
 import {
   AlertCircle,
@@ -52,7 +59,9 @@ interface KYCFormData {
   postal_code: string;
   street_address: string;
   id_type: string;
-  gov_issued_id: File | null;
+  gov_issued_id: File | File[] | null; // For form state only (legacy)
+  gov_issued_id_front: File | null; // Front of ID
+  gov_issued_id_back: File | null; // Back of ID
   proof_address: File | null;
 }
 
@@ -67,7 +76,12 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
   // Load initial values from Redux
-  const savedData = (data.kyc || {}) as Partial<KYCFormData>;
+  const savedData = (data.kyc || {}) as Partial<
+    KYCFormData & {
+      gov_issued_id?: File | File[] | string | string[] | null;
+      acceptedCompliance?: boolean;
+    }
+  >;
   const initialValues: KYCFormData = {
     id_number: (savedData.id_number as string) || "",
     dob: (savedData.dob as string) || "",
@@ -76,19 +90,23 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
     postal_code: (savedData.postal_code as string) || "",
     street_address: (savedData.street_address as string) || "",
     id_type: (savedData.id_type as string) || "",
-    gov_issued_id: (savedData.gov_issued_id as File | null) || null,
-    proof_address: (savedData.proof_address as File | null) || null,
+    gov_issued_id: null,
+    gov_issued_id_front: null,
+    gov_issued_id_back: null,
+    proof_address: null,
   };
 
-  const [idDocument, setIdDocument] = useState<File | null>(
-    initialValues.gov_issued_id
+  const [idDocumentFront, setIdDocumentFront] = useState<File | null>(null);
+  const [idDocumentBack, setIdDocumentBack] = useState<File | null>(null);
+  const [proofOfAddress, setProofOfAddress] = useState<File | null>(null);
+  const [idDocumentPreviews, setIdDocumentPreviews] = useState<PreviewItem[]>(
+    []
   );
-  const [proofOfAddress, setProofOfAddress] = useState<File | null>(
-    initialValues.proof_address
-  );
+  const [proofOfAddressPreviews, setProofOfAddressPreviews] = useState<
+    PreviewItem[]
+  >([]);
   // Restore compliance checkbox state from saved data
-  const savedCompliance = (savedData as { acceptedCompliance?: boolean })
-    .acceptedCompliance;
+  const savedCompliance = savedData.acceptedCompliance;
   const [acceptedCompliance, setAcceptedCompliance] = useState(
     savedCompliance || false
   );
@@ -113,58 +131,106 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
   useEffect(() => {
     const savedIdDoc = savedData.gov_issued_id;
     const savedProof = savedData.proof_address;
-    const savedComplianceState = (savedData as { acceptedCompliance?: boolean })
-      .acceptedCompliance;
+    const savedComplianceState = savedData.acceptedCompliance;
 
     // Restore compliance checkbox
     if (savedComplianceState !== undefined) {
       setAcceptedCompliance(savedComplianceState);
     }
 
-    // Restore ID document
-    // Note: File objects can't be serialized in Redux, so we store file names as strings
-    // If we have a File object, use it; otherwise, if we have a file name string,
-    // we can't recreate the File object, so the user will need to re-upload
+    // Handle ID documents - support front and back separately
+    // API can return: single string, array of strings, or separate front/back fields
     if (savedIdDoc) {
-      if (savedIdDoc instanceof File) {
-        // If it's a File object (from current session), use it
-        setIdDocument(savedIdDoc);
-        setValue("gov_issued_id", savedIdDoc);
-      } else if (typeof savedIdDoc === "string" && savedIdDoc) {
-        // If it's a file name string (from Redux), we can't recreate the File object
-        // The file will need to be re-uploaded, but we know a file was previously uploaded
-        setIdDocument(null);
-        setValue("gov_issued_id", null);
+      // Normalize to array for handling
+      const idDocs = Array.isArray(savedIdDoc)
+        ? savedIdDoc
+        : [savedIdDoc];
+
+      const fileDocs: File[] = [];
+      const urlDocs: string[] = [];
+
+      idDocs.forEach((doc) => {
+        if (doc instanceof File) {
+          fileDocs.push(doc);
+        } else if (typeof doc === "string" && doc) {
+          urlDocs.push(doc);
+        }
+      });
+
+      if (fileDocs.length > 0) {
+        // Map files: first = front, second = back
+        setIdDocumentFront(fileDocs[0] || null);
+        setIdDocumentBack(fileDocs[1] || null);
+        setValue("gov_issued_id_front", fileDocs[0] || null);
+        setValue("gov_issued_id_back", fileDocs[1] || null);
+        const previews = normalizeToPreviewItems(fileDocs, ["Front", "Back"]);
+        setIdDocumentPreviews(previews);
+      } else if (urlDocs.length > 0) {
+        // Map URLs: first = front, second = back
+        setIdDocumentFront(null);
+        setIdDocumentBack(null);
+        setValue("gov_issued_id_front", null);
+        setValue("gov_issued_id_back", null);
+        const fullUrls = urlDocs
+          .map((url) => getFullImageUrl(url))
+          .filter((url): url is string => !!url);
+        const previews = normalizeToPreviewItems(fullUrls, ["Front", "Back"]);
+        setIdDocumentPreviews(previews);
       } else {
-        setIdDocument(null);
-        setValue("gov_issued_id", null);
+        setIdDocumentFront(null);
+        setIdDocumentBack(null);
+        setIdDocumentPreviews([]);
+        setValue("gov_issued_id_front", null);
+        setValue("gov_issued_id_back", null);
       }
     } else {
-      setIdDocument(null);
-      setValue("gov_issued_id", null);
+      setIdDocumentFront(null);
+      setIdDocumentBack(null);
+      setIdDocumentPreviews([]);
+      setValue("gov_issued_id_front", null);
+      setValue("gov_issued_id_back", null);
     }
 
-    // Restore proof of address
+    // Handle proof of address - single file
     if (savedProof) {
       if (savedProof instanceof File) {
-        // If it's a File object (from current session), use it
         setProofOfAddress(savedProof);
         setValue("proof_address", savedProof);
-      } else if (typeof savedProof === "string" && savedProof) {
-        // If it's a file name string (from Redux), we can't recreate the File object
-        // The file will need to be re-uploaded, but we know a file was previously uploaded
-        setProofOfAddress(null);
-        setValue("proof_address", null);
-      } else {
+        const previews = normalizeToPreviewItems(savedProof);
+        setProofOfAddressPreviews(previews);
+      } else if (typeof savedProof === "string") {
+        const fullUrl = getFullImageUrl(savedProof);
+        if (fullUrl) {
+          const previews = normalizeToPreviewItems(fullUrl);
+          setProofOfAddressPreviews(previews);
+        } else {
+          setProofOfAddressPreviews([]);
+        }
         setProofOfAddress(null);
         setValue("proof_address", null);
       }
     } else {
       setProofOfAddress(null);
+      setProofOfAddressPreviews([]);
       setValue("proof_address", null);
     }
 
     // Reset form with saved values
+    // Extract File objects for form reset (skip string URLs as they can't be used directly)
+    let frontFile: File | null = null;
+    let backFile: File | null = null;
+    
+    if (savedIdDoc instanceof File) {
+      frontFile = savedIdDoc;
+    } else if (Array.isArray(savedIdDoc)) {
+      if (savedIdDoc[0] instanceof File) {
+        frontFile = savedIdDoc[0];
+      }
+      if (savedIdDoc[1] instanceof File) {
+        backFile = savedIdDoc[1];
+      }
+    }
+    
     reset({
       id_number: (savedData.id_number as string) || "",
       dob: (savedData.dob as string) || "",
@@ -173,18 +239,31 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       postal_code: (savedData.postal_code as string) || "",
       street_address: (savedData.street_address as string) || "",
       id_type: (savedData.id_type as string) || "",
-      gov_issued_id: savedIdDoc instanceof File ? savedIdDoc : null,
+      gov_issued_id: null,
+      gov_issued_id_front: frontFile,
+      gov_issued_id_back: backFile,
       proof_address: savedProof instanceof File ? savedProof : null,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.kyc]);
+
+  // Cleanup preview URLs on unmount
+  useEffect(() => {
+    return () => {
+      cleanupPreviewUrls(idDocumentPreviews);
+      cleanupPreviewUrls(proofOfAddressPreviews);
+    };
+  }, [idDocumentPreviews, proofOfAddressPreviews]);
 
   // Compare current form values with submitted values
   const hasChanges = () => {
     if (!isStepSubmitted || !submittedData) return true;
 
     const submitted = submittedData as Partial<
-      KYCFormData & { acceptedCompliance?: boolean }
+      KYCFormData & {
+        acceptedCompliance?: boolean;
+        gov_issued_id?: File | File[] | string | string[] | null;
+      }
     >;
 
     // Compare text fields
@@ -204,12 +283,34 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         ((submitted.id_type as string) || "");
 
     // File comparison - check if both are null or both have files with same name
-    const idDocMatch =
-      (!idDocument && !submitted.gov_issued_id) ||
-      (idDocument &&
-        submitted.gov_issued_id &&
-        (idDocument.name === (submitted.gov_issued_id as unknown as string) ||
-          idDocument.name === (submitted.gov_issued_id as unknown as string)));
+    const submittedIdDocs = submitted.gov_issued_id;
+    const submittedIdDocsArray = Array.isArray(submittedIdDocs)
+      ? submittedIdDocs
+      : submittedIdDocs
+        ? [submittedIdDocs]
+        : [];
+
+    const submittedFrontName =
+      submittedIdDocsArray[0] instanceof File
+        ? submittedIdDocsArray[0].name
+        : typeof submittedIdDocsArray[0] === "string"
+          ? submittedIdDocsArray[0]
+          : "";
+    const submittedBackName =
+      submittedIdDocsArray[1] instanceof File
+        ? submittedIdDocsArray[1].name
+        : typeof submittedIdDocsArray[1] === "string"
+          ? submittedIdDocsArray[1]
+          : "";
+
+    // Check if front and back documents match (both null or both have same names)
+    const frontMatch =
+      (!idDocumentFront && !submittedFrontName) ||
+      (idDocumentFront?.name === submittedFrontName && submittedFrontName !== "");
+    const backMatch =
+      (!idDocumentBack && !submittedBackName) ||
+      (idDocumentBack?.name === submittedBackName && submittedBackName !== "");
+    const idDocMatch = frontMatch && backMatch;
 
     const proofMatch =
       (!proofOfAddress && !submitted.proof_address) ||
@@ -401,6 +502,10 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
   const onSubmit = async (formData: KYCFormData) => {
     // If step was already submitted and no changes, just proceed without API call
     if (shouldShowNext) {
+      const savedIdDocs: string[] = [];
+      if (idDocumentFront?.name) savedIdDocs.push(idDocumentFront.name);
+      if (idDocumentBack?.name) savedIdDocs.push(idDocumentBack.name);
+      
       onNext({
         id_number: formData.id_number,
         dob: formData.dob,
@@ -409,7 +514,12 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         postal_code: formData.postal_code,
         street_address: formData.street_address,
         id_type: formData.id_type,
-        gov_issued_id: idDocument?.name || "",
+        gov_issued_id:
+          savedIdDocs.length === 1
+            ? savedIdDocs[0]
+            : savedIdDocs.length > 1
+              ? savedIdDocs
+              : "",
         proof_address: proofOfAddress?.name || "",
         acceptedCompliance: acceptedCompliance, // Include compliance checkbox state
       });
@@ -436,9 +546,12 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         id_type: formData.id_type.trim(),
       };
 
-      // Only include document fields if files are attached
-      if (idDocument) {
-        kycData.gov_issued_id = idDocument;
+      // Handle ID documents - send front and back separately
+      if (idDocumentFront) {
+        kycData.gov_issued_id_front = idDocumentFront;
+      }
+      if (idDocumentBack) {
+        kycData.gov_issued_id_back = idDocumentBack;
       }
       if (proofOfAddress) {
         kycData.proof_address = proofOfAddress;
@@ -527,6 +640,10 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         }
 
         // Mark step as submitted in Redux
+        const savedIdDocs: string[] = [];
+        if (idDocumentFront?.name) savedIdDocs.push(idDocumentFront.name);
+        if (idDocumentBack?.name) savedIdDocs.push(idDocumentBack.name);
+
         const stepData = {
           id_number: formData.id_number,
           dob: formData.dob,
@@ -535,7 +652,12 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
           postal_code: formData.postal_code,
           street_address: formData.street_address,
           id_type: formData.id_type,
-          gov_issued_id: idDocument?.name || "",
+          gov_issued_id:
+            savedIdDocs.length === 1
+              ? savedIdDocs[0]
+              : savedIdDocs.length > 1
+                ? savedIdDocs
+                : "",
           proof_address: proofOfAddress?.name || "",
           acceptedCompliance: acceptedCompliance, // Save compliance checkbox state
         };
@@ -770,24 +892,124 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
               {content.documents.title}
             </h3>
 
-            {/* ID Document */}
+            {/* ID Document - Multiple files (Front & Back) */}
             <div className="p-6 rounded-xl glass border border-white/10">
               <FileUploadField
                 label={content.documents.idDocument.label}
                 helperText={content.documents.idDocument.desc}
                 accept=".pdf,.png,.jpg,.jpeg"
                 maxSize={10 * 1024 * 1024} // 10MB
-                value={idDocument}
-                onFileChange={(file) => {
-                  setIdDocument(file);
-                  setValue("gov_issued_id", file || null);
+                multiple={true}
+                maxFiles={2}
+                files={[idDocumentFront, idDocumentBack].filter(
+                  (f): f is File => f !== null
+                )}
+                onFilesChange={(files) => {
+                  // Cleanup old preview URLs
+                  cleanupPreviewUrls(idDocumentPreviews);
+
+                  // Map files: first = front, second = back
+                  const front = files[0] || null;
+                  const back = files[1] || null;
+
+                  setIdDocumentFront(front);
+                  setIdDocumentBack(back);
+                  setValue("gov_issued_id_front", front);
+                  setValue("gov_issued_id_back", back);
+
+                  // Create preview items for new files
+                  if (files.length > 0) {
+                    const previews = normalizeToPreviewItems(files, [
+                      "Front",
+                      "Back",
+                    ]);
+                    setIdDocumentPreviews(previews);
+                  } else {
+                    setIdDocumentPreviews([]);
+                  }
                 }}
+                onPreviewChange={(items) => {
+                  setIdDocumentPreviews(items);
+                }}
+                showPreview={false}
                 isRTL={isRTL}
                 formatText={content.documents.formats}
                 buttonText={content.documents.uploadButton}
                 buttonClassName="border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
                 labelClassName="text-white/80 text-sm"
               />
+              {/* Show current document previews if exist and no new files selected */}
+              {idDocumentPreviews.length > 0 &&
+                !idDocumentFront &&
+                !idDocumentBack && (
+                  <div className="mt-4 space-y-2">
+                    <p className="text-xs text-white/60">
+                      {language === "en"
+                        ? "Current documents"
+                        : "المستندات الحالية"}
+                    </p>
+                    <ImagePreviewList
+                      items={idDocumentPreviews}
+                      onRemove={(item) => {
+                        // Remove from previews (read-only for existing documents)
+                        const newPreviews = idDocumentPreviews.filter(
+                          (p) => p.id !== item.id
+                        );
+                        setIdDocumentPreviews(newPreviews);
+                        cleanupPreviewUrls([item]);
+                      }}
+                      size="md"
+                      gridCols={2}
+                      showNames={true}
+                      itemLabels={["Front", "Back"]}
+                      isRTL={isRTL}
+                    />
+                    <p className="text-xs text-white/40">
+                      {language === "en"
+                        ? "Upload new documents to replace"
+                        : "قم بتحميل مستندات جديدة للاستبدال"}
+                    </p>
+                  </div>
+                )}
+              {/* Show previews for newly selected files */}
+              {idDocumentPreviews.length > 0 &&
+                (idDocumentFront || idDocumentBack) && (
+                  <div className="mt-4 space-y-2">
+                    <p className="text-xs text-white/60">
+                      {language === "en"
+                        ? "Selected documents"
+                        : "المستندات المحددة"}
+                    </p>
+                    <ImagePreviewList
+                      items={idDocumentPreviews}
+                      onRemove={(item) => {
+                        // Find and remove the file
+                        const index = idDocumentPreviews.findIndex(
+                          (p) => p.id === item.id
+                        );
+                        if (index === 0) {
+                          // Remove front
+                          setIdDocumentFront(null);
+                          setValue("gov_issued_id_front", null);
+                        } else if (index === 1) {
+                          // Remove back
+                          setIdDocumentBack(null);
+                          setValue("gov_issued_id_back", null);
+                        }
+                        const newPreviews = idDocumentPreviews.filter(
+                          (p) => p.id !== item.id
+                        );
+                        setIdDocumentPreviews(newPreviews);
+                        cleanupPreviewUrls([item]);
+                      }}
+                      size="md"
+                      gridCols={2}
+                      showNames={true}
+                      itemLabels={["Front", "Back"]}
+                      isRTL={isRTL}
+                    />
+                  </div>
+                )}
             </div>
 
             {/* Proof of Address */}
@@ -799,8 +1021,22 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 maxSize={10 * 1024 * 1024} // 10MB
                 value={proofOfAddress}
                 onFileChange={(file) => {
+                  // Cleanup old preview URLs
+                  cleanupPreviewUrls(proofOfAddressPreviews);
+
                   setProofOfAddress(file);
                   setValue("proof_address", file || null);
+
+                  // Create preview items for new file
+                  if (file) {
+                    const previews = normalizeToPreviewItems(file);
+                    setProofOfAddressPreviews(previews);
+                  } else {
+                    setProofOfAddressPreviews([]);
+                  }
+                }}
+                onPreviewChange={(items) => {
+                  setProofOfAddressPreviews(items);
                 }}
                 isRTL={isRTL}
                 formatText={content.documents.formats}
@@ -808,6 +1044,25 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 buttonClassName="border-amber-500/30 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white"
                 labelClassName="text-white/80 text-sm"
               />
+              {/* Show current document preview if exists and no new file selected */}
+              {proofOfAddressPreviews.length > 0 && !proofOfAddress && (
+                <div className="mt-4 space-y-2">
+                  <p className="text-xs text-white/60">
+                    {language === "en" ? "Current document" : "المستند الحالي"}
+                  </p>
+                  <ImagePreviewList
+                    items={proofOfAddressPreviews}
+                    size="md"
+                    showNames={true}
+                    isRTL={isRTL}
+                  />
+                  <p className="text-xs text-white/40">
+                    {language === "en"
+                      ? "Upload new document to replace"
+                      : "قم بتحميل مستند جديد للاستبدال"}
+                  </p>
+                </div>
+              )}
             </div>
           </motion.div>
 

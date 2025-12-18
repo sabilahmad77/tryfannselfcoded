@@ -1,5 +1,6 @@
 import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
+import { useGetDashboardStatsQuery } from "@/services/api/dashboardApi";
 import type { RootState } from "@/store/store";
 import { motion } from "motion/react";
 import { useSelector } from "react-redux";
@@ -31,10 +32,13 @@ export function CollectorDashboard() {
   const navigate = useNavigate();
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
-  // Get profile completion status from Redux
-  const profileCompleted = useSelector(
-    (state: RootState) => state.auth.profileCompleted
-  );
+  // Fetch dashboard stats to get profile_complete from API
+  const { data: dashboardStatsData } = useGetDashboardStatsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  // Get profile_complete from API response
+  const profileCompleted = dashboardStatsData?.data?.profile_complete ?? false;
 
   // Handler to navigate to profile completion
   const handleCompleteProfile = () => {
@@ -59,7 +63,7 @@ export function CollectorDashboard() {
 
       {/* Complete Profile Section */}
       <CompleteProfile
-        profileCompleted={profileCompleted ?? false}
+        profileCompleted={profileCompleted}
         onCompleteProfile={handleCompleteProfile}
       />
 

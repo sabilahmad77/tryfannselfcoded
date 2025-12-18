@@ -67,6 +67,9 @@ interface PersonaDetailsFormData {
   organization_email: string;
   organization_main_contact_name: string;
   organization_name: string;
+  organization_type: string;
+  founded_year: string;
+  exhibition_count: string;
 }
 
 export function PersonaDetailsStep({
@@ -137,6 +140,9 @@ export function PersonaDetailsStep({
     organization_main_contact_name:
       (savedData.organization_main_contact_name as string) || "",
     organization_name: (savedData.organization_name as string) || "",
+    organization_type: (savedData.organization_type as string) || "",
+    founded_year: (savedData.founded_year as string) || "",
+    exhibition_count: (savedData.exhibition_count as string) || "",
   };
 
   const {
@@ -258,7 +264,13 @@ export function PersonaDetailsStep({
       (currentValues.organization_main_contact_name?.trim() || "") ===
       ((submitted.organization_main_contact_name as string) || "") &&
       (currentValues.organization_name?.trim() || "") ===
-      ((submitted.organization_name as string) || "");
+      ((submitted.organization_name as string) || "") &&
+      (currentValues.organization_type?.trim() || "") ===
+      ((submitted.organization_type as string) || "") &&
+      (currentValues.founded_year?.trim() || "") ===
+      ((submitted.founded_year as string) || "") &&
+      (currentValues.exhibition_count?.trim() || "") ===
+      ((submitted.exhibition_count as string) || "");
 
     // Profile image comparison - check if both are null or both are files
     const imageMatch =
@@ -317,8 +329,9 @@ export function PersonaDetailsStep({
         websitePlaceholder: "https://yourwebsite.com",
         instagram: "Instagram Handle",
         instagramPlaceholder: "@yourusername",
-        location: "Location",
-        locationPlaceholder: "City, Country",
+        // Used as Country for non-gallery personas (artists, collectors, etc.)
+        location: "Country",
+        locationPlaceholder: "Country",
         phone: "Phone Number",
         phonePlaceholder: "+971 50 123 4567",
         uploadPhoto: "Upload Profile Photo",
@@ -371,8 +384,9 @@ export function PersonaDetailsStep({
         websitePlaceholder: "https://yourwebsite.com",
         instagram: "حساب إنستغرام",
         instagramPlaceholder: "@yourusername",
-        location: "الموقع",
-        locationPlaceholder: "المدينة، الدولة",
+        // Used as Country for non-gallery personas (artists، الجامعين، إلخ)
+        location: "الدولة",
+        locationPlaceholder: "الدولة",
         phone: "رقم الهاتف",
         phonePlaceholder: "+971 50 123 4567",
         uploadPhoto: "تحميل صورة الملف الشخصي",
@@ -450,6 +464,7 @@ export function PersonaDetailsStep({
 
   const Icon = icons[data.persona as keyof typeof icons] || Palette;
   const isGallery = data.persona === "gallery";
+  const isCollector = data.persona === "collector";
 
   const onSubmit = async (formData: PersonaDetailsFormData) => {
     // If step was already submitted and no changes, just proceed without API call
@@ -472,10 +487,11 @@ export function PersonaDetailsStep({
         // Shared extra fields
         location: formData.location?.trim() || undefined,
         phone_number: formData.phone_number?.trim() || undefined,
-        // Artist-specific
-        price_range: isArtist
-          ? formData.price_range?.trim() || undefined
-          : undefined,
+        // Artist & Collector: use price_range for both (artists = price, collectors = budget)
+        price_range:
+          isArtist || isCollector
+            ? formData.price_range?.trim() || undefined
+            : undefined,
         preferred_commission_rate: isArtist
           ? formData.preferred_commission_rate?.trim() || undefined
           : undefined,
@@ -503,6 +519,15 @@ export function PersonaDetailsStep({
           : undefined,
         organization_name: isGallery
           ? formData.organization_name?.trim() || undefined
+          : undefined,
+        organization_type: isGallery
+          ? formData.organization_type?.trim() || undefined
+          : undefined,
+        founded_year: isGallery
+          ? formData.founded_year?.trim() || undefined
+          : undefined,
+        exhibition_count: isGallery && formData.exhibition_count?.trim()
+          ? Number(formData.exhibition_count.trim())
           : undefined,
       };
 
@@ -584,12 +609,17 @@ export function PersonaDetailsStep({
                   formData.location?.trim() || userData.location || null,
                 phone_number:
                   formData.phone_number?.trim() || userData.phone_number || null,
-                // Artist-specific fields (only if persona is artist)
+                // Artist & Collector: use price_range for both (artists = price, collectors = budget)
+                ...(isArtist || isCollector
+                  ? {
+                    price_range:
+                      formData.price_range?.trim() ||
+                      userData.price_range ||
+                      null,
+                  }
+                  : {}),
+                // Artist-specific extra fields (only if persona is artist)
                 ...(isArtist && {
-                  price_range:
-                    formData.price_range?.trim() ||
-                    userData.price_range ||
-                    null,
                   preferred_commission_rate:
                     formData.preferred_commission_rate?.trim() ||
                     userData.preferred_commission_rate ||
@@ -625,6 +655,17 @@ export function PersonaDetailsStep({
                     formData.organization_name?.trim() ||
                     userData.organization_name ||
                     null,
+                  organization_type:
+                    formData.organization_type?.trim() ||
+                    userData.organization_type ||
+                    null,
+                  founded_year:
+                    formData.founded_year?.trim() ||
+                    userData.founded_year ||
+                    null,
+                  exhibition_count: formData.exhibition_count?.trim()
+                    ? Number(formData.exhibition_count.trim())
+                    : userData.exhibition_count || null,
                 }),
                 // profile_image is already included from userData spread above
               };
@@ -940,8 +981,8 @@ export function PersonaDetailsStep({
             </motion.div>
           </div>
 
-          {/* Artist extra fields */}
-          {isArtist && (
+          {/* Artist & Collector extra fields (price/budget range etc.) */}
+          {(isArtist || isCollector) && (
             <div className="space-y-6 mt-2">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -950,11 +991,23 @@ export function PersonaDetailsStep({
               >
                 <div className="grid md:grid-cols-2 gap-6">
                   <SelectField
-                    label={language === "en" ? "Price Range" : "نطاق الأسعار"}
+                    label={
+                      language === "en"
+                        ? isCollector
+                          ? "Budget Range"
+                          : "Price Range"
+                        : isCollector
+                          ? "نطاق الميزانية"
+                          : "نطاق الأسعار"
+                    }
                     placeholder={
                       language === "en"
-                        ? "Select price range"
-                        : "اختر نطاق الأسعار"
+                        ? isCollector
+                          ? "Select your typical budget range"
+                          : "Select price range"
+                        : isCollector
+                          ? "اختر نطاق ميزانيتك المعتاد"
+                          : "اختر نطاق الأسعار"
                     }
                     options={priceRangeOptions}
                     value={watch("price_range")}
@@ -964,104 +1017,122 @@ export function PersonaDetailsStep({
                     isRTL={isRTL}
                     error={errors.price_range?.message}
                   />
-                  <InputField
-                    {...register("preferred_commission_rate")}
-                    label={
-                      language === "en"
-                        ? "Preferred Commission Rate (%)"
-                        : "نسبة العمولة المفضلة (%)"
-                    }
-                    type="number"
-                    placeholder={language === "en" ? "10" : "10"}
-                    isRTL={isRTL}
-                    error={errors.preferred_commission_rate?.message}
-                  />
+                  {isArtist && (
+                    <InputField
+                      {...register("preferred_commission_rate")}
+                      label={
+                        language === "en"
+                          ? "Preferred Commission Rate (%)"
+                          : "نسبة العمولة المفضلة (%)"
+                      }
+                      type="number"
+                      placeholder={language === "en" ? "10" : "10"}
+                      isRTL={isRTL}
+                      error={errors.preferred_commission_rate?.message}
+                    />
+                  )}
                 </div>
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-              >
-                <div className="grid md:grid-cols-2 gap-6">
-                  <InputField
-                    {...register("shipping_preference")}
-                    label={
-                      language === "en"
-                        ? "Shipping Preference"
-                        : "تفضيلات الشحن"
-                    }
-                    placeholder={
-                      language === "en"
-                        ? "e.g. Local, International, Both"
-                        : "مثال: محلي، دولي، كلاهما"
-                    }
-                    isRTL={isRTL}
-                    error={errors.shipping_preference?.message}
-                  />
-                  <InputField
-                    {...register("studio_address")}
-                    label={
-                      language === "en"
-                        ? "Studio Address"
-                        : "عنوان الاستوديو"
-                    }
-                    placeholder={language === "en" ? "Studio address" : "عنوان الاستوديو"}
-                    isRTL={isRTL}
-                    error={errors.studio_address?.message}
-                  />
-                </div>
-              </motion.div>
+              {isArtist && (
+                <>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 }}
+                  >
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <InputField
+                        {...register("shipping_preference")}
+                        label={
+                          language === "en"
+                            ? "Shipping Preference"
+                            : "تفضيلات الشحن"
+                        }
+                        placeholder={
+                          language === "en"
+                            ? "e.g. Local, International, Both"
+                            : "مثال: محلي، دولي، كلاهما"
+                        }
+                        isRTL={isRTL}
+                        error={errors.shipping_preference?.message}
+                      />
+                      <InputField
+                        {...register("studio_address")}
+                        label={
+                          language === "en"
+                            ? "Studio Address"
+                            : "عنوان الاستوديو"
+                        }
+                        placeholder={
+                          language === "en"
+                            ? "Studio address"
+                            : "عنوان الاستوديو"
+                        }
+                        isRTL={isRTL}
+                        error={errors.studio_address?.message}
+                      />
+                    </div>
+                  </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.85 }}
-              >
-                <div className="grid md:grid-cols-2 gap-6">
-                  <InputField
-                    {...register("education")}
-                    label={language === "en" ? "Education" : "التعليم"}
-                    placeholder={
-                      language === "en" ? "Art education or background" : "التعليم أو الخلفية الفنية"
-                    }
-                    isRTL={isRTL}
-                    error={errors.education?.message}
-                  />
-                  <InputField
-                    {...register("award_artist")}
-                    label={language === "en" ? "Awards / Honors" : "الجوائز / التكريم"}
-                    placeholder={
-                      language === "en" ? "Key awards or recognitions" : "الجوائز أو التكريمات البارزة"
-                    }
-                    isRTL={isRTL}
-                    error={errors.award_artist?.message}
-                  />
-                </div>
-              </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.85 }}
+                  >
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <InputField
+                        {...register("education")}
+                        label={language === "en" ? "Education" : "التعليم"}
+                        placeholder={
+                          language === "en"
+                            ? "Art education or background"
+                            : "التعليم أو الخلفية الفنية"
+                        }
+                        isRTL={isRTL}
+                        error={errors.education?.message}
+                      />
+                      <InputField
+                        {...register("award_artist")}
+                        label={
+                          language === "en"
+                            ? "Awards / Honors"
+                            : "الجوائز / التكريم"
+                        }
+                        placeholder={
+                          language === "en"
+                            ? "Key awards or recognitions"
+                            : "الجوائز أو التكريمات البارزة"
+                        }
+                        isRTL={isRTL}
+                        error={errors.award_artist?.message}
+                      />
+                    </div>
+                  </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 }}
-              >
-                <TextareaField
-                  {...register("artist_statement")}
-                  label={
-                    language === "en"
-                      ? "Artist Statement"
-                      : "بيان الفنان"
-                  }
-                  placeholder={
-                    language === "en"
-                      ? "Share your artistic philosophy or statement..."
-                      : "شارك فلسفتك أو بيانك الفني..."
-                  }
-                  isRTL={isRTL}
-                  error={errors.artist_statement?.message}
-                />
-              </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 }}
+                  >
+                    <TextareaField
+                      {...register("artist_statement")}
+                      label={
+                        language === "en"
+                          ? "Artist Statement"
+                          : "بيان الفنان"
+                      }
+                      placeholder={
+                        language === "en"
+                          ? "Share your artistic philosophy or statement..."
+                          : "شارك فلسفتك أو بيانك الفني..."
+                      }
+                      isRTL={isRTL}
+                      error={errors.artist_statement?.message}
+                    />
+                  </motion.div>
+                </>
+              )}
             </div>
           )}
 
@@ -1082,11 +1153,12 @@ export function PersonaDetailsStep({
                         : "اسم المؤسسة"
                     }
                     placeholder={
-                      language === "en" ? "Gallery organization name" : "اسم مؤسسة المعرض"
+                      language === "en"
+                        ? "Gallery or organization name"
+                        : "اسم المعرض أو المؤسسة"
                     }
                     isRTL={isRTL}
                     error={errors.organization_name?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
                   />
                   <InputField
                     {...register("organization_email")}
@@ -1099,7 +1171,6 @@ export function PersonaDetailsStep({
                     placeholder="org@example.com"
                     isRTL={isRTL}
                     error={errors.organization_email?.message}
-                    inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
                   />
                 </div>
               </motion.div>
@@ -1109,22 +1180,127 @@ export function PersonaDetailsStep({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
               >
-                <InputField
-                  {...register("organization_main_contact_name")}
-                  label={
-                    language === "en"
-                      ? "Main Contact Name"
-                      : "اسم جهة الاتصال الرئيسية"
-                  }
-                  placeholder={
-                    language === "en"
-                      ? "Primary contact person"
-                      : "الشخص الأساسي للتواصل"
-                  }
-                  isRTL={isRTL}
-                  error={errors.organization_main_contact_name?.message}
-                  inputClassName="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-amber-500/50 focus:ring-amber-500/20"
-                />
+                <div className="grid md:grid-cols-2 gap-6">
+                  <InputField
+                    {...register("organization_main_contact_name")}
+                    label={
+                      language === "en"
+                        ? "Main Contact Name"
+                        : "اسم جهة الاتصال الرئيسية"
+                    }
+                    placeholder={
+                      language === "en"
+                        ? "Primary contact person"
+                        : "الشخص الأساسي للتواصل"
+                    }
+                    isRTL={isRTL}
+                    error={errors.organization_main_contact_name?.message}
+                  />
+                  <SelectField
+                    label={
+                      language === "en"
+                        ? "Organization Type"
+                        : "نوع المؤسسة / المعرض"
+                    }
+                    placeholder={
+                      language === "en"
+                        ? "Select organization type"
+                        : "اختر نوع المؤسسة"
+                    }
+                    options={[
+                      {
+                        value: "commercial",
+                        label:
+                          language === "en"
+                            ? "Commercial / For-profit"
+                            : "تجاري / هادف للربح",
+                      },
+                      {
+                        value: "non_profit",
+                        label:
+                          language === "en" ? "Non-profit" : "غير ربحي",
+                      },
+                      {
+                        value: "public_museum",
+                        label:
+                          language === "en"
+                            ? "Public Museum"
+                            : "متحف عام",
+                      },
+                      {
+                        value: "private_collection",
+                        label:
+                          language === "en"
+                            ? "Private Collection"
+                            : "مجموعة خاصة",
+                      },
+                      {
+                        value: "other",
+                        label:
+                          language === "en" ? "Other" : "أخرى",
+                      },
+                    ]}
+                    value={watch("organization_type")}
+                    onValueChange={(value) =>
+                      setValue("organization_type", value, {
+                        shouldValidate: true,
+                      })
+                    }
+                    isRTL={isRTL}
+                    error={errors.organization_type?.message}
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.85 }}
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <InputField
+                    {...register("founded_year", {
+                      pattern: {
+                        value: /^\d{4}$/,
+                        message:
+                          language === "en"
+                            ? "Enter a valid year (e.g. 2005)"
+                            : "أدخل سنة صحيحة (مثال: 2005)",
+                      },
+                    })}
+                    label={
+                      language === "en" ? "Founded Year" : "سنة التأسيس"
+                    }
+                    type="number"
+                    placeholder={
+                      language === "en" ? "e.g. 2005" : "مثال: 2005"
+                    }
+                    isRTL={isRTL}
+                    error={errors.founded_year?.message}
+                  />
+                  <InputField
+                    {...register("exhibition_count", {
+                      pattern: {
+                        value: /^\d+$/,
+                        message:
+                          language === "en"
+                            ? "Please enter a valid number"
+                            : "يرجى إدخال رقم صحيح",
+                      },
+                    })}
+                    label={
+                      language === "en"
+                        ? "Number of Exhibitions"
+                        : "عدد المعارض"
+                    }
+                    type="number"
+                    placeholder={
+                      language === "en" ? "e.g. 12" : "مثال: 12"
+                    }
+                    isRTL={isRTL}
+                    error={errors.exhibition_count?.message}
+                  />
+                </div>
               </motion.div>
             </div>
           )}

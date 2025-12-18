@@ -25,6 +25,7 @@ import {
   User,
   Video,
   Youtube,
+  Mail,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -62,6 +63,7 @@ interface AmbassadorInfoFormData {
   twitter_followers: string;
   primary_platform: string;
   content_niche: string;
+  promotion_plan: string;
 }
 
 export function AmbassadorInfoStep({
@@ -123,6 +125,7 @@ export function AmbassadorInfoStep({
     twitter_followers: (savedData.twitter_followers as string) || "",
     primary_platform: (savedData.primary_platform as string) || "",
     content_niche: (savedData.content_niche as string) || "",
+    promotion_plan: (savedData.promotion_plan as string) || "",
   };
 
   const {
@@ -217,9 +220,11 @@ export function AmbassadorInfoStep({
       (currentValues.twitter_followers?.trim() || "") ===
       ((submitted.twitter_followers as string) || "") &&
       (currentValues.primary_platform?.trim() || "") ===
-      ((submitted.primary_platform as string) || "") &&
+        ((submitted.primary_platform as string) || "") &&
       (currentValues.content_niche?.trim() || "") ===
-      ((submitted.content_niche as string) || "");
+        ((submitted.content_niche as string) || "") &&
+      (currentValues.promotion_plan?.trim() || "") ===
+        ((submitted.promotion_plan as string) || "");
 
     const imageMatch =
       (!profileImage && !submitted.profile_image) ||
@@ -279,6 +284,9 @@ export function AmbassadorInfoStep({
         message:
           "This helps us match you with the right artists and art pieces to promote, ensuring authentic partnerships.",
       },
+      promotionPlanLabel: "How will you promote FANN?",
+      promotionPlanPlaceholder:
+        "Share how you plan to promote FANN to your audience, e.g. content formats, channels, and frequency.",
       back: "Back",
       continue: "Continue",
       next: "Next",
@@ -327,6 +335,9 @@ export function AmbassadorInfoStep({
         message:
           "هذا يساعدنا في مطابقتك مع الفنانين والقطع الفنية المناسبة للترويج، مما يضمن شراكات حقيقية.",
       },
+      promotionPlanLabel: "كيف ستقوم بالترويج لمنصة FANN؟",
+      promotionPlanPlaceholder:
+        "شارك كيف تخطط للترويج لمنصة FANN لجمهورك، مثل أنواع المحتوى والقنوات وتكرار النشر.",
       back: "رجوع",
       continue: "متابعة",
       next: "التالي",
@@ -480,6 +491,7 @@ export function AmbassadorInfoStep({
         content_niche: formData.content_niche?.trim() || undefined,
         focus: formData.content_niche?.trim() || undefined, // focus is also sent for backward compatibility
         primary_platform: formData.primary_platform?.trim() || undefined,
+        promotion_plan: formData.promotion_plan?.trim() || undefined,
       };
 
       const result = await profileSetup(profileData).unwrap();
@@ -586,6 +598,10 @@ export function AmbassadorInfoStep({
                   formData.primary_platform?.trim() ||
                   userData.primary_platform ||
                   null,
+                promotion_plan:
+                  formData.promotion_plan?.trim() ||
+                  userData.promotion_plan ||
+                  null,
                 // profile_image is already included from userData spread above
               };
 
@@ -665,6 +681,19 @@ export function AmbassadorInfoStep({
           </div>
           <h2 className="text-3xl text-white mb-2">{content.title}</h2>
           <p className="text-white/60">{content.subtitle}</p>
+          {storedUser?.email && (
+            <div
+              className={`mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-white/70 ${
+                isRTL ? "flex-row-reverse" : ""
+              }`}
+            >
+              <Mail className="w-4 h-4 text-amber-300" />
+              <span className="font-medium">
+                {language === "en" ? "Contact email:" : "البريد الإلكتروني للتواصل:"}
+              </span>
+              <span className="text-white/80">{storedUser.email}</span>
+            </div>
+          )}
         </motion.div>
 
         {/* Pro Tip */}
@@ -1011,13 +1040,40 @@ export function AmbassadorInfoStep({
               {watch("bio")?.length || 0}/250
             </p>
           </motion.div>
+
+          {/* Promotion Plan */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0 }}
+          >
+            <TextareaField
+              {...register("promotion_plan", {
+                maxLength: {
+                  value: 400,
+                  message:
+                    language === "en"
+                      ? "Response must not exceed 400 characters"
+                      : "يجب ألا يتجاوز الرد 400 حرفاً",
+                },
+              })}
+              label={content.promotionPlanLabel}
+              placeholder={content.promotionPlanPlaceholder}
+              isRTL={isRTL}
+              error={errors.promotion_plan?.message}
+              maxLength={400}
+            />
+            <p className="text-white/40 text-xs text-right mt-1">
+              {watch("promotion_plan")?.length || 0}/400
+            </p>
+          </motion.div>
         </div>
 
         {/* Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
+          transition={{ delay: 1.05 }}
           className="flex gap-4 pt-8"
         >
           {onBack && (
