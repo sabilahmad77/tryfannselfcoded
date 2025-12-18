@@ -893,7 +893,7 @@ export const FileUploadField = React.forwardRef<
       onPreviewChange,
       value,
       files,
-      initialUrls,
+      initialUrls = [],
       multiple = false,
       maxFiles,
       showPreview,

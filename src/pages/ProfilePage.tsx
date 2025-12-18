@@ -17,15 +17,14 @@ import {
 import { setUser, type UserProfileData } from "@/store/authSlice";
 import { selectSubmittedData } from "@/store/onboardingSlice";
 import type { RootState } from "@/store/store";
-import { getTierInfo } from "@/utils/tierSystem";
 import {
-  normalizeToPreviewItems,
   getFullImageUrl,
+  normalizeToPreviewItems,
 } from "@/utils/filePreviewHelpers";
+import { getTierInfo } from "@/utils/tierSystem";
 import {
   Award,
   Briefcase,
-  Building2,
   Calendar,
   Crown,
   Edit2,
@@ -40,8 +39,7 @@ import {
   Share2,
   Shield,
   Star,
-  TrendingUp,
-  User,
+  TrendingUp
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
