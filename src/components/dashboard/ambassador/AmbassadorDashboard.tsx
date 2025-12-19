@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import {
-  TrendingUp,
   Users,
   Heart,
   Share2,
@@ -195,7 +194,7 @@ export function AmbassadorDashboard() {
         ? `${socialStatsData.instagram_engagement}%`
         : "—",
       posts: socialStatsData?.instagram_post || 0,
-      trend: "+12%", // Mock trend data
+      // trend: "+12%", // Mock trend data (removed from UI)
     },
     {
       platform: "TikTok",
@@ -207,7 +206,7 @@ export function AmbassadorDashboard() {
         ? `${socialStatsData.tiktok_engagement}%`
         : "—",
       posts: socialStatsData?.tiktok_post || 0,
-      trend: "+24%", // Mock trend data
+      // trend: "+24%", // Mock trend data (removed from UI)
     },
     {
       platform: "YouTube",
@@ -219,7 +218,7 @@ export function AmbassadorDashboard() {
         ? `${socialStatsData.youtube_engagement}%`
         : "—",
       posts: socialStatsData?.youtube_post || 0,
-      trend: "+8%", // Mock trend data
+      // trend: "+8%", // Mock trend data (removed from UI)
     },
     {
       platform: "Twitter",
@@ -231,7 +230,7 @@ export function AmbassadorDashboard() {
         ? `${socialStatsData.twitter_engagement}%`
         : "—",
       posts: socialStatsData?.twitter_post || 0,
-      trend: "+5%", // Mock trend data
+      // trend: "+5%", // Mock trend data (removed from UI)
     },
   ].filter((stat) => {
     // Show platform if it has followers data (not null/N/A) or has posts
@@ -250,7 +249,7 @@ export function AmbassadorDashboard() {
 
       {/* Complete Profile Section */}
       <CompleteProfile
-        profileCompleted={profileCompleted ?? false}
+        profileCompleted={profileCompleted}
         onCompleteProfile={handleCompleteProfile}
       />
 
@@ -429,10 +428,7 @@ export function AmbassadorDashboard() {
                           {stat.followers}
                         </p>
                       </div>
-                      <div className="flex items-center gap-1 text-green-400 text-sm px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20">
-                        <TrendingUp className="w-3 h-3" />
-                        <span>{stat.trend}</span>
-                      </div>
+                      {/* Trend badge removed (was using mock trend data) */}
                     </div>
 
                     {/* Metrics Grid - Tile Layout */}

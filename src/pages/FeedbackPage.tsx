@@ -14,7 +14,7 @@ import { InputField, TextareaField } from '@/components/ui/custom-form-elements'
 import { toast } from 'sonner';
 import { DashboardLayout } from '@/components/dashboard/shared/DashboardLayout';
 import { useLanguage } from '@/contexts/useLanguage';
-import { useSendFeedbackMutation } from '@/services/api/dashboardApi';
+import { useSendFeedbackMutation, type UserFeedbackRequest } from '@/services/api/dashboardApi';
 
 const content = {
   en: {
@@ -30,7 +30,7 @@ const content = {
     neutral: "Neutral",
     satisfied: "Satisfied",
     verySatisfied: "Very Satisfied",
-    categoryLabel: "What would you like to give feedback about?",
+    categoryLabel: "Category",
     categories: {
       performanceExperience: "Performance Experience",
       featuresFunctionality: "Features & Functionality",
@@ -56,7 +56,7 @@ const content = {
         other: "Other"
       }
     },
-    emailLabel: "Email (Optional)",
+    emailLabel: "Email",
     emailPlaceholder: "your.email@example.com",
     submitButton: "Submit Feedback",
     submitting: "Submitting...",
@@ -78,7 +78,7 @@ const content = {
     neutral: "محايد",
     satisfied: "راضٍ",
     verySatisfied: "راضٍ جداً",
-    categoryLabel: "ما الذي تود إبداء ملاحظاتك عنه؟",
+    categoryLabel: "الفئة",
     categories: {
       performanceExperience: "تجربة الأداء",
       featuresFunctionality: "الميزات والوظائف",
@@ -104,7 +104,7 @@ const content = {
         other: "أخرى"
       }
     },
-    emailLabel: "البريد الإلكتروني (اختياري)",
+    emailLabel: "البريد الإلكتروني",
     emailPlaceholder: "your.email@example.com",
     submitButton: "إرسال الملاحظات",
     submitting: "جاري الإرسال...",
@@ -117,6 +117,51 @@ const content = {
 
 type FeedbackTab = 'general' | 'ideas';
 
+const GENERAL_CATEGORY_KEYS = [
+  'performanceExperience',
+  'featuresFunctionality',
+  'designInterface',
+  'performanceSpeed',
+  'customerSupport',
+  'other',
+] as const;
+
+const IDEA_CATEGORY_KEYS = [
+  'newFeature',
+  'improvement',
+  'integration',
+  'userExperience',
+  'communityFeatures',
+  'other',
+] as const;
+
+type GeneralCategoryKey = typeof GENERAL_CATEGORY_KEYS[number];
+type IdeaCategoryKey = typeof IDEA_CATEGORY_KEYS[number];
+
+const GENERAL_CATEGORY_VALUE_MAP: Record<GeneralCategoryKey, string> = {
+  performanceExperience: content.en.categories.performanceExperience,
+  featuresFunctionality: content.en.categories.featuresFunctionality,
+  designInterface: content.en.categories.designInterface,
+  performanceSpeed: content.en.categories.performanceSpeed,
+  customerSupport: content.en.categories.customerSupport,
+  other: content.en.categories.other,
+};
+
+const IDEA_CATEGORY_VALUE_MAP: Record<IdeaCategoryKey, string> = {
+  newFeature: content.en.ideasFeedback.categories.newFeature,
+  improvement: content.en.ideasFeedback.categories.improvement,
+  integration: content.en.ideasFeedback.categories.integration,
+  userExperience: content.en.ideasFeedback.categories.userExperience,
+  communityFeatures: content.en.ideasFeedback.categories.communityFeatures,
+  other: content.en.ideasFeedback.categories.other,
+};
+
+const sentimentFromSatisfaction = (satisfaction: number): 'Bad' | 'Neutral' | 'Good' => {
+  if (satisfaction >= 4) return 'Good';
+  if (satisfaction === 3) return 'Neutral';
+  return 'Bad';
+};
+
 export function FeedbackPage() {
   const { language } = useLanguage();
   const t = content[language];
@@ -124,7 +169,7 @@ export function FeedbackPage() {
 
   const [activeTab, setActiveTab] = useState<FeedbackTab>('general');
   const [satisfaction, setSatisfaction] = useState<number>(0);
-  const [category, setCategory] = useState<string>('');
+  const [generalAbout, setGeneralAbout] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [ideaTitle, setIdeaTitle] = useState<string>('');
@@ -147,7 +192,7 @@ export function FeedbackPage() {
     const isGeneral = activeTab === 'general';
 
     if (isGeneral) {
-      if (!satisfaction || !category || !message.trim()) {
+      if (!satisfaction || !generalAbout || !message.trim()) {
         toast.error(t.requiredField);
         return;
       }
@@ -158,37 +203,40 @@ export function FeedbackPage() {
       }
     }
 
-    const generalCategoryLabel =
-      t.categories[category as keyof typeof t.categories] || category || t.categoryLabel;
+    let payload: UserFeedbackRequest;
+    const emailValue = email.trim();
 
-    const ideaCategoryLabel =
-      t.ideasFeedback.categories[ideaCategory as keyof typeof t.ideasFeedback.categories] ||
-      ideaCategory ||
-      t.ideasFeedback.categoryLabel;
+    if (isGeneral) {
+      const selectedAbout = IDEA_CATEGORY_VALUE_MAP[generalAbout as IdeaCategoryKey] || '';
 
-  const sentimentLabel = isGeneral
-    ? satisfactionLevels.find((level) => level.value === satisfaction)?.label || t.neutral
-    : t.neutral;
+      if (!selectedAbout) {
+        toast.error(t.requiredField);
+        return;
+      }
 
-    const payload = isGeneral
-      ? {
-          title: `Feedback - ${generalCategoryLabel}`,
-          describe_idea: message.trim(),
-          feedback: message.trim(),
-          email: email.trim() || undefined,
-          feedback_category: generalCategoryLabel, // matches general category options
-          feedback_about: language === 'ar' ? 'أخرى' : 'Other', // fallback for about when only general category is chosen
-          sentiment: sentimentLabel,
-        }
-      : {
-          title: ideaTitle.trim(),
-          describe_idea: ideaDescription.trim(),
-          feedback: ideaDescription.trim(),
-          email: email.trim() || undefined,
-          feedback_category: ideaCategoryLabel, // aligns with provided feedback category options list
-          feedback_about: ideaCategoryLabel, // aligns with provided feedback about options list
-          sentiment: sentimentLabel,
-        };
+      payload = {
+        feedback_category: "",
+        feedback_about: selectedAbout,
+        feedback: message.trim(),
+        sentiment: sentimentFromSatisfaction(satisfaction),
+        ...(emailValue ? { email: emailValue } : {}),
+      };
+    } else {
+      const selectedIdeaCategory = GENERAL_CATEGORY_VALUE_MAP[ideaCategory as GeneralCategoryKey] || '';
+
+      if (!selectedIdeaCategory) {
+        toast.error(t.requiredField);
+        return;
+      }
+
+      payload = {
+        title: ideaTitle.trim(),
+        describe_idea: ideaDescription.trim(),
+        feedback_category: selectedIdeaCategory,
+        feedback_about: "",
+        ...(emailValue ? { email: emailValue } : {}),
+      };
+    }
 
     try {
       setIsSubmitting(true);
@@ -202,7 +250,7 @@ export function FeedbackPage() {
       setEmail('');
       if (isGeneral) {
         setSatisfaction(0);
-        setCategory('');
+        setGeneralAbout('');
         setMessage('');
       } else {
         setIdeaTitle('');
@@ -299,32 +347,33 @@ export function FeedbackPage() {
                   </div>
                 </div>
 
-                {/* Category Selection */}
-                <div>
-                  <label className={`block text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
-                    {t.categoryLabel} <span className="text-[#ef4444]">*</span>
-                  </label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {Object.entries(t.categories).map(([key, label]) => {
-                      const isSelected = category === key;
-                      return (
-                        <motion.button
-                          key={key}
-                          type="button"
-                          onClick={() => setCategory(key)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className={`p-3 rounded-lg transition-all cursor-pointer ${isSelected
-                            ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10 text-[#ffffff]'
-                            : 'bg-[#0f021c] border border-[#4e4e4e78] text-[#808c99] hover:border-[#ffcc33]/30'
-                            } ${isRTL ? 'text-right' : 'text-left'}`}
-                        >
-                          <span className="text-sm">{label}</span>
-                        </motion.button>
-                      );
-                    })}
-                  </div>
+              {/* Feedback About */}
+              <div>
+                <label className={`block text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  {t.ideasFeedback.categoryLabel} <span className="text-[#ef4444]">*</span>
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {IDEA_CATEGORY_KEYS.map((key) => {
+                    const label = t.ideasFeedback.categories[key];
+                    const isSelected = generalAbout === key;
+                    return (
+                      <motion.button
+                        key={`general-about-${key}`}
+                        type="button"
+                        onClick={() => setGeneralAbout(key)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`p-3 rounded-lg transition-all cursor-pointer ${isSelected
+                          ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10 text-[#ffffff]'
+                          : 'bg-[#0f021c] border border-[#4e4e4e78] text-[#808c99] hover:border-[#ffcc33]/30'
+                          } ${isRTL ? 'text-right' : 'text-left'}`}
+                      >
+                        <span className="text-sm">{label}</span>
+                      </motion.button>
+                    );
+                  })}
                 </div>
+              </div>
 
                 {/* Message */}
                 <TextareaField
@@ -365,10 +414,11 @@ export function FeedbackPage() {
                 {/* Idea Category */}
                 <div>
                   <label className={`block text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
-                    {t.ideasFeedback.categoryLabel} <span className="text-[#ef4444]">*</span>
+                    {t.categoryLabel} <span className="text-[#ef4444]">*</span>
                   </label>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {Object.entries(t.ideasFeedback.categories).map(([key, label]) => {
+                    {GENERAL_CATEGORY_KEYS.map((key) => {
+                      const label = t.categories[key];
                       const isSelected = ideaCategory === key;
                       return (
                         <motion.button

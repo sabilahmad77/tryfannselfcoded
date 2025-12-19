@@ -601,9 +601,9 @@ export function ProfilePage() {
                 <p className="text-[#808c99] mb-3">
                   {userData.username ? `@${userData.username}` : userData.email}
                 </p>
-                <Badge className="bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#0F021C] border-0">
-                  <Crown className="w-3 h-3 mr-1" />
-                  {currentTierName}
+                <Badge className="bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#0F021C] border-0 flex items-center gap-1">
+                  <Crown className={`w-3 h-3 ${isRTL ? "ml-1" : "mr-1"}`} />
+                  <span className="text-xs font-semibold opacity-80">{t.tier}: {currentTierName}</span>
                 </Badge>
               </div>
               <div className={`flex gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>

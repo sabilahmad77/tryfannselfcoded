@@ -16,7 +16,6 @@ import {
   Target,
   Trophy,
   Users,
-  ArrowRightCircle,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -209,7 +208,6 @@ export function GamificationStep({
       back: "Back",
       continue: "Start My Journey",
       next: "Next",
-      skip: "Skip for now",
     },
     ar: {
       title: "حدد هدفك الأول",
@@ -297,15 +295,10 @@ export function GamificationStep({
       back: "رجوع",
       continue: "ابدأ رحلتي",
       next: "التالي",
-      skip: "تخطي الآن",
     },
   };
 
   const content = t[language];
-
-  const handleSkip = () => {
-    onNext({ skipped: true });
-  };
 
   const handleSubmit = async () => {
     // If step was already submitted and no changes, just proceed without API call
@@ -623,25 +616,7 @@ export function GamificationStep({
         </motion.div>
 
         {/* Skip Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2 }}
-          className="mt-4 text-center"
-        >
-          <Button
-            type="button"
-            onClick={handleSkip}
-            disabled={isLoading}
-            variant="ghost"
-            className="text-white/60 hover:text-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ArrowRightCircle
-              className={`w-4 h-4 mr-2 ${isRTL ? "rotate-180" : ""}`}
-            />
-            {content.skip}
-          </Button>
-        </motion.div>
+        {/* Skip Button removed */}
       </div>
     </div>
   );

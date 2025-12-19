@@ -96,25 +96,6 @@ export function ProfileCompletionPrompt({
         })}
       </div>
 
-      {/* Progress Indicator */}
-      <div className="bg-[#1e293b]/50 rounded-lg p-3">
-        <div
-          className={`flex items-center justify-between mb-2 ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
-        >
-          <span className="text-sm text-[#cbd5e1]">{t.progress}</span>
-          <span className="text-sm text-[#d4af37]">0%</span>
-        </div>
-        <div className="h-2 bg-[#334155] rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-gradient-to-r from-[#d4af37] to-[#fbbf24]"
-            initial={{ width: 0 }}
-            animate={{ width: "0%" }}
-          />
-        </div>
-      </div>
-
       {/* Actions */}
       <div
         className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}

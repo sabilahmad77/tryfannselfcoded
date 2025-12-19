@@ -124,7 +124,7 @@ export function URLEncoder() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleShare = (platform: string) => {
+  const handleShare = async (platform: "facebook" | "twitter" | "instagram" | "email") => {
     if (!referralLink) {
       toast.error(
         language === "en"
@@ -133,15 +133,47 @@ export function URLEncoder() {
       );
       return;
     }
+
     const encodedUrl = encodeURIComponent(referralLink);
-    const shareUrls: { [key: string]: string } = {
+    const shareText = language === "en" ? "Join me on FANN!" : "انضم إليّ في FANN!";
+
+    // Native Web Share where supported (only for platforms that allow URL sharing)
+    if (typeof navigator !== "undefined" && navigator.share && platform !== "instagram") {
+      try {
+        await navigator.share({
+          title: "FANN",
+          text: shareText,
+          url: referralLink,
+        });
+        toast.success(t.shareSuccess);
+        return;
+      } catch {
+        // Fall back to manual share below
+      }
+    }
+
+    const shareUrls: Record<typeof platform, string | null> = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-      twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=Join me on FANN!`,
-      email: `mailto:?subject=Join FANN&body=Use my referral link: ${referralLink}`,
+      twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodeURIComponent(shareText)}`,
+      email: `mailto:?subject=${encodeURIComponent("Join FANN")}&body=${encodeURIComponent(
+        `${shareText}\n\n${referralLink}`
+      )}`,
+      instagram: null, // Instagram doesn't support direct URL sharing; fallback to copy
     };
 
-    if (shareUrls[platform]) {
-      window.open(shareUrls[platform], "_blank");
+    if (platform === "instagram") {
+      navigator.clipboard.writeText(referralLink);
+      toast.success(
+        language === "en"
+          ? "Link copied! Paste it into your Instagram post/story."
+          : "تم نسخ الرابط! الصقه في منشورك أو قصتك على إنستغرام."
+      );
+      return;
+    }
+
+    const targetUrl = shareUrls[platform];
+    if (targetUrl) {
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
       toast.success(t.shareSuccess);
     }
   };

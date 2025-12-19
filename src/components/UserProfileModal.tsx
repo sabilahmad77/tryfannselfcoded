@@ -862,10 +862,12 @@ export function UserProfileModal({
 
           <div className={`flex items-center gap-3 flex-wrap ${isRTL ? 'flex-row-reverse' : ''}`}>
             <Badge className={`bg-gradient-to-r ${getTierColor(displayedTier)} text-[#020e27] border-0`}>
-              {displayedTier}
+              <span className="text-xs font-semibold opacity-80">{t.tier}:</span>
+              <span className={`${isRTL ? 'mr-1' : 'ml-1'}`}>{displayedTier}</span>
             </Badge>
             <Badge variant="outline" className="border-[#4e4e4e78] text-[#808c99]">
-              {user.type}
+              <span className="text-xs font-semibold opacity-80">{language === 'ar' ? 'الدور' : 'Role'}:</span>
+              <span className={`${isRTL ? 'mr-1' : 'ml-1'}`}>{user.type}</span>
             </Badge>
             {getKYCBadge(profileData.kycStatus)}
             <Badge className="bg-gradient-to-r from-orange-500 to-amber-500 text-white border-0">
@@ -1211,7 +1213,7 @@ export function UserProfileModal({
                 ? `${socialStatsData.instagram_engagement}%`
                 : "—",
               posts: socialStatsData?.instagram_post || 0,
-              trend: "+12%", // Mock trend data
+              // trend: "+12%", // Mock trend data (removed from UI)
             },
             {
               platform: "TikTok",
@@ -1223,7 +1225,7 @@ export function UserProfileModal({
                 ? `${socialStatsData.tiktok_engagement}%`
                 : "—",
               posts: socialStatsData?.tiktok_post || 0,
-              trend: "+24%", // Mock trend data
+              // trend: "+24%", // Mock trend data (removed from UI)
             },
             {
               platform: "YouTube",
@@ -1235,7 +1237,7 @@ export function UserProfileModal({
                 ? `${socialStatsData.youtube_engagement}%`
                 : "—",
               posts: socialStatsData?.youtube_post || 0,
-              trend: "+8%", // Mock trend data
+              // trend: "+8%", // Mock trend data (removed from UI)
             },
             {
               platform: "Twitter",
@@ -1247,7 +1249,7 @@ export function UserProfileModal({
                 ? `${socialStatsData.twitter_engagement}%`
                 : "—",
               posts: socialStatsData?.twitter_post || 0,
-              trend: "+5%", // Mock trend data
+              // trend: "+5%", // Mock trend data (removed from UI)
             },
           ].filter((stat) => {
             // Show platform if it has followers data (not null/N/A) or has posts
@@ -1295,10 +1297,7 @@ export function UserProfileModal({
                               {stat.followers}
                             </p>
                           </div>
-                          <div className={`flex items-center gap-1 text-green-400 text-sm px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                            <TrendingUp className="w-3 h-3" />
-                            <span>{stat.trend}</span>
-                          </div>
+                          {/* Trend badge removed (was using mock trend data) */}
                         </div>
 
                         {/* Metrics Grid - Tile Layout */}

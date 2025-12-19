@@ -220,15 +220,23 @@ export interface ProgressionResponse {
 }
 
 // Feedback & Bug Report Types
-export interface UserFeedbackRequest {
-  title: string;
-  describe_idea: string;
+export interface GeneralFeedbackRequest {
   feedback: string;
-  email?: string;
   feedback_category: string;
+  email?: string;
   feedback_about: string;
   sentiment?: string;
 }
+
+export interface IdeasFeedbackRequest {
+  title: string;
+  describe_idea: string;
+  email?: string;
+  feedback_category: string;
+  feedback_about: string;
+}
+
+export type UserFeedbackRequest = GeneralFeedbackRequest | IdeasFeedbackRequest;
 
 export interface UserFeedbackResponse {
   success: boolean;
