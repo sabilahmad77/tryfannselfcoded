@@ -1,17 +1,24 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Users, Plus, TrendingUp, Award, Mail, ExternalLink, Loader2 } from "lucide-react";
+import { Users, Plus, TrendingUp, Award, Mail, Loader2, Lock } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
 import { Badge } from "../../ui/badge";
 import { useLanguage } from "@/contexts/useLanguage";
 import { AddArtistModal, type Artist } from "./AddArtistModal";
+import { toast } from "sonner";
+import { ProfileLockedState } from "@/components/dashboard/shared/ProfileLockedState";
 import {
   useGetArtistRoasterQuery,
   useCreateArtistRoasterMutation,
   useDeleteArtistRoasterMutation,
   type ArtistRoaster,
 } from "@/services/api/dashboardApi";
+
+interface ArtistRosterProps {
+  profileCompleted?: boolean;
+  onCompleteProfile?: () => void;
+}
 
 const content = {
   en: {
@@ -23,6 +30,13 @@ const content = {
     addArtist: "Add Artist",
     viewProfile: "View Profile",
     contact: "Contact",
+    profileLocked: "Complete Your Profile",
+    unlockFeature: "Complete your profile to unlock artist roster management",
+    completeProfile: "Complete Profile",
+    profileRequired: "Please complete your profile to add artists",
+    emailCopied: "Email copied",
+    emailCopyFailed: "Failed to copy email",
+    noEmail: "No email available",
     artists: [
       {
         name: "Sarah Al-Mansouri",
@@ -64,6 +78,13 @@ const content = {
     addArtist: "إضافة فنان",
     viewProfile: "عرض الملف الشخصي",
     contact: "تواصل",
+    profileLocked: "أكمل ملفك الشخصي",
+    unlockFeature: "أكمل ملفك الشخصي لفتح إدارة قائمة الفنانين",
+    completeProfile: "إكمال الملف الشخصي",
+    profileRequired: "يرجى إكمال ملفك الشخصي لإضافة فنانين",
+    emailCopied: "تم نسخ البريد الإلكتروني",
+    emailCopyFailed: "فشل نسخ البريد الإلكتروني",
+    noEmail: "لا يوجد بريد إلكتروني",
     artists: [
       {
         name: "سارة المنصوري",
@@ -98,7 +119,10 @@ const content = {
   },
 };
 
-export function ArtistRoster() {
+export function ArtistRoster({
+  profileCompleted = true,
+  onCompleteProfile,
+}: ArtistRosterProps) {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === "ar";
@@ -111,13 +135,17 @@ export function ArtistRoster() {
     data: artistsData,
     isLoading: isLoadingArtists,
     error: artistsError,
-  } = useGetArtistRoasterQuery();
+  } = useGetArtistRoasterQuery(undefined, { skip: !profileCompleted });
 
   const [createArtist, { isLoading: isCreating }] = useCreateArtistRoasterMutation();
   const [_deleteArtist] = useDeleteArtistRoasterMutation();
 
   // Transform API data to component format
   useEffect(() => {
+    if (!profileCompleted) {
+      return;
+    }
+
     if (artistsData?.data) {
       const apiArtists = Array.isArray(artistsData.data)
         ? artistsData.data
@@ -140,8 +168,7 @@ export function ArtistRoster() {
       // Fallback to default data if API returns no data
       setArtists(t.artists);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [artistsData, isLoadingArtists, artistsError]);
+  }, [profileCompleted, artistsData, isLoadingArtists, artistsError, t.artists]);
 
   const generateInitials = (name: string) => {
     const names = name.trim().split(" ");
@@ -174,6 +201,14 @@ export function ArtistRoster() {
     }
   };
 
+  const handleAddArtistClick = () => {
+    if (!profileCompleted) {
+      toast.error(t.profileRequired);
+      return;
+    }
+    setIsModalOpen(true);
+  };
+
   const getStatusBadge = (status: string) => {
     if (status === "established") {
       return {
@@ -187,6 +222,42 @@ export function ArtistRoster() {
     };
   };
 
+  const copyToClipboard = async (text: string) => {
+    // Modern clipboard API (requires secure context)
+    if (navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    // Fallback for older browsers
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.top = "0";
+    textarea.style.left = "0";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    if (!ok) throw new Error("Copy command failed");
+  };
+
+  const handleCopyEmail = async (email: string) => {
+    if (!email) {
+      toast.error(t.noEmail);
+      return;
+    }
+
+    try {
+      await copyToClipboard(email);
+      toast.success(t.emailCopied);
+    } catch {
+      toast.error(t.emailCopyFailed);
+    }
+  };
+
   return (
     <div className="glass rounded-2xl p-6 h-full">
       {/* Header */}
@@ -198,8 +269,22 @@ export function ArtistRoster() {
         <div
           className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] rounded-xl flex items-center justify-center">
-            <Users className="w-6 h-6 text-[#0F021C]" />
+          <div className="relative">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] rounded-xl flex items-center justify-center">
+              <Users className="w-6 h-6 text-[#0F021C]" />
+            </div>
+            {/* Subtle pulsing glow (match AddArtwork) */}
+            <motion.div
+              className="absolute inset-0 bg-[#ffcc33]/30 rounded-xl blur-xl"
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            {/* Lock overlay if profile not completed */}
+            {!profileCompleted && (
+              <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-[#ffb54d] to-[#ffcc33] rounded-full flex items-center justify-center border-2 border-[#0F021C]">
+                <Lock className="w-3 h-3 text-[#0F021C]" />
+              </div>
+            )}
           </div>
           <div className={isRTL ? "text-right" : "text-left"}>
             <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
@@ -210,9 +295,11 @@ export function ArtistRoster() {
         </div>
         <Button
           size="sm"
-          onClick={() => setIsModalOpen(true)}
-          className="hover:shadow-lg hover:shadow-primary/50 border-0 transition-all duration-200 cursor-pointer"
+          onClick={handleAddArtistClick}
+          disabled={!profileCompleted}
+          className="hover:shadow-lg hover:shadow-primary/50 border-0 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
+          {!profileCompleted && <Lock className={`w-3 h-3 ${isRTL ? "ml-2" : "mr-2"}`} />}
           <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
           {t.addArtist}
         </Button>
@@ -220,7 +307,15 @@ export function ArtistRoster() {
 
       {/* Artists List */}
       <div className="space-y-4">
-        {isLoadingArtists ? (
+        {!profileCompleted ? (
+          <ProfileLockedState
+            title={t.profileLocked}
+            description={t.unlockFeature}
+            ctaLabel={t.completeProfile}
+            onCta={onCompleteProfile}
+            isRTL={isRTL}
+          />
+        ) : isLoadingArtists ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-6 h-6 text-[#45e3d3] animate-spin" />
           </div>
@@ -313,13 +408,13 @@ export function ArtistRoster() {
                   size="sm"
                   variant="ghost"
                   className="hover:scale-110 transition-all duration-200 cursor-pointer"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="hover:scale-110 transition-all duration-200 cursor-pointer"
+                  onClick={() => void handleCopyEmail(artist.email)}
+                  disabled={!artist.email}
+                  aria-label={
+                    language === "en"
+                      ? "Copy email to clipboard"
+                      : "نسخ البريد الإلكتروني"
+                  }
                 >
                   <Mail className="w-4 h-4" />
                 </Button>

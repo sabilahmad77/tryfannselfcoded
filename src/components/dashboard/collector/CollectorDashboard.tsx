@@ -85,7 +85,10 @@ export function CollectorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <MyCollection />
+          <MyCollection
+            profileCompleted={profileCompleted}
+            onCompleteProfile={handleCompleteProfile}
+          />
         </motion.div>
 
         {/* Add Artwork */}

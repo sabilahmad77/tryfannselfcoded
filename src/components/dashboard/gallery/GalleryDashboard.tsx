@@ -85,7 +85,10 @@ export function GalleryDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <ArtistRoster />
+          <ArtistRoster
+            profileCompleted={profileCompleted}
+            onCompleteProfile={handleCompleteProfile}
+          />
         </motion.div>
 
         {/* Row 2: Add Artwork + Referral Link Generator (URL Encoder) */}

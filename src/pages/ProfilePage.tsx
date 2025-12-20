@@ -462,8 +462,7 @@ export function ProfilePage() {
 
     // Get base URL and remove /api suffix if present
     const BASE_URL =
-      import.meta.env.VITE_API_BASE_URL ||
-      "https://apifann.globaltechserivce.com/api";
+      import.meta.env.VITE_API_BASE_URL;
     const baseWithoutApi = BASE_URL.replace(/\/api$/, "");
 
     // If it's a relative path (starts with /), prepend base URL without /api

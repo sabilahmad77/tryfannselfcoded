@@ -11,6 +11,7 @@ import { formatDateForDisplay } from "@/utils/dateUtils";
 import {
   Gem,
   Loader2,
+  Lock,
   Plus,
   Trash2,
   TrendingUp
@@ -23,6 +24,12 @@ import { Badge } from "../../ui/badge";
 import { Button } from "../../ui/button";
 import { ConfirmationDialog } from "../../ui/ConfirmationDialog";
 import { AddArtworkModal, type Artwork } from "./AddArtworkModal";
+import { ProfileLockedState } from "../shared/ProfileLockedState";
+
+interface MyCollectionProps {
+  profileCompleted?: boolean;
+  onCompleteProfile?: () => void;
+}
 
 const content = {
   en: {
@@ -33,6 +40,10 @@ const content = {
     addPiece: "Add Artwork",
     filter: "Filter",
     recent: "Recent Acquisitions",
+    profileLocked: "Complete Your Profile",
+    unlockFeature: "Complete your profile to unlock collection management",
+    completeProfile: "Complete Profile",
+    profileRequired: "Please complete your profile to add artworks",
     pieces: [
       {
         title: "Desert Echoes",
@@ -87,6 +98,10 @@ const content = {
     addPiece: "إضافة عمل فني",
     filter: "تصفية",
     recent: "الاقتناءات الأخيرة",
+    profileLocked: "أكمل ملفك الشخصي",
+    unlockFeature: "أكمل ملفك الشخصي لفتح إدارة مجموعتك",
+    completeProfile: "إكمال الملف الشخصي",
+    profileRequired: "يرجى إكمال ملفك الشخصي لإضافة أعمال فنية",
     pieces: [
       {
         title: "أصداء الصحراء",
@@ -135,7 +150,10 @@ const content = {
   },
 };
 
-export function MyCollection() {
+export function MyCollection({
+  profileCompleted = true,
+  onCompleteProfile,
+}: MyCollectionProps) {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === "ar";
@@ -154,7 +172,7 @@ export function MyCollection() {
     data: artworksData,
     isLoading: isLoadingArtworks,
     error: artworksError,
-  } = useGetArtworkCollectionQuery();
+  } = useGetArtworkCollectionQuery(undefined, { skip: !profileCompleted });
 
   // Fetch dashboard stats from API
   const { data: dashboardStatsData } = useGetDashboardStatsQuery(undefined, {
@@ -170,6 +188,9 @@ export function MyCollection() {
 
   // Transform API data to component format
   useEffect(() => {
+    if (!profileCompleted) {
+      return;
+    }
     if (artworksData?.data) {
       const apiArtworks = Array.isArray(artworksData.data)
         ? artworksData.data
@@ -196,7 +217,7 @@ export function MyCollection() {
       setArtworkList(t.pieces);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [artworksData, isLoadingArtworks, artworksError]);
+  }, [profileCompleted, artworksData, isLoadingArtworks, artworksError, t.pieces]);
 
   const getCategoryColor = (category: string) => {
     switch (category.toLowerCase()) {
@@ -330,6 +351,14 @@ export function MyCollection() {
     setEditingArtwork(null);
   };
 
+  const handleAddClick = () => {
+    if (!profileCompleted) {
+      toast.error(t.profileRequired);
+      return;
+    }
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="glass rounded-2xl p-6 h-full">
       {/* Header */}
@@ -341,17 +370,33 @@ export function MyCollection() {
           className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
             }`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#9375b5] rounded-xl flex items-center justify-center">
-            <Gem className="w-6 h-6 text-white" />
+          <div className="relative">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#9375b5] rounded-xl flex items-center justify-center">
+              <Gem className="w-6 h-6 text-white" />
+            </div>
+            {/* Subtle pulsing glow (match AddArtwork) */}
+            <motion.div
+              className="absolute inset-0 bg-[#ffcc33]/30 rounded-xl blur-xl"
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            {/* Lock overlay if profile not completed */}
+            {!profileCompleted && (
+              <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-[#ffb54d] to-[#ffcc33] rounded-full flex items-center justify-center border-2 border-[#0F021C]">
+                <Lock className="w-3 h-3 text-[#0F021C]" />
+              </div>
+            )}
           </div>
           <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
         </div>
         <div className={`flex gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
           <Button
             size="sm"
-            onClick={() => setIsModalOpen(true)}
-            className="border-0 cursor-pointer"
+            onClick={handleAddClick}
+            disabled={!profileCompleted}
+            className="border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
+            {!profileCompleted && <Lock className={`w-3 h-3 ${isRTL ? "ml-2" : "mr-2"}`} />}
             <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
             {t.addPiece}
           </Button>
@@ -421,7 +466,15 @@ export function MyCollection() {
         >
           {t.recent}
         </h3>
-        {isLoadingArtworks ? (
+        {!profileCompleted ? (
+          <ProfileLockedState
+            title={t.profileLocked}
+            description={t.unlockFeature}
+            ctaLabel={t.completeProfile}
+            onCta={onCompleteProfile}
+            isRTL={isRTL}
+          />
+        ) : isLoadingArtworks ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-6 h-6 text-[#ffcc33] animate-spin" />
           </div>

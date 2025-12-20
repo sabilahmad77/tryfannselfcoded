@@ -13,8 +13,7 @@ import { extractErrorMessage } from "@/utils/errorMessages";
 // Vite requires VITE_ prefix for environment variables to be exposed to client
 // Default matches the Postman collection: http://127.0.0.1:8000/api
 const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "https://apifann.globaltechserivce.com/api";
+  import.meta.env.VITE_API_BASE_URL;
 
 // Debug: Log environment variables (only in development)
 if (import.meta.env.DEV) {
