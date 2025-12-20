@@ -122,7 +122,7 @@ export function getFullImageUrl(
   // Get base URL
   const BASE_URL =
     baseUrl ||
-    import.meta.env.VITE_API_BASE_URL;
+    "https://api.fann.art/api";
   const baseWithoutApi = BASE_URL.replace(/\/api$/, "");
 
   // If it's a relative path (starts with /), prepend base URL without /api
