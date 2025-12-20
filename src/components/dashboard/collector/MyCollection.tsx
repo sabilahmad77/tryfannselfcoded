@@ -216,7 +216,6 @@ export function MyCollection({
       // Fallback to default data if API returns no data
       setArtworkList(t.pieces);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileCompleted, artworksData, isLoadingArtworks, artworksError, t.pieces]);
 
   const getCategoryColor = (category: string) => {
