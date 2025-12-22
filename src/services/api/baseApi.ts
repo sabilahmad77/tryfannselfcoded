@@ -11,7 +11,6 @@ import { extractErrorMessage } from "@/utils/errorMessages";
 
 // Get base URL from environment variable or use default
 // Vite requires VITE_ prefix for environment variables to be exposed to client
-// Default matches the Postman collection: http://127.0.0.1:8000/api
 const BASE_URL =
   "https://api.fann.art/api";
 

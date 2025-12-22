@@ -16,10 +16,23 @@ import { Input } from "../../ui/input";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/useLanguage";
 import {
-  useGetDashboardStatsQuery,
   useLazyGenerateReferralCodeQuery,
 } from "@/services/api/dashboardApi";
 import QRCode from "react-qr-code";
+
+interface URLEncoderProps {
+  profileCompleted?: boolean;
+  statsData?: {
+    referral_link?: string;
+    is_referral_code?: boolean;
+    total_referral_clicks?: number;
+    conversation?: number;
+    pending?: number;
+    [key: string]: unknown;
+  };
+  isLoadingStats?: boolean;
+  onRefetchStats?: () => void;
+}
 
 const content = {
   en: {
@@ -56,34 +69,30 @@ const content = {
   },
 };
 
-export function URLEncoder() {
+export function URLEncoder({
+  profileCompleted = false,
+  statsData,
+  isLoadingStats = false,
+  onRefetchStats
+}: URLEncoderProps) {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === "ar";
   const [copied, setCopied] = useState(false);
 
-  // Fetch dashboard stats from API
-  const {
-    data: statsData,
-    isLoading: isLoadingStats,
-    refetch: refetchStats,
-  } = useGetDashboardStatsQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
-
   // Lazy query for generating referral code
   const [generateReferralCode, { isLoading: isGenerating }] =
     useLazyGenerateReferralCodeQuery();
 
-  // Use API data or fallback to empty
+  // Use stats data from props or fallback to empty
   // Check if referral_link contains "ref/None" - if so, treat as empty
-  const rawReferralLink = statsData?.data?.referral_link || "";
+  const rawReferralLink = statsData?.referral_link || "";
   const referralLink = rawReferralLink.includes("ref/None") ? "" : rawReferralLink;
-  const isReferralCode = statsData?.data?.is_referral_code || false;
+  const isReferralCode = statsData?.is_referral_code || false;
   const stats = {
-    clicks: statsData?.data?.total_referral_clicks || 0,
-    conversions: statsData?.data?.conversation || 0,
-    pending: statsData?.data?.pending || 0,
+    clicks: statsData?.total_referral_clicks || 0,
+    conversions: statsData?.conversation || 0,
+    pending: statsData?.pending || 0,
   };
 
   // Handle generate new referral code
@@ -97,7 +106,7 @@ export function URLEncoder() {
             : "تم إنشاء رمز الإحالة بنجاح!"
         );
         // Refetch stats to get updated referral link
-        refetchStats();
+        onRefetchStats?.();
       }
     } catch (error) {
       console.error("Error generating referral code:", error);
@@ -198,9 +207,8 @@ export function URLEncoder() {
     <div className="glass rounded-2xl p-6 h-full">
       {/* Header */}
       <div
-        className={`flex items-center gap-3 mb-4 ${
-          isRTL ? "flex-row-reverse" : ""
-        }`}
+        className={`flex items-center gap-3 mb-4 ${isRTL ? "flex-row-reverse" : ""
+          }`}
       >
         <div className="w-12 h-12 bg-gradient-to-br from-[#45e3d3] to-[#0ea5e9] rounded-xl flex items-center justify-center">
           <Link2 className="w-6 h-6 text-[#0F021C]" />
@@ -214,23 +222,21 @@ export function URLEncoder() {
       {/* Referral Link Input */}
       <div className="mb-6">
         <div
-          className={`flex items-center justify-between mb-2 ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
+          className={`flex items-center justify-between mb-2 ${isRTL ? "flex-row-reverse" : ""
+            }`}
         >
           <label
-            className={`text-sm text-[#808c99] block ${
-              isRTL ? "text-right" : "text-left"
-            }`}
+            className={`text-sm text-[#808c99] block ${isRTL ? "text-right" : "text-left"
+              }`}
           >
             {t.yourLink}
           </label>
           <Button
             onClick={handleGenerate}
-            disabled={isGenerating || isReferralCode}
+            disabled={isGenerating || isReferralCode || !profileCompleted}
             size="sm"
             variant="outline"
-            className="text-xs transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="text-xs transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isGenerating ? (
               <>

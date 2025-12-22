@@ -2,8 +2,15 @@ import { motion } from 'motion/react';
 import { TrendingUp, BarChart3, DollarSign, TrendingDown, Loader2 } from 'lucide-react';
 import { Badge } from '../../ui/badge';
 import { useLanguage } from '@/contexts/useLanguage';
-import { useGetDashboardStatsQuery } from '@/services/api/dashboardApi';
 import type { MarketInsight } from '@/services/api/dashboardApi';
+
+interface MarketInsightsProps {
+  statsData?: {
+    market_insight?: MarketInsight[];
+    [key: string]: unknown;
+  };
+  isLoadingStats?: boolean;
+}
 
 const content = {
   en: {
@@ -52,25 +59,16 @@ const formatPrice = (price: number): string => {
   }).format(price);
 };
 
-export function MarketInsights() {
+export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsightsProps) {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === 'ar';
 
-  // Fetch market insights from API
-  const {
-    data: statsData,
-    isLoading,
-    isError,
-  } = useGetDashboardStatsQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
-
-  // Get market insights from API response
-  const marketInsights: MarketInsight[] = statsData?.data?.market_insight || [];
+  // Get market insights from props
+  const marketInsights: MarketInsight[] = statsData?.market_insight || [];
 
   // Show loading state
-  if (isLoading) {
+  if (isLoadingStats) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -95,8 +93,8 @@ export function MarketInsights() {
     );
   }
 
-  // Show error state
-  if (isError) {
+  // Show error state (if no data and not loading)
+  if (!isLoadingStats && !statsData) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -182,13 +180,12 @@ export function MarketInsights() {
                   <h3 className="text-[#ffffff] mb-1">{insight.category}</h3>
                   <p className="text-xs text-[#808c99]">{insight.description}</p>
                 </div>
-                <div className={`flex items-center gap-1 ${
-                  trend === 'up' 
-                    ? 'text-[#45e3d3]' 
+                <div className={`flex items-center gap-1 ${trend === 'up'
+                    ? 'text-[#45e3d3]'
                     : trend === 'down'
-                    ? 'text-[#f87171]'
-                    : 'text-[#ffcc33]'
-                }`}>
+                      ? 'text-[#f87171]'
+                      : 'text-[#ffcc33]'
+                  }`}>
                   {trend === 'up' ? (
                     <TrendingUp className="w-5 h-5" />
                   ) : trend === 'down' ? (
@@ -208,13 +205,12 @@ export function MarketInsights() {
                   </div>
                 </div>
                 <div className="flex-1" />
-                <Badge className={`${
-                  trend === 'up'
+                <Badge className={`${trend === 'up'
                     ? 'bg-[#45e3d3]/20 text-[#45e3d3] border-[#45e3d3]/30'
                     : trend === 'down'
-                    ? 'bg-[#f87171]/20 text-[#f87171] border-[#f87171]/30'
-                    : 'bg-[#ffcc33]/20 text-[#ffcc33] border-[#ffcc33]/30'
-                }`}>
+                      ? 'bg-[#f87171]/20 text-[#f87171] border-[#f87171]/30'
+                      : 'bg-[#ffcc33]/20 text-[#ffcc33] border-[#ffcc33]/30'
+                  }`}>
                   {percentageFormatted}
                 </Badge>
               </div>

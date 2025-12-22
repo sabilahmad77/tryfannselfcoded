@@ -1,15 +1,19 @@
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
 import { useLanguage } from "@/contexts/useLanguage";
 import {
-  useGetDashboardStatsQuery,
-  useGetDashboardStatsAmbassadorQuery,
   useGetProgressionQuery,
 } from "@/services/api/dashboardApi";
 import { getTierInfo, tierNameToKey, parsePointsRange } from "@/utils/tierSystem";
 import { Award, Compass, Crown, Loader2, Star, Zap } from "lucide-react";
 import { motion } from "motion/react";
-import type { RootState } from "@/store/store";
+
+interface TierProgressProps {
+  statsData?: {
+    total_points?: number;
+    [key: string]: unknown;
+  };
+  isLoadingStats?: boolean;
+}
 
 const content = {
   en: {
@@ -64,36 +68,10 @@ const getTierConfig = (tierName: string) => {
   );
 };
 
-export function TierProgress() {
+export function TierProgress({ statsData, isLoadingStats = false }: TierProgressProps) {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === "ar";
-
-  // Get user role from Redux store
-  const storedUser = useSelector((state: RootState) => state.auth.user);
-  const persona = useSelector((state: RootState) => state.auth.persona);
-  const userRole = storedUser?.role?.toLowerCase() || persona?.toLowerCase() || "";
-  const isAmbassador = userRole === "ambassador";
-
-  // Fetch dashboard stats based on user role
-  // For ambassador: use dashboard_stats_ambassador
-  // For others: use dashboard_stats
-  const {
-    data: statsData,
-    isLoading: isLoadingStats,
-    isError: isErrorStats,
-  } = useGetDashboardStatsQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-    skip: isAmbassador, // Skip for ambassador role
-  });
-
-  const {
-    data: ambassadorStatsData,
-    isLoading: isLoadingAmbassadorStats,
-    isError: isErrorAmbassadorStats,
-  } = useGetDashboardStatsAmbassadorQuery(undefined, {
-    skip: !isAmbassador, // Only fetch for ambassador role
-  });
 
   const {
     data: progressionData,
@@ -101,17 +79,11 @@ export function TierProgress() {
     isError: isErrorProgression,
   } = useGetProgressionQuery();
 
-  const isLoading = isAmbassador
-    ? isLoadingAmbassadorStats || isLoadingProgression
-    : isLoadingStats || isLoadingProgression;
-  const isError = isAmbassador
-    ? isErrorAmbassadorStats || isErrorProgression
-    : isErrorStats || isErrorProgression;
+  const isLoading = isLoadingStats || isLoadingProgression;
+  const isError = isErrorProgression;
 
-  // Get user points from appropriate API based on role
-  const userPoints = isAmbassador
-    ? ambassadorStatsData?.data?.total_points || 0
-    : statsData?.data?.total_points || 0;
+  // Get user points from props
+  const userPoints = statsData?.total_points || 0;
 
   // Get tier information using dynamic tier system
   const progressionTiers = useMemo(
@@ -186,8 +158,7 @@ export function TierProgress() {
   }
 
   // Show error state (but still render with 0 points)
-  const hasData = isAmbassador ? ambassadorStatsData : statsData;
-  if (isError && !hasData) {
+  if (isError && !statsData) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}

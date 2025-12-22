@@ -294,7 +294,7 @@ const content = {
 };
 
 // Generic helper to build absolute image URLs from API responses
-const API_BASE_URL = 'http://apifann.globaltechserivce.com';
+const API_BASE_URL = 'http://api.fann.art';
 
 const buildImageUrl = (path: string | undefined): string => {
   if (!path) return '';

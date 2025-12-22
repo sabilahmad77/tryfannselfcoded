@@ -1,6 +1,6 @@
 import { useSignUpMutation } from "@/services/api/authApi";
 import { useGetRegionsQuery } from "@/services/api/regionApi";
-import { setTokens } from "@/store/authSlice";
+import { setTokens, type UserProfileData } from "@/store/authSlice";
 import { extractErrorMessage } from "@/utils/errorMessages";
 import {
   ArrowRight,
@@ -35,6 +35,7 @@ import {
   SelectField,
 } from "./ui/custom-form-elements";
 import { Label } from "./ui/label";
+import { AmbassadorVerificationModal } from "./auth/AmbassadorVerificationModal";
 
 interface SignUpProps {
   language: "en" | "ar";
@@ -70,6 +71,8 @@ export function SignUp({
     initialPersona || "artist"
   );
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showAmbassadorVerificationModal, setShowAmbassadorVerificationModal] =
+    useState(false);
 
   // Auto-select persona and move to step 2 if initialPersona is provided
   useEffect(() => {
@@ -541,25 +544,48 @@ export function SignUp({
       console.log("Is success?", isSuccess);
 
       if (isSuccess) {
-        // Extract tokens from response.data
-        // New API response structure: { success: true, status_code: 200, message: {}, data: { access: "...", refresh: "...", ... } }
+        // Extract tokens and user data from response.data
+        // New API response structure: { success: true, status_code: 200, message: {}, data: { access: "...", refresh: "...", role: "...", is_verify: ..., ... } }
+        // The API always returns full user data in the data field
         let accessToken: string | null = null;
         let refreshToken: string | null = null;
+        let userData: UserProfileData | undefined = undefined;
 
         if (apiResponse.data && typeof apiResponse.data === "object") {
           accessToken = apiResponse.data.access || null;
           refreshToken = apiResponse.data.refresh || null;
 
+          // Extract user data from response
+          // The API always returns full user profile data in the data field
+          userData = apiResponse.data as unknown as UserProfileData;
+
           console.log("Extracted tokens:", {
             hasAccessToken: !!accessToken,
             hasRefreshToken: !!refreshToken,
+            hasUserData: !!userData,
           });
         }
+
+        // Extract role and is_verify from user data
+        const role = userData?.role;
+        const isVerify = userData?.is_verify;
+
+        // Check if user is an ambassador with pending verification
+        const isAmbassador =
+          role === "Ambassador" || role?.toLowerCase() === "ambassador";
+        const isPendingVerification = isAmbassador && isVerify === false;
 
         // If tokens are found, store them in Redux store along with persona
         const persona = selectedPersona || "artist";
         if (accessToken && refreshToken) {
-          dispatch(setTokens({ accessToken, refreshToken, persona }));
+          dispatch(
+            setTokens({
+              accessToken,
+              refreshToken,
+              persona,
+              user: userData,
+            })
+          );
           console.log("Tokens and persona stored in Redux store");
         } else {
           console.warn("No tokens found in API response");
@@ -599,13 +625,19 @@ export function SignUp({
         // Show success toast
         toast.success(successMessage);
 
-        // Navigate to onboarding page after storing tokens
-        console.log("Navigating to onboarding with persona:", persona);
+        // Check for ambassador verification status
+        if (isPendingVerification) {
+          // Show ambassador verification modal instead of navigating
+          setShowAmbassadorVerificationModal(true);
+        } else {
+          // Navigate to onboarding page after storing tokens
+          console.log("Navigating to onboarding with persona:", persona);
 
-        // Call the navigation callback
-        onSignUpComplete(persona);
+          // Call the navigation callback
+          onSignUpComplete(persona);
 
-        console.log("Navigation callback completed");
+          console.log("Navigation callback completed");
+        }
       } else {
         // Handle failure case (success is false or undefined)
         console.warn(
@@ -626,6 +658,11 @@ export function SignUp({
   };
 
   const selectedPersonaData = personas.find((p) => p.id === selectedPersona);
+
+  // Show ambassador verification modal if needed
+  if (showAmbassadorVerificationModal) {
+    return <AmbassadorVerificationModal />;
+  }
 
   return (
     <div className="min-h-screen bg-[#0F021C] flex" dir={isRTL ? "rtl" : "ltr"}>

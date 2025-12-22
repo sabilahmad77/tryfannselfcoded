@@ -1,9 +1,11 @@
 import { useLanguage } from "@/contexts/useLanguage";
 import { useGetDashboardStatsGalleryQuery } from "@/services/api/dashboardApi";
 import type { RootState } from "@/store/store";
+import { setProfileCompleted } from "@/store/authSlice";
 import { motion } from "motion/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
 import { CompleteProfile } from "../shared/CompleteProfile";
@@ -30,6 +32,7 @@ export function GalleryDashboard() {
   const { language } = useLanguage();
   const t = content[language];
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
   // Handler to navigate to profile completion
@@ -37,13 +40,31 @@ export function GalleryDashboard() {
     navigate(ROUTES.PROFILE_COMPLETION);
   };
 
+  // Read from Redux store first (immediate, no API wait)
+  const reduxProfileCompleted = useSelector((state: RootState) => state.auth.profileCompleted);
+
   // Fetch gallery-specific dashboard stats
-  const { data: galleryStatsData } = useGetDashboardStatsGalleryQuery(undefined, {
+  const { data: galleryStatsData, refetch: refetchGalleryStats } = useGetDashboardStatsGalleryQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
 
   // Get profile_complete from API response
-  const profileCompleted = galleryStatsData?.data?.profile_complete ?? false;
+  const apiProfileCompleted = galleryStatsData?.data?.profile_complete ?? false;
+
+  // Use Redux store first, fallback to API if Redux is null
+  // This ensures immediate display without waiting for API
+  const profileCompleted = reduxProfileCompleted ?? apiProfileCompleted;
+
+  // Sync Redux store when API response comes back with updated value
+  useEffect(() => {
+    if (galleryStatsData?.data?.profile_complete !== undefined) {
+      const apiValue = galleryStatsData.data.profile_complete;
+      // Only update if different from current Redux value
+      if (reduxProfileCompleted !== apiValue) {
+        dispatch(setProfileCompleted(apiValue));
+      }
+    }
+  }, [galleryStatsData?.data?.profile_complete, reduxProfileCompleted, dispatch]);
 
   // Get user name from stored data
   const galleryName = storedUser
@@ -77,7 +98,10 @@ export function GalleryDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <PointWallet />
+          <PointWallet 
+            statsData={galleryStatsData?.data}
+            isLoadingStats={!galleryStatsData}
+          />
         </motion.div>
 
         <motion.div
@@ -109,7 +133,12 @@ export function GalleryDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <URLEncoder />
+          <URLEncoder
+            profileCompleted={profileCompleted}
+            statsData={galleryStatsData?.data}
+            isLoadingStats={!galleryStatsData}
+            onRefetchStats={refetchGalleryStats}
+          />
         </motion.div>
 
         {/* Row 3: Watch & Earn + Tier Progress */}
@@ -126,7 +155,10 @@ export function GalleryDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <TierProgress />
+          <TierProgress 
+            statsData={galleryStatsData?.data}
+            isLoadingStats={!galleryStatsData}
+          />
         </motion.div>
       </div>
     </DashboardLayout>

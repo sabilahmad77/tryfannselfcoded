@@ -19,7 +19,7 @@ import {
   Zap,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Oval } from "react-loader-spinner";
 import { useDispatch } from "react-redux";
@@ -29,6 +29,7 @@ import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { InputField, PasswordField } from "./ui/custom-form-elements";
 import { Label } from "./ui/label";
+import { AmbassadorVerificationModal } from "./auth/AmbassadorVerificationModal";
 
 interface SignInProps {
   language: "en" | "ar";
@@ -87,6 +88,8 @@ export function SignIn({
 
   const rememberMe = watch("rememberMe");
   const [login, { isLoading }] = useLoginMutation();
+  const [showAmbassadorVerificationModal, setShowAmbassadorVerificationModal] =
+    useState(false);
 
   // Load remembered credentials on component mount
   useEffect(() => {
@@ -202,6 +205,11 @@ export function SignIn({
   const content = t[language];
   const isRTL = language === "ar";
 
+  // Show ambassador verification modal if needed
+  if (showAmbassadorVerificationModal) {
+    return <AmbassadorVerificationModal />;
+  }
+
   const onSubmit = async (data: SignInFormData) => {
     try {
       // Handle remember me functionality
@@ -220,7 +228,7 @@ export function SignIn({
       }).unwrap();
 
       // Extract tokens from the nested data structure
-      // API response: { success: true, data: { access: "...", refresh: "...", profile_completed: ... } }
+      // API response: { success: true, status_code: 200, message: {}, data: { access: "...", refresh: "...", role: "...", is_verify: ..., ... } }
       const loginResult = result as LoginResponse;
       const responseData = loginResult.data || loginResult;
 
@@ -232,19 +240,17 @@ export function SignIn({
       const refreshToken =
         (responseData as LoginResponseData).refresh || loginResult.refresh;
 
-      // Get profile completion status and role (persona)
-      const profileCompleted =
-        (responseData as LoginResponseData)?.profile_completed ?? false;
-      const role = (responseData as LoginResponseData)?.role;
+      // Extract user profile data from response
+      // The API always returns full user data in the data field
+      const userData = loginResult.data
+        ? (loginResult.data as unknown as UserProfileData)
+        : undefined;
+
+      // Get profile completion status and role (persona) from userData
+      const profileCompleted = userData?.profile_completed ?? false;
+      const role = userData?.role || (responseData as LoginResponseData)?.role;
       // Convert role to lowercase persona (e.g., "Artist" -> "artist")
       const persona = role ? role.toLowerCase() : undefined;
-
-      // Extract user profile data from response
-      // The API returns user data in the data field when profile_completed is true
-      const userData =
-        profileCompleted && loginResult.data
-          ? (loginResult.data as unknown as UserProfileData)
-          : undefined;
 
       if (accessToken) {
         // Clear RTK Query cache when user logs in/relogins to ensure fresh data
@@ -283,6 +289,15 @@ export function SignIn({
         }
       }
 
+      // Extract role and is_verify from user data for ambassador verification check
+      const userRole = userData?.role;
+      const isVerify = userData?.is_verify;
+
+      // Check if user is an ambassador with pending verification
+      const isAmbassador =
+        userRole === "Ambassador" || userRole?.toLowerCase?.() === "ambassador";
+      const isPendingVerification = isAmbassador && isVerify === false;
+
       // Show success message
       const successMessage =
         (typeof loginResult.message === "string"
@@ -294,8 +309,14 @@ export function SignIn({
 
       toast.success(successMessage);
 
-      // Redirect to dashboard regardless of profile completion status
-      navigate(ROUTES.DASHBOARD, { replace: true });
+      // Check for ambassador verification status
+      if (isPendingVerification) {
+        // Show ambassador verification modal instead of navigating
+        setShowAmbassadorVerificationModal(true);
+      } else {
+        // Redirect to dashboard regardless of profile completion status
+        navigate(ROUTES.DASHBOARD, { replace: true });
+      }
     } catch {
       // Error toast is already shown by baseApi interceptor
       // No need to show duplicate toast here

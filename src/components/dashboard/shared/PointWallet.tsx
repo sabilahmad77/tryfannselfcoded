@@ -13,7 +13,7 @@ import {
 import { Progress } from "../../ui/progress";
 import { Badge } from "../../ui/badge";
 import { useLanguage } from "@/contexts/useLanguage";
-import { useGetDashboardStatsQuery, useGetProgressionQuery } from "@/services/api/dashboardApi";
+import { useGetProgressionQuery } from "@/services/api/dashboardApi";
 import {
   getCurrentTier,
   getNextTier,
@@ -22,6 +22,20 @@ import {
   buildTierThresholds,
   getTierOrder,
 } from "@/utils/tierSystem";
+
+interface PointWalletProps {
+  statsData?: {
+    total_points?: number;
+    influence_points?: number;
+    provenance_points?: number;
+    user_followers?: number;
+    profile_completed?: number;
+    referral_joined?: number;
+    first_login?: number;
+    [key: string]: unknown;
+  };
+  isLoadingStats?: boolean;
+}
 
 const content = {
   en: {
@@ -78,20 +92,11 @@ const content = {
   },
 };
 
-export function PointWallet() {
+export function PointWallet({ statsData, isLoadingStats = false }: PointWalletProps) {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === "ar";
   const [activeTab, setActiveTab] = useState<'activity' | 'nextSteps'>('activity');
-
-  // Fetch dashboard stats and progression data from API
-  const {
-    data: statsData,
-    isLoading: isLoadingStats,
-    isError: isErrorStats,
-  } = useGetDashboardStatsQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
 
   const {
     data: progressionData,
@@ -100,13 +105,13 @@ export function PointWallet() {
   } = useGetProgressionQuery();
 
   const isLoading = isLoadingStats || isLoadingProgression;
-  const isError = isErrorStats || isErrorProgression;
+  const isError = isErrorProgression;
 
-  // Use API data or fallback to default values
-  const totalPoints = statsData?.data?.total_points || 0;
-  const influencePoints = statsData?.data?.influence_points || 0;
-  const provenancePoints = statsData?.data?.provenance_points || 0;
-  const followerCount = statsData?.data?.user_followers || 0;
+  // Use stats data from props or fallback to default values
+  const totalPoints = statsData?.total_points || 0;
+  const influencePoints = statsData?.influence_points || 0;
+  const provenancePoints = statsData?.provenance_points || 0;
+  const followerCount = statsData?.user_followers || 0;
 
   // Get tier information using dynamic tier system
   const progressionTiers = progressionData?.data || [];
@@ -142,21 +147,21 @@ export function PointWallet() {
   const progress = tierProgress.progress;
   const pointsNeeded = tierProgress.pointsNeeded;
 
-  // Build activities from API data
+  // Build activities from stats data
   const activities = [
     {
       action: language === "en" ? "Profile Completed" : "إكمال الملف الشخصي",
-      points: `+${statsData?.data?.profile_completed || 0}`,
+      points: `+${statsData?.profile_completed || 0}`,
       type: "provenance" as const,
     },
     {
       action: language === "en" ? "Referral Joined" : "انضمام إحالة",
-      points: `+${statsData?.data?.referral_joined || 0}`,
+      points: `+${statsData?.referral_joined || 0}`,
       type: "influence" as const,
     },
     {
       action: language === "en" ? "First Login" : "تسجيل الدخول الأول",
-      points: `+${statsData?.data?.first_login || 0}`,
+      points: `+${statsData?.first_login || 0}`,
       type: "provenance" as const,
     },
   ].filter((activity) => {

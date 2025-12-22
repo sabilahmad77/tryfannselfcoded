@@ -13,9 +13,11 @@ import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
 import { useGetDashboardStatsQuery } from "@/services/api/dashboardApi";
 import type { RootState } from "@/store/store";
+import { setProfileCompleted } from "@/store/authSlice";
 import { motion } from "motion/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const content = {
   en: {
@@ -55,19 +57,38 @@ export function DashboardPage() {
   const { language } = useLanguage();
   const t = content[language];
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
   // Get user role/persona - check role field first, then persona
   const userRole = storedUser?.role?.toLowerCase() || null;
   const persona = useSelector((state: RootState) => state.auth.persona);
 
+  // Read from Redux store first (immediate, no API wait)
+  const reduxProfileCompleted = useSelector((state: RootState) => state.auth.profileCompleted);
+
   // Fetch dashboard stats to get profile_complete from API
-  const { data: dashboardStatsData } = useGetDashboardStatsQuery(undefined, {
+  const { data: dashboardStatsData, refetch: refetchDashboardStats } = useGetDashboardStatsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
 
   // Get profile_complete from API response
-  const profileCompleted = dashboardStatsData?.data?.profile_complete ?? false;
+  const apiProfileCompleted = dashboardStatsData?.data?.profile_complete ?? false;
+
+  // Use Redux store first, fallback to API if Redux is null
+  // This ensures immediate display without waiting for API
+  const profileCompleted = reduxProfileCompleted ?? apiProfileCompleted;
+
+  // Sync Redux store when API response comes back with updated value
+  useEffect(() => {
+    if (dashboardStatsData?.data?.profile_complete !== undefined) {
+      const apiValue = dashboardStatsData.data.profile_complete;
+      // Only update if different from current Redux value
+      if (reduxProfileCompleted !== apiValue) {
+        dispatch(setProfileCompleted(apiValue));
+      }
+    }
+  }, [dashboardStatsData?.data?.profile_complete, reduxProfileCompleted, dispatch]);
 
   // Determine which dashboard to show based on role
   // Role can be: "artist", "gallery", "collector" (case-insensitive)
@@ -145,7 +166,10 @@ export function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <PointWallet />
+          <PointWallet 
+            statsData={dashboardStatsData?.data}
+            isLoadingStats={!dashboardStatsData}
+          />
         </motion.div>
 
         {/* Referral Link Generator (URL Encoder) */}
@@ -154,7 +178,12 @@ export function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <URLEncoder />
+          <URLEncoder
+            profileCompleted={profileCompleted}
+            statsData={dashboardStatsData?.data}
+            isLoadingStats={!dashboardStatsData}
+            onRefetchStats={refetchDashboardStats}
+          />
         </motion.div>
 
         {/* Watch & Earn Videos */}
@@ -185,7 +214,10 @@ export function DashboardPage() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="lg:col-span-2"
         >
-          <TierProgress />
+          <TierProgress 
+            statsData={dashboardStatsData?.data}
+            isLoadingStats={!dashboardStatsData}
+          />
         </motion.div>
       </div>
     </DashboardLayout>

@@ -12,6 +12,8 @@ import { ROUTES } from "@/routes/paths";
 import { useGetUserDetailsQuery } from "@/services/api/authApi";
 import {
   useGetDashboardStatsQuery,
+  useGetDashboardStatsGalleryQuery,
+  useGetDashboardStatsAmbassadorQuery,
   useGetProgressionQuery,
 } from "@/services/api/dashboardApi";
 import { setUser, type UserProfileData } from "@/store/authSlice";
@@ -380,10 +382,74 @@ export function ProfilePage() {
       ? kycDataFromUser
       : kycDataFromOnboarding;
 
-  // Fetch dashboard stats from API (must be called before any conditional returns)
+  // Determine user role for API calls (must be before API calls)
+  const userRole = storedUser?.role?.toLowerCase() || persona?.toLowerCase() || "";
+  const isCollector = userRole === "collector";
+  const isAmbassador = userRole === "ambassador";
+  const isGallery = userRole === "gallery";
+
+  // Fetch dashboard stats from API based on role (must be called before any conditional returns)
   const { data: dashboardStatsData } = useGetDashboardStatsQuery(undefined, {
     refetchOnMountOrArgChange: true,
+    skip: isGallery || isAmbassador, // Skip if Gallery or Ambassador
   });
+
+  const { data: dashboardStatsGalleryData } = useGetDashboardStatsGalleryQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    skip: !isGallery, // Only call for Gallery
+  });
+
+  const { data: dashboardStatsAmbassadorData } = useGetDashboardStatsAmbassadorQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    skip: !isAmbassador, // Only call for Ambassador
+  });
+
+  // Map dashboard stats data based on role
+  const mappedDashboardStats = useMemo(() => {
+    if (isGallery && dashboardStatsGalleryData?.data) {
+      // Map Gallery stats
+      return {
+        total_points: dashboardStatsGalleryData.data.total_points ?? 0,
+        influence_points: dashboardStatsGalleryData.data.influence_points ?? 0,
+        provenance_points: dashboardStatsGalleryData.data.provenance_points ?? 0,
+        referral_count: dashboardStatsGalleryData.data.referral_count ?? 0,
+        user_followers: dashboardStatsGalleryData.data.user_followers ?? 0,
+        artwork_count: 0, // Gallery doesn't have artwork_count
+        collection_count: 0, // Gallery doesn't have collection_count
+      };
+    }
+    if (isAmbassador && dashboardStatsAmbassadorData?.data) {
+      // Map Ambassador stats
+      return {
+        total_points: dashboardStatsAmbassadorData.data.total_points ?? 0,
+        influence_points: dashboardStatsAmbassadorData.data.influence_points ?? 0,
+        provenance_points: dashboardStatsAmbassadorData.data.provenance_points ?? 0,
+        referral_count: dashboardStatsAmbassadorData.data.referral_count ?? 0,
+        user_followers: dashboardStatsAmbassadorData.data.user_followers ?? 0,
+        artwork_count: dashboardStatsAmbassadorData.data.artwork_count ?? 0,
+        collection_count: dashboardStatsAmbassadorData.data.collection_count ?? 0,
+      };
+    }
+    // Default stats (Collector/Artist)
+    if (dashboardStatsData?.data) {
+      return {
+        total_points: dashboardStatsData.data.total_points ?? 0,
+        influence_points: dashboardStatsData.data.influence_points ?? 0,
+        provenance_points: dashboardStatsData.data.provenance_points ?? 0,
+        referral_count: dashboardStatsData.data.referral_count ?? 0,
+        user_followers: dashboardStatsData.data.user_followers ?? 0,
+        artwork_count: dashboardStatsData.data.artwork_count ?? 0,
+        collection_count: dashboardStatsData.data.collection_count ?? 0,
+      };
+    }
+    return null;
+  }, [
+    isGallery,
+    isAmbassador,
+    dashboardStatsGalleryData,
+    dashboardStatsAmbassadorData,
+    dashboardStatsData,
+  ]);
 
   // Fetch progression data for tier calculation
   const { data: progressionData } = useGetProgressionQuery();
@@ -396,7 +462,7 @@ export function ProfilePage() {
 
   // Calculate total points for tier calculation (before conditional returns)
   const totalPoints =
-    dashboardStatsData?.data?.total_points ??
+    mappedDashboardStats?.total_points ??
     parseInt(storedUser?.points || "0", 10) ??
     0;
 
@@ -492,18 +558,18 @@ export function ProfilePage() {
       memberSince: formatDate(storedUser.date_joined),
       totalPoints,
       influencePoints:
-        dashboardStatsData?.data?.influence_points ??
+        mappedDashboardStats?.influence_points ??
         Math.floor(parseInt(storedUser.points || "0", 10) * 0.6),
       provenancePoints:
-        dashboardStatsData?.data?.provenance_points ??
+        mappedDashboardStats?.provenance_points ??
         Math.floor(parseInt(storedUser.points || "0", 10) * 0.4),
       referrals:
-        dashboardStatsData?.data?.referral_count ??
+        mappedDashboardStats?.referral_count ??
         storedUser.total_referral_clicks ??
         0,
-      followers: dashboardStatsData?.data?.user_followers ?? 0,
-      artworksSaved: dashboardStatsData?.data?.artwork_count ?? 0,
-      collections: dashboardStatsData?.data?.collection_count ?? 0,
+      followers: mappedDashboardStats?.user_followers ?? 0,
+      artworksSaved: mappedDashboardStats?.artwork_count ?? 0,
+      collections: mappedDashboardStats?.collection_count ?? 0,
       // Additional fields for edit profile
       title: storedUser.title || "",
       focus: storedUser.focus || "",
@@ -621,7 +687,7 @@ export function ProfilePage() {
 
             {/* Quick Stats */}
             <div
-              className={`grid grid-cols-2 md:grid-cols-5 gap-4 ${isRTL ? "text-right" : "text-left"
+              className={`grid grid-cols-2 ${isAmbassador ? "md:grid-cols-3" : isCollector ? "md:grid-cols-5" : "md:grid-cols-4"} gap-4 ${isRTL ? "text-right" : "text-left"
                 }`}
             >
               <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
@@ -638,18 +704,22 @@ export function ProfilePage() {
                 <p className="text-2xl text-[#ffffff]">{userData.referrals}</p>
                 <p className="text-xs text-[#808c99]">{t.referrals}</p>
               </div>
-              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
-                <p className="text-2xl text-[#ffffff]">
-                  {userData.artworksSaved}
-                </p>
-                <p className="text-xs text-[#808c99]">{t.artworksSaved}</p>
-              </div>
-              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
-                <p className="text-2xl text-[#ffffff]">
-                  {userData.collections}
-                </p>
-                <p className="text-xs text-[#808c99]">{t.collectionsCreated}</p>
-              </div>
+              {!isAmbassador && (
+                <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
+                  <p className="text-2xl text-[#ffffff]">
+                    {userData.artworksSaved}
+                  </p>
+                  <p className="text-xs text-[#808c99]">{t.artworksSaved}</p>
+                </div>
+              )}
+              {isCollector && (
+                <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
+                  <p className="text-2xl text-[#ffffff]">
+                    {userData.collections}
+                  </p>
+                  <p className="text-xs text-[#808c99]">{t.collectionsCreated}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1298,26 +1368,30 @@ export function ProfilePage() {
                       {userData.referrals}
                     </span>
                   </div>
-                  <div
-                    className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""
-                      }`}
-                  >
-                    <span className="text-[#808c99]">{t.artworksSaved}</span>
-                    <span className="text-2xl text-[#45e3d3]">
-                      {userData.artworksSaved}
-                    </span>
-                  </div>
-                  <div
-                    className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""
-                      }`}
-                  >
-                    <span className="text-[#808c99]">
-                      {t.collectionsCreated}
-                    </span>
-                    <span className="text-2xl text-[#0ea5e9]">
-                      {userData.collections}
-                    </span>
-                  </div>
+                  {!isAmbassador && (
+                    <div
+                      className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""
+                        }`}
+                    >
+                      <span className="text-[#808c99]">{t.artworksSaved}</span>
+                      <span className="text-2xl text-[#45e3d3]">
+                        {userData.artworksSaved}
+                      </span>
+                    </div>
+                  )}
+                  {isCollector && (
+                    <div
+                      className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""
+                        }`}
+                    >
+                      <span className="text-[#808c99]">
+                        {t.collectionsCreated}
+                      </span>
+                      <span className="text-2xl text-[#0ea5e9]">
+                        {userData.collections}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

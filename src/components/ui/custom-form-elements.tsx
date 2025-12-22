@@ -1,5 +1,5 @@
 import * as React from "react";
-import { LucideIcon, Eye, EyeOff, X, Upload, FileText } from "lucide-react";
+import { LucideIcon, Eye, EyeOff, X, Upload, FileText, Calendar } from "lucide-react";
 import { Input } from "./input";
 import { Label } from "./label";
 import { Textarea } from "./textarea";
@@ -87,6 +87,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       inputClassName,
       iconClassName,
       id,
+      type,
       ...inputProps
     },
     ref
@@ -96,6 +97,8 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     const effectiveIconPosition = iconPosition || (isRTL ? "right" : "left");
     const hasIcon = !!Icon;
     const hasError = !!error;
+    const isDateType = type === "date";
+    const inputRef = React.useRef<HTMLInputElement>(null);
 
     // Determine optional text based on isRTL
     const optionalText = isRTL ? "(اختياري)" : "(Optional)";
@@ -104,6 +107,20 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     const { ref: registerRef, ...restInputProps } = inputProps as {
       ref?: React.Ref<HTMLInputElement>;
     } & typeof inputProps;
+
+    // Handle calendar icon click to open date picker
+    const handleCalendarClick = () => {
+      const input = inputRef.current;
+      if (input && isDateType) {
+        // Try showPicker() first (modern browsers)
+        if (typeof input.showPicker === "function") {
+          input.showPicker();
+        } else {
+          // Fallback: trigger click on input
+          input.click();
+        }
+      }
+    };
 
     return (
       <div className={cn("space-y-2", className)}>
@@ -137,8 +154,30 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           )}
 
           <Input
-            ref={registerRef || ref}
+            ref={(node) => {
+              // Store in internal ref for calendar functionality
+              // @ts-expect-error - inputRef is mutable, this is safe
+              inputRef.current = node;
+              
+              // Handle react-hook-form ref
+              if (registerRef) {
+                if (typeof registerRef === "function") {
+                  registerRef(node);
+                } else if (registerRef && typeof registerRef === "object" && "current" in registerRef) {
+                  // @ts-expect-error - registerRef from react-hook-form is typically mutable
+                  registerRef.current = node;
+                }
+              }
+              
+              // Handle external ref (from forwardRef)
+              if (typeof ref === "function") {
+                ref(node);
+              } else if (ref && typeof ref === "object" && "current" in ref) {
+                ref.current = node;
+              }
+            }}
             id={fieldId}
+            type={type}
             className={cn(
               "bg-background border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
               "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20",
@@ -150,6 +189,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
               hasIcon &&
                 effectiveIconPosition === (isRTL ? "left" : "right") &&
                 (isRTL ? "pl-10" : "pr-10"),
+              isDateType && (isRTL ? "pl-10" : "pr-10"), // Add padding for calendar icon
               inputClassName
             )}
             aria-invalid={hasError}
@@ -168,10 +208,32 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             <Icon
               className={cn(
                 "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#ffffff]/40 pointer-events-none",
-                isRTL ? "left-3" : "right-3",
+                isDateType
+                  ? isRTL
+                    ? "left-10"
+                    : "right-10"
+                  : isRTL
+                  ? "left-3"
+                  : "right-3",
                 iconClassName
               )}
             />
+          )}
+
+          {/* Calendar icon for date type - always at the end */}
+          {isDateType && (
+            <button
+              type="button"
+              onClick={handleCalendarClick}
+              className={cn(
+                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-white hover:text-[#ffcc33] transition-colors cursor-pointer z-10",
+                isRTL ? "left-3" : "right-3"
+              )}
+              aria-label={isRTL ? "فتح التقويم" : "Open calendar"}
+              tabIndex={0}
+            >
+              <Calendar className="w-5 h-5" />
+            </button>
           )}
         </div>
 

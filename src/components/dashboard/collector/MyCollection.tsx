@@ -3,7 +3,6 @@ import {
   useCreateArtworkCollectionMutation,
   useDeleteArtworkCollectionMutation,
   useGetArtworkCollectionQuery,
-  useGetDashboardStatsQuery,
   useUpdateArtworkCollectionMutation,
   type ArtworkCollection,
 } from "@/services/api/dashboardApi";
@@ -29,6 +28,12 @@ import { ProfileLockedState } from "../shared/ProfileLockedState";
 interface MyCollectionProps {
   profileCompleted?: boolean;
   onCompleteProfile?: () => void;
+  statsData?: {
+    artwork_count?: number;
+    portfolio_value?: number;
+    growth?: number;
+    [key: string]: unknown;
+  };
 }
 
 const content = {
@@ -153,6 +158,7 @@ const content = {
 export function MyCollection({
   profileCompleted = true,
   onCompleteProfile,
+  statsData,
 }: MyCollectionProps) {
   const { language } = useLanguage();
   const t = content[language];
@@ -173,11 +179,6 @@ export function MyCollection({
     isLoading: isLoadingArtworks,
     error: artworksError,
   } = useGetArtworkCollectionQuery(undefined, { skip: !profileCompleted });
-
-  // Fetch dashboard stats from API
-  const { data: dashboardStatsData } = useGetDashboardStatsQuery(undefined, {
-    skip: false,
-  });
 
   const [createArtwork, { isLoading: isCreating }] =
     useCreateArtworkCollectionMutation();
@@ -416,7 +417,7 @@ export function MyCollection({
             <span className="text-xs text-[#808c99]">{t.totalPieces}</span>
           </div>
           <p className="text-2xl text-[#ffffff]">
-            {dashboardStatsData?.data?.artwork_count ?? artworkList.length}
+            {statsData?.artwork_count ?? artworkList.length}
           </p>
         </motion.div>
 
@@ -432,8 +433,8 @@ export function MyCollection({
             <span className="text-xs text-[#808c99]">{t.totalValue}</span>
           </div>
           <p className="text-2xl text-[#ffffff]">
-            {dashboardStatsData?.data?.portfolio_value
-              ? `$${dashboardStatsData.data.portfolio_value.toFixed(1)}K`
+            {statsData?.portfolio_value
+              ? `$${statsData.portfolio_value.toFixed(1)}K`
               : "$0K"}
           </p>
         </motion.div>
@@ -450,8 +451,8 @@ export function MyCollection({
             <span className="text-xs text-[#808c99]">{t.growth}</span>
           </div>
           <p className="text-2xl text-emerald-400">
-            {dashboardStatsData?.data?.growth !== undefined
-              ? `+${dashboardStatsData.data.growth.toFixed(1)}%`
+            {statsData?.growth !== undefined
+              ? `+${statsData.growth.toFixed(1)}%`
               : "+0%"}
           </p>
         </motion.div>

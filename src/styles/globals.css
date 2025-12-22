@@ -559,3 +559,15 @@ html {
   scrollbar-color: rgba(255, 204, 51, 0.4) rgba(15, 2, 28, 0.5);
   overflow-x: hidden; /* Hide horizontal scrollbar */
 }
+
+/* Hide default browser calendar icon for date inputs */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Firefox - hide calendar icon */
+input[type="date"] {
+  -moz-appearance: textfield;
+}

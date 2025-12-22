@@ -27,6 +27,7 @@ export function CompleteProfile({
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === 'ar';
+  
   const [isPromptOpen, setIsPromptOpen] = useState(!profileCompleted);
 
   useEffect(() => {

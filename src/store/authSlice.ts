@@ -157,10 +157,18 @@ const authSlice = createSlice({
     },
     setUser: (state, action: PayloadAction<UserProfileData>) => {
       state.user = action.payload;
+      // Sync profileCompleted from user object if available
+      if (action.payload.profile_completed !== undefined) {
+        state.profileCompleted = action.payload.profile_completed;
+      }
     },
     updateUser: (state, action: PayloadAction<Partial<UserProfileData>>) => {
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
+        // Sync profileCompleted from user object if available
+        if (action.payload.profile_completed !== undefined) {
+          state.profileCompleted = action.payload.profile_completed;
+        }
       }
     },
     clearAuth: (state) => {

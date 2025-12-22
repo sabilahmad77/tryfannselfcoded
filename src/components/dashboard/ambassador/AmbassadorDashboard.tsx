@@ -26,14 +26,16 @@ import { TierProgress } from "../shared/TierProgress";
 import { URLEncoder } from "../shared/URLEncoder";
 import { WatchVideos } from "../shared/WatchVideos";
 import { useLanguage } from "@/contexts/useLanguage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "@/store/store";
+import { setProfileCompleted } from "@/store/authSlice";
 import { ROUTES } from "@/routes/paths";
 import {
   useGetDashboardStatsAmbassadorQuery,
   useGenerateReferralCodeQuery,
 } from "@/services/api/dashboardApi";
+import { useEffect } from "react";
 
 const content = {
   en: {
@@ -111,6 +113,7 @@ export function AmbassadorDashboard() {
   const t = content[language];
   const isRTL = language === "ar";
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
   // Handler to navigate to profile completion
@@ -128,14 +131,32 @@ export function AmbassadorDashboard() {
 
   const [referralLinkCopied, setReferralLinkCopied] = useState(false);
 
+  // Read from Redux store first (immediate, no API wait)
+  const reduxProfileCompleted = useSelector((state: RootState) => state.auth.profileCompleted);
+
   // Fetch API data
-  const { data: ambassadorStatsData, isLoading: isLoadingAmbassadorStats } =
+  const { data: ambassadorStatsData, isLoading: isLoadingAmbassadorStats, refetch: refetchAmbassadorStats } =
     useGetDashboardStatsAmbassadorQuery(undefined, {
       refetchOnMountOrArgChange: true,
     });
 
   // Get profile_complete from API response
-  const profileCompleted = ambassadorStatsData?.data?.profile_complete ?? false;
+  const apiProfileCompleted = ambassadorStatsData?.data?.profile_complete ?? false;
+
+  // Use Redux store first, fallback to API if Redux is null
+  // This ensures immediate display without waiting for API
+  const profileCompleted = reduxProfileCompleted ?? apiProfileCompleted;
+
+  // Sync Redux store when API response comes back with updated value
+  useEffect(() => {
+    if (ambassadorStatsData?.data?.profile_complete !== undefined) {
+      const apiValue = ambassadorStatsData.data.profile_complete;
+      // Only update if different from current Redux value
+      if (reduxProfileCompleted !== apiValue) {
+        dispatch(setProfileCompleted(apiValue));
+      }
+    }
+  }, [ambassadorStatsData?.data?.profile_complete, reduxProfileCompleted, dispatch]);
 
   const { data: referralCodeData } = useGenerateReferralCodeQuery();
 
@@ -364,7 +385,10 @@ export function AmbassadorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <PointWallet />
+          <PointWallet 
+            statsData={ambassadorStatsData?.data}
+            isLoadingStats={isLoadingAmbassadorStats}
+          />
         </motion.div>
 
         <motion.div
@@ -372,7 +396,12 @@ export function AmbassadorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
         >
-          <URLEncoder />
+          <URLEncoder
+            profileCompleted={profileCompleted}
+            statsData={ambassadorStatsData?.data}
+            isLoadingStats={isLoadingAmbassadorStats}
+            onRefetchStats={refetchAmbassadorStats}
+          />
         </motion.div>
       </div>
 
@@ -468,7 +497,10 @@ export function AmbassadorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <TierProgress />
+          <TierProgress 
+            statsData={ambassadorStatsData?.data}
+            isLoadingStats={isLoadingAmbassadorStats}
+          />
         </motion.div>
 
         {/* Referral Stats */}

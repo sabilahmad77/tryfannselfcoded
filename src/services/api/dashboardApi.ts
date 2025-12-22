@@ -367,14 +367,21 @@ export interface DashboardStatsGalleryResponse {
     influence_points?: number;
     provenance_points?: number;
     fann_platform_follower?: number;
+    user_followers?: number;
     profile_completed?: number;
     profile_complete?: boolean;
     referral_joined?: number;
+    referral_count?: number;
     first_login?: number;
     tier_name?: string;
     tier_min_points?: number;
     tier_max_points?: number;
     tier_progress_percentage?: number;
+    referral_link?: string;
+    is_referral_code?: boolean;
+    total_referral_clicks?: number;
+    conversation?: number;
+    pending?: number;
     [key: string]: unknown;
   };
 }
@@ -413,7 +420,7 @@ export interface DashboardStatsAmbassadorResponse {
     profile_complete?: boolean;
     referral_joined?: number;
     first_login?: number;
-    conversation?: number; // This is conversions
+    conversation?: number;
     pending?: number;
     curator_percentage?: number;
     watched_percentage?: number;
@@ -423,9 +430,10 @@ export interface DashboardStatsAmbassadorResponse {
     artwork_count?: number;
     collection_count?: number;
     is_referral_code?: boolean;
-    rewards_point?: number; // Note: singular "point" in API
+    rewards_point?: number;
     active_referral_count?: number;
     fann_platform_follower?: number;
+    user_followers?: number;
     social_stats?: SocialStats;
     [key: string]: unknown;
   };

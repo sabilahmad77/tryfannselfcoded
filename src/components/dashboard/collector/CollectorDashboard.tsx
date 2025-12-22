@@ -2,9 +2,11 @@ import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
 import { useGetDashboardStatsQuery } from "@/services/api/dashboardApi";
 import type { RootState } from "@/store/store";
+import { setProfileCompleted } from "@/store/authSlice";
 import { motion } from "motion/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { CompleteProfile } from "../shared/CompleteProfile";
 import { DashboardLayout } from "../shared/DashboardLayout";
 import { DashboardWelcome } from "../shared/DashboardWelcome";
@@ -31,15 +33,34 @@ export function CollectorDashboard() {
   const { language } = useLanguage();
   const t = content[language];
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const storedUser = useSelector((state: RootState) => state.auth.user);
 
+  // Read from Redux store first (immediate, no API wait)
+  const reduxProfileCompleted = useSelector((state: RootState) => state.auth.profileCompleted);
+
   // Fetch dashboard stats to get profile_complete from API
-  const { data: dashboardStatsData } = useGetDashboardStatsQuery(undefined, {
+  const { data: dashboardStatsData, refetch: refetchDashboardStats } = useGetDashboardStatsQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
 
   // Get profile_complete from API response
-  const profileCompleted = dashboardStatsData?.data?.profile_complete ?? false;
+  const apiProfileCompleted = dashboardStatsData?.data?.profile_complete ?? false;
+
+  // Use Redux store first, fallback to API if Redux is null
+  // This ensures immediate display without waiting for API
+  const profileCompleted = reduxProfileCompleted ?? apiProfileCompleted;
+
+  // Sync Redux store when API response comes back with updated value
+  useEffect(() => {
+    if (dashboardStatsData?.data?.profile_complete !== undefined) {
+      const apiValue = dashboardStatsData.data.profile_complete;
+      // Only update if different from current Redux value
+      if (reduxProfileCompleted !== apiValue) {
+        dispatch(setProfileCompleted(apiValue));
+      }
+    }
+  }, [dashboardStatsData?.data?.profile_complete, reduxProfileCompleted, dispatch]);
 
   // Handler to navigate to profile completion
   const handleCompleteProfile = () => {
@@ -76,7 +97,10 @@ export function CollectorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <PointWallet />
+          <PointWallet 
+            statsData={dashboardStatsData?.data}
+            isLoadingStats={!dashboardStatsData}
+          />
         </motion.div>
 
         {/* My Collection */}
@@ -88,6 +112,7 @@ export function CollectorDashboard() {
           <MyCollection
             profileCompleted={profileCompleted}
             onCompleteProfile={handleCompleteProfile}
+            statsData={dashboardStatsData?.data}
           />
         </motion.div>
 
@@ -110,7 +135,12 @@ export function CollectorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <URLEncoder />
+          <URLEncoder
+            profileCompleted={profileCompleted}
+            statsData={dashboardStatsData?.data}
+            isLoadingStats={!dashboardStatsData}
+            onRefetchStats={refetchDashboardStats}
+          />
         </motion.div>
 
         {/* Watch & Earn Videos */}
@@ -130,10 +160,16 @@ export function CollectorDashboard() {
           className="flex flex-col gap-6"
         >
           {/* Tier Progress */}
-          <TierProgress />
+          <TierProgress 
+            statsData={dashboardStatsData?.data}
+            isLoadingStats={!dashboardStatsData}
+          />
 
           {/* Market Insights */}
-          <MarketInsights />
+          <MarketInsights 
+            statsData={dashboardStatsData?.data}
+            isLoadingStats={!dashboardStatsData}
+          />
         </motion.div>
       </div>
     </DashboardLayout>
