@@ -4,6 +4,7 @@ import type { RootState } from "@/store/store";
 import { ROUTES } from "@/routes/paths";
 import { useTokenExpired } from "@/contexts/useTokenExpired";
 import { AmbassadorVerificationModal } from "@/components/auth/AmbassadorVerificationModal";
+import { EmailVerificationModal } from "@/components/auth/EmailVerificationModal";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -61,8 +62,25 @@ export function PrivateRoute({ children }: PrivateRouteProps) {
     user?.role?.toLowerCase?.() === "ambassador";
   const isPendingVerification = isAmbassador && user?.is_verify === false;
 
+  // Email verification gate:
+  // If the user is an artist, gallery, or collector and their email is not verified,
+  // block access to all private routes and show email verification modal.
+  const isArtistGalleryCollector =
+    user?.role === "Artist" ||
+    user?.role === "Gallery" ||
+    user?.role === "Collector" ||
+    user?.role?.toLowerCase?.() === "artist" ||
+    user?.role?.toLowerCase?.() === "gallery" ||
+    user?.role?.toLowerCase?.() === "collector";
+  const needsEmailVerification =
+    isArtistGalleryCollector && user?.is_verify === false;
+
   if (isPendingVerification) {
     return <AmbassadorVerificationModal />;
+  }
+
+  if (needsEmailVerification) {
+    return <EmailVerificationModal />;
   }
 
   return <>{children}</>;

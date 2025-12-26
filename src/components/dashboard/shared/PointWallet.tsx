@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { useState } from "react";
+// import { useState } from "react";
 import {
   Wallet,
   TrendingUp,
@@ -7,28 +7,25 @@ import {
   Shield,
   Loader2,
   Users,
+  UserPlus,
   Award,
   Zap,
 } from "lucide-react";
 import { Progress } from "../../ui/progress";
 import { Badge } from "../../ui/badge";
 import { useLanguage } from "@/contexts/useLanguage";
-import { useGetProgressionQuery } from "@/services/api/dashboardApi";
-import {
-  getCurrentTier,
-  getNextTier,
-  calculateTierProgress,
-  tierNameToKey,
-  buildTierThresholds,
-  getTierOrder,
-} from "@/utils/tierSystem";
 
 interface PointWalletProps {
   statsData?: {
     total_points?: number;
+    tier_name?: string;
+    tier_progress_percentage?: number;
+    next_tier_name?: string;
+    next_tier_need_points?: number;
     influence_points?: number;
     provenance_points?: number;
     user_followers?: number;
+    user_following?: number;
     profile_completed?: number;
     referral_joined?: number;
     first_login?: number;
@@ -47,6 +44,7 @@ const content = {
     influencePoints: "Influence Points",
     provenancePoints: "Provenance Points",
     followers: "Followers",
+    following: "Following",
     recentActivity: "Recent Activity",
     nextSteps: "Next Steps",
     pointsNeeded: "points needed",
@@ -73,6 +71,7 @@ const content = {
     influencePoints: "نقاط التأثير",
     provenancePoints: "نقاط المصداقية",
     followers: "المتابعون",
+    following: "المتابَعون",
     recentActivity: "النشاط الأخير",
     nextSteps: "الخطوات التالية",
     pointsNeeded: "نقطة مطلوبة",
@@ -96,79 +95,46 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === "ar";
-  const [activeTab, setActiveTab] = useState<'activity' | 'nextSteps'>('activity');
+  // const [activeTab, setActiveTab] = useState<'activity' | 'nextSteps'>('activity');
 
-  const {
-    data: progressionData,
-    isLoading: isLoadingProgression,
-    isError: isErrorProgression,
-  } = useGetProgressionQuery();
-
-  const isLoading = isLoadingStats || isLoadingProgression;
-  const isError = isErrorProgression;
+  const isLoading = isLoadingStats;
+  const isError = false; // No longer using progression query
 
   // Use stats data from props or fallback to default values
   const totalPoints = statsData?.total_points || 0;
   const influencePoints = statsData?.influence_points || 0;
   const provenancePoints = statsData?.provenance_points || 0;
   const followerCount = statsData?.user_followers || 0;
+  const followingCount = statsData?.user_following || 0;
 
-  // Get tier information using dynamic tier system
-  const progressionTiers = progressionData?.data || [];
-
-  // Get tier display names from API data
-  const getTierNameFromKey = (tierKey: string): string => {
-    const tier = progressionTiers.find(t => tierNameToKey(t.name) === tierKey);
-    return tier?.name || tierKey;
-  };
-
-  // Calculate current tier based on total points with dynamic thresholds
-  const tierThresholds = progressionTiers.length > 0
-    ? buildTierThresholds(progressionTiers)
-    : {};
-  const tierOrder = progressionTiers.length > 0
-    ? getTierOrder(progressionTiers)
-    : [];
-
-  const currentTierKey = progressionTiers.length > 0
-    ? getCurrentTier(totalPoints, tierThresholds)
-    : "explorer";
-  const nextTierKey = progressionTiers.length > 0
-    ? getNextTier(currentTierKey, tierOrder)
-    : null;
-
-  const tierProgress = progressionTiers.length > 0
-    ? calculateTierProgress(totalPoints, currentTierKey, nextTierKey, tierThresholds)
-    : { progress: 0, pointsNeeded: 0 };
-
-  // Get tier display names
-  const currentTier = getTierNameFromKey(currentTierKey);
-  const nextTier = nextTierKey ? getTierNameFromKey(nextTierKey) : null;
-  const progress = tierProgress.progress;
-  const pointsNeeded = tierProgress.pointsNeeded;
+  // Get tier information directly from dashboard stats API
+  const currentTier = statsData?.tier_name || "Explorer";
+  const nextTier = statsData?.next_tier_name || null;
+  const progress = statsData?.tier_progress_percentage || 0;
+  const pointsNeeded = statsData?.next_tier_need_points || 0;
 
   // Build activities from stats data
-  const activities = [
-    {
-      action: language === "en" ? "Profile Completed" : "إكمال الملف الشخصي",
-      points: `+${statsData?.profile_completed || 0}`,
-      type: "provenance" as const,
-    },
-    {
-      action: language === "en" ? "Referral Joined" : "انضمام إحالة",
-      points: `+${statsData?.referral_joined || 0}`,
-      type: "influence" as const,
-    },
-    {
-      action: language === "en" ? "First Login" : "تسجيل الدخول الأول",
-      points: `+${statsData?.first_login || 0}`,
-      type: "provenance" as const,
-    },
-  ].filter((activity) => {
-    // Only show activities with points > 0
-    const points = parseInt(activity.points.replace("+", ""));
-    return points > 0;
-  });
+  // const activities = [
+  //   {
+  //     action: language === "en" ? "Profile Completed" : "إكمال الملف الشخصي",
+  //     points: `+${statsData?.profile_completed || 0}`,
+  //     type: "provenance" as const,
+  //   },
+  //   {
+  //     action: language === "en" ? "Referral Joined" : "انضمام إحالة",
+  //     points: `+${statsData?.referral_joined || 0}`,
+  //     type: "influence" as const,
+  //   },
+  //   {
+  //     action: language === "en" ? "First Login" : "تسجيل الدخول الأول",
+  //     points: `+${statsData?.first_login || 0}`,
+  //     type: "provenance" as const,
+  //   },
+  // ].filter((activity) => {
+  //   // Only show activities with points > 0
+  //   const points = parseInt(activity.points.replace("+", ""));
+  //   return points > 0;
+  // });
 
   // Show loading state
   if (isLoading) {
@@ -293,7 +259,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
       )}
 
       {/* Point Types */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
         <motion.div
           whileHover={{ scale: 1.05 }}
           className="bg-[#0f021c] rounded-xl p-4 border border-[#9375b5]/30"
@@ -335,10 +301,24 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
           </div>
           <p className="text-2xl text-[#ffffff]">{followerCount}</p>
         </motion.div>
+
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="bg-[#0f021c] rounded-xl p-4 border border-[#45e3d3]/30"
+        >
+          <div
+            className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
+              }`}
+          >
+            <UserPlus className="w-5 h-5 text-[#45e3d3]" />
+            <span className="text-xs text-[#808c99]">{t.following}</span>
+          </div>
+          <p className="text-2xl text-[#ffffff]">{followingCount}</p>
+        </motion.div>
       </div>
 
       {/* Tabs */}
-      <div className={`flex gap-2 mb-4 p-1 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
+      {/* <div className={`flex gap-2 mb-4 p-1 bg-background rounded-lg ${isRTL ? 'flex-row-reverse' : ''}`}>
         <button
           onClick={() => setActiveTab('activity')}
           className={`flex-1 px-4 py-2 rounded-md text-sm transition-all ${activeTab === 'activity'
@@ -357,10 +337,10 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
         >
           {t.nextSteps}
         </button>
-      </div>
+      </div> */}
 
       {/* Recent Activity */}
-      {activeTab === 'activity' && (
+      {/* {activeTab === 'activity' && (
         <div>
           <div className="space-y-2">
             {activities.length > 0 ? (
@@ -408,10 +388,10 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
             )}
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Next Steps */}
-      {activeTab === 'nextSteps' && (
+      {/* {activeTab === 'nextSteps' && (
         <div>
           <div className="space-y-2">
             {t.nextStepsList.map((step, index) => {
@@ -449,7 +429,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
             })}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

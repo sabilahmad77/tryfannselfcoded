@@ -12,6 +12,7 @@ import {
 } from "./select";
 import { Switch } from "./switch";
 import { cn } from "./utils";
+import { getPhoneValidationError } from "@/utils/phoneValidation";
 
 // ============================================================================
 // Base Field Wrapper Props
@@ -46,13 +47,15 @@ export interface BaseFieldProps {
 
 export interface InputFieldProps
   extends Omit<React.ComponentProps<"input">, "className">,
-    BaseFieldProps {
+  BaseFieldProps {
   /** Optional icon to display on the left (LTR) or right (RTL) */
   icon?: LucideIcon;
   /** Icon position - 'left' for LTR, 'right' for RTL (auto-adjusted based on isRTL) */
   iconPosition?: "left" | "right";
   /** Custom icon className */
   iconClassName?: string;
+  /** Disable automatic phone validation when type="tel" (default: false) */
+  validatePhone?: boolean;
 }
 
 /**
@@ -88,6 +91,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       iconClassName,
       id,
       type,
+      validatePhone = true,
       ...inputProps
     },
     ref
@@ -96,17 +100,38 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     const fieldId = id || htmlFor || generatedId;
     const effectiveIconPosition = iconPosition || (isRTL ? "right" : "left");
     const hasIcon = !!Icon;
-    const hasError = !!error;
     const isDateType = type === "date";
+    const isTelType = type === "tel";
     const inputRef = React.useRef<HTMLInputElement>(null);
+    const [phoneError, setPhoneError] = React.useState<string | null>(null);
+
+    // Combine phone validation error with prop error
+    const hasError = !!error || !!phoneError;
+    const finalError = error || phoneError;
 
     // Determine optional text based on isRTL
     const optionalText = isRTL ? "(اختياري)" : "(Optional)";
 
-    // Extract ref from inputProps if it comes from react-hook-form register
-    const { ref: registerRef, ...restInputProps } = inputProps as {
+    // Extract ref, onBlur, onChange, and onKeyDown from inputProps if it comes from react-hook-form register
+    const { ref: registerRef, onBlur: registerOnBlur, onChange: registerOnChange, onKeyDown: registerOnKeyDown, ...restInputProps } = inputProps as {
       ref?: React.Ref<HTMLInputElement>;
+      onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+      onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+      onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     } & typeof inputProps;
+
+    // Extract onChange and onKeyDown from restInputProps if they exist (for non-register usage)
+    const { onChange: restOnChange, onKeyDown: restOnKeyDown, placeholder: providedPlaceholder, ...finalRestInputProps } = restInputProps as {
+      onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+      onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+      placeholder?: string;
+    } & typeof restInputProps;
+
+    // Set default placeholder for tel type if not provided
+    const defaultTelPlaceholder = isRTL ? "+971 50 123 4567" : "+1 234 567 8900";
+    const placeholder = isTelType && !providedPlaceholder 
+      ? defaultTelPlaceholder 
+      : providedPlaceholder;
 
     // Handle calendar icon click to open date picker
     const handleCalendarClick = () => {
@@ -119,6 +144,137 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           // Fallback: trigger click on input
           input.click();
         }
+      }
+    };
+
+    // Handle phone validation on blur
+    const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      if (isTelType && validatePhone) {
+        const value = e.target.value.trim();
+        if (value) {
+          const error = getPhoneValidationError(value, isRTL);
+          setPhoneError(error);
+        } else {
+          setPhoneError(null);
+        }
+      }
+    };
+
+    // Handle keydown - restrict space when empty and restrict alphabets for tel type
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const input = e.currentTarget;
+      const isEmpty = !input.value || input.value.trim().length === 0;
+
+      // Prevent space when input is empty (for all types)
+      if (e.key === " " && isEmpty) {
+        e.preventDefault();
+        return;
+      }
+
+      // For tel type, restrict alphabets (only allow numbers and phone formatting characters)
+      if (isTelType) {
+        // Allow: numbers, +, -, space, (, ), ., Backspace, Delete, Tab, Arrow keys, Home, End
+        const allowedKeys = [
+          "Backspace",
+          "Delete",
+          "Tab",
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowUp",
+          "ArrowDown",
+          "Home",
+          "End",
+        ];
+
+        // Allow control keys (Ctrl, Alt, Meta) - for copy/paste, etc.
+        if (e.ctrlKey || e.altKey || e.metaKey) {
+          // Call original onKeyDown if provided
+          if (registerOnKeyDown) {
+            registerOnKeyDown(e);
+          }
+          if (restOnKeyDown) {
+            restOnKeyDown(e);
+          }
+          return;
+        }
+
+        // Check if key is allowed navigation/editing key
+        if (allowedKeys.includes(e.key)) {
+          // Call original onKeyDown if provided
+          if (registerOnKeyDown) {
+            registerOnKeyDown(e);
+          }
+          if (restOnKeyDown) {
+            restOnKeyDown(e);
+          }
+          return;
+        }
+
+        // Allow numbers (0-9)
+        if (/^[0-9]$/.test(e.key)) {
+          // Call original onKeyDown if provided
+          if (registerOnKeyDown) {
+            registerOnKeyDown(e);
+          }
+          if (restOnKeyDown) {
+            restOnKeyDown(e);
+          }
+          return;
+        }
+
+        // Allow phone formatting characters: +, -, space, (, ), .
+        if (/^[+\-() .]$/.test(e.key)) {
+          // Call original onKeyDown if provided
+          if (registerOnKeyDown) {
+            registerOnKeyDown(e);
+          }
+          if (restOnKeyDown) {
+            restOnKeyDown(e);
+          }
+          return;
+        }
+
+        // Block all other keys (alphabets, special characters, etc.)
+        e.preventDefault();
+        return;
+      }
+
+      // For non-tel types, just handle space restriction and call original handlers
+      if (registerOnKeyDown) {
+        registerOnKeyDown(e);
+      }
+      if (restOnKeyDown) {
+        restOnKeyDown(e);
+      }
+    };
+
+    // Handle change for tel type - filter out invalid characters on paste/input
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      let finalEvent = e;
+
+      if (isTelType) {
+        // Only allow numbers and phone formatting characters
+        const value = e.target.value;
+        const filtered = value.replace(/[^0-9+\-() .]/g, "");
+        if (value !== filtered) {
+          // Update the input value
+          e.target.value = filtered;
+          // Create synthetic event with filtered value
+          finalEvent = {
+            ...e,
+            target: { ...e.target, value: filtered },
+          } as React.ChangeEvent<HTMLInputElement>;
+        }
+      }
+
+      // Call registerOnChange if provided (from react-hook-form register)
+      if (registerOnChange) {
+        registerOnChange(finalEvent);
+      }
+
+      // Call restOnChange if provided (for non-register usage)
+      if (restOnChange) {
+        restOnChange(finalEvent);
       }
     };
 
@@ -158,7 +314,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
               // Store in internal ref for calendar functionality
               // @ts-expect-error - inputRef is mutable, this is safe
               inputRef.current = node;
-              
+
               // Handle react-hook-form ref
               if (registerRef) {
                 if (typeof registerRef === "function") {
@@ -168,7 +324,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
                   registerRef.current = node;
                 }
               }
-              
+
               // Handle external ref (from forwardRef)
               if (typeof ref === "function") {
                 ref(node);
@@ -182,26 +338,36 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
               "bg-background border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
               "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20",
               hasError &&
-                "border-destructive focus:border-destructive focus:ring-destructive/20",
+              "border-destructive focus:border-destructive focus:ring-destructive/20",
               hasIcon &&
-                effectiveIconPosition === (isRTL ? "right" : "left") &&
-                (isRTL ? "pr-10" : "pl-10"),
+              effectiveIconPosition === (isRTL ? "right" : "left") &&
+              (isRTL ? "pr-10" : "pl-10"),
               hasIcon &&
-                effectiveIconPosition === (isRTL ? "left" : "right") &&
-                (isRTL ? "pl-10" : "pr-10"),
+              effectiveIconPosition === (isRTL ? "left" : "right") &&
+              (isRTL ? "pl-10" : "pr-10"),
               isDateType && (isRTL ? "pl-10" : "pr-10"), // Add padding for calendar icon
               inputClassName
             )}
             aria-invalid={hasError}
             aria-describedby={
-              error
+              finalError
                 ? `${fieldId}-error`
                 : helperText
-                ? `${fieldId}-helper`
-                : undefined
+                  ? `${fieldId}-helper`
+                  : undefined
             }
             required={required}
-            {...restInputProps}
+            placeholder={placeholder}
+            {...finalRestInputProps}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            onBlur={(e) => {
+              handlePhoneBlur(e);
+              // Call original onBlur if provided (from react-hook-form register)
+              if (registerOnBlur) {
+                registerOnBlur(e);
+              }
+            }}
           />
 
           {hasIcon && effectiveIconPosition === (isRTL ? "left" : "right") && (
@@ -213,8 +379,8 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
                     ? "left-10"
                     : "right-10"
                   : isRTL
-                  ? "left-3"
-                  : "right-3",
+                    ? "left-3"
+                    : "right-3",
                 iconClassName
               )}
             />
@@ -237,17 +403,17 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           )}
         </div>
 
-        {error && (
+        {finalError && (
           <p
             id={`${fieldId}-error`}
             className="text-sm text-destructive"
             role="alert"
           >
-            {error}
+            {finalError}
           </p>
         )}
 
-        {helperText && !error && (
+        {helperText && !finalError && (
           <p id={`${fieldId}-helper`} className="text-sm text-[#ffffff]/60">
             {helperText}
           </p>
@@ -265,7 +431,7 @@ InputField.displayName = "InputField";
 
 export interface PasswordFieldProps
   extends Omit<React.ComponentProps<"input">, "type" | "className">,
-    BaseFieldProps {
+  BaseFieldProps {
   /** Optional icon to display on the left (LTR) or right (RTL) */
   icon?: LucideIcon;
   /** Icon position - 'left' for LTR, 'right' for RTL (auto-adjusted based on isRTL) */
@@ -340,10 +506,16 @@ export const PasswordField = React.forwardRef<
     // Determine optional text based on isRTL
     const optionalText = isRTL ? "(اختياري)" : "(Optional)";
 
-    // Extract ref from inputProps if it comes from react-hook-form register
-    const { ref: registerRef, ...restInputProps } = inputProps as {
+    // Extract ref and onKeyDown from inputProps if it comes from react-hook-form register
+    const { ref: registerRef, onKeyDown: registerOnKeyDown, ...restInputProps } = inputProps as {
       ref?: React.Ref<HTMLInputElement>;
+      onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     } & typeof inputProps;
+
+    // Extract onKeyDown from restInputProps if it exists (for non-register usage)
+    const { onKeyDown: restOnKeyDown, ...finalRestInputProps } = restInputProps as {
+      onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    } & typeof restInputProps;
 
     const handleTogglePassword = () => {
       const newValue = !showPassword;
@@ -351,6 +523,26 @@ export const PasswordField = React.forwardRef<
         onShowPasswordChange?.(newValue);
       } else {
         setInternalShowPassword(newValue);
+      }
+    };
+
+    // Handle keydown - restrict space when empty
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const input = e.currentTarget;
+      const isEmpty = !input.value || input.value.trim().length === 0;
+
+      // Prevent space when input is empty
+      if (e.key === " " && isEmpty) {
+        e.preventDefault();
+        return;
+      }
+
+      // Call original onKeyDown handlers if provided
+      if (registerOnKeyDown) {
+        registerOnKeyDown(e);
+      }
+      if (restOnKeyDown) {
+        restOnKeyDown(e);
       }
     };
 
@@ -393,11 +585,11 @@ export const PasswordField = React.forwardRef<
               "bg-background border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
               "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20",
               hasError &&
-                "border-destructive focus:border-destructive focus:ring-destructive/20",
+              "border-destructive focus:border-destructive focus:ring-destructive/20",
               // Icon padding (left side for LTR, right side for RTL)
               hasIcon &&
-                effectiveIconPosition === (isRTL ? "right" : "left") &&
-                (isRTL ? "pr-10" : "pl-10"),
+              effectiveIconPosition === (isRTL ? "right" : "left") &&
+              (isRTL ? "pr-10" : "pl-10"),
               // Toggle padding (right side for LTR, left side for RTL)
               showToggle && (isRTL ? "pl-10" : "pr-10"),
               inputClassName
@@ -407,11 +599,12 @@ export const PasswordField = React.forwardRef<
               error
                 ? `${fieldId}-error`
                 : helperText
-                ? `${fieldId}-helper`
-                : undefined
+                  ? `${fieldId}-helper`
+                  : undefined
             }
             required={required}
-            {...restInputProps}
+            {...finalRestInputProps}
+            onKeyDown={handleKeyDown}
           />
 
           {showToggle && (
@@ -443,8 +636,8 @@ export const PasswordField = React.forwardRef<
                     ? "right-10"
                     : "left-10"
                   : isRTL
-                  ? "right-3"
-                  : "left-3",
+                    ? "right-3"
+                    : "left-3",
                 iconClassName
               )}
             />
@@ -485,7 +678,7 @@ export interface SelectFieldOption {
 
 export interface SelectFieldProps
   extends Omit<React.ComponentProps<typeof Select>, "className">,
-    BaseFieldProps {
+  BaseFieldProps {
   /** Options for the select dropdown */
   options: SelectFieldOption[];
   /** Placeholder text */
@@ -610,10 +803,10 @@ export const SelectField = React.forwardRef<
                 "hover:bg-[#0f021c]/80 transition-colors",
                 '[&_svg:not([class*="text-"])]:text-[#ffffff]/40',
                 hasError &&
-                  "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
+                "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
                 hasIcon &&
-                  effectiveIconPosition === (isRTL ? "right" : "left") &&
-                  (isRTL ? "pr-10" : "pl-10"),
+                effectiveIconPosition === (isRTL ? "right" : "left") &&
+                (isRTL ? "pr-10" : "pl-10"),
                 value && (isRTL ? "pl-10" : "pr-10"), // Add padding for clear button when value exists
                 triggerClassName,
                 inputClassName
@@ -623,8 +816,8 @@ export const SelectField = React.forwardRef<
                 error
                   ? `${fieldId}-error`
                   : helperText
-                  ? `${fieldId}-helper`
-                  : undefined
+                    ? `${fieldId}-helper`
+                    : undefined
               }
             >
               <SelectValue
@@ -683,8 +876,8 @@ export const SelectField = React.forwardRef<
                     ? "right-10"
                     : "left-10"
                   : isRTL
-                  ? "left-3"
-                  : "right-3", // Adjust position if clear button exists
+                    ? "left-3"
+                    : "right-3", // Adjust position if clear button exists
                 iconClassName
               )}
             />
@@ -719,7 +912,7 @@ SelectField.displayName = "SelectField";
 
 export interface TextareaFieldProps
   extends Omit<React.ComponentProps<"textarea">, "className">,
-    BaseFieldProps {
+  BaseFieldProps {
   /** Optional icon to display on the left (LTR) or right (RTL) */
   icon?: LucideIcon;
   /** Icon position - 'left' for LTR, 'right' for RTL (auto-adjusted based on isRTL) */
@@ -775,14 +968,40 @@ export const TextareaField = React.forwardRef<
     // Determine optional text based on isRTL
     const optionalText = isRTL ? "(اختياري)" : "(Optional)";
 
-    // Extract ref from textareaProps if it comes from react-hook-form register
+    // Extract ref and onKeyDown from textareaProps if it comes from react-hook-form register
     // react-hook-form's register returns { ref, onChange, onBlur, name }
-    const { ref: registerRef, ...restTextareaProps } = textareaProps as {
+    const { ref: registerRef, onKeyDown: registerOnKeyDown, ...restTextareaProps } = textareaProps as {
       ref?: React.Ref<HTMLTextAreaElement>;
       onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
       onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+      onKeyDown?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
       name?: string;
     } & typeof textareaProps;
+
+    // Extract onKeyDown from restTextareaProps if it exists (for non-register usage)
+    const { onKeyDown: restOnKeyDown, ...finalRestTextareaProps } = restTextareaProps as {
+      onKeyDown?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+    } & typeof restTextareaProps;
+
+    // Handle keydown - restrict space when empty
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      const textarea = e.currentTarget;
+      const isEmpty = !textarea.value || textarea.value.trim().length === 0;
+
+      // Prevent space when textarea is empty
+      if (e.key === " " && isEmpty) {
+        e.preventDefault();
+        return;
+      }
+
+      // Call original onKeyDown handlers if provided
+      if (registerOnKeyDown) {
+        registerOnKeyDown(e);
+      }
+      if (restOnKeyDown) {
+        restOnKeyDown(e);
+      }
+    };
 
     return (
       <div className={cn("space-y-2", className)}>
@@ -822,10 +1041,10 @@ export const TextareaField = React.forwardRef<
               "bg-background border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 min-h-32",
               "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20 resize-none",
               hasError &&
-                "border-destructive focus:border-destructive focus:ring-destructive/20",
+              "border-destructive focus:border-destructive focus:ring-destructive/20",
               hasIcon &&
-                effectiveIconPosition === (isRTL ? "right" : "left") &&
-                (isRTL ? "pr-10" : "pl-10"),
+              effectiveIconPosition === (isRTL ? "right" : "left") &&
+              (isRTL ? "pr-10" : "pl-10"),
               inputClassName
             )}
             aria-invalid={hasError}
@@ -833,11 +1052,12 @@ export const TextareaField = React.forwardRef<
               error
                 ? `${fieldId}-error`
                 : helperText
-                ? `${fieldId}-helper`
-                : undefined
+                  ? `${fieldId}-helper`
+                  : undefined
             }
             required={required}
-            {...restTextareaProps}
+            {...finalRestTextareaProps}
+            onKeyDown={handleKeyDown}
           />
 
           {hasIcon && effectiveIconPosition === (isRTL ? "left" : "right") && (
@@ -879,10 +1099,10 @@ TextareaField.displayName = "TextareaField";
 
 export interface FileUploadFieldProps
   extends Omit<
-      React.ComponentProps<"input">,
-      "type" | "className" | "value" | "onChange"
-    >,
-    BaseFieldProps {
+    React.ComponentProps<"input">,
+    "type" | "className" | "value" | "onChange"
+  >,
+  BaseFieldProps {
   /** Optional icon to display */
   icon?: LucideIcon;
   /** Accepted file types (e.g., "image/*", ".pdf,.png,.jpg") */
@@ -973,8 +1193,8 @@ export const FileUploadField = React.forwardRef<
     const hasError = !!error || !!fileError;
 
     // Determine if we should show preview inline
-    const shouldShowPreview = showPreview !== undefined 
-      ? showPreview 
+    const shouldShowPreview = showPreview !== undefined
+      ? showPreview
       : !multiple; // Default: show for single, hide for multiple
 
     // Determine optional text based on isRTL
@@ -1057,7 +1277,7 @@ export const FileUploadField = React.forwardRef<
       if (multiple) {
         // Multiple file mode
         let newFiles = [...selectedFiles];
-        
+
         // Validate all new files
         for (const file of inputFiles) {
           const validationError = validateFile(file);
@@ -1080,7 +1300,7 @@ export const FileUploadField = React.forwardRef<
 
         // Add new files
         newFiles = [...newFiles, ...inputFiles];
-        
+
         // Enforce maxFiles limit (take first N files)
         if (maxFiles && newFiles.length > maxFiles) {
           newFiles = newFiles.slice(0, maxFiles);
@@ -1092,14 +1312,14 @@ export const FileUploadField = React.forwardRef<
 
         setSelectedFiles(newFiles);
         onFilesChange?.(newFiles);
-        
+
         // Create preview items and notify
         const previewItems = createPreviewItems(newFiles);
         onPreviewChange?.(previewItems);
       } else {
         // Single file mode
         const file = inputFiles[0] || null;
-        
+
         if (file) {
           const validationError = validateFile(file);
           if (validationError) {
@@ -1111,7 +1331,7 @@ export const FileUploadField = React.forwardRef<
 
         setSelectedFile(file);
         onFileChange?.(file);
-        
+
         // Create preview item and notify
         if (file) {
           const previewItems = createPreviewItems([file]);
@@ -1125,12 +1345,12 @@ export const FileUploadField = React.forwardRef<
     const handleRemoveFile = (index?: number) => {
       if (multiple) {
         // Remove file at index
-        const newFiles = index !== undefined 
+        const newFiles = index !== undefined
           ? selectedFiles.filter((_, i) => i !== index)
           : [];
         setSelectedFiles(newFiles);
         onFilesChange?.(newFiles);
-        
+
         // Cleanup blob URLs for removed files
         if (index !== undefined) {
           const removedFile = selectedFiles[index];
@@ -1139,7 +1359,7 @@ export const FileUploadField = React.forwardRef<
             // We rely on the cleanup in useEffect
           }
         }
-        
+
         // Update preview
         const previewItems = createPreviewItems(newFiles);
         onPreviewChange?.(previewItems);
@@ -1149,7 +1369,7 @@ export const FileUploadField = React.forwardRef<
         onFileChange?.(null);
         onPreviewChange?.([]);
       }
-      
+
       // Reset the input element
       const input = document.getElementById(fieldId) as HTMLInputElement;
       if (input) {
@@ -1216,8 +1436,8 @@ export const FileUploadField = React.forwardRef<
                   error || fileError
                     ? `${fieldId}-error`
                     : helperText
-                    ? `${fieldId}-helper`
-                    : undefined
+                      ? `${fieldId}-helper`
+                      : undefined
                 }
                 required={required && !hasFiles}
                 {...inputProps}
@@ -1301,7 +1521,7 @@ export const FileUploadField = React.forwardRef<
           {/* File count indicator for multiple mode */}
           {multiple && hasFiles && !shouldShowPreview && (
             <p className="text-xs text-white/60">
-              {isRTL 
+              {isRTL
                 ? `${currentFiles.length} ملف${currentFiles.length > 1 ? "ات" : ""} محدد${currentFiles.length > 1 ? "ة" : ""}`
                 : `${currentFiles.length} file${currentFiles.length > 1 ? "s" : ""} selected`}
             </p>
@@ -1336,7 +1556,7 @@ FileUploadField.displayName = "FileUploadField";
 
 export interface SwitchFieldProps
   extends Omit<React.ComponentProps<typeof Switch>, "className">,
-    BaseFieldProps {
+  BaseFieldProps {
   /** Optional icon to display */
   icon?: LucideIcon;
   /** Custom icon className */
@@ -1397,9 +1617,9 @@ export const SwitchField = React.forwardRef<
 
     return (
       <div className={cn("space-y-2", className)}>
-          <div
-            className={cn(
-              "flex items-center justify-between p-4 bg-background/50 rounded-xl",
+        <div
+          className={cn(
+            "flex items-center justify-between p-4 bg-background/50 rounded-xl",
             isRTL ? "flex-row-reverse" : "",
             switchWrapperClassName
           )}
@@ -1445,8 +1665,8 @@ export const SwitchField = React.forwardRef<
               error
                 ? `${fieldId}-error`
                 : helperText
-                ? `${fieldId}-helper`
-                : undefined
+                  ? `${fieldId}-helper`
+                  : undefined
             }
             {...switchProps}
           />

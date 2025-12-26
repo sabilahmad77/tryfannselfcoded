@@ -49,6 +49,7 @@ export interface DashboardStatsResponse {
     collection_count: number;
     is_referral_code: boolean;
     user_followers: number;
+    user_following?: number;
     portfolio_value?: number;
     growth?: number;
     tier_name?: string;
@@ -368,6 +369,7 @@ export interface DashboardStatsGalleryResponse {
     provenance_points?: number;
     fann_platform_follower?: number;
     user_followers?: number;
+    user_following?: number;
     profile_completed?: number;
     profile_complete?: boolean;
     referral_joined?: number;
@@ -434,6 +436,7 @@ export interface DashboardStatsAmbassadorResponse {
     active_referral_count?: number;
     fann_platform_follower?: number;
     user_followers?: number;
+    user_following?: number;
     social_stats?: SocialStats;
     [key: string]: unknown;
   };

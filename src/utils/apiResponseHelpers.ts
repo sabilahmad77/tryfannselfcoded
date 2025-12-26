@@ -16,6 +16,8 @@ export function parseGetUserDetailsResponse(response: unknown): {
         street_address?: string;
         gov_issued_id?: string | null;
         proof_address?: string | null;
+        social_link_handler?: string | null;
+        social_link_followers?: string | null;
     };
     interest_rewards?: unknown[];
 } {
@@ -39,6 +41,8 @@ export function parseGetUserDetailsResponse(response: unknown): {
                 street_address?: string;
                 gov_issued_id?: string | null;
                 proof_address?: string | null;
+                social_link_handler?: string | null;
+                social_link_followers?: string | null;
             };
             interest_rewards?: unknown[];
             [key: string]: unknown;

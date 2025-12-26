@@ -35,6 +35,7 @@ import {
   useGetDashboardStatsAmbassadorQuery,
   useGenerateReferralCodeQuery,
 } from "@/services/api/dashboardApi";
+import { FE_BASE_URL } from "@/services/api/baseApi";
 import { useEffect } from "react";
 
 const content = {
@@ -176,8 +177,8 @@ export function AmbassadorDashboard() {
   const referralLink =
     referralCodeData?.data?.referral_link ||
     (storedUser?.referral_code
-      ? `https://tryfann.com/ref/${storedUser.referral_code}`
-      : "https://tryfann.com");
+      ? `${FE_BASE_URL}/ref/${storedUser.referral_code}`
+      : FE_BASE_URL);
 
   // Handle copying referral link
   const handleCopyReferralLink = () => {
@@ -413,7 +414,7 @@ export function AmbassadorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <WatchVideos />
+          <WatchVideos onRefetchStats={refetchAmbassadorStats} />
         </motion.div>
 
         {/* Social Media Performance */}

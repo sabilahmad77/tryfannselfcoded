@@ -8,6 +8,7 @@ import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { CustomModal } from './ui/CustomModal';
 import { useGetUserProfileDetailsQuery } from '@/services/api/dashboardApi';
+import { API_BASE_URL } from '@/services/api/baseApi';
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -294,7 +295,8 @@ const content = {
 };
 
 // Generic helper to build absolute image URLs from API responses
-const API_BASE_URL = 'http://api.fann.art';
+// Remove /api suffix from API_BASE_URL for image URLs
+const IMAGE_BASE_URL = API_BASE_URL.replace(/\/api$/, '');
 
 const buildImageUrl = (path: string | undefined): string => {
   if (!path) return '';
@@ -308,10 +310,10 @@ const buildImageUrl = (path: string | undefined): string => {
 
   // Ensure we don't end up with double slashes
   if (trimmed.startsWith('/')) {
-    return `${API_BASE_URL}${trimmed}`;
+    return `${IMAGE_BASE_URL}${trimmed}`;
   }
 
-  return `${API_BASE_URL}/${trimmed}`;
+  return `${IMAGE_BASE_URL}/${trimmed}`;
 };
 
 // Mock data for user profile (in a real app, this would come from an API)
@@ -1336,7 +1338,7 @@ export function UserProfileModal({
         })()}
 
         {/* Achievements */}
-        <div>
+        {/* <div>
           <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
             {t.achievements}
           </h3>
@@ -1362,7 +1364,7 @@ export function UserProfileModal({
               );
             })}
           </div>
-        </div>
+        </div> */}
       </div>
     </CustomModal>
   );

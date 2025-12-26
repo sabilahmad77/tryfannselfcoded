@@ -33,11 +33,13 @@ import {
   ChevronLeft,
   FileText,
   Hash,
+  Link,
   MapPin,
   Shield,
+  Users,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Oval } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
@@ -63,6 +65,9 @@ interface KYCFormData {
   gov_issued_id_front: File | null; // Front of ID
   gov_issued_id_back: File | null; // Back of ID
   proof_address: File | null;
+  // Artist-specific fields
+  social_link_handler: string;
+  social_link_followers: string;
 }
 
 export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
@@ -74,6 +79,9 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
     selectSubmittedData(state, "kyc")
   );
   const storedUser = useSelector((state: RootState) => state.auth.user);
+
+  // Determine if user is artist role
+  const isArtistRole = data.persona?.toLowerCase() === "artist";
 
   // Load initial values from Redux onboarding slice and merge with storedUser KYC fields
   // Check storedUser for KYC fields (kyc_id_type, kyc_gov_issued_id, etc.) when page reloads
@@ -88,6 +96,9 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         id_type: (storedUser as { kyc_id_type?: string }).kyc_id_type,
         gov_issued_id: (storedUser as { kyc_gov_issued_id?: string | string[] | null }).kyc_gov_issued_id,
         proof_address: (storedUser as { kyc_proof_address?: string | null }).kyc_proof_address,
+        // Artist-specific fields
+        social_link_handler: (storedUser as { kyc_social_link_handler?: string }).kyc_social_link_handler,
+        social_link_followers: (storedUser as { kyc_social_link_followers?: string }).kyc_social_link_followers,
       } as Partial<
         KYCFormData & {
           gov_issued_id?: File | File[] | string | string[] | null;
@@ -118,6 +129,9 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
     gov_issued_id_front: null,
     gov_issued_id_back: null,
     proof_address: null,
+    // Artist-specific fields
+    social_link_handler: (savedData.social_link_handler as string) || "",
+    social_link_followers: (savedData.social_link_followers as string) || "",
   };
 
   const [idDocumentFront, setIdDocumentFront] = useState<File | null>(null);
@@ -165,6 +179,9 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
           id_type: (storedUser as { kyc_id_type?: string }).kyc_id_type,
           gov_issued_id: (storedUser as { kyc_gov_issued_id?: string | string[] | null }).kyc_gov_issued_id,
           proof_address: (storedUser as { kyc_proof_address?: string | null }).kyc_proof_address,
+          // Artist-specific fields
+          social_link_handler: (storedUser as { kyc_social_link_handler?: string }).kyc_social_link_handler,
+          social_link_followers: (storedUser as { kyc_social_link_followers?: string }).kyc_social_link_followers,
         } as Partial<
           KYCFormData & {
             gov_issued_id?: File | File[] | string | string[] | null;
@@ -224,6 +241,15 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         kycDataFromUser.proof_address !== undefined
           ? kycDataFromUser.proof_address
           : onboardingKyc.proof_address,
+      // Artist-specific fields
+      social_link_handler:
+        kycDataFromUser.social_link_handler !== undefined
+          ? kycDataFromUser.social_link_handler
+          : onboardingKyc.social_link_handler,
+      social_link_followers:
+        kycDataFromUser.social_link_followers !== undefined
+          ? kycDataFromUser.social_link_followers
+          : onboardingKyc.social_link_followers,
     };
 
     const savedIdDoc = currentSavedData.gov_issued_id;
@@ -342,6 +368,9 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       gov_issued_id_front: frontFile,
       gov_issued_id_back: backFile,
       proof_address: savedProof instanceof File ? savedProof : null,
+      // Artist-specific fields
+      social_link_handler: (currentSavedData.social_link_handler as string) || "",
+      social_link_followers: (currentSavedData.social_link_followers as string) || "",
     });
     
     // Explicitly set id_type to ensure SelectField updates properly
@@ -429,7 +458,15 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
     const complianceMatch =
       acceptedCompliance === (submitted.acceptedCompliance || false);
 
-    return !(textFieldsMatch && idDocMatch && proofMatch && complianceMatch);
+    // Artist-specific fields comparison
+    const artistFieldsMatch = !isArtistRole || (
+      (currentValues.social_link_handler?.trim() || "") ===
+        ((submitted.social_link_handler as string) || "") &&
+      (currentValues.social_link_followers?.trim() || "") ===
+        ((submitted.social_link_followers as string) || "")
+    );
+
+    return !(textFieldsMatch && idDocMatch && proofMatch && complianceMatch && artistFieldsMatch);
   };
 
   const shouldShowNext = isStepSubmitted && !hasChanges();
@@ -513,6 +550,11 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       back: "Back",
       continue: "Verify & Continue",
       next: "Next",
+      // Artist-specific fields
+      socialLinkHandler: "Social Link Handler",
+      socialLinkHandlerPlaceholder: "Enter your social link handler",
+      socialLinkFollowers: "Social Link Followers",
+      socialLinkFollowersPlaceholder: "Enter your social link follower",
     },
     ar: {
       title: "التحقق من الهوية",
@@ -593,6 +635,11 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       back: "رجوع",
       continue: "التحقق والمتابعة",
       next: "التالي",
+      // Artist-specific fields
+      socialLinkHandler: "معرف الرابط الاجتماعي",
+      socialLinkHandlerPlaceholder: "أدخل معرف الرابط الاجتماعي",
+      socialLinkFollowers: "متابعي الرابط الاجتماعي",
+      socialLinkFollowersPlaceholder: "أدخل متابع الرابط الاجتماعي",
     },
   };
 
@@ -602,6 +649,42 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
     value: opt.value,
     label: opt.label,
   }));
+
+  // Watch nationality and id_type to filter ID type options
+  const selectedNationality = watch("nationality");
+  const currentIdType = watch("id_type");
+  
+  // Filter ID type options based on nationality
+  const filteredIdTypeOptions = useMemo(() => {
+    const allOptions = content.idType.options;
+    
+    if (selectedNationality === "Emirati") {
+      // Show Emirates ID, hide Iqama (Saudi Residency)
+      return allOptions.filter(
+        (opt) => opt.value !== "Iqama (Saudi Residency)"
+      );
+    } else if (selectedNationality === "Saudi") {
+      // Show Iqama (Saudi Residency), hide Emirates ID
+      return allOptions.filter((opt) => opt.value !== "Emirates ID");
+    } else {
+      // For other nationalities, hide both Emirates ID and Iqama (Saudi Residency)
+      return allOptions.filter(
+        (opt) =>
+          opt.value !== "Emirates ID" &&
+          opt.value !== "Iqama (Saudi Residency)"
+      );
+    }
+  }, [selectedNationality, content.idType.options]);
+
+  // Clear id_type if it's not in the filtered options
+  useEffect(() => {
+    if (
+      currentIdType &&
+      !filteredIdTypeOptions.some((opt) => opt.value === currentIdType)
+    ) {
+      setValue("id_type", "", { shouldValidate: false });
+    }
+  }, [filteredIdTypeOptions, currentIdType, setValue]);
 
   const onSubmit = async (formData: KYCFormData) => {
     // If step was already submitted and no changes, just proceed without API call
@@ -626,6 +709,11 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
               : "",
         proof_address: proofOfAddress?.name || "",
         acceptedCompliance: acceptedCompliance, // Include compliance checkbox state
+        // Artist-specific fields
+        ...(isArtistRole && {
+          social_link_handler: formData.social_link_handler || "",
+          social_link_followers: formData.social_link_followers || "",
+        }),
       });
       return;
     }
@@ -661,6 +749,16 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         kycData.proof_address = proofOfAddress;
       }
 
+      // Artist-specific fields
+      if (isArtistRole) {
+        if (formData.social_link_handler?.trim()) {
+          kycData.social_link_handler = formData.social_link_handler.trim();
+        }
+        if (formData.social_link_followers?.trim()) {
+          kycData.social_link_followers = formData.social_link_followers.trim();
+        }
+      }
+
       const result = await kycVerification(kycData).unwrap();
 
       // Handle API response
@@ -682,6 +780,9 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
             gov_issued_id_front?: string | null; // Front of ID
             gov_issued_id_back?: string | null; // Back of ID
             proof_address?: string | null;
+            // Artist-specific fields
+            social_link_handler?: string | null;
+            social_link_followers?: string | null;
           };
           user?: unknown;
           [key: string]: unknown;
@@ -736,6 +837,9 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
             gov_issued_id_front?: string | null; // Front of ID
             gov_issued_id_back?: string | null; // Back of ID
             proof_address?: string | null;
+            // Artist-specific fields
+            social_link_handler?: string | null;
+            social_link_followers?: string | null;
             [key: string]: unknown;
           };
 
@@ -766,6 +870,13 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 kyc_id_type: kycVerification.id_type || formData.id_type.trim(),
                 kyc_gov_issued_id: govIdUrls,
                 kyc_proof_address: kycVerification.proof_address || null,
+                // Artist-specific fields
+                ...(isArtistRole && {
+                  kyc_social_link_handler:
+                    kycVerification.social_link_handler || formData.social_link_handler?.trim() || null,
+                  kyc_social_link_followers:
+                    kycVerification.social_link_followers || formData.social_link_followers?.trim() || null,
+                }),
               } as Partial<typeof storedUser>),
             })
           );
@@ -827,6 +938,11 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 kyc_id_type: formData.id_type.trim(),
                 kyc_gov_issued_id: govIdUrl,
                 kyc_proof_address: proofUrl,
+                // Artist-specific fields
+                ...(isArtistRole && {
+                  kyc_social_link_handler: formData.social_link_handler?.trim() || null,
+                  kyc_social_link_followers: formData.social_link_followers?.trim() || null,
+                }),
               } as Partial<typeof storedUser>),
             })
           );
@@ -957,6 +1073,16 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
           savedProofAddress = proofOfAddress?.name || "";
         }
 
+        // Artist-specific fields for stepData
+        let savedSocialLinkHandler = formData.social_link_handler || "";
+        let savedSocialLinkFollowers = formData.social_link_followers || "";
+        
+        if (apiResponse.data?.kyc_verification) {
+          const kycVerification = apiResponse.data.kyc_verification;
+          if (kycVerification.social_link_handler) savedSocialLinkHandler = kycVerification.social_link_handler;
+          if (kycVerification.social_link_followers) savedSocialLinkFollowers = kycVerification.social_link_followers;
+        }
+
         const stepData = {
           id_number: savedIdNumber,
           dob: savedDob,
@@ -973,6 +1099,11 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 : "",
           proof_address: savedProofAddress,
           acceptedCompliance: acceptedCompliance, // Save compliance checkbox state
+          // Artist-specific fields
+          ...(isArtistRole && {
+            social_link_handler: savedSocialLinkHandler,
+            social_link_followers: savedSocialLinkFollowers,
+          }),
         };
 
         dispatch(
@@ -1182,7 +1313,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
             <SelectField
               label={content.idType.label}
               placeholder={content.idType.placeholder}
-              options={content.idType.options}
+              options={filteredIdTypeOptions}
               value={watch("id_type")}
               onValueChange={(value) => {
                 setValue("id_type", value, { shouldValidate: true });
@@ -1192,6 +1323,41 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
               error={errors.id_type?.message}
             />
           </motion.div>
+
+          {/* Artist-specific: Social Link Handler & Followers */}
+          {isArtistRole && (
+            <div className="grid md:grid-cols-2 gap-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75 }}
+              >
+                <InputField
+                  {...register("social_link_handler")}
+                  label={content.socialLinkHandler}
+                  placeholder={content.socialLinkHandlerPlaceholder}
+                  icon={Link}
+                  isRTL={isRTL}
+                  error={errors.social_link_handler?.message}
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <InputField
+                  {...register("social_link_followers")}
+                  label={content.socialLinkFollowers}
+                  placeholder={content.socialLinkFollowersPlaceholder}
+                  icon={Users}
+                  isRTL={isRTL}
+                  error={errors.social_link_followers?.message}
+                />
+              </motion.div>
+            </div>
+          )}
 
           {/* Document Uploads */}
           <motion.div

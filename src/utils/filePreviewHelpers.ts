@@ -3,6 +3,8 @@
  * with preview URL management and normalization
  */
 
+import { API_BASE_URL } from "@/services/api/baseApi";
+
 export type PreviewSourceType = "local" | "existing";
 
 export interface PreviewItem {
@@ -120,9 +122,7 @@ export function getFullImageUrl(
   }
 
   // Get base URL
-  const BASE_URL =
-    baseUrl ||
-    "https://api.fann.art/api";
+  const BASE_URL = baseUrl || API_BASE_URL;
   const baseWithoutApi = BASE_URL.replace(/\/api$/, "");
 
   // If it's a relative path (starts with /), prepend base URL without /api

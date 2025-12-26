@@ -4,15 +4,18 @@ import type {
   FetchArgs,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
-import type { RootState } from "@/store/store";
+import type { RootState, AppDispatch } from "@/store/store";
+import { persistor } from "@/store/store";
 import { toast } from "sonner";
-import { getAuthToken, getRefreshToken } from "@/utils/auth";
+import { clearAllAuthState, getAuthToken, getRefreshToken } from "@/utils/auth";
 import { extractErrorMessage } from "@/utils/errorMessages";
 
 // Get base URL from environment variable or use default
 // Vite requires VITE_ prefix for environment variables to be exposed to client
-const BASE_URL =
-  "https://api.fann.art/api";
+// export const API_BASE_URL = "https://apifann.globaltechserivce.com/api";
+export const API_BASE_URL = "https://api.fann.art/api";
+export const FE_BASE_URL = "https://tryfann.com";
+const BASE_URL = API_BASE_URL;
 
 
 // Create base query with automatic authentication
@@ -146,13 +149,12 @@ const handleTokenExpiration = async (
       window.dispatchEvent(event);
     }
 
-    // Clear RTK Query cache to remove all cached API data
-    api.dispatch(baseApi.util.resetApiState());
-
-    // Clear tokens from Redux store using api.dispatch AFTER setting flag
-    // Dynamically import to avoid circular dependencies
-    const { clearAuth } = await import("@/store/authSlice");
-    api.dispatch(clearAuth());
+    // Clear all auth state, storage, and cache
+    // Note: clearExpiredPage is set to false because we want to preserve the expired page
+    // for redirect after login (it's set above before clearing)
+    await clearAllAuthState(api.dispatch as AppDispatch, persistor, {
+      clearExpiredPage: false,   // Keep expired page for redirect after login
+    });
 
     // Reset flag after a short delay to allow for future token expiration handling
     if (typeof window !== "undefined") {

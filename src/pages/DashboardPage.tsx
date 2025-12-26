@@ -192,7 +192,7 @@ export function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <WatchVideos />
+          <WatchVideos onRefetchStats={refetchDashboardStats} />
         </motion.div>
 
         {/* My Artworks */}
@@ -204,6 +204,7 @@ export function DashboardPage() {
           <AddArtwork
             profileCompleted={profileCompleted}
             onCompleteProfile={handleCompleteProfile}
+            onRefetchStats={refetchDashboardStats}
           />
         </motion.div>
 

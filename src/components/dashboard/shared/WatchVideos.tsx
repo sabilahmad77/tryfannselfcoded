@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "motion/react";
 import {
   Play,
@@ -19,6 +19,7 @@ import {
   useUserWatchEarnMutation,
   type WatchEarn,
 } from "@/services/api/dashboardApi";
+import { VideoWatchModal } from "./VideoWatchModal";
 
 const content = {
   en: {
@@ -69,6 +70,11 @@ const content = {
     watchError: "Failed to start video. Please try again.",
     loadingError: "Failed to load videos. Please try again.",
     noVideos: "No videos available",
+    watchProgress: "Watch {seconds}/20 seconds to earn points",
+    closeWarning: "You haven't watched 20 seconds yet. Close anyway?",
+    videoLoading: "Loading video...",
+    videoError: "Failed to load video. Please try again.",
+    watchComplete: "Great! You've earned {points} points!",
   },
   ar: {
     title: "شاهد واربح",
@@ -85,6 +91,11 @@ const content = {
     watchError: "فشل بدء الفيديو. يرجى المحاولة مرة أخرى.",
     loadingError: "فشل تحميل الفيديوهات. يرجى المحاولة مرة أخرى.",
     noVideos: "لا توجد فيديوهات متاحة",
+    watchProgress: "شاهد {seconds}/20 ثانية لكسب النقاط",
+    closeWarning: "لم تشاهد 20 ثانية بعد. إغلاق على أي حال؟",
+    videoLoading: "جاري تحميل الفيديو...",
+    videoError: "فشل تحميل الفيديو. يرجى المحاولة مرة أخرى.",
+    watchComplete: "رائع! لقد ربحت {points} نقاط!",
   },
 };
 
@@ -117,10 +128,30 @@ const getThumbnailGradient = (video: WatchEarn, index: number): string => {
   return gradients[index % gradients.length] || thumbnailGradients.default;
 };
 
-export function WatchVideos() {
+interface VideoWatchTime {
+  watchTime: number;
+  hasCalledAPI: boolean;
+  lastPosition: number;
+}
+
+interface WatchVideosProps {
+  /** Callback to refetch dashboard stats after watch earn API is called */
+  onRefetchStats?: () => void;
+}
+
+export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
   const { language } = useLanguage();
   const t = content[language];
   const isRTL = language === "ar";
+
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<WatchEarn | null>(null);
+
+  // Per-video watch time tracking
+  const [videoWatchTimes, setVideoWatchTimes] = useState<
+    Record<number, VideoWatchTime>
+  >({});
 
   // Fetch videos from API
   const {
@@ -133,7 +164,7 @@ export function WatchVideos() {
   });
 
   // User watch earn mutation
-  const [userWatchEarn, { isLoading: isWatching }] = useUserWatchEarnMutation();
+  const [userWatchEarn] = useUserWatchEarnMutation();
 
   // Parse videos from API response
   const videos = useMemo(() => {
@@ -177,29 +208,63 @@ export function WatchVideos() {
   const { totalVideos, completedCount, totalPointsEarned, progressPercent } =
     stats;
 
-  // Handle watching a video
-  const handleWatchVideo = async (video: WatchEarn) => {
+  // Handle watching a video - open modal instead of calling API
+  const handleWatchVideo = (video: WatchEarn) => {
     if (!video.link) {
       toast.error(t.watchError);
       return;
     }
 
+    // If opening a different video, update selected video first
+    // The modal will handle the state reset when video.id changes
+    if (selectedVideo?.id !== video.id) {
+      setSelectedVideo(video);
+      // Ensure modal is open for the new video
+      setIsModalOpen(true);
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  // Handle modal close
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    // Don't reset selectedVideo to preserve state for reopening
+  };
+
+  // Handle watch time update from modal
+  const handleWatchTimeUpdate = (videoId: number, data: VideoWatchTime) => {
+    setVideoWatchTimes((prev) => ({
+      ...prev,
+      [videoId]: data,
+    }));
+  };
+
+  // Handle API call from modal
+  const handleApiCall = async (videoId: number) => {
     try {
-      // Call API to mark video as watched
       const result = await userWatchEarn({
-        watch_id: video.id,
+        watch_id: videoId,
       }).unwrap();
 
       if (result.success) {
-        // Open video link in new tab
-        window.open(video.link, "_blank", "noopener,noreferrer");
-        toast.success(t.watchSuccess);
+        // Mark API as called in watch time state
+        setVideoWatchTimes((prev) => ({
+          ...prev,
+          [videoId]: {
+            ...prev[videoId],
+            hasCalledAPI: true,
+          },
+        }));
+        // Refetch dashboard stats to update points and other stats
+        onRefetchStats?.();
         // Videos will be automatically refetched via RTK Query tag invalidation
       } else {
         // Handle API error messages
         const errorMessage =
           typeof result.message === "string" ? result.message : t.watchError;
         toast.error(errorMessage);
+        throw new Error(errorMessage);
       }
     } catch (error: unknown) {
       console.error("Error watching video:", error);
@@ -218,8 +283,15 @@ export function WatchVideos() {
       } else {
         toast.error(t.watchError);
       }
+      throw error;
     }
   };
+
+  // Get watch time data for selected video
+  const selectedVideoWatchTime =
+    selectedVideo && videoWatchTimes[selectedVideo.id]
+      ? videoWatchTimes[selectedVideo.id]
+      : null;
 
   return (
     <div className="glass rounded-2xl p-6 h-full flex flex-col">
@@ -380,21 +452,12 @@ export function WatchVideos() {
                     {!isCompleted && (
                       <Button
                         onClick={() => handleWatchVideo(video)}
-                        disabled={isWatching}
                         size="sm"
-                        className="mt-2 bg-gradient-to-r from-[#0ea5e9] to-[#45e3d3] hover:from-[#45e3d3] hover:to-[#0ea5e9] hover:shadow-lg hover:shadow-[#0ea5e9]/50 text-white transition-all duration-200 self-start cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+                        className="mt-2 bg-gradient-to-r from-[#0ea5e9] to-[#45e3d3] hover:from-[#45e3d3] hover:to-[#0ea5e9] hover:shadow-lg hover:shadow-[#0ea5e9]/50 text-white transition-all duration-200 self-start cursor-pointer"
                       >
-                        {isWatching ? (
-                          <Loader2
-                            className={`w-4 h-4 animate-spin ${
-                              isRTL ? "ml-2" : "mr-2"
-                            }`}
-                          />
-                        ) : (
-                          <Play
-                            className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`}
-                          />
-                        )}
+                        <Play
+                          className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`}
+                        />
                         {t.watchNow}
                       </Button>
                     )}
@@ -416,6 +479,18 @@ export function WatchVideos() {
           })
         )}
       </div>
+
+      {/* Video Watch Modal */}
+      {selectedVideo && (
+        <VideoWatchModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          video={selectedVideo}
+          watchTimeData={selectedVideoWatchTime}
+          onWatchTimeUpdate={handleWatchTimeUpdate}
+          onApiCall={handleApiCall}
+        />
+      )}
     </div>
   );
 }

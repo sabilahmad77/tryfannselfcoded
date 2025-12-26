@@ -28,8 +28,10 @@ import {
   CheckCircle,
   FileText,
   Hash,
+  Link,
   MapPin,
   Shield,
+  Users,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
@@ -42,6 +44,7 @@ interface EditKYCProps {
   open: boolean;
   onClose: () => void;
   language: "en" | "ar";
+  isArtist?: boolean; // Whether the user is an artist (for showing artist-specific fields)
   initialData?: {
     id_number?: string;
     dob?: string;
@@ -52,6 +55,9 @@ interface EditKYCProps {
     id_type?: string;
     gov_issued_id?: File | File[] | string | string[] | null;
     proof_address?: File | string | null;
+    // Artist-specific fields
+    social_link_handler?: string;
+    social_link_followers?: string;
   };
 }
 
@@ -67,12 +73,16 @@ interface KYCFormData {
   gov_issued_id_front: File | null; // Front of ID
   gov_issued_id_back: File | null; // Back of ID
   proof_address: File | null;
+  // Artist-specific fields
+  social_link_handler: string;
+  social_link_followers: string;
 }
 
 export function EditKYC({
   open,
   onClose,
   language,
+  isArtist = false,
   initialData,
 }: EditKYCProps) {
   const dispatch = useDispatch();
@@ -98,6 +108,9 @@ export function EditKYC({
       gov_issued_id_front: null,
       gov_issued_id_back: null,
       proof_address: null,
+      // Artist-specific fields
+      social_link_handler: initialData?.social_link_handler || "",
+      social_link_followers: initialData?.social_link_followers || "",
     }),
     [initialData]
   );
@@ -128,6 +141,9 @@ export function EditKYC({
         gov_issued_id_front: null,
         gov_issued_id_back: null,
         proof_address: null,
+        // Artist-specific fields
+        social_link_handler: initialData.social_link_handler || "",
+        social_link_followers: initialData.social_link_followers || "",
       });
 
       // Handle ID documents - support front and back separately
@@ -307,6 +323,11 @@ export function EditKYC({
       cancel: "Cancel",
       save: "Save Changes",
       saving: "Saving...",
+      // Artist-specific fields
+      socialLinkHandler: "Social Link Handler",
+      socialLinkHandlerPlaceholder: "Enter your social link handler",
+      socialLinkFollowers: "Social Link Followers",
+      socialLinkFollowersPlaceholder: "Enter your social link follower",
     },
     ar: {
       title: "تعديل معلومات التحقق من الهوية",
@@ -386,6 +407,11 @@ export function EditKYC({
       cancel: "إلغاء",
       save: "حفظ التغييرات",
       saving: "جارٍ الحفظ...",
+      // Artist-specific fields
+      socialLinkHandler: "معرف الرابط الاجتماعي",
+      socialLinkHandlerPlaceholder: "أدخل معرف الرابط الاجتماعي",
+      socialLinkFollowers: "متابعي الرابط الاجتماعي",
+      socialLinkFollowersPlaceholder: "أدخل متابع الرابط الاجتماعي",
     },
   };
 
@@ -395,6 +421,42 @@ export function EditKYC({
     value: opt.value,
     label: opt.label,
   }));
+
+  // Watch nationality and id_type to filter ID type options
+  const selectedNationality = watch("nationality");
+  const currentIdType = watch("id_type");
+  
+  // Filter ID type options based on nationality
+  const filteredIdTypeOptions = useMemo(() => {
+    const allOptions = content.idType.options;
+    
+    if (selectedNationality === "Emirati") {
+      // Show Emirates ID, hide Iqama (Saudi Residency)
+      return allOptions.filter(
+        (opt) => opt.value !== "Iqama (Saudi Residency)"
+      );
+    } else if (selectedNationality === "Saudi") {
+      // Show Iqama (Saudi Residency), hide Emirates ID
+      return allOptions.filter((opt) => opt.value !== "Emirates ID");
+    } else {
+      // For other nationalities, hide both Emirates ID and Iqama (Saudi Residency)
+      return allOptions.filter(
+        (opt) =>
+          opt.value !== "Emirates ID" &&
+          opt.value !== "Iqama (Saudi Residency)"
+      );
+    }
+  }, [selectedNationality, content.idType.options]);
+
+  // Clear id_type if it's not in the filtered options
+  useEffect(() => {
+    if (
+      currentIdType &&
+      !filteredIdTypeOptions.some((opt) => opt.value === currentIdType)
+    ) {
+      setValue("id_type", "", { shouldValidate: false });
+    }
+  }, [filteredIdTypeOptions, currentIdType, setValue]);
 
   const onSubmit = async (formData: KYCFormData) => {
     if (!acceptedCompliance) {
@@ -428,6 +490,16 @@ export function EditKYC({
         kycData.proof_address = proofOfAddress;
       }
 
+      // Artist-specific fields
+      if (isArtist) {
+        if (formData.social_link_handler?.trim()) {
+          kycData.social_link_handler = formData.social_link_handler.trim();
+        }
+        if (formData.social_link_followers?.trim()) {
+          kycData.social_link_followers = formData.social_link_followers.trim();
+        }
+      }
+
       const result = await kycVerification(kycData).unwrap();
 
       // Handle API response
@@ -448,6 +520,9 @@ export function EditKYC({
             gov_issued_id_front?: string | null; // Front of ID
             gov_issued_id_back?: string | null; // Back of ID
             proof_address?: string | null;
+            // Artist-specific fields
+            social_link_handler?: string | null;
+            social_link_followers?: string | null;
           };
           user?: unknown;
           [key: string]: unknown;
@@ -501,6 +576,9 @@ export function EditKYC({
             gov_issued_id_front?: string | null; // Front of ID
             gov_issued_id_back?: string | null; // Back of ID
             proof_address?: string | null;
+            // Artist-specific fields
+            social_link_handler?: string | null;
+            social_link_followers?: string | null;
             [key: string]: unknown;
           };
 
@@ -531,6 +609,13 @@ export function EditKYC({
                 kyc_id_type: kycVerification.id_type || formData.id_type.trim(),
                 kyc_gov_issued_id: govIdUrls,
                 kyc_proof_address: kycVerification.proof_address || null,
+                // Artist-specific fields
+                ...(isArtist && {
+                  kyc_social_link_handler:
+                    kycVerification.social_link_handler || formData.social_link_handler?.trim() || null,
+                  kyc_social_link_followers:
+                    kycVerification.social_link_followers || formData.social_link_followers?.trim() || null,
+                }),
               } as Partial<typeof storedUser>),
             })
           );
@@ -606,6 +691,11 @@ export function EditKYC({
                 kyc_id_type: formData.id_type.trim(),
                 kyc_gov_issued_id: govIdUrl,
                 kyc_proof_address: proofUrl,
+                // Artist-specific fields
+                ...(isArtist && {
+                  kyc_social_link_handler: formData.social_link_handler?.trim() || null,
+                  kyc_social_link_followers: formData.social_link_followers?.trim() || null,
+                }),
               } as Partial<typeof storedUser>),
             })
           );
@@ -813,7 +903,7 @@ export function EditKYC({
             <SelectField
               label={content.idType.label}
               placeholder={content.idType.placeholder}
-              options={content.idType.options}
+              options={filteredIdTypeOptions}
               value={watch("id_type")}
               onValueChange={(value) => {
                 setValue("id_type", value, { shouldValidate: true });
@@ -823,6 +913,41 @@ export function EditKYC({
               error={errors.id_type?.message}
             />
           </motion.div>
+
+          {/* Artist-specific: Social Link Handler & Followers */}
+          {isArtist && (
+            <div className="grid md:grid-cols-2 gap-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75 }}
+              >
+                <InputField
+                  {...register("social_link_handler")}
+                  label={content.socialLinkHandler}
+                  placeholder={content.socialLinkHandlerPlaceholder}
+                  icon={Link}
+                  isRTL={isRTL}
+                  error={errors.social_link_handler?.message}
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <InputField
+                  {...register("social_link_followers")}
+                  label={content.socialLinkFollowers}
+                  placeholder={content.socialLinkFollowersPlaceholder}
+                  icon={Users}
+                  isRTL={isRTL}
+                  error={errors.social_link_followers?.message}
+                />
+              </motion.div>
+            </div>
+          )}
 
           {/* Document Uploads */}
           <motion.div

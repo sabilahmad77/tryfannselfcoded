@@ -137,7 +137,7 @@ export function ProfileCompletion({
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           onClick={onCancel}
-          className={`fixed top-6 ${isRTL ? "right-6" : "left-6"} z-50 flex items-center gap-2 px-4 py-2 bg-[#1D112A]/80 backdrop-blur-sm border border-amber-500/30 rounded-xl text-white hover:bg-[#1D112A] hover:border-amber-500/50 transition-all duration-200 group`}
+          className={`fixed top-6 ${isRTL ? "right-6" : "left-6"} z-50 flex items-center gap-2 px-4 py-2 bg-[#1D112A]/80 backdrop-blur-sm border border-amber-500/30 rounded-xl text-white hover:bg-[#1D112A] hover:border-amber-500/50 transition-all duration-200 group cursor-pointer`}
         >
           {isRTL ? (
             <>

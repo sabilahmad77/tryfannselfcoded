@@ -13,8 +13,12 @@ import {
 import { useLanguage } from "@/contexts/useLanguage";
 import { useTokenExpired } from "@/contexts/useTokenExpired";
 import { ROUTES } from "@/routes/paths";
+import { persistor } from "@/store/store";
+import type { AppDispatch } from "@/store/store";
+import { clearAllAuthState } from "@/utils/auth";
 import { LogIn, AlertCircle } from "lucide-react";
 import { motion } from "motion/react";
+import { useDispatch } from "react-redux";
 
 interface TokenExpiredDialogProps {
   open: boolean;
@@ -42,14 +46,18 @@ const content = {
 export function TokenExpiredDialog({ open, onClose }: TokenExpiredDialogProps) {
   const { language } = useLanguage();
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const isRTL = language === "ar";
   const t = content[language];
   const { setHandlingTokenExpiration } = useTokenExpired();
 
-  const handleSignIn = () => {
-    // Clear any stored page path before navigating
+  const handleSignIn = async () => {
+    // Clear all auth state before navigating
+    await clearAllAuthState(dispatch, persistor, {
+      clearExpiredPage: true,   // Clear expired page
+    });
+
     if (typeof window !== "undefined") {
-      localStorage.removeItem("tryfann_expired_last_visit_page");
       // Clear the window flag so PrivateRoute can redirect if needed
       window.__tryfann_handling_token_expiration__ = false;
     }

@@ -3,13 +3,18 @@ import { useLanguage } from "@/contexts/useLanguage";
 import {
   useGetProgressionQuery,
 } from "@/services/api/dashboardApi";
-import { getTierInfo, tierNameToKey, parsePointsRange } from "@/utils/tierSystem";
 import { Award, Compass, Crown, Loader2, Star, Zap } from "lucide-react";
 import { motion } from "motion/react";
 
 interface TierProgressProps {
   statsData?: {
     total_points?: number;
+    tier_name?: string;
+    tier_min_points?: number;
+    tier_max_points?: number;
+    tier_progress_percentage?: number;
+    next_tier_name?: string;
+    next_tier_need_points?: number;
     [key: string]: unknown;
   };
   isLoadingStats?: boolean;
@@ -47,6 +52,16 @@ const getTierConfig = (tierName: string) => {
       color: "from-gray-600 to-gray-500",
       multiplier: "1x",
     },
+    Curator: {
+      icon: Star,
+      color: "from-[#45e3d3] to-[#4de3ed]",
+      multiplier: "1x",
+    },
+    Patron: {
+      icon: Star,
+      color: "from-[#45e3d3] to-[#4de3ed]",
+      multiplier: "1x",
+    },
     Ambassador: {
       icon: Crown,
       color: "from-[#ffcc33] to-[#ffb54d]",
@@ -82,40 +97,14 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
   const isLoading = isLoadingStats || isLoadingProgression;
   const isError = isErrorProgression;
 
-  // Get user points from props
+  // Get tier information directly from dashboard stats API
   const userPoints = statsData?.total_points || 0;
-
-  // Get tier information using dynamic tier system
-  const progressionTiers = useMemo(
-    () => progressionData?.data || [],
-    [progressionData?.data]
-  );
-  const tierInfo =
-    progressionTiers.length > 0
-      ? getTierInfo(userPoints, progressionTiers)
-      : null;
-
-  // Get tier names from API data
-  const getTierNameFromKey = (tierKey: string): string => {
-    const tier = progressionTiers.find(
-      (t) => tierNameToKey(t.name) === tierKey
-    );
-    return tier?.name || tierKey;
-  };
-
-  const currentTierKey = tierInfo?.currentTier || "explorer";
-  const nextTierKey = tierInfo?.nextTier ?? null;
-  const progress = tierInfo?.progress ?? 0;
-  const pointsNeeded = tierInfo?.pointsNeeded ?? 0;
-
-  const currentTierName =
-    progressionTiers.length > 0
-      ? getTierNameFromKey(currentTierKey)
-      : "Explorer";
-  const nextTierName =
-    progressionTiers.length > 0 && nextTierKey
-      ? getTierNameFromKey(nextTierKey)
-      : null;
+  const currentTierName = statsData?.tier_name || "Explorer";
+  const nextTierName = statsData?.next_tier_name || null;
+  const progress = statsData?.tier_progress_percentage || 0;
+  const pointsNeeded = statsData?.next_tier_need_points || 0;
+  const tierMinPoints = statsData?.tier_min_points || 0;
+  const tierMaxPoints = statsData?.tier_max_points || null;
 
   const currentTierConfig = getTierConfig(currentTierName);
   const nextTierConfig = nextTierName ? getTierConfig(nextTierName) : null;
@@ -123,18 +112,33 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
   const CurrentTierIcon = currentTierConfig.icon;
   const NextTierIcon = nextTierConfig?.icon || Crown;
 
-  // Get all tiers from API data
-  const allTierKeys = tierInfo?.tierOrder || [];
-  const currentTierIndex = allTierKeys.indexOf(currentTierKey);
+  // Get all tiers from progression API for milestones display
+  const progressionTiers = useMemo(
+    () => progressionData?.data || [],
+    [progressionData?.data]
+  );
 
   // Sort tiers by minimum points (lowest to highest) for display
   const sortedTiers = useMemo(() => {
+    if (progressionTiers.length === 0) return [];
+    
+    // Parse points range from string format (e.g., "3501-7501")
+    const parsePoints = (pointsStr: string) => {
+      const match = pointsStr.match(/(\d+)/);
+      return match ? parseInt(match[1], 10) : 0;
+    };
+
     return [...progressionTiers].sort((a, b) => {
-      const aRange = parsePointsRange(a.points);
-      const bRange = parsePointsRange(b.points);
-      return aRange.min - bRange.min;
+      const aMin = parsePoints(a.points);
+      const bMin = parsePoints(b.points);
+      return aMin - bMin;
     });
   }, [progressionTiers]);
+
+  // Find current tier index in sorted tiers for milestones display
+  const currentTierIndex = useMemo(() => {
+    return sortedTiers.findIndex((tier) => tier.name === currentTierName);
+  }, [sortedTiers, currentTierName]);
 
   // Show loading state
   if (isLoading) {
@@ -265,10 +269,10 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
-          <span>{tierInfo?.currentTierMin || 0}</span>
+          <span>{tierMinPoints}</span>
           <span className="text-[#ffcc33]">{Math.round(progress)}%</span>
           <span>
-            {tierInfo?.nextTierMin || tierInfo?.currentTierMax || "∞"}
+            {tierMaxPoints || (nextTierName ? "∞" : "∞")}
           </span>
         </div>
       </div>
@@ -277,12 +281,11 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
       {sortedTiers.length > 0 && (
         <div className="flex items-center justify-between gap-2">
           {sortedTiers.map((tier, index) => {
-            const tierKey = tierNameToKey(tier.name);
             const tierConfig = getTierConfig(tier.name);
             const TierIcon = tierConfig.icon;
             // Calculate if unlocked based on sorted order
-            const isUnlocked = index <= currentTierIndex;
-            const isCurrent = tierKey === currentTierKey;
+            const isUnlocked = currentTierIndex >= 0 && index <= currentTierIndex;
+            const isCurrent = tier.name === currentTierName;
 
             return (
               <div

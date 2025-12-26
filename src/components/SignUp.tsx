@@ -1,6 +1,8 @@
 import { useSignUpMutation } from "@/services/api/authApi";
 import { useGetRegionsQuery } from "@/services/api/regionApi";
 import { setTokens, type UserProfileData } from "@/store/authSlice";
+import { persistor } from "@/store/store";
+import { clearAllAuthState } from "@/utils/auth";
 import { extractErrorMessage } from "@/utils/errorMessages";
 import {
   ArrowRight,
@@ -36,6 +38,7 @@ import {
 } from "./ui/custom-form-elements";
 import { Label } from "./ui/label";
 import { AmbassadorVerificationModal } from "./auth/AmbassadorVerificationModal";
+import { EmailVerificationModal } from "./auth/EmailVerificationModal";
 
 interface SignUpProps {
   language: "en" | "ar";
@@ -72,6 +75,8 @@ export function SignUp({
   );
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showAmbassadorVerificationModal, setShowAmbassadorVerificationModal] =
+    useState(false);
+  const [showEmailVerificationModal, setShowEmailVerificationModal] =
     useState(false);
 
   // Auto-select persona and move to step 2 if initialPersona is provided
@@ -575,9 +580,24 @@ export function SignUp({
           role === "Ambassador" || role?.toLowerCase() === "ambassador";
         const isPendingVerification = isAmbassador && isVerify === false;
 
+        // Check if user needs email verification (artist, gallery, collector)
+        const needsEmailVerification =
+          isVerify === false &&
+          (role === "Artist" ||
+            role === "Gallery" ||
+            role === "Collector" ||
+            role?.toLowerCase() === "artist" ||
+            role?.toLowerCase() === "gallery" ||
+            role?.toLowerCase() === "collector");
+
         // If tokens are found, store them in Redux store along with persona
         const persona = selectedPersona || "artist";
         if (accessToken && refreshToken) {
+          // Clear all auth state before setting new tokens
+          await clearAllAuthState(dispatch, persistor, {
+            clearExpiredPage: true,    // Clear expired page on signup
+          });
+
           dispatch(
             setTokens({
               accessToken,
@@ -625,10 +645,13 @@ export function SignUp({
         // Show success toast
         toast.success(successMessage);
 
-        // Check for ambassador verification status
+        // Check for verification status
         if (isPendingVerification) {
           // Show ambassador verification modal instead of navigating
           setShowAmbassadorVerificationModal(true);
+        } else if (needsEmailVerification) {
+          // Show email verification modal instead of navigating
+          setShowEmailVerificationModal(true);
         } else {
           // Navigate to onboarding page after storing tokens
           console.log("Navigating to onboarding with persona:", persona);
@@ -662,6 +685,11 @@ export function SignUp({
   // Show ambassador verification modal if needed
   if (showAmbassadorVerificationModal) {
     return <AmbassadorVerificationModal />;
+  }
+
+  // Show email verification modal if needed
+  if (showEmailVerificationModal) {
+    return <EmailVerificationModal />;
   }
 
   return (

@@ -113,6 +113,7 @@ export function CollectorDashboard() {
             profileCompleted={profileCompleted}
             onCompleteProfile={handleCompleteProfile}
             statsData={dashboardStatsData?.data}
+            onRefetchStats={refetchDashboardStats}
           />
         </motion.div>
 
@@ -126,6 +127,7 @@ export function CollectorDashboard() {
             profileCompleted={profileCompleted}
             onCompleteProfile={handleCompleteProfile}
             userType="Collector"
+            onRefetchStats={refetchDashboardStats}
           />
         </motion.div>
 
@@ -149,7 +151,7 @@ export function CollectorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <WatchVideos />
+          <WatchVideos onRefetchStats={refetchDashboardStats} />
         </motion.div>
 
         {/* Tier Progress and Market Insights - Stacked in one column */}

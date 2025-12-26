@@ -20,10 +20,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { ImageWithFallback } from "../../figma/ImageWithFallback";
 import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
-import { baseApi } from "@/services/api/baseApi";
-import { clearAuth } from "@/store/authSlice";
 import { persistor } from "@/store/store";
 import type { RootState } from "@/store/store";
+import { clearAllAuthState } from "@/utils/auth";
 import fannLogo from "figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png";
 
 interface DashboardNavProps {
@@ -90,21 +89,21 @@ export function DashboardNav({
   // Get user display data
   const userName = storedUser
     ? `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim() ||
-      storedUser.title ||
-      storedUser.email ||
-      "User"
+    storedUser.title ||
+    storedUser.email ||
+    "User"
     : "User";
 
   const userInitials = storedUser
     ? `${storedUser.first_name || ""} ${storedUser.last_name || ""}`
-        .trim()
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2) ||
-      storedUser.email?.[0]?.toUpperCase() ||
-      "U"
+      .trim()
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2) ||
+    storedUser.email?.[0]?.toUpperCase() ||
+    "U"
     : "U";
 
   // Get user role for display
@@ -112,7 +111,7 @@ export function DashboardNav({
     // Get role from storedUser.role first, then fallback to persona
     const displayRoleRaw =
       storedUser?.role?.toLowerCase() || persona?.toLowerCase() || "artist";
-    
+
     // Validate and map role to our supported roles
     const validRoles: Array<"artist" | "collector" | "gallery" | "ambassador"> = [
       "artist",
@@ -125,7 +124,7 @@ export function DashboardNav({
     )
       ? (displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador")
       : "artist";
-    
+
     return t.roles[displayRole] || t.roles.artist;
   };
 
@@ -153,16 +152,16 @@ export function DashboardNav({
     (location.pathname === ROUTES.DASHBOARD
       ? "dashboard"
       : location.pathname === ROUTES.PROFILE
-      ? "profile"
-      : location.pathname === ROUTES.SETTINGS
-      ? "settings"
-      : location.pathname === ROUTES.LEADERBOARD
-      ? "leaderboard"
-      : location.pathname === ROUTES.FEEDBACK
-      ? "feedback"
-      : location.pathname === ROUTES.BUG_REPORT
-      ? "bugReport"
-      : "dashboard");
+        ? "profile"
+        : location.pathname === ROUTES.SETTINGS
+          ? "settings"
+          : location.pathname === ROUTES.LEADERBOARD
+            ? "leaderboard"
+            : location.pathname === ROUTES.FEEDBACK
+              ? "feedback"
+              : location.pathname === ROUTES.BUG_REPORT
+                ? "bugReport"
+                : "dashboard");
 
   // Check profile visibility from user settings
   const profileVisibility = storedUser?.profile_visibility ?? true;
@@ -216,21 +215,9 @@ export function DashboardNav({
   ];
 
   const handleLogout = async () => {
-    // Clear RTK Query cache to remove all cached API data
-    dispatch(baseApi.util.resetApiState());
-
-    // Clear Redux auth state
-    dispatch(clearAuth());
-
-    // Clear persisted Redux state from localStorage
-    // redux-persist stores data with key "persist:auth" based on the persist config
-    localStorage.removeItem("persist:auth");
-
-    // Clear any other localStorage items set during signup/signin
-    localStorage.removeItem("tryfann_expired_last_visit_page");
-
-    // Purge the persistor to ensure all persisted state is cleared
-    await persistor.purge();
+    await clearAllAuthState(dispatch, persistor, {
+      clearExpiredPage: true,   // Clear expired page on logout
+    });
 
     // Call custom logout handler if provided
     if (onLogout) {
@@ -291,21 +278,20 @@ export function DashboardNav({
                           item.onClick();
                           setMobileMenuOpen(false);
                         }}
-                        className={`justify-start gap-3 transition-all duration-200 cursor-pointer ${
-                          isActive
+                        className={`justify-start gap-3 transition-all duration-200 cursor-pointer ${isActive
                             ? "bg-[#ffcc33]/20 text-[#ffcc33] border border-[#ffcc33]/30"
                             : "text-[#808c99] hover:text-[#ffcc33] hover:bg-[#ffcc33]/20"
-                        }`}
+                          }`}
                       >
                         <Icon className="w-5 h-5" />
                         {item.label}
                       </Button>
                     );
                   })}
-                
+
                 {/* Support Items Separator */}
                 <div className="h-px bg-[#ffcc33]/20 my-2" />
-                
+
                 {supportItems
                   .filter((item) => item.show)
                   .map((item) => {
@@ -319,18 +305,17 @@ export function DashboardNav({
                           item.onClick();
                           setMobileMenuOpen(false);
                         }}
-                        className={`justify-start gap-3 transition-all duration-200 cursor-pointer ${
-                          isActive
+                        className={`justify-start gap-3 transition-all duration-200 cursor-pointer ${isActive
                             ? "bg-[#ffcc33]/20 text-[#ffcc33] border border-[#ffcc33]/30"
                             : "text-[#808c99] hover:text-[#ffcc33] hover:bg-[#ffcc33]/20"
-                        }`}
+                          }`}
                       >
                         <Icon className="w-5 h-5" />
                         {item.label}
                       </Button>
                     );
                   })}
-                
+
                 <div className="h-px bg-[#ffcc33]/20 my-2" />
                 <Button
                   variant="ghost"
@@ -351,11 +336,9 @@ export function DashboardNav({
 
       {/* Desktop Sidebar */}
       <div
-        className={`hidden lg:flex fixed ${
-          isRTL ? "right-0 border-l" : "left-0 border-r"
-        } top-0 h-screen glass border-[#ffcc33]/20 flex-col z-40 transition-all duration-300 ${
-          isCollapsed ? 'w-[80px]' : 'w-[280px]'
-        }`}
+        className={`hidden lg:flex fixed ${isRTL ? "right-0 border-l" : "left-0 border-r"
+          } top-0 h-screen glass border-[#ffcc33]/20 flex-col z-40 transition-all duration-300 ${isCollapsed ? 'w-[80px]' : 'w-[280px]'
+          }`}
       >
         {/* Header */}
         <div className="p-6 border-b border-[#ffcc33]/20">
@@ -378,7 +361,7 @@ export function DashboardNav({
                 />
               </motion.div>
             )}
-            
+
             {/* Collapse/Expand Button */}
             <motion.button
               onClick={() => setIsCollapsed(!isCollapsed)}
@@ -399,9 +382,8 @@ export function DashboardNav({
         {/* User Profile Section */}
         <div className="p-6 border-b border-[#ffcc33]/20">
           <motion.div
-            className={`flex items-center gap-3 ${
-              isCollapsed ? "justify-center" : ""
-            }`}
+            className={`flex items-center gap-3 ${isCollapsed ? "justify-center" : ""
+              }`}
             initial={false}
           >
             <Avatar
@@ -445,11 +427,10 @@ export function DashboardNav({
                   onClick={item.onClick}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer ${
-                    isActive
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer ${isActive
                       ? "bg-primary/20 text-primary border border-primary/30"
                       : "text-[#808c99] hover:text-primary hover:bg-primary/10"
-                  } ${isCollapsed ? "justify-center" : ""}`}
+                    } ${isCollapsed ? "justify-center" : ""}`}
                   style={{ pointerEvents: "auto" }}
                 >
                   <Icon className="w-5 h-5 shrink-0" />
@@ -473,7 +454,7 @@ export function DashboardNav({
           {!isCollapsed && (
             <div className="h-px bg-[#ffcc33]/20 mb-4" />
           )}
-          
+
           <div className="space-y-2">
             {supportItems
               .filter((item) => item.show)
@@ -486,11 +467,10 @@ export function DashboardNav({
                     onClick={item.onClick}
                     whileHover={{ scale: isActive ? 1 : 1.02 }}
                     whileTap={{ scale: isActive ? 1 : 0.98 }}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer ${
-                      isActive
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer ${isActive
                         ? "bg-primary/20 text-primary border border-primary/30"
                         : "text-[#808c99] hover:text-primary hover:bg-primary/10"
-                    } ${isCollapsed ? "justify-center" : ""}`}
+                      } ${isCollapsed ? "justify-center" : ""}`}
                     style={{ pointerEvents: "auto" }}
                   >
                     <Icon className="w-5 h-5 shrink-0" />
@@ -516,9 +496,8 @@ export function DashboardNav({
             onClick={handleLogout}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#808c99] hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer ${
-              isCollapsed ? "justify-center" : ""
-            }`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#808c99] hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer ${isCollapsed ? "justify-center" : ""
+              }`}
             style={{ pointerEvents: "auto" }}
           >
             <LogOut className="w-5 h-5 shrink-0" />

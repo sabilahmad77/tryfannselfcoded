@@ -10,11 +10,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
 import { useGetUserDetailsQuery } from "@/services/api/authApi";
+import { API_BASE_URL } from "@/services/api/baseApi";
 import {
   useGetDashboardStatsQuery,
   useGetDashboardStatsGalleryQuery,
   useGetDashboardStatsAmbassadorQuery,
-  useGetProgressionQuery,
 } from "@/services/api/dashboardApi";
 import { setUser, type UserProfileData } from "@/store/authSlice";
 import { selectSubmittedData } from "@/store/onboardingSlice";
@@ -23,7 +23,6 @@ import {
   getFullImageUrl,
   normalizeToPreviewItems,
 } from "@/utils/filePreviewHelpers";
-import { getTierInfo } from "@/utils/tierSystem";
 import {
   Award,
   Briefcase,
@@ -35,13 +34,15 @@ import {
   Globe,
   Hash,
   IdCard,
+  Link,
   Mail,
   MapPin,
   Phone,
   Share2,
   Shield,
   Star,
-  TrendingUp
+  TrendingUp,
+  Users,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
@@ -70,6 +71,7 @@ const content = {
     provenancePoints: "Provenance Points",
     referrals: "Referrals",
     followers: "Followers",
+    following: "Following",
     artworksSaved: "Artworks Saved",
     collectionsCreated: "Collections",
     progressToNext: "Progress to Next Tier",
@@ -86,6 +88,8 @@ const content = {
     documents: "Documents",
     idDocument: "Government ID",
     proofOfAddress: "Proof of Address",
+    socialLinkHandler: "Social Link Handler",
+    socialLinkFollowers: "Social Link Followers",
     verified: "Verified",
     pending: "Pending",
     notSubmitted: "Not Submitted",
@@ -166,6 +170,7 @@ const content = {
     provenancePoints: "نقاط المصداقية",
     referrals: "الإحالات",
     followers: "المتابعين",
+    following: "المتابَعون",
     artworksSaved: "الأعمال المحفوظة",
     collectionsCreated: "المجموعات",
     progressToNext: "التقدم للمستوى التالي",
@@ -182,6 +187,8 @@ const content = {
     documents: "المستندات",
     idDocument: "هوية حكومية",
     proofOfAddress: "إثبات العنوان",
+    socialLinkHandler: "معرف الرابط الاجتماعي",
+    socialLinkFollowers: "متابعي الرابط الاجتماعي",
     verified: "تم التحقق",
     pending: "قيد الانتظار",
     notSubmitted: "لم يتم الإرسال",
@@ -283,6 +290,9 @@ export function ProfilePage() {
             gov_issued_id_front?: string | null; // Front of ID
             gov_issued_id_back?: string | null; // Back of ID
             proof_address?: string | null;
+            // Artist-specific fields
+            social_link_handler?: string | null;
+            social_link_followers?: string | null;
           };
           [key: string]: unknown;
         };
@@ -322,6 +332,9 @@ export function ProfilePage() {
             kyc_id_type: kycVerification?.id_type,
             kyc_gov_issued_id: govIdUrls,
             kyc_proof_address: kycVerification?.proof_address || null,
+            // Artist-specific fields
+            kyc_social_link_handler: kycVerification?.social_link_handler || null,
+            kyc_social_link_followers: kycVerification?.social_link_followers || null,
           } as Partial<UserProfileData>),
         };
 
@@ -349,6 +362,11 @@ export function ProfilePage() {
         .kyc_gov_issued_id,
       proof_address: (storedUser as { kyc_proof_address?: string | null })
         .kyc_proof_address,
+      // Artist-specific fields
+      social_link_handler: (storedUser as { kyc_social_link_handler?: string | null })
+        .kyc_social_link_handler,
+      social_link_followers: (storedUser as { kyc_social_link_followers?: string | null })
+        .kyc_social_link_followers,
     } as {
       id_number?: string;
       dob?: string;
@@ -359,6 +377,9 @@ export function ProfilePage() {
       id_type?: string;
       gov_issued_id?: string | null;
       proof_address?: string | null;
+      // Artist-specific fields
+      social_link_handler?: string | null;
+      social_link_followers?: string | null;
     })
     : undefined;
   const kycDataFromOnboarding = useSelector((state: RootState) =>
@@ -374,6 +395,9 @@ export function ProfilePage() {
       id_type?: string;
       gov_issued_id?: string;
       proof_address?: string;
+      // Artist-specific fields
+      social_link_handler?: string | null;
+      social_link_followers?: string | null;
     }
     | undefined;
   // Use KYC data from user object if available, otherwise fallback to onboarding data
@@ -384,6 +408,7 @@ export function ProfilePage() {
 
   // Determine user role for API calls (must be before API calls)
   const userRole = storedUser?.role?.toLowerCase() || persona?.toLowerCase() || "";
+  const isArtist = userRole === "artist";
   const isCollector = userRole === "collector";
   const isAmbassador = userRole === "ambassador";
   const isGallery = userRole === "gallery";
@@ -410,10 +435,15 @@ export function ProfilePage() {
       // Map Gallery stats
       return {
         total_points: dashboardStatsGalleryData.data.total_points ?? 0,
+        tier_name: dashboardStatsGalleryData.data.tier_name,
+        tier_progress_percentage: dashboardStatsGalleryData.data.tier_progress_percentage ?? 0,
+        next_tier_name: dashboardStatsGalleryData.data.next_tier_name,
+        next_tier_need_points: dashboardStatsGalleryData.data.next_tier_need_points ?? 0,
         influence_points: dashboardStatsGalleryData.data.influence_points ?? 0,
         provenance_points: dashboardStatsGalleryData.data.provenance_points ?? 0,
         referral_count: dashboardStatsGalleryData.data.referral_count ?? 0,
         user_followers: dashboardStatsGalleryData.data.user_followers ?? 0,
+        user_following: dashboardStatsGalleryData.data.user_following ?? 0,
         artwork_count: 0, // Gallery doesn't have artwork_count
         collection_count: 0, // Gallery doesn't have collection_count
       };
@@ -422,10 +452,15 @@ export function ProfilePage() {
       // Map Ambassador stats
       return {
         total_points: dashboardStatsAmbassadorData.data.total_points ?? 0,
+        tier_name: dashboardStatsAmbassadorData.data.tier_name,
+        tier_progress_percentage: dashboardStatsAmbassadorData.data.tier_progress_percentage ?? 0,
+        next_tier_name: dashboardStatsAmbassadorData.data.next_tier_name,
+        next_tier_need_points: dashboardStatsAmbassadorData.data.next_tier_need_points ?? 0,
         influence_points: dashboardStatsAmbassadorData.data.influence_points ?? 0,
         provenance_points: dashboardStatsAmbassadorData.data.provenance_points ?? 0,
         referral_count: dashboardStatsAmbassadorData.data.referral_count ?? 0,
         user_followers: dashboardStatsAmbassadorData.data.user_followers ?? 0,
+        user_following: dashboardStatsAmbassadorData.data.user_following ?? 0,
         artwork_count: dashboardStatsAmbassadorData.data.artwork_count ?? 0,
         collection_count: dashboardStatsAmbassadorData.data.collection_count ?? 0,
       };
@@ -434,10 +469,15 @@ export function ProfilePage() {
     if (dashboardStatsData?.data) {
       return {
         total_points: dashboardStatsData.data.total_points ?? 0,
+        tier_name: dashboardStatsData.data.tier_name,
+        tier_progress_percentage: dashboardStatsData.data.tier_progress_percentage ?? 0,
+        next_tier_name: dashboardStatsData.data.next_tier_name,
+        next_tier_need_points: dashboardStatsData.data.next_tier_need_points ?? 0,
         influence_points: dashboardStatsData.data.influence_points ?? 0,
         provenance_points: dashboardStatsData.data.provenance_points ?? 0,
         referral_count: dashboardStatsData.data.referral_count ?? 0,
         user_followers: dashboardStatsData.data.user_followers ?? 0,
+        user_following: dashboardStatsData.data.user_following ?? 0,
         artwork_count: dashboardStatsData.data.artwork_count ?? 0,
         collection_count: dashboardStatsData.data.collection_count ?? 0,
       };
@@ -451,34 +491,17 @@ export function ProfilePage() {
     dashboardStatsData,
   ]);
 
-  // Fetch progression data for tier calculation
-  const { data: progressionData } = useGetProgressionQuery();
-
-  // Calculate progression tiers (must be before conditional returns)
-  const progressionTiers = useMemo(
-    () => progressionData?.data || [],
-    [progressionData?.data]
-  );
-
-  // Calculate total points for tier calculation (before conditional returns)
+  // Get tier information directly from dashboard stats API
   const totalPoints =
     mappedDashboardStats?.total_points ??
     parseInt(storedUser?.points || "0", 10) ??
     0;
 
-  // Calculate tier information using shared utility (before conditional returns)
-  const tierInfo =
-    progressionTiers.length > 0
-      ? getTierInfo(totalPoints, progressionTiers)
-      : null;
-  const currentTierName = tierInfo
-    ? t.tiers[tierInfo.currentTier as keyof typeof t.tiers]
-    : t.tiers.explorer;
-  const nextTierName = tierInfo?.nextTier
-    ? t.tiers[tierInfo.nextTier as keyof typeof t.tiers]
-    : null;
-  const progress = tierInfo?.progress ?? 0;
-  const pointsNeeded = tierInfo?.pointsNeeded ?? 0;
+  // Use tier data directly from API with proper type handling
+  const currentTierName: string = (mappedDashboardStats?.tier_name as string | undefined) || "Explorer";
+  const nextTierName: string | null = (mappedDashboardStats?.next_tier_name as string | undefined) || null;
+  const progress: number = (mappedDashboardStats?.tier_progress_percentage as number | undefined) ?? 0;
+  const pointsNeeded: number = (mappedDashboardStats?.next_tier_need_points as number | undefined) ?? 0;
 
   // Redirect if profile visibility is disabled
   // This prevents users from accessing the profile page even by manual URL navigation
@@ -527,8 +550,7 @@ export function ProfilePage() {
     }
 
     // Get base URL and remove /api suffix if present
-    const BASE_URL =
-      "https://api.fann.art/api";
+    const BASE_URL = API_BASE_URL;
     const baseWithoutApi = BASE_URL.replace(/\/api$/, "");
 
     // If it's a relative path (starts with /), prepend base URL without /api
@@ -568,6 +590,7 @@ export function ProfilePage() {
         storedUser.total_referral_clicks ??
         0,
       followers: mappedDashboardStats?.user_followers ?? 0,
+      following: mappedDashboardStats?.user_following ?? 0,
       artworksSaved: mappedDashboardStats?.artwork_count ?? 0,
       collections: mappedDashboardStats?.collection_count ?? 0,
       // Additional fields for edit profile
@@ -614,6 +637,7 @@ export function ProfilePage() {
       provenancePoints: 0,
       referrals: 0,
       followers: 0,
+      following: 0,
       artworksSaved: 0,
       collections: 0,
       title: "",
@@ -687,7 +711,7 @@ export function ProfilePage() {
 
             {/* Quick Stats */}
             <div
-              className={`grid grid-cols-2 ${isAmbassador ? "md:grid-cols-3" : isCollector ? "md:grid-cols-5" : "md:grid-cols-4"} gap-4 ${isRTL ? "text-right" : "text-left"
+              className={`grid grid-cols-2 ${isAmbassador ? "md:grid-cols-4" : isCollector ? "md:grid-cols-6" : "md:grid-cols-5"} gap-4 ${isRTL ? "text-right" : "text-left"
                 }`}
             >
               <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
@@ -699,6 +723,10 @@ export function ProfilePage() {
               <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">{userData.followers}</p>
                 <p className="text-xs text-[#808c99]">{t.followers}</p>
+              </div>
+              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
+                <p className="text-2xl text-[#ffffff]">{userData.following}</p>
+                <p className="text-xs text-[#808c99]">{t.following}</p>
               </div>
               <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">{userData.referrals}</p>
@@ -765,7 +793,7 @@ export function ProfilePage() {
         <TabsList className="glass border border-[#4e4e4e78] mb-6">
           <TabsTrigger value="about">{t.about}</TabsTrigger>
           <TabsTrigger value="activity">{t.activity}</TabsTrigger>
-          <TabsTrigger value="achievements">{t.achievementsTab}</TabsTrigger>
+          {/* <TabsTrigger value="achievements">{t.achievementsTab}</TabsTrigger> */}
           <TabsTrigger value="stats">{t.stats}</TabsTrigger>
         </TabsList>
 
@@ -1082,6 +1110,46 @@ export function ProfilePage() {
                         </div>
                       </div>
                     )}
+
+                    {/* Artist-specific: Social Link Handler */}
+                    {isArtist && kycData.social_link_handler && (
+                      <div
+                        className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
+                      >
+                        <div className="w-12 h-12 bg-[#1D112A] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
+                          <Link className="w-6 h-6 text-[#9375b5]" />
+                        </div>
+                        <div className={isRTL ? "text-right" : "text-left"}>
+                          <p className="text-xs text-[#808c99]">
+                            {t.socialLinkHandler}
+                          </p>
+                          <p className="text-[#ffffff]">
+                            {kycData.social_link_handler}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Artist-specific: Social Link Followers */}
+                    {isArtist && kycData.social_link_followers && (
+                      <div
+                        className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
+                      >
+                        <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
+                          <Users className="w-6 h-6 text-[#0ea5e9]" />
+                        </div>
+                        <div className={isRTL ? "text-right" : "text-left"}>
+                          <p className="text-xs text-[#808c99]">
+                            {t.socialLinkFollowers}
+                          </p>
+                          <p className="text-[#ffffff]">
+                            {kycData.social_link_followers}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Documents Status */}
@@ -1217,7 +1285,7 @@ export function ProfilePage() {
         </TabsContent>
 
         {/* Achievements Tab */}
-        <TabsContent value="achievements">
+        {/* <TabsContent value="achievements">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1278,7 +1346,7 @@ export function ProfilePage() {
               })}
             </div>
           </motion.div>
-        </TabsContent>
+        </TabsContent> */}
 
         {/* Stats Tab */}
         <TabsContent value="stats">
@@ -1442,6 +1510,7 @@ export function ProfilePage() {
         open={isEditKYCOpen}
         onClose={() => setIsEditKYCOpen(false)}
         language={language}
+        isArtist={isArtist}
         initialData={
           kycData
             ? {
@@ -1462,6 +1531,9 @@ export function ProfilePage() {
                 typeof kycData.proof_address === "string"
                   ? kycData.proof_address
                   : kycData.proof_address || null,
+              // Artist-specific fields
+              social_link_handler: kycData.social_link_handler || undefined,
+              social_link_followers: kycData.social_link_followers || undefined,
             }
             : undefined
         }

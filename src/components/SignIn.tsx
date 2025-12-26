@@ -1,12 +1,13 @@
 import { ROUTES } from "@/routes/paths";
 import { useLoginMutation } from "@/services/api/authApi";
-import { baseApi } from "@/services/api/baseApi";
 import {
   setAccessToken,
   setPersona,
   setTokens,
   type UserProfileData,
 } from "@/store/authSlice";
+import { persistor } from "@/store/store";
+import { clearAllAuthState, REMEMBERED_EMAIL_KEY, REMEMBERED_PASSWORD_KEY } from "@/utils/auth";
 import {
   ArrowRight,
   ChevronLeft,
@@ -30,6 +31,7 @@ import { Checkbox } from "./ui/checkbox";
 import { InputField, PasswordField } from "./ui/custom-form-elements";
 import { Label } from "./ui/label";
 import { AmbassadorVerificationModal } from "./auth/AmbassadorVerificationModal";
+import { EmailVerificationModal } from "./auth/EmailVerificationModal";
 
 interface SignInProps {
   language: "en" | "ar";
@@ -62,9 +64,6 @@ interface LoginResponse {
   user?: unknown;
 }
 
-const REMEMBERED_EMAIL_KEY = "fann_remembered_email";
-const REMEMBERED_PASSWORD_KEY = "fann_remembered_password";
-
 export function SignIn({
   language,
   onNavigateToSignUp,
@@ -89,6 +88,8 @@ export function SignIn({
   const rememberMe = watch("rememberMe");
   const [login, { isLoading }] = useLoginMutation();
   const [showAmbassadorVerificationModal, setShowAmbassadorVerificationModal] =
+    useState(false);
+  const [showEmailVerificationModal, setShowEmailVerificationModal] =
     useState(false);
 
   // Load remembered credentials on component mount
@@ -210,6 +211,11 @@ export function SignIn({
     return <AmbassadorVerificationModal />;
   }
 
+  // Show email verification modal if needed
+  if (showEmailVerificationModal) {
+    return <EmailVerificationModal />;
+  }
+
   const onSubmit = async (data: SignInFormData) => {
     try {
       // Handle remember me functionality
@@ -253,8 +259,10 @@ export function SignIn({
       const persona = role ? role.toLowerCase() : undefined;
 
       if (accessToken) {
-        // Clear RTK Query cache when user logs in/relogins to ensure fresh data
-        dispatch(baseApi.util.resetApiState());
+        // Clear all auth state before setting new tokens
+        await clearAllAuthState(dispatch, persistor, {
+          clearExpiredPage: true,    // Clear expired page on relogin
+        });
 
         // Store tokens in Redux (persisted via redux-persist)
         if (refreshToken) {
@@ -289,7 +297,7 @@ export function SignIn({
         }
       }
 
-      // Extract role and is_verify from user data for ambassador verification check
+      // Extract role and is_verify from user data for verification check
       const userRole = userData?.role;
       const isVerify = userData?.is_verify;
 
@@ -297,6 +305,16 @@ export function SignIn({
       const isAmbassador =
         userRole === "Ambassador" || userRole?.toLowerCase?.() === "ambassador";
       const isPendingVerification = isAmbassador && isVerify === false;
+
+      // Check if user needs email verification (artist, gallery, collector)
+      const needsEmailVerification =
+        isVerify === false &&
+        (userRole === "Artist" ||
+          userRole === "Gallery" ||
+          userRole === "Collector" ||
+          userRole?.toLowerCase?.() === "artist" ||
+          userRole?.toLowerCase?.() === "gallery" ||
+          userRole?.toLowerCase?.() === "collector");
 
       // Show success message
       const successMessage =
@@ -309,10 +327,13 @@ export function SignIn({
 
       toast.success(successMessage);
 
-      // Check for ambassador verification status
+      // Check for verification status
       if (isPendingVerification) {
         // Show ambassador verification modal instead of navigating
         setShowAmbassadorVerificationModal(true);
+      } else if (needsEmailVerification) {
+        // Show email verification modal instead of navigating
+        setShowEmailVerificationModal(true);
       } else {
         // Redirect to dashboard regardless of profile completion status
         navigate(ROUTES.DASHBOARD, { replace: true });

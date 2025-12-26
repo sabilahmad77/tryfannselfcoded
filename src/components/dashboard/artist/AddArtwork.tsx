@@ -31,6 +31,8 @@ interface AddArtworkProps {
   onCompleteProfile?: () => void;
   /** User type to use for artworks (Artist, Gallery, or Collector) */
   userType?: "Artist" | "Gallery" | "Collector";
+  /** Callback to refetch dashboard stats after artwork is added */
+  onRefetchStats?: () => void;
 }
 
 const content = {
@@ -120,6 +122,7 @@ export function AddArtwork({
   profileCompleted,
   onCompleteProfile,
   userType = "Artist",
+  onRefetchStats,
 }: AddArtworkProps) {
   const { language } = useLanguage();
   const t = content[language];
@@ -173,6 +176,8 @@ export function AddArtwork({
 
       toast.success(t.success);
       void refetch();
+      // Refetch dashboard stats to update points and other stats
+      onRefetchStats?.();
       handleModalClose();
 
       if (import.meta.env.DEV) {
@@ -204,6 +209,8 @@ export function AddArtwork({
           : "تم تحديث العمل الفني بنجاح"
       );
       void refetch();
+      // Refetch dashboard stats to update points and other stats
+      onRefetchStats?.();
       handleModalClose();
 
       if (import.meta.env.DEV) {

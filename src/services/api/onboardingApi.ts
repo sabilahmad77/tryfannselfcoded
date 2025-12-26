@@ -84,6 +84,9 @@ export interface KYCVerificationRequest {
   gov_issued_id_front?: File; // Front of ID
   gov_issued_id_back?: File; // Back of ID
   proof_address?: File;
+  // Artist-specific fields
+  social_link_handler?: string;
+  social_link_followers?: string;
 }
 
 export interface KYCVerificationResponse {
@@ -310,6 +313,14 @@ export const onboardingApi = baseApi.injectEndpoints({
         }
         if (formData.proof_address) {
           body.append("proof_address", formData.proof_address);
+        }
+
+        // Artist-specific fields
+        if (formData.social_link_handler) {
+          body.append("social_link_handler", formData.social_link_handler);
+        }
+        if (formData.social_link_followers) {
+          body.append("social_link_followers", formData.social_link_followers);
         }
 
         return {

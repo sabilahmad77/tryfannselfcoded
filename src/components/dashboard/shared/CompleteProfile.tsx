@@ -43,7 +43,7 @@ export function CompleteProfile({
 
   // Don't render if profile is already completed
   // Show component only when profile is NOT completed (profileCompleted === false)
-  if (profileCompleted === true) {
+  if (profileCompleted !== true) {
     return null;
   }
 

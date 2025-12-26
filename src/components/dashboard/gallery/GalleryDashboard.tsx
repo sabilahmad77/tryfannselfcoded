@@ -125,6 +125,7 @@ export function GalleryDashboard() {
             profileCompleted={profileCompleted}
             onCompleteProfile={handleCompleteProfile}
             userType="Gallery"
+            onRefetchStats={refetchGalleryStats}
           />
         </motion.div>
 
@@ -147,7 +148,7 @@ export function GalleryDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <WatchVideos />
+          <WatchVideos onRefetchStats={refetchGalleryStats} />
         </motion.div>
 
         <motion.div

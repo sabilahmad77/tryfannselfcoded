@@ -34,6 +34,8 @@ interface MyCollectionProps {
     growth?: number;
     [key: string]: unknown;
   };
+  /** Callback to refetch dashboard stats after collection is modified */
+  onRefetchStats?: () => void;
 }
 
 const content = {
@@ -159,6 +161,7 @@ export function MyCollection({
   profileCompleted = true,
   onCompleteProfile,
   statsData,
+  onRefetchStats,
 }: MyCollectionProps) {
   const { language } = useLanguage();
   const t = content[language];
@@ -282,6 +285,8 @@ export function MyCollection({
       }
 
       toast.success(successMessage);
+      // Refetch dashboard stats to update points and other stats
+      onRefetchStats?.();
       setIsModalOpen(false);
       setEditingArtwork(null);
     } catch (error) {
@@ -331,6 +336,8 @@ export function MyCollection({
       }
 
       toast.success(successMessage);
+      // Refetch dashboard stats to update points and other stats
+      onRefetchStats?.();
       setShowDeleteConfirm(false);
       setArtworkToDelete(null);
     } catch (error) {

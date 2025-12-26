@@ -207,7 +207,7 @@ export function FeedbackPage() {
     const emailValue = email.trim();
 
     if (isGeneral) {
-      const selectedAbout = IDEA_CATEGORY_VALUE_MAP[generalAbout as IdeaCategoryKey] || '';
+      const selectedAbout = GENERAL_CATEGORY_VALUE_MAP[generalAbout as GeneralCategoryKey] || '';
 
       if (!selectedAbout) {
         toast.error(t.requiredField);
@@ -222,7 +222,7 @@ export function FeedbackPage() {
         ...(emailValue ? { email: emailValue } : {}),
       };
     } else {
-      const selectedIdeaCategory = GENERAL_CATEGORY_VALUE_MAP[ideaCategory as GeneralCategoryKey] || '';
+      const selectedIdeaCategory = IDEA_CATEGORY_VALUE_MAP[ideaCategory as IdeaCategoryKey] || '';
 
       if (!selectedIdeaCategory) {
         toast.error(t.requiredField);
@@ -353,8 +353,8 @@ export function FeedbackPage() {
                   {t.ideasFeedback.categoryLabel} <span className="text-[#ef4444]">*</span>
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {IDEA_CATEGORY_KEYS.map((key) => {
-                    const label = t.ideasFeedback.categories[key];
+                  {GENERAL_CATEGORY_KEYS.map((key) => {
+                    const label = t.categories[key];
                     const isSelected = generalAbout === key;
                     return (
                       <motion.button
@@ -417,8 +417,8 @@ export function FeedbackPage() {
                     {t.categoryLabel} <span className="text-[#ef4444]">*</span>
                   </label>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {GENERAL_CATEGORY_KEYS.map((key) => {
-                      const label = t.categories[key];
+                    {IDEA_CATEGORY_KEYS.map((key) => {
+                      const label = t.ideasFeedback.categories[key];
                       const isSelected = ideaCategory === key;
                       return (
                         <motion.button

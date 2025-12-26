@@ -219,6 +219,10 @@ export function LeaderboardPage() {
     (state: RootState) => state.auth.isAuthenticated
   );
 
+  // Get logged-in user's email
+  const loggedInUser = useSelector((state: RootState) => state.auth.user);
+  const loggedInUserEmail = loggedInUser?.email;
+
   // Check if user came from homepage
   const fromHomepage =
     (location.state as { fromHomepage?: boolean })?.fromHomepage ?? false;
@@ -382,6 +386,7 @@ export function LeaderboardPage() {
           entry.email ||
           "Unknown",
         username: entry.username || `@${entry.email?.split("@")[0] || "user"}`,
+        email: entry.email || "", // Include email for comparison with logged-in user
         points: entry.points ? parseInt(entry.points, 10) : 0,
         tier: entry.tier || "Explorer",
         avatar:
@@ -979,8 +984,8 @@ export function LeaderboardPage() {
                       )}
                     </div>
                   </div>
-                  {/* Follow Button - Only show when authenticated */}
-                  {isAuthenticated && leader.id && (
+                  {/* Follow Button - Only show when authenticated and not the logged-in user */}
+                  {isAuthenticated && leader.id && loggedInUserEmail && leader.email !== loggedInUserEmail && (
                     <Button
                       size="sm"
                       onClick={(e) => {
@@ -1158,8 +1163,8 @@ export function LeaderboardPage() {
                       </span>
                     </td>
 
-                    {/* Follow Button - Only show when authenticated */}
-                    {isAuthenticated && leader.id && (
+                    {/* Follow Button - Only show when authenticated and not the logged-in user */}
+                    {isAuthenticated && leader.id && loggedInUserEmail && leader.email !== loggedInUserEmail && (
                       <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                         <Button
                           size="sm"
