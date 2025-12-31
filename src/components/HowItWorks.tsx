@@ -10,54 +10,82 @@ interface HowItWorksProps {
 
 const content = {
   en: {
-    title: { white: "How It", gold: " Works" },
-    subtitle: "Four simple steps to secure your place in the art revolution",
+    title: { white: "How It Works", gold: " A Simple, Seamless Experience for All" },
+    subtitle: "At FANN, we believe in making the art world more accessible, transparent, and rewarding for everyone. Here’s how you can get started.",
     steps: [
       {
         icon: UserPlus,
         title: "Sign Up & Verify",
-        description: "Create your account and complete KYC verification to unlock your journey."
+        description: (
+          <>
+            Create your account and complete KYC verification. This step secures your identity and ensures a trustworthy platform experience. Once verified, you&apos;re part of our <span className="font-bold text-white">exclusive early access</span> phase and can work towards unlocking whitelist status.
+          </>
+        )
       },
       {
         icon: Zap,
-        title: "Complete Tasks",
-        description: "Engage with challenges, share your vision, and earn Influence & Provenance Points."
+        title: "Engage & Participate",
+        description: "Join art challenges, share your vision, and earn Influence and Provenance Points. Each interaction helps you level up, gain visibility, and unlock rewards."
       },
       {
         icon: Trophy,
         title: "Climb the Ranks",
-        description: "Progress from Explorer to Founding Patron by accumulating points and achievements."
+        description: (
+          <>
+            Earn points and climb from <span className="font-bold text-white">Explorer</span> to <span className="font-bold text-white">Founding Patron</span> by completing tasks and contributing to the community. Each milestone brings you closer to exclusive benefits.
+          </>
+        )
       },
       {
         icon: Award,
         title: "Unlock Rewards",
-        description: "Gain exclusive access to AR galleries, limited edition artworks, and premium platform features."
+        description: (
+          <>
+            Enjoy exclusive access to AR galleries, limited edition artworks, VIP support, and personalized features as you ascend through the ranks.
+            <br />
+            It&apos;s that simple. Start your journey today and unlock a world of art that is authenticated, immersive, and rewarding.
+          </>
+        )
       }
     ]
   },
   ar: {
-    title: { white: "كيف", gold: " يعمل" },
-    subtitle: "أربع خطوات بسيطة لتأمين مكانك في ثورة الفن",
+    title: { white: "كيف يعمل", gold: " تجربة بسيطة وسلسة للجميع" },
+    subtitle: "في FANN، نؤمن بجعل عالم الفن أكثر سهولة وشفافية ومكافأة للجميع. إليك كيف يمكنك البدء.",
     steps: [
       {
         icon: UserPlus,
         title: "التسجيل والتحقق",
-        description: "أنشئ حسابك وأكمل التحقق من الهوية لفتح رحلتك."
+        description: (
+          <>
+            أنشئ حسابك وأكمل التحقق من الهوية (KYC). هذه الخطوة تؤمن هويتك وتضمن تجربة منصة موثوقة. بمجرد التحقق، أنت جزء من مرحلة <span className="font-bold text-white">الوصول المبكر الحصري</span> ويمكنك العمل نحو فتح حالة القائمة البيضاء.
+          </>
+        )
       },
       {
         icon: Zap,
-        title: "أكمل المهام",
-        description: "شارك في التحديات، وشارك رؤيتك، واكسب نقاط التأثير والمصداقية."
+        title: "شارك وكن نشطاً",
+        description: "انضم إلى تحديات الفن، شارك رؤيتك، واكسب نقاط التأثير والمصداقية. كل تفاعل يساعدك على الارتقاء، واكتساب الرؤية، وفتح المكافآت."
       },
       {
         icon: Trophy,
         title: "تسلق الرتب",
-        description: "تقدم من مستكشف إلى راعي مؤسس عبر جمع النقاط والإنجازات."
+        description: (
+          <>
+            اكسب النقاط وتسلق من <span className="font-bold text-white">مستكشف</span> إلى <span className="font-bold text-white">راعي مؤسس</span> من خلال إكمال المهام والمساهمة في المجتمع. كل معلم يقربك من الفوائد الحصرية.
+          </>
+        )
       },
       {
         icon: Award,
         title: "افتح المكافآت",
-        description: "احصل على وصول حصري لمعارض الواقع المعزز والأعمال الفنية المحدودة وميزات المنصة المميزة."
+        description: (
+          <>
+            استمتع بالوصول الحصري إلى معارض الواقع المعزز والأعمال الفنية المحدودة ودعم VIP والميزات المخصصة أثناء صعودك في الرتب.
+            <br />
+            الأمر بهذه البساطة. ابدأ رحلتك اليوم وافتح عالماً من الفن الأصيل والغامر والمجزِي.
+          </>
+        )
       }
     ]
   }
@@ -135,7 +163,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                whileHover={{ 
+                whileHover={{
                   y: -12,
                   transition: { duration: 0.3 }
                 }}
@@ -145,7 +173,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
                 {index < t.steps.length - 1 && (
                   <div className="hidden lg:block absolute top-20 left-[60%] w-[80%] h-px">
                     <div className="w-full h-full bg-gradient-to-r from-[#ffcc33]/60 via-[#ffcc33]/40 to-transparent" />
-                    <motion.div 
+                    <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-[#ffcc33] via-[#ffb54d] to-transparent"
                       initial={{ scaleX: 0 }}
                       whileInView={{ scaleX: 1 }}
@@ -158,7 +186,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
                 <div className="relative backdrop-blur-2xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 rounded-3xl overflow-hidden h-full border border-[#ffcc33]/20 hover:border-[#ffcc33]/60 transition-all duration-500">
                   {/* Glass Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent" />
-                  
+
                   {/* Scan Line Effect */}
                   <motion.div
                     className="absolute inset-0 opacity-0 group-hover:opacity-100"
@@ -179,9 +207,9 @@ export function HowItWorks({ language }: HowItWorksProps) {
 
                   {/* Top Gradient Bar */}
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffcc33] to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
-                  
+
                   {/* Step Number Badge */}
-                  <motion.div 
+                  <motion.div
                     className="absolute -top-4 -left-4 w-16 h-16 group-hover:scale-110 transition-all duration-500"
                     whileHover={{ rotate: [0, -5, 5, -5, 0] }}
                     transition={{ duration: 0.5 }}
@@ -199,7 +227,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
                         ease: "easeInOut"
                       }}
                     />
-                    
+
                     {/* Rotating Border Ring */}
                     <motion.div
                       className="absolute inset-0 rounded-full"
@@ -223,7 +251,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
                     <div className="absolute inset-[3px] rounded-full bg-gradient-to-br from-[#ffcc33] via-[#ffb54d] to-[#e6b800] flex items-center justify-center shadow-2xl border border-[#ffffff]/30">
                       {/* Inner Glass Effect */}
                       <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 via-transparent to-transparent" />
-                      
+
                       {/* Number */}
                       <span className="relative z-10 text-[#0F021C] text-2xl drop-shadow-lg" style={{ fontVariantNumeric: 'tabular-nums' }}>
                         {index + 1}
@@ -248,14 +276,14 @@ export function HowItWorks({ language }: HowItWorksProps) {
                   <div className="relative z-10 p-8 pt-10">
                     {/* Icon Container */}
                     <div className="relative mb-6 flex justify-center">
-                      <motion.div 
+                      <motion.div
                         className="relative w-24 h-24"
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.3 }}
                       >
                         {/* Outer Glow Ring */}
                         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#ffcc33]/30 to-[#45e3d3]/30 blur-xl group-hover:blur-2xl transition-all duration-500" />
-                        
+
                         {/* Main Circle */}
                         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#ffcc33]/20 via-[#1a1a2e]/80 to-[#45e3d3]/20 border-2 border-[#ffcc33]/40 group-hover:border-[#ffcc33]/80 transition-all duration-500 flex items-center justify-center backdrop-blur-xl">
                           <Icon className="w-12 h-12 text-[#ffcc33] relative z-10 drop-shadow-[0_0_10px_rgba(255,204,51,0.5)]" />

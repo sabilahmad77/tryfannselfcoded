@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Share2, Copy, Check, Users, Sparkles, Twitter, Send, MessageCircle, Award, Zap, Trophy, Target, ArrowUpRight } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
-import fannLogo from 'figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png';
+// import fannLogo from 'figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import bgImage from 'figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png';
 
@@ -14,8 +14,8 @@ interface ReferralModuleProps {
 const content = {
   en: {
     badge: "Referral Rewards",
-    title: { white: "Share the", gold: " Future of Art" },
-    subtitle: "Your network is your net worth. Earn rewards for every artist, collector, and curator you bring to FANN.",
+    title: { white: "Referral Rewards", gold: " Your Network is Your Net Worth" },
+    subtitle: "As an integral part of FANN, your influence matters. Share FANN with your network and earn rewards every time someone you refer joins and participates.",
     codeCard: {
       label: "Your Unique Code",
       action: "Copy & Share",
@@ -65,8 +65,8 @@ const content = {
   },
   ar: {
     badge: "مكاف��ت الإحالة",
-    title: { white: "شارك", gold: " مستقبل الفن" },
-    subtitle: "شبكتك هي ثروتك. اكسب مكافآت عن كل فنان وجامع ومنسق تجلبه إلى FANN.",
+    title: { white: "مكافآت الإحالة", gold: " شبكتك هي ثروتك" },
+    subtitle: "كجزء لا يتجزأ من FANN، تأثيرك مهم. شارك FANN مع شبكتك واكسب مكافآت في كل مرة ينضم فيها شخص أحلته ويشارك.",
     codeCard: {
       label: "رمزك الفريد",
       action: "نسخ ومشاركة",
@@ -169,7 +169,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <motion.div
+          {/* <motion.div
             className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass mb-6 border border-amber-500/30"
             animate={{
               boxShadow: ['0 0 20px rgba(234, 179, 8, 0.3)', '0 0 40px rgba(234, 179, 8, 0.5)', '0 0 20px rgba(234, 179, 8, 0.3)']
@@ -178,7 +178,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
           >
             <img src={fannLogo} alt="FANN" className="h-5 w-auto" />
             <span className="text-amber-300 text-sm">{t.badge}</span>
-          </motion.div>
+          </motion.div> */}
           <h2 className="mb-4 text-4xl md:text-5xl max-w-3xl mx-auto">
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>

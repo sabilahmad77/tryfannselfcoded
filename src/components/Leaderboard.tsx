@@ -24,8 +24,8 @@ interface LeaderboardProps {
 
 const content = {
   en: {
-    title: { white: "Global", gold: " Leaderboard" },
-    subtitle: "Compete with art pioneers from around the world",
+    title: { white: "Global Leaderboard", gold: " Compete, Celebrate, and Connect" },
+    subtitle: "Track your progress and see how you compare to other art pioneers. Our global leaderboard recognizes top artists, curators, and collectors based on their engagement and contributions. Compete for top spots and gain recognition on a global scale.",
     tabs: ["All Time", "This Month", "This Week"],
     columns: ["Rank", "User", "Role", "Tier", "Points"],
     viewAll: "View Full Leaderboard",
@@ -79,8 +79,8 @@ const content = {
     ],
   },
   ar: {
-    title: { white: "لوحة المتصدرين", gold: " العالمية" },
-    subtitle: "تنافس مع رواد الفن من جميع أنحاء العالم",
+    title: { white: "لوحة المتصدرين العالمية", gold: " تنافس واحتفل وتواصل" },
+    subtitle: "تتبع تقدمك وشاهد كيف تقارن نفسك برواد الفن الآخرين. تعترف لوحة المتصدرين العالمية بأفضل الفنانين والمنسقين والجامعين بناءً على تفاعلهم ومساهماتهم. تنافس للحصول على المراكز الأولى واحصل على الاعتراف على نطاق عالمي.",
     tabs: ["كل الأوقات", "هذا الشهر", "هذا الأسبوع"],
     columns: ["الترتيب", "المستخدم", "الدور", "المستوى", "النقاط"],
     viewAll: "عرض لوحة المتصدرين الكاملة",

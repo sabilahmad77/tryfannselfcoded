@@ -11,8 +11,8 @@ interface FooterProps {
 
 const content = {
   en: {
-    tagline: "The Future of Art Starts Here",
-    description: "TRYFANN is the gateway to FANN - where authenticated fine art meets immersive technology.",
+    tagline: { white: "Get Started Today", gold: " Join the Future of Art" },
+    description: "The art world is changing. FANN is at the forefront of this transformation. Whether you’re an artist, a curator, or a collector, FANN offers the tools, community, and opportunities you need to thrive in the future of art.",
     sections: [
       {
         title: "Platform",
@@ -36,8 +36,8 @@ const content = {
     compliance: "KYC powered by SumSub • GDPR Compliant"
   },
   ar: {
-    tagline: "مستقبل الفن يبدأ هنا",
-    description: "TRYFANN هو البوابة إلى FANN - حيث يلتقي الفن الراقي الموثق بالتكنولوجيا الغامرة.",
+    tagline: { white: "ابدأ اليوم", gold: " انضم إلى مستقبل الفن" },
+    description: "عالم الفن يتغير. FANN في طليعة هذا التحول. سواء كنت فنانًا أو منسقًا أو جامعًا، تقدم FANN الأدوات والمجتمع والفرص التي تحتاجها للازدهار في مستقبل الفن.",
     sections: [
       {
         title: "المنصة",
@@ -88,11 +88,11 @@ export function Footer({ language }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <motion.div 
+            <motion.div
               className="flex items-center gap-3 mb-6"
               whileHover={{ scale: 1.05 }}
             >
-              <motion.img 
+              <motion.img
                 src={fannLogo}
                 alt="FANN"
                 className="h-8 w-auto"
@@ -106,11 +106,14 @@ export function Footer({ language }: FooterProps) {
                 transition={{ duration: 2, repeat: Infinity }}
               />
             </motion.div>
-            <p className="text-[#ffcc33] mb-3">{t.tagline}</p>
+            <p className="mb-3">
+              <span className="text-white">{t.tagline.white}</span>
+              <span className="text-[#ffcc33]">{t.tagline.gold}</span>
+            </p>
             <p className="text-[#ffffff]/60 text-sm mb-6 max-w-sm leading-relaxed">
               {t.description}
             </p>
-            
+
             {/* Social Links */}
             <div className="flex items-center gap-3">
               {[

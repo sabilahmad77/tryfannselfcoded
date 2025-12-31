@@ -17,8 +17,8 @@ interface PersonaPathsProps {
 
 const content = {
   en: {
-    title: { white: "Choose Your", gold: " Path" },
-    subtitle: "Tailored experiences for every art ecosystem participant",
+    title: { white: "Choose Your Path", gold: " Tailored Experiences for Every Participant" },
+    subtitle: "Whether you're an artist, collector, or curator, FANN offers a personalized journey designed to enhance your art experience. Choose your path and unlock the resources, support, and community that’s perfect for you.",
     personas: [
       {
         id: "artist",

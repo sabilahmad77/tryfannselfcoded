@@ -18,9 +18,10 @@ interface RewardsTiersProps {
 
 const content = {
   en: {
-    title: { white: "Your Progression", gold: " System" },
-    subtitle: "Climb the ladder and unlock powerful rewards at every milestone",
+    title: { white: "Your Progression System", gold: " Unlock Exclusive Benefits and Rewards" },
+    subtitle: "The more you engage, the more you're rewarded. Our tiered system is designed to recognize and celebrate your participation.",
     viewRewards: "View Rewards",
+    startJourney: "Start Your Journey",
     tiers: [
       {
         name: "Explorer",
@@ -55,15 +56,16 @@ const content = {
         benefits: [
           "Lifetime benefits",
           "Executive access",
-          "Founding member status",
+          "Special recognition",
         ],
       },
     ],
   },
   ar: {
-    title: { white: "نظام التقدم", gold: " الخاص بك" },
-    subtitle: "تسلق السلم وافتح مكافآت قوية في كل معلم",
+    title: { white: "نظام التقدم الخاص بك", gold: " افتح الفوائد والمكافآت الحصرية" },
+    subtitle: "كلما تفاعلت أكثر، كلما حصلت على مكافآت أكثر. نظامنا المتدرج مصمم للاعتراف بمساهمتك والاحتفال بها.",
     viewRewards: "عرض المكافآت",
+    startJourney: "ابدأ رحلتك",
     tiers: [
       {
         name: "مستكشف",
@@ -91,7 +93,7 @@ const content = {
         icon: Award,
         color: "from-[#ffcc33] to-[#ffb54d]",
         glowColor: "shadow-[#ffcc33]/50",
-        benefits: ["فوائد مدى الحياة", "وصول متميز", "حالة عضو مؤسس"],
+        benefits: ["فوائد مدى الحياة", "وصول تنفيذي", "اعتراف خاص"],
       },
     ],
   },
@@ -191,8 +193,8 @@ export function RewardsTiers({
       glowColor: "shadow-amber-500/50",
       benefits:
         language === "en"
-          ? ["Lifetime benefits", "Executive access", "Founding member status"]
-          : ["فوائد مدى الحياة", "وصول متميز", "حالة عضو مؤسس"],
+          ? ["Lifetime benefits", "Executive access", "Special recognition"]
+          : ["فوائد مدى الحياة", "وصول تنفيذي", "اعتراف خاص"],
     },
   };
 
@@ -557,8 +559,8 @@ export function RewardsTiers({
             onClick={onNavigateToSignUp}
             className="px-10 py-4 rounded-xl bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#0F021C] shadow-xl shadow-[#ffcc33]/30 hover:shadow-2xl hover:shadow-[#ffcc33]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer"
           >
-            <span>Start Your Journey</span>
-            <ChevronRight className="w-5 h-5" />
+            <span>{t.startJourney}</span>
+            <ChevronRight className={`w-5 h-5 ${isRTL ? 'rotate-180' : ''}`} />
           </motion.button>
         </motion.div>
       </div>
