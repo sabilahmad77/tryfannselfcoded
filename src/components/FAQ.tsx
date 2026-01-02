@@ -20,8 +20,26 @@ const content = {
     faqs: [
       {
         question: "What is FANN?",
-        answer:
-          "FANN is a digital ecosystem that merges authenticated art with immersive technology like AR, offering a unique platform for artists, galleries, and collectors to connect and engage.",
+        answer: (
+          <>
+            FANN is a next-generation digital ecosystem built exclusively for <span className="font-bold text-white">physical art</span>. It combines expert authentication, immersive technologies like <span className="font-bold text-white">AR galleries</span>, and a trusted global network to help artists, collectors, galleries, and institutions connect with confidence. FANN is not a marketplace chasing trends, it&apos;s infrastructure designed to protect artistic value, credibility, and long-term growth.
+          </>
+        ),
+      },
+      {
+        question: "Who is FANN for?",
+        answer: (
+          <>
+            FANN is designed for every serious participant in the physical art world:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li><span className="font-bold text-white">Artists</span> seeking credibility, visibility, and protection</li>
+              <li><span className="font-bold text-white">Collectors</span> who want verified art with clear provenance</li>
+              <li><span className="font-bold text-white">Galleries & Museums</span> expanding globally with digital tools</li>
+              <li><span className="font-bold text-white">Ambassadors</span> building influence within a trusted ecosystem</li>
+            </ul>
+            <p className="mt-4">Each role unlocks tailored features, rewards, and experiences.</p>
+          </>
+        ),
       },
       {
         question: "Why FANN?",
@@ -48,14 +66,150 @@ const content = {
         },
       },
       {
-        question: "How do I earn points?",
-        answer:
-          "Earn Influence Points for referrals and community engagement, and Provenance Points for verified activities like completing KYC, uploading portfolios, and participating in challenges.",
+        question: "How do I earn points on FANN?",
+        answer: (
+          <>
+            FANN uses a dual-point system to reward meaningful participation:
+            <div className="mt-4 space-y-4">
+              <div>
+                <p className="font-bold text-white mb-2">Influence Points</p>
+                <p className="mb-2">Earned through:</p>
+                <ul className="list-disc list-inside space-y-1 ml-4">
+                  <li>Referrals</li>
+                  <li>Community engagement</li>
+                  <li>Ambassador activity</li>
+                  <li>Platform participation</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-bold text-white mb-2">Provenance Points</p>
+                <p className="mb-2">Earned through:</p>
+                <ul className="list-disc list-inside space-y-1 ml-4">
+                  <li>Completing KYC</li>
+                  <li>Uploading verified portfolios</li>
+                  <li>Listing authenticated works</li>
+                </ul>
+              </div>
+              <ul className="list-disc list-inside space-y-1 ml-4">
+                <li>Participating in official challenges</li>
+              </ul>
+            </div>
+            <p className="mt-4">Both systems reward trust, not noise.</p>
+          </>
+        ),
       },
       {
-        question: "What are the tiers and rewards?",
-        answer:
-          "Progress through 5 tiers, each offering greater benefits, from exclusive previews to VIP support, culminating in lifetime perks as a Founding Patron.",
+        question: "What are the tiers and how do they work?",
+        answer: (
+          <>
+            Members progress through <span className="font-bold text-white">5 tiers</span>, each unlocking greater benefits:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li>Early previews and feature access</li>
+              <li>Reduced platform fees</li>
+              <li>Profile boosts and visibility</li>
+              <li>Priority support</li>
+              <li>Exclusive invitations and recognition</li>
+            </ul>
+            <p className="mt-4">The highest tier, <span className="font-bold text-white">Founding Patron</span>, offers lifetime perks and legacy status within the FANN ecosystem.</p>
+          </>
+        ),
+      },
+      {
+        question: "How does authentication work on FANN?",
+        answer: (
+          <>
+            Every artwork on FANN goes through a structured verification process:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li>Reviewed by art professionals and experts</li>
+              <li>Matched with artist credentials and documentation</li>
+              <li>Issued verified records and provenance data</li>
+              <li>Secured with tamper-resistant digital tracking</li>
+            </ul>
+            <p className="mt-4">This ensures collectors buy with confidence and artists sell with credibility.</p>
+          </>
+        ),
+      },
+      {
+        question: "What are AR Galleries and how do they help?",
+        answer: (
+          <>
+            FANN&apos;s immersive AR galleries allow artworks to be:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li>Viewed in real-world spaces before purchase</li>
+              <li>Presented digitally without losing physical value</li>
+              <li>Shared globally without shipping risks</li>
+              <li>Experienced by collectors, curators, and institutions</li>
+            </ul>
+            <p className="mt-4">This bridges the gap between physical art and digital discovery.</p>
+          </>
+        ),
+      },
+      {
+        question: "Is FANN free to join?",
+        answer: (
+          <>
+            Yes.
+            <p className="mt-2">Registration is free, allowing users to explore the platform, community, and features.</p>
+            <p className="mt-2">Additional benefits unlock through participation, verification, and tier progression.</p>
+          </>
+        ),
+      },
+      {
+        question: "How does FANN protect collectors?",
+        answer: (
+          <>
+            Collectors are protected through:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li>Expert authentication</li>
+              <li>Provenance tracking</li>
+              <li>Verified artist credentials</li>
+              <li>Secure, insured logistics</li>
+              <li>Transparent records</li>
+            </ul>
+            <p className="mt-4">Every layer is designed to reduce risk and preserve long-term value.</p>
+          </>
+        ),
+      },
+      {
+        question: "How does FANN support artists?",
+        answer: (
+          <>
+            FANN empowers artists by:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li>Providing verified status</li>
+              <li>Offering global exposure without gatekeeping</li>
+              <li>Protecting work through authentication</li>
+              <li>Supporting logistics and documentation</li>
+              <li>Building long-term credibility, not short-term hype</li>
+            </ul>
+            <p className="mt-4">Artists focus on creation. FANN handles trust.</p>
+          </>
+        ),
+      },
+      {
+        question: "What makes FANN different from traditional platforms?",
+        answer: (
+          <>
+            Traditional platforms focus on visibility.
+            <br />
+            FANN focuses on <span className="font-bold text-white">trust</span>, <span className="font-bold text-white">structure</span>, and <span className="font-bold text-white">sustainability</span>.
+            <br />
+            <br />
+            It&apos;s not about selling fast
+            <br />
+            it&apos;s about building value that lasts.
+          </>
+        ),
+      },
+      {
+        question: "Is FANN focused on NFTs or digital-only art?",
+        answer: (
+          <>
+            No.
+            <p className="mt-2">FANN is dedicated to <span className="font-bold text-white">physical art only</span> — paintings, sculptures, installations, and tangible works.</p>
+            <p className="mt-2">Technology is used to <span className="font-bold text-white">support authenticity, documentation, and presentation</span>, not replace the artwork itself.</p>
+          </>
+        ),
       },
     ],
   },
@@ -65,8 +219,26 @@ const content = {
     faqs: [
       {
         question: "ما هو FANN؟",
-        answer:
-          "FANN هو نظام بيئي رقمي يدمج الفن الأصيل مع التكنولوجيا الغامرة مثل الواقع المعزز، مما يوفر منصة فريدة للفنانين والمعارض والجامعين للتواصل والتفاعل.",
+        answer: (
+          <>
+            FANN هو نظام بيئي رقمي من الجيل القادم مبني حصريًا لـ <span className="font-bold text-white">الفن المادي</span>. يجمع بين المصادقة الخبيرة والتكنولوجيات الغامرة مثل <span className="font-bold text-white">معارض الواقع المعزز</span>، وشبكة عالمية موثوقة لمساعدة الفنانين والجامعين والمعارض والمؤسسات على التواصل بثقة. FANN ليست سوقًا تطارد الاتجاهات، إنها بنية تحتية مصممة لحماية القيمة الفنية والمصداقية والنمو طويل الأجل.
+          </>
+        ),
+      },
+      {
+        question: "لمن FANN؟",
+        answer: (
+          <>
+            FANN مصمم لكل مشارك جاد في عالم الفن المادي:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li><span className="font-bold text-white">الفنانون</span> الذين يسعون للحصول على المصداقية والرؤية والحماية</li>
+              <li><span className="font-bold text-white">الجامعون</span> الذين يريدون فنًا موثقًا بمصداقية واضحة</li>
+              <li><span className="font-bold text-white">المعارض والمتاحف</span> التي تتوسع عالميًا بالأدوات الرقمية</li>
+              <li><span className="font-bold text-white">السفراء</span> الذين يبنون التأثير داخل نظام بيئي موثوق</li>
+            </ul>
+            <p className="mt-4">كل دور يفتح ميزات ومكافآت وتجارب مخصصة.</p>
+          </>
+        ),
       },
       {
         question: "لماذا FANN؟",
@@ -93,14 +265,150 @@ const content = {
         },
       },
       {
-        question: "كيف أكسب النقاط؟",
-        answer:
-          "اكسب نقاط التأثير للإحالات والمشاركة المجتمعية، ونقاط المصداقية للأنشطة الموثقة مثل إكمال التحقق من الهوية، وتحميل المحافظ، والمشاركة في التحديات.",
+        question: "كيف أكسب النقاط على FANN؟",
+        answer: (
+          <>
+            يستخدم FANN نظام نقاط مزدوج لمكافأة المشاركة الهادفة:
+            <div className="mt-4 space-y-4">
+              <div>
+                <p className="font-bold text-white mb-2">نقاط التأثير</p>
+                <p className="mb-2">تُكسب من خلال:</p>
+                <ul className="list-disc list-inside space-y-1 ml-4">
+                  <li>الإحالات</li>
+                  <li>المشاركة المجتمعية</li>
+                  <li>نشاط السفراء</li>
+                  <li>المشاركة في المنصة</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-bold text-white mb-2">نقاط المصداقية</p>
+                <p className="mb-2">تُكسب من خلال:</p>
+                <ul className="list-disc list-inside space-y-1 ml-4">
+                  <li>إكمال التحقق من الهوية</li>
+                  <li>تحميل المحافظ الموثقة</li>
+                  <li>إدراج الأعمال الموثقة</li>
+                </ul>
+              </div>
+              <ul className="list-disc list-inside space-y-1 ml-4">
+                <li>المشاركة في التحديات الرسمية</li>
+              </ul>
+            </div>
+            <p className="mt-4">كلا النظامين يكافئان الثقة، وليس الضوضاء.</p>
+          </>
+        ),
       },
       {
-        question: "ما هي المستويات والمكافآت؟",
-        answer:
-          "تقدم عبر 5 مستويات، كل مستوى يقدم فوائد أكبر، من المعاينات الحصرية إلى دعم VIP، وتنتهي بامتيازات مدى الحياة كراعي مؤسس.",
+        question: "ما هي المستويات وكيف تعمل؟",
+        answer: (
+          <>
+            يتقدم الأعضاء عبر <span className="font-bold text-white">5 مستويات</span>، كل مستوى يفتح فوائد أكبر:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li>معاينات مبكرة ووصول للميزات</li>
+              <li>رسوم منصة مخفضة</li>
+              <li>تعزيز الملف الشخصي والرؤية</li>
+              <li>دعم ذو أولوية</li>
+              <li>دعوات حصرية والاعتراف</li>
+            </ul>
+            <p className="mt-4">المستوى الأعلى، <span className="font-bold text-white">الراعي المؤسس</span>، يقدم امتيازات مدى الحياة وحالة الإرث داخل نظام FANN البيئي.</p>
+          </>
+        ),
+      },
+      {
+        question: "كيف يعمل التحقق على FANN؟",
+        answer: (
+          <>
+            كل عمل فني على FANN يمر بعملية تحقق منظمة:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li>مراجعة من قبل محترفي الفن والخبراء</li>
+              <li>مطابقة مع أوراق اعتماد الفنان والتوثيق</li>
+              <li>إصدار سجلات موثقة وبيانات المصداقية</li>
+              <li>تأمين بتتبع رقمي مقاوم للعبث</li>
+            </ul>
+            <p className="mt-4">هذا يضمن أن الجامعين يشترون بثقة والفنانين يبيعون بمصداقية.</p>
+          </>
+        ),
+      },
+      {
+        question: "ما هي معارض الواقع المعزز وكيف تساعد؟",
+        answer: (
+          <>
+            تسمح معارض الواقع المعزز الغامرة في FANN للأعمال الفنية بأن تكون:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li>مشاهدة في مساحات العالم الحقيقي قبل الشراء</li>
+              <li>معروضة رقميًا دون فقدان القيمة المادية</li>
+              <li>مشاركة عالميًا دون مخاطر الشحن</li>
+              <li>تجربة من قبل الجامعين والمنسقين والمؤسسات</li>
+            </ul>
+            <p className="mt-4">هذا يربط الفجوة بين الفن المادي والاكتشاف الرقمي.</p>
+          </>
+        ),
+      },
+      {
+        question: "هل الانضمام إلى FANN مجاني؟",
+        answer: (
+          <>
+            نعم.
+            <p className="mt-2">التسجيل مجاني، مما يسمح للمستخدمين باستكشاف المنصة والمجتمع والميزات.</p>
+            <p className="mt-2">تفتح الفوائد الإضافية من خلال المشاركة والتحقق وتقدم المستويات.</p>
+          </>
+        ),
+      },
+      {
+        question: "كيف يحمي FANN الجامعين؟",
+        answer: (
+          <>
+            يتم حماية الجامعين من خلال:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li>المصادقة الخبيرة</li>
+              <li>تتبع المصداقية</li>
+              <li>أوراق اعتماد الفنان الموثقة</li>
+              <li>لوجستيات آمنة ومؤمنة</li>
+              <li>سجلات شفافة</li>
+            </ul>
+            <p className="mt-4">كل طبقة مصممة لتقليل المخاطر والحفاظ على القيمة طويلة الأجل.</p>
+          </>
+        ),
+      },
+      {
+        question: "كيف يدعم FANN الفنانين؟",
+        answer: (
+          <>
+            FANN يمكّن الفنانين من خلال:
+            <ul className="list-disc list-inside space-y-2 mt-4 ml-4">
+              <li>توفير حالة موثقة</li>
+              <li>تقديم التعرض العالمي دون بوابات</li>
+              <li>حماية العمل من خلال المصادقة</li>
+              <li>دعم اللوجستيات والتوثيق</li>
+              <li>بناء المصداقية طويلة الأجل، وليس الضجة قصيرة الأجل</li>
+            </ul>
+            <p className="mt-4">الفنانون يركزون على الإبداع. FANN يتعامل مع الثقة.</p>
+          </>
+        ),
+      },
+      {
+        question: "ما الذي يجعل FANN مختلفًا عن المنصات التقليدية؟",
+        answer: (
+          <>
+            المنصات التقليدية تركز على الرؤية.
+            <br />
+            FANN تركز على <span className="font-bold text-white">الثقة</span> و<span className="font-bold text-white">الهيكل</span> و<span className="font-bold text-white">الاستدامة</span>.
+            <br />
+            <br />
+            الأمر ليس حول البيع السريع
+            <br />
+            بل حول بناء قيمة تدوم.
+          </>
+        ),
+      },
+      {
+        question: "هل يركز FANN على NFTs أو الفن الرقمي فقط؟",
+        answer: (
+          <>
+            لا.
+            <p className="mt-2">FANN مخصص لـ <span className="font-bold text-white">الفن المادي فقط</span> — اللوحات والمنحوتات والتركيبات والأعمال الملموسة.</p>
+            <p className="mt-2">تُستخدم التكنولوجيا لدعم <span className="font-bold text-white">الأصالة والتوثيق والعرض</span>، وليس لاستبدال العمل الفني نفسه.</p>
+          </>
+        ),
       },
     ],
   },
@@ -175,7 +483,7 @@ export function FAQ({ language }: FAQProps) {
                   <AccordionContent className="text-white/60 leading-relaxed pb-6">
                     {typeof faq.answer === "string" ? (
                       <p>{faq.answer}</p>
-                    ) : (
+                    ) : faq.answer && typeof faq.answer === "object" && "intro" in faq.answer ? (
                       <div className="space-y-4">
                         <p className="mb-4">{faq.answer.intro}</p>
                         <ul className="space-y-3 list-none">
@@ -191,6 +499,8 @@ export function FAQ({ language }: FAQProps) {
                           ))}
                         </ul>
                       </div>
+                    ) : (
+                      <div>{faq.answer}</div>
                     )}
                   </AccordionContent>
                 </AccordionItem>

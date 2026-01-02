@@ -11,10 +11,16 @@ interface HeroProps {
 
 const content = {
   en: {
-    badge: "EXCLUSIVE ART MARKETPLACE",
-    headline: "Enter the Future",
-    headlineAccent: "of Authenticated Art",
-    subheadline: "Join the revolution where verified fine art meets digital innovation. Connect, compete, and curate in the premier art ecosystem for MENA/GCC.",
+    badge: "WELCOME TO FANN",
+    headline: "The Future of Art is Here",
+    headlineAccent: "Where Verified Art Meets Immersive Technology",
+    subheadline: (
+      <>
+        FANN is revolutionizing the art world by combining authenticated fine art with augmented reality (AR) and blockchain technology. Designed for the modern art ecosystem, FANN connects artists, collectors, and galleries from the MENA/GCC region and beyond. Whether you&apos;re an artist looking for global exposure, a collector seeking authenticity, or a curator aiming to manage your portfolio digitally, FANN is your gateway to the future of art.
+        <br />
+        <span className="font-bold text-white">Join FANN Today</span> and become part of the art revolution.
+      </>
+    ),
     cta: "Launch Your Journey",
     watchDemo: "View AR Experience",
     stats: [
@@ -24,10 +30,16 @@ const content = {
     ]
   },
   ar: {
-    badge: "سوق فني حصري",
-    headline: "ادخل المستقبل",
-    headlineAccent: "للفن الموثق",
-    subheadline: "انضم إلى الثورة حيث يلتقي الفن الراقي الموثق بالابتكار الرقمي. تواصل وتنافس وانسق في النظام الفني الرائد لمنطقة الشرق الأوسط وشمال أفريقيا ودول الخليج.",
+    badge: "مرحبًا بك في FANN",
+    headline: "مستقبل الفن هنا",
+    headlineAccent: "حيث يلتقي الفن الموثق بالتكنولوجيا الغامرة",
+    subheadline: (
+      <>
+        FANN يحدث ثورة في عالم الفن من خلال دمج الفن الراقي الموثق مع الواقع المعزز (AR) وتقنية البلوك تشين. مصمم للنظام البيئي الفني الحديث، يربط FANN الفنانين والجامعين والمعارض من منطقة الشرق الأوسط وشمال أفريقيا ودول الخليج وما بعدها. سواء كنت فنانًا تسعى للوصول العالمي، أو جامعًا تبحث عن الأصالة، أو منسقًا تهدف لإدارة محفظتك رقميًا، FANN هو بوابتك إلى مستقبل الفن.
+        <br />
+        <span className="font-bold text-white">انضم إلى FANN اليوم</span> وكن جزءًا من ثورة الفن.
+      </>
+    ),
     cta: "ابدأ رحلتك",
     watchDemo: "شاهد تجربة الواقع المعزز",
     stats: [
@@ -58,7 +70,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
 
       {/* Animated gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div 
+        <motion.div
           className="absolute -top-40 -right-40 w-96 h-96 bg-[#ffcc33]/20 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
@@ -70,7 +82,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             ease: "easeInOut"
           }}
         />
-        <motion.div 
+        <motion.div
           className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#45e3d3]/20 rounded-full blur-3xl"
           animate={{
             scale: [1.2, 1, 1.2],
@@ -83,7 +95,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             delay: 1
           }}
         />
-        <motion.div 
+        <motion.div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#4de3ed]/15 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.3, 1],
@@ -146,10 +158,10 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-6 text-5xl md:text-7xl"
+            className="mb-6 text-5xl md:text-7xl leading-[1.1] md:leading-[1.1] overflow-visible"
           >
-            <span className="block text-[#ffffff]">{t.headline}</span>
-            <span className="block bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] bg-clip-text text-transparent animate-gradient">
+            <span className="block text-[#ffffff] leading-[1.1] md:leading-[1.1] py-1">{t.headline}</span>
+            <span className="block bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] bg-clip-text text-transparent animate-gradient text-4xl md:text-5xl leading-[1.2] md:leading-[1.2] py-1">
               {t.headlineAccent}
             </span>
           </motion.h1>
@@ -159,7 +171,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-8 text-[#ffffff]/60 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
+            className="mb-8 text-[#ffffff]/60 text-lg md:text-xl leading-relaxed"
           >
             {t.subheadline}
           </motion.p>
@@ -195,7 +207,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                 />
               </Button>
             </motion.div>
-            
+
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
               <Button
                 size="lg"
@@ -238,12 +250,12 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                   <div className="relative h-full rounded-2xl overflow-hidden">
                     {/* Frosted glass background */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/12 via-white/8 to-white/4 backdrop-blur-2xl" />
-                    
+
                     {/* Gradient background - each card gets unique gradient */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-[0.08] group-hover:opacity-[0.15] transition-opacity duration-500`} />
-                    
+
                     {/* Diagonal stripes pattern */}
-                    <div 
+                    <div
                       className="absolute inset-0 opacity-[0.04]"
                       style={{
                         backgroundImage: `repeating-linear-gradient(
@@ -255,13 +267,13 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                         )`
                       }}
                     />
-                    
+
                     {/* Border */}
                     <div className="absolute inset-0 rounded-2xl border border-white/20 group-hover:border-white/30 transition-colors duration-500" />
-                    
+
                     {/* Top gradient accent */}
                     <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.gradient} opacity-60`} />
-                    
+
                     {/* Content */}
                     <div className="relative p-6 flex flex-col h-full">
                       {/* Icon */}
@@ -270,12 +282,12 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                           <Icon className="w-6 h-6 text-[#ffffff]" />
                         </div>
                       </div>
-                      
+
                       {/* Number */}
                       <div className="text-4xl text-[#ffffff] mb-2">
                         {stat.number}
                       </div>
-                      
+
                       {/* Label */}
                       <div className="text-sm text-[#ffffff]/70">
                         {stat.label}
@@ -311,7 +323,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                 animate={{ y: ['0%', '100%'] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               />
-              
+
               {/* Play button */}
               <motion.div
                 whileHover={{ scale: 1.2 }}
