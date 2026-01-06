@@ -476,15 +476,17 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
   const t = {
     en: {
       title: "Identity Verification",
-      subtitle: "Required for KYC compliance and platform security",
+      subtitle: "Building trust starts here",
+      description: "To keep FANN safe, credible, and fair for everyone, we verify every member's identity. This process protects artists, collectors, and institutions — and ensures all activity on the platform is genuine.",
       notice: {
-        title: "Why do we need this?",
+        title: "Why we ask for this",
         points: [
-          "Regulatory compliance in MENA/GCC region",
-          "Prevent fraud and ensure platform security",
-          "Enable high-value transactions",
-          "Protect all community members",
+          "Required for regulatory compliance in the MENA/GCC region",
+          "Prevents fraud and impersonation",
+          "Enables high-value art transactions",
+          "Protects the integrity of the entire FANN community",
         ],
+        conclusion: "Your information is handled securely and used only for verification purposes.",
       },
       idNumber: "ID Number",
       idNumberPlaceholder: "Enter your ID number",
@@ -558,15 +560,17 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
     },
     ar: {
       title: "التحقق من الهوية",
-      subtitle: "مطلوب للامتثال لمعرفة العميل وأمان المنصة",
+      subtitle: "بناء الثقة يبدأ من هنا",
+      description: "لإبقاء FANN آمنة وموثوقة وعادلة للجميع، نتحقق من هوية كل عضو. هذه العملية تحمي الفنانين والجامعين والمؤسسات — وتضمن أن جميع الأنشطة على المنصة حقيقية.",
       notice: {
-        title: "لماذا نحتاج هذا؟",
+        title: "لماذا نطلب هذا",
         points: [
-          "الامتثال التنظيمي في منطقة الشرق الأوسط وشمال أفريقيا ودول مجلس التعاون الخليجي",
-          "منع الاحتيال وضمان أمن المنصة",
-          "تمكين المعاملات عالية القيمة",
-          "حماية جميع أعضاء المجتمع",
+          "مطلوب للامتثال التنظيمي في منطقة الشرق الأوسط وشمال أفريقيا ودول مجلس التعاون الخليجي",
+          "يمنع الاحتيال وانتحال الشخصية",
+          "يمكن المعاملات الفنية عالية القيمة",
+          "يحمي نزاهة مجتمع FANN بأكمله",
         ],
+        conclusion: "يتم التعامل مع معلوماتك بشكل آمن وتُستخدم فقط لأغراض التحقق.",
       },
       idNumber: "رقم الهوية",
       idNumberPlaceholder: "أدخل رقم هويتك",
@@ -1145,7 +1149,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
             <Shield className="w-8 h-8 text-amber-400" />
           </div>
           <h2 className="text-3xl text-white mb-2">{content.title}</h2>
-          <p className="text-white/60">{content.subtitle}</p>
+          <p className="text-white/60 font-semibold mb-3">{content.subtitle}</p>
+          <p className="text-white/60 text-sm leading-relaxed max-w-2xl mx-auto">{content.description}</p>
         </motion.div>
 
         {/* Notice */}
@@ -1159,7 +1164,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
             <AlertCircle className="w-5 h-5 text-blue-400 mt-0.5 shrink-0" />
             <h3 className="text-blue-400">{content.notice.title}</h3>
           </div>
-          <ul className="space-y-2 ml-8">
+          <ul className="space-y-2 ml-8 mb-4">
             {content.notice.points.map((point, index) => (
               <li
                 key={index}
@@ -1170,6 +1175,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
               </li>
             ))}
           </ul>
+          <p className="text-white/60 text-sm ml-8">{content.notice.conclusion}</p>
         </motion.div>
 
         <div className="space-y-6">

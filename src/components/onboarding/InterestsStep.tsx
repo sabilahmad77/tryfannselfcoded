@@ -154,8 +154,8 @@ export function InterestsStep({
 
   const t = {
     en: {
-      title: "What interests you?",
-      subtitle: "Help us curate your perfect experience",
+      title: "Interest",
+      subtitle: "Your choices shape your FANN journey",
       styles: {
         title: "Art Styles & Mediums",
         subtitle: "Select all that apply",
@@ -230,8 +230,8 @@ export function InterestsStep({
       next: "Next",
     },
     ar: {
-      title: "ما الذي يهمك؟",
-      subtitle: "ساعدنا في تنسيق تجربتك المثالية",
+      title: "الاهتمامات",
+      subtitle: "خياراتك تشكل رحلتك في FANN",
       styles: {
         title: "الأساليب والوسائط الفنية",
         subtitle: "اختر كل ما ينطبق",
@@ -505,11 +505,10 @@ export function InterestsStep({
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     disabled={isLoading}
-                    className={`p-4 rounded-xl border transition-all ${
-                      isSelected
+                    className={`p-4 rounded-xl border transition-all ${isSelected
                         ? "bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-amber-500/50 text-white"
                         : "glass border-white/10 text-white/70 hover:border-amber-500/30"
-                    } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                      } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     <div className="flex flex-col items-center gap-2">
                       {isSelected && (
@@ -561,11 +560,10 @@ export function InterestsStep({
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     disabled={isLoading}
-                    className={`p-4 rounded-xl border transition-all ${
-                      isSelected
+                    className={`p-4 rounded-xl border transition-all ${isSelected
                         ? "bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-amber-500/50 text-white"
                         : "glass border-white/10 text-white/70 hover:border-amber-500/30"
-                    } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                      } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     <div className="flex flex-col items-center gap-2">
                       {isSelected && (
@@ -613,17 +611,15 @@ export function InterestsStep({
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     disabled={isLoading}
-                    className={`p-5 rounded-xl border transition-all text-left ${
-                      isSelected
+                    className={`p-5 rounded-xl border transition-all text-left ${isSelected
                         ? "bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-amber-500/50"
                         : "glass border-white/10 hover:border-amber-500/30"
-                    } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                      } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div
-                        className={`${
-                          isSelected ? "text-white" : "text-white/70"
-                        }`}
+                        className={`${isSelected ? "text-white" : "text-white/70"
+                          }`}
                       >
                         {option.label}
                       </div>
@@ -676,11 +672,10 @@ export function InterestsStep({
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     disabled={isLoading}
-                    className={`p-4 rounded-xl border transition-all ${
-                      isSelected
+                    className={`p-4 rounded-xl border transition-all ${isSelected
                         ? "bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-amber-500/50 text-white"
                         : "glass border-white/10 text-white/70 hover:border-amber-500/30"
-                    } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                      } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     <div className="flex flex-col items-center gap-2">
                       {isSelected && (
@@ -744,9 +739,8 @@ export function InterestsStep({
                 <>
                   {shouldShowNext ? content.next : content.continue}
                   <ArrowRight
-                    className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
-                      isRTL ? "rotate-180" : ""
-                    }`}
+                    className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
+                      }`}
                   />
                 </>
               )}

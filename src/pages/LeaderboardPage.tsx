@@ -46,8 +46,13 @@ type PersonaFilter = "all" | "artist" | "gallery" | "collector" | "ambassador";
 const content = {
   en: {
     title: "Global Leaderboard",
-    subtitle:
-      "Discover the top art pioneers and visionaries shaping the future of the art world",
+    subtitle: {
+      all: "Discover the top art pioneers and visionaries shaping the future of the art world",
+      artist: "Discover the top art pioneers and visionaries shaping the future of the art world",
+      gallery: "Discover the top art pioneers and visionaries shaping the future of the art world",
+      collector: "Where the art world's most active voices rise.",
+      ambassador: "Where FANN ambassadors lead the movement.",
+    },
     filterBy: "Filter By",
     timePeriod: "Time Period",
     userType: "User Type",
@@ -87,7 +92,13 @@ const content = {
   },
   ar: {
     title: "لوحة المتصدرين العالمية",
-    subtitle: "اكتشف رواد الفن والمبدعين الذين يشكلون مستقبل عالم الفن",
+    subtitle: {
+      all: "اكتشف رواد الفن والمبدعين الذين يشكلون مستقبل عالم الفن",
+      artist: "اكتشف رواد الفن والمبدعين الذين يشكلون مستقبل عالم الفن",
+      gallery: "اكتشف رواد الفن والمبدعين الذين يشكلون مستقبل عالم الفن",
+      collector: "حيث ترتفع أصوات الفن الأكثر نشاطًا في العالم.",
+      ambassador: "حيث يقود سفراء FANN الحركة.",
+    },
     filterBy: "تصفية حسب",
     timePeriod: "الفترة الزمنية",
     userType: "نوع المستخدم",
@@ -222,6 +233,7 @@ export function LeaderboardPage() {
   // Get logged-in user's email
   const loggedInUser = useSelector((state: RootState) => state.auth.user);
   const loggedInUserEmail = loggedInUser?.email;
+  const persona = useSelector((state: RootState) => state.auth.persona);
 
   // Check if user came from homepage
   const fromHomepage =
@@ -518,6 +530,38 @@ export function LeaderboardPage() {
     setSelectedUser(null);
   };
 
+  // Get user's actual role from reducer (similar to DashboardNav)
+  const getUserRole = (): PersonaFilter => {
+    // If user is not authenticated, return "all" to show default subtitle
+    if (!isAuthenticated || !loggedInUser) {
+      return "all";
+    }
+
+    // Get role from storedUser.role first, then fallback to persona
+    const displayRoleRaw =
+      loggedInUser?.role?.toLowerCase() || persona?.toLowerCase() || "artist";
+
+    // Validate and map role to our supported roles
+    const validRoles: Array<"artist" | "collector" | "gallery" | "ambassador"> = [
+      "artist",
+      "collector",
+      "gallery",
+      "ambassador",
+    ];
+    const displayRole = validRoles.includes(
+      displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador"
+    )
+      ? (displayRoleRaw as "artist" | "collector" | "gallery" | "ambassador")
+      : "artist";
+
+    return displayRole;
+  };
+
+  // Get role-based subtitle based on user's actual role
+  const userRole = getUserRole();
+  const subtitle = (t.subtitle as Record<PersonaFilter, string>)[userRole] ||
+    (t.subtitle as Record<PersonaFilter, string>).all;
+
   // Content to be rendered (same for both cases)
   const leaderboardContent = (
     <>
@@ -561,7 +605,7 @@ export function LeaderboardPage() {
             <h1 className="text-4xl md:text-5xl">
               <span className="text-[#ffffff]">{t.title}</span>
             </h1>
-            <p className="text-[#808c99] text-lg mt-1">{t.subtitle}</p>
+            <p className="text-[#808c99] text-lg mt-1">{subtitle}</p>
           </div>
         </div>
       </motion.div>
