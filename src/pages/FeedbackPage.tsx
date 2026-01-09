@@ -7,7 +7,6 @@ import {
   Smile,
   Meh,
   Frown,
-  Lightbulb,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { InputField, TextareaField } from '@/components/ui/custom-form-elements';
@@ -42,10 +41,8 @@ const content = {
     messageLabel: "Your Feedback",
     messagePlaceholder: "Tell us what you think, what we're doing well, or how we can improve...",
     ideasFeedback: {
-      titleLabel: "Idea Title",
-      titlePlaceholder: "Give your idea a clear, concise title",
-      descriptionLabel: "Describe Your Idea",
-      descriptionPlaceholder: "Share your idea in detail. What problem does it solve? How would it improve the FANN experience?",
+      descriptionLabel: "Your Thoughts on FANN",
+      descriptionPlaceholder: "Share your thoughts about FANN, your suggestions, whether you feel the concept is valuable and needed, and any improvements you'd like to see. We especially value feedback from artists, collectors, and investors.",
       categoryLabel: "What would you like to give feedback about?",
       categories: {
         newFeature: "New Feature",
@@ -90,10 +87,8 @@ const content = {
     messageLabel: "ملاحظاتك",
     messagePlaceholder: "أخبرنا برأيك، ما نقوم به بشكل جيد، أو كيف يمكننا التحسين...",
     ideasFeedback: {
-      titleLabel: "عنوان الفكرة",
-      titlePlaceholder: "أعطِ فكرتك عنواناً واضحاً ومختصراً",
-      descriptionLabel: "وصف فكرتك",
-      descriptionPlaceholder: "شارك فكرتك بالتفصيل. ما المشكلة التي تحلها؟ كيف ستحسن تجربة FANN؟",
+      descriptionLabel: "أفكارك حول FANN",
+      descriptionPlaceholder: "شارك أفكارك حول FANN، واقتراحاتك، وما إذا كنت تشعر أن المفهوم ذو قيمة وضروري، وأي تحسينات ترغب في رؤيتها. نحن نقدر بشكل خاص الملاحظات من الفنانين والجامعين والمستثمرين.",
       categoryLabel: "ما الذي تود إبداء ملاحظاتك عنه؟",
       categories: {
         newFeature: "ميزة جديدة",
@@ -172,7 +167,6 @@ export function FeedbackPage() {
   const [generalAbout, setGeneralAbout] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [ideaTitle, setIdeaTitle] = useState<string>('');
   const [ideaDescription, setIdeaDescription] = useState<string>('');
   const [ideaCategory, setIdeaCategory] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -197,7 +191,7 @@ export function FeedbackPage() {
         return;
       }
     } else {
-      if (!ideaTitle.trim() || !ideaDescription.trim() || !ideaCategory) {
+      if (!ideaDescription.trim() || !ideaCategory) {
         toast.error(t.requiredField);
         return;
       }
@@ -230,7 +224,7 @@ export function FeedbackPage() {
       }
 
       payload = {
-        title: ideaTitle.trim(),
+        title: "FANN Concept Feedback",
         describe_idea: ideaDescription.trim(),
         feedback_category: selectedIdeaCategory,
         feedback_about: "",
@@ -253,7 +247,6 @@ export function FeedbackPage() {
         setGeneralAbout('');
         setMessage('');
       } else {
-        setIdeaTitle('');
         setIdeaDescription('');
         setIdeaCategory('');
       }
@@ -388,25 +381,13 @@ export function FeedbackPage() {
               </>
             ) : (
               <>
-                {/* Idea Title */}
-                <InputField
-                  label={t.ideasFeedback.titleLabel}
-                  type="text"
-                  value={ideaTitle}
-                  onChange={(e) => setIdeaTitle(e.target.value)}
-                  placeholder={t.ideasFeedback.titlePlaceholder}
-                  required
-                  isRTL={isRTL}
-                  icon={Lightbulb}
-                />
-
                 {/* Idea Description */}
                 <TextareaField
                   label={t.ideasFeedback.descriptionLabel}
                   value={ideaDescription}
                   onChange={(e) => setIdeaDescription(e.target.value)}
                   placeholder={t.ideasFeedback.descriptionPlaceholder}
-                  rows={5}
+                  rows={6}
                   required
                   isRTL={isRTL}
                 />
