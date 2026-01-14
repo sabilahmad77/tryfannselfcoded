@@ -66,13 +66,21 @@ export function GalleryDashboard() {
     }
   }, [galleryStatsData?.data?.profile_complete, reduxProfileCompleted, dispatch]);
 
-  // Get user name from stored data
+  // Get user name from stored data - prevent duplication
   const galleryName = storedUser
-    ? storedUser.organization_name ||
-    `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim() ||
-    storedUser.title ||
-    storedUser.email ||
-    "Art Gallery"
+    ? (() => {
+        // Prioritize organization_name for galleries (check for non-empty string)
+        if (storedUser.organization_name?.trim()) {
+          return storedUser.organization_name.trim();
+        }
+        // Fallback to first_name + last_name (only if organization_name is not set)
+        const fullName = `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim();
+        if (fullName) {
+          return fullName;
+        }
+        // Further fallbacks
+        return storedUser.title?.trim() || storedUser.email?.trim() || "Art Gallery";
+      })()
     : "Art Gallery";
 
 

@@ -124,10 +124,15 @@ export function AmbassadorDashboard() {
 
   // Get user name from stored data
   const userName = storedUser
-    ? `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim() ||
-    storedUser.title ||
-    storedUser.email ||
-    "Ambassador"
+    ? (() => {
+        // Use first_name + last_name
+        const fullName = `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim();
+        if (fullName) {
+          return fullName;
+        }
+        // Fallbacks
+        return storedUser.title?.trim() || storedUser.email?.trim() || "Ambassador";
+      })()
     : "Ambassador";
 
   const [referralLinkCopied, setReferralLinkCopied] = useState(false);

@@ -69,10 +69,15 @@ export function CollectorDashboard() {
 
   // Get user name from stored data
   const collectorName = storedUser
-    ? `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim() ||
-    storedUser.title ||
-    storedUser.email ||
-    "Art Collector"
+    ? (() => {
+        // Use first_name + last_name
+        const fullName = `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim();
+        if (fullName) {
+          return fullName;
+        }
+        // Fallbacks
+        return storedUser.title?.trim() || storedUser.email?.trim() || "Art Collector";
+      })()
     : "Art Collector";
 
   return (

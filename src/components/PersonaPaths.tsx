@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { useState } from "react";
 import {
   Palette,
   Building2,
@@ -9,6 +10,7 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import bgImage from "figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png";
+import { PersonaDetailsModal } from "./PersonaDetailsModal";
 
 interface PersonaPathsProps {
   language: "en" | "ar";
@@ -169,6 +171,7 @@ export function PersonaPaths({
 }: PersonaPathsProps) {
   const t = content[language];
   const isRTL = language === "ar";
+  const [selectedPersona, setSelectedPersona] = useState<string | null>(null);
 
   return (
     <section
@@ -226,7 +229,8 @@ export function PersonaPaths({
                   y: -12,
                   transition: { duration: 0.3, ease: "easeOut" },
                 }}
-                className="group relative"
+                className="group relative cursor-pointer"
+                onClick={() => setSelectedPersona(persona.id)}
               >
                 {/* Main Card Container */}
                 <div className="relative h-full rounded-3xl overflow-hidden">
@@ -353,7 +357,10 @@ export function PersonaPaths({
 
                       {/* CTA Button */}
                       <motion.button
-                        onClick={() => onNavigateToSignUp?.(persona.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onNavigateToSignUp?.(persona.id);
+                        }}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         className="relative w-full group/btn overflow-hidden rounded-lg sm:rounded-xl cursor-pointer"
@@ -406,6 +413,15 @@ export function PersonaPaths({
           })}
         </motion.div>
       </div>
+
+      {/* Persona Details Modal */}
+      <PersonaDetailsModal
+        isOpen={selectedPersona !== null}
+        onClose={() => setSelectedPersona(null)}
+        personaId={selectedPersona || undefined}
+        language={language}
+        onNavigateToSignUp={onNavigateToSignUp}
+      />
     </section>
   );
 }
