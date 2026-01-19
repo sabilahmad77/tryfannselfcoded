@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { ArrowRight, Sparkles, Play, Hexagon, Users, Palette, Building2 } from 'lucide-react';
+import { ArrowRight, Sparkles, Hexagon, Users, Palette, Building2, Info, CheckCircle2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import bgImage from 'figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png';
@@ -7,22 +7,30 @@ import bgImage from 'figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png';
 interface HeroProps {
   language: 'en' | 'ar';
   onNavigateToSignUp?: () => void;
+  onNavigateToRewards?: () => void;
 }
 
 const content = {
   en: {
     badge: "WELCOME TO FANN",
-    headline: "The Future of Art is Here",
+    headline: "The Verified Art Marketplace Starts Here",
     headlineAccent: "Where Verified Art Meets Immersive Technology",
     subheadline: (
       <>
-        FANN is revolutionizing the art world by combining authenticated fine art with augmented reality (AR) and blockchain technology. Designed for the modern art ecosystem, FANN connects artists, collectors, and galleries from the MENA/GCC region and beyond. Whether you&apos;re an artist looking for global exposure, a collector seeking authenticity, or a curator aiming to manage your portfolio digitally, FANN is your gateway to the future of art.
+        Founding access to FANN — a verified-only marketplace for physical art with provenance-first records and resale royalties. Join now, complete missions, earn points, and unlock founder perks before launch.
         <br />
-        <span className="font-bold text-white">Join FANN Today</span> and become part of the art revolution.
+        AR/VR experiences are planned for later phases. Today, TryFANN focuses on verification, provenance, and founder rewards.
       </>
     ),
-    cta: "Launch Your Journey",
-    watchDemo: "View AR Experience",
+    cta: "Start Your Journey",
+    watchDemo: "How Points & Tiers Work",
+    trustBullets: [
+      "Verified participants",
+      "Verified listings at launch",
+      "Provenance-first records",
+      "Resale royalties",
+      "Founder advantages"
+    ],
     stats: [
       { number: "20K+", label: "Early Adopters", icon: Users, gradient: "from-[#ffcc33] to-[#fbbf24]" },
       { number: "2K+", label: "Verified Artists", icon: Palette, gradient: "from-[#45e3d3] to-[#4de3ed]" },
@@ -31,17 +39,24 @@ const content = {
   },
   ar: {
     badge: "مرحبًا بك في FANN",
-    headline: "مستقبل الفن هنا",
+    headline: "تبدأ سوق الفن الموثق هنا",
     headlineAccent: "حيث يلتقي الفن الموثق بالتكنولوجيا الغامرة",
     subheadline: (
       <>
-        FANN يحدث ثورة في عالم الفن من خلال دمج الفن الراقي الموثق مع الواقع المعزز (AR) وتقنية البلوك تشين. مصمم للنظام البيئي الفني الحديث، يربط FANN الفنانين والجامعين والمعارض من منطقة الشرق الأوسط وشمال أفريقيا ودول الخليج وما بعدها. سواء كنت فنانًا تسعى للوصول العالمي، أو جامعًا تبحث عن الأصالة، أو منسقًا تهدف لإدارة محفظتك رقميًا، FANN هو بوابتك إلى مستقبل الفن.
+        الوصول المؤسس إلى FANN — سوق موثق حصريًا للفن المادي مع سجلات المصداقية أولاً وإتاوات إعادة البيع. انضم الآن، أكمل المهام، اربح النقاط، وافتح مزايا المؤسس قبل الإطلاق.
         <br />
-        <span className="font-bold text-white">انضم إلى FANN اليوم</span> وكن جزءًا من ثورة الفن.
+        تجارب AR/VR مخطط لها لمراحل لاحقة. اليوم، يركز TryFANN على التحقق والمصداقية ومكافآت المؤسس.
       </>
     ),
     cta: "ابدأ رحلتك",
-    watchDemo: "شاهد تجربة الواقع المعزز",
+    watchDemo: "كيف تعمل النقاط والمستويات",
+    trustBullets: [
+      "مشاركون موثقون",
+      "قوائم موثقة عند الإطلاق",
+      "سجلات المصداقية أولاً",
+      "إتاوات إعادة البيع",
+      "مزايا المؤسس"
+    ],
     stats: [
       { number: "+20K", label: "مستخدم مبكر", icon: Users, gradient: "from-[#ffcc33] to-[#fbbf24]" },
       { number: "+2K", label: "فنان موثق", icon: Palette, gradient: "from-[#45e3d3] to-[#4de3ed]" },
@@ -50,7 +65,7 @@ const content = {
   }
 };
 
-export function Hero({ language, onNavigateToSignUp }: HeroProps) {
+export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: HeroProps) {
   const t = content[language];
   const isRTL = language === 'ar';
 
@@ -158,10 +173,10 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-6 text-5xl md:text-7xl leading-[1.1] md:leading-[1.1] overflow-visible"
+            className="mb-6 text-4xl md:text-5xl leading-[1.1] md:leading-[1.1] overflow-visible"
           >
             <span className="block text-[#ffffff] leading-[1.1] md:leading-[1.1] py-1">{t.headline}</span>
-            <span className="block bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] bg-clip-text text-transparent animate-gradient text-4xl md:text-5xl leading-[1.2] md:leading-[1.2] py-1">
+            <span className="block bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] bg-clip-text text-transparent animate-gradient text-3xl md:text-4xl leading-[1.2] md:leading-[1.2] py-1">
               {t.headlineAccent}
             </span>
           </motion.h1>
@@ -212,7 +227,8 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
               <Button
                 size="lg"
                 variant="outline"
-                className="relative px-8 py-6 glass border-2 backdrop-blur-xl overflow-hidden group transition-all duration-300"
+                onClick={onNavigateToRewards}
+                className="relative px-8 py-6 glass border-2 backdrop-blur-xl overflow-hidden group transition-all duration-300 cursor-pointer"
               >
                 <motion.div
                   className="absolute inset-0 bg-primary/20"
@@ -221,11 +237,36 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                   transition={{ duration: 0.8 }}
                 />
                 <span className="relative z-10 flex items-center gap-2">
-                  <Play className="w-5 h-5" />
+                  <Info className="w-5 h-5" />
                   {t.watchDemo}
                 </span>
               </Button>
             </motion.div>
+          </motion.div>
+
+          {/* Trust Bullets */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="mb-12 max-w-5xl mx-auto"
+          >
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-3">
+              {t.trustBullets.map((bullet, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full glass border border-[#ffcc33]/20 hover:border-[#ffcc33]/40 transition-all duration-300 group"
+                >
+                  <CheckCircle2 className="w-4 h-4 text-[#ffcc33] shrink-0" />
+                  <span className="text-white/80 text-sm group-hover:text-white transition-colors whitespace-nowrap">
+                    {bullet}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
 
           {/* Stats */}
@@ -303,7 +344,8 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
           </motion.div>
         </div>
 
-        {/* 3D AR Preview Card */}
+        {/* 3D AR Preview Card - COMMENTED OUT - AR Preview Card to be removed per new TryFANN positioning */}
+        {/* 
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -317,14 +359,12 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             className="relative rounded-3xl overflow-hidden glass border border-amber-500/30 shadow-2xl"
           >
             <div className="aspect-video bg-gradient-to-br from-amber-900/50 via-black to-yellow-900/50 flex items-center justify-center relative overflow-hidden">
-              {/* Animated scan lines */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/10 to-transparent"
                 animate={{ y: ['0%', '100%'] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               />
 
-              {/* Play button */}
               <motion.div
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.9 }}
@@ -333,11 +373,9 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                 <Play className="w-8 h-8 text-amber-400 ml-1 group-hover:text-amber-300 transition-colors" />
               </motion.div>
 
-              {/* Holographic effect */}
               <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/10 via-transparent to-yellow-500/10 pointer-events-none" />
             </div>
 
-            {/* Bottom info bar */}
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-black/60 backdrop-blur-xl border-t border-amber-500/30">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -349,6 +387,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             </div>
           </motion.div>
         </motion.div>
+        */}
       </div>
     </section>
   );

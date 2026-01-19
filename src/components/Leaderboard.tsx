@@ -232,8 +232,7 @@ export function Leaderboard({
         role,
         avatar:
           entry.profile_image ||
-          `https://api.dicebear.com/7.x/avataaars/svg?seed=${
-            entry.first_name || entry.email || entry.id
+          `https://api.dicebear.com/7.x/avataaars/svg?seed=${entry.first_name || entry.email || entry.id
           }`,
       };
     });
@@ -248,8 +247,8 @@ export function Leaderboard({
   // API response structure: { data: LeaderboardEntry[], ... }
   const leaders =
     leaderboardData?.data &&
-    Array.isArray(leaderboardData.data) &&
-    leaderboardData.data.length > 0
+      Array.isArray(leaderboardData.data) &&
+      leaderboardData.data.length > 0
       ? mapApiDataToLeaders(leaderboardData.data)
       : t.leaders;
 
@@ -367,8 +366,8 @@ export function Leaderboard({
                 index === 0
                   ? "allTime"
                   : index === 1
-                  ? "thisMonth"
-                  : "thisWeek";
+                    ? "thisMonth"
+                    : "thisWeek";
               const isActive = timeFilter === filterValue;
               return (
                 <motion.button
@@ -376,11 +375,10 @@ export function Leaderboard({
                   onClick={() => setTimeFilter(filterValue)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`px-8 py-3 rounded-full transition-all duration-300 ${
-                    isActive
+                  className={`px-8 py-3 rounded-full transition-all duration-300 ${isActive
                       ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black shadow-lg shadow-amber-500/50"
                       : "glass border border-white/10 text-white/60 hover:text-white hover:border-amber-500/50"
-                  }`}
+                    }`}
                 >
                   {tab}
                 </motion.button>
@@ -541,11 +539,10 @@ export function Leaderboard({
                         <Button
                           size="sm"
                           onClick={() => toggleFollow(leader.username)}
-                          className={`shrink-0 ${
-                            isFollowing(leader.username)
+                          className={`shrink-0 ${isFollowing(leader.username)
                               ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
                               : "bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#3bc4b5] text-white"
-                          }`}
+                            }`}
                         >
                           {isFollowing(leader.username) ? (
                             <>
@@ -675,11 +672,10 @@ export function Leaderboard({
                             <Button
                               size="sm"
                               onClick={() => toggleFollow(leader.username)}
-                              className={`${
-                                isFollowing(leader.username)
+                              className={`${isFollowing(leader.username)
                                   ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
                                   : "bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#3bc4b5] text-white"
-                              }`}
+                                }`}
                             >
                               {isFollowing(leader.username) ? (
                                 <>

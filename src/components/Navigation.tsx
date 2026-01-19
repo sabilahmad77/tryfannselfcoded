@@ -22,7 +22,7 @@ const content = {
       { label: "FAQ", href: "#faq" }
     ],
     login: "Sign In",
-    signup: "Get Started"
+    signup: "Start Journey"
   },
   ar: {
     nav: [
@@ -33,7 +33,7 @@ const content = {
       { label: "الأسئلة الشائعة", href: "#faq" }
     ],
     login: "ربط المحفظة",
-    signup: "تشغيل التطبيق"
+    signup: "ابدأ الرحلة"
   }
 };
 

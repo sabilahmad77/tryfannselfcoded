@@ -25,6 +25,12 @@ export function HomePage() {
         <Hero 
           language={language}
           onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
+          onNavigateToRewards={() => {
+            const element = document.getElementById('rewards');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }}
         />
         
         <div id="how">
