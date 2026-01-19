@@ -95,7 +95,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
                 key={index}
                 href={item.href}
                 whileHover={{ scale: 1.05, y: -2 }}
-                className="text-white/70 hover:text-white transition-colors relative group"
+                className="text-white/70 hover:text-white transition-colors relative group font-body"
               >
                 {item.label}
                 <motion.div
@@ -173,7 +173,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   whileHover={{ x: 10 }}
-                  className="text-white/70 hover:text-white transition-colors py-2"
+                  className="text-white/70 hover:text-white transition-colors py-2 font-body"
                 >
                   {item.label}
                 </motion.a>

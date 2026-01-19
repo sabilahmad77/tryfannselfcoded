@@ -77,7 +77,6 @@ const content = {
     progressToNext: "Progress to Next Tier",
     pointsNeeded: "points needed",
     kyc: "KYC Verification",
-    kycStatus: "Verification Status",
     idNumber: "ID Number",
     dateOfBirth: "Date of Birth",
     nationality: "Nationality",
@@ -91,7 +90,9 @@ const content = {
     socialLinkHandler: "Social Link Handler",
     socialLinkFollowers: "Social Link Followers",
     verified: "Verified",
+    approved: "Approved",
     pending: "Pending",
+    rejected: "Rejected",
     notSubmitted: "Not Submitted",
     editKYC: "Edit KYC",
     addKYC: "Add KYC Information",
@@ -176,7 +177,6 @@ const content = {
     progressToNext: "التقدم للمستوى التالي",
     pointsNeeded: "نقطة مطلوبة",
     kyc: "التحقق من الهوية",
-    kycStatus: "حالة التحقق",
     idNumber: "رقم الهوية",
     dateOfBirth: "تاريخ الميلاد",
     nationality: "الجنسية",
@@ -190,7 +190,9 @@ const content = {
     socialLinkHandler: "معرف الرابط الاجتماعي",
     socialLinkFollowers: "متابعي الرابط الاجتماعي",
     verified: "تم التحقق",
+    approved: "موافق عليه",
     pending: "قيد الانتظار",
+    rejected: "مرفوض",
     notSubmitted: "لم يتم الإرسال",
     editKYC: "تعديل التحقق من الهوية",
     addKYC: "إضافة معلومات التحقق من الهوية",
@@ -286,6 +288,7 @@ export function ProfilePage() {
             postal_code?: string;
             street_address?: string;
             id_type?: string;
+            status?: "Pending" | "Approved" | "Rejected" | string | null;
             gov_issued_id?: string | null; // Legacy single file
             gov_issued_id_front?: string | null; // Front of ID
             gov_issued_id_back?: string | null; // Back of ID
@@ -330,6 +333,7 @@ export function ProfilePage() {
             kyc_postal_code: kycVerification?.postal_code,
             kyc_street_address: kycVerification?.street_address,
             kyc_id_type: kycVerification?.id_type,
+            kyc_status: kycVerification?.status || null,
             kyc_gov_issued_id: govIdUrls,
             kyc_proof_address: kycVerification?.proof_address || null,
             // Artist-specific fields
@@ -358,6 +362,7 @@ export function ProfilePage() {
       street_address: (storedUser as { kyc_street_address?: string })
         .kyc_street_address,
       id_type: (storedUser as { kyc_id_type?: string }).kyc_id_type,
+      status: (storedUser as { kyc_status?: string | null }).kyc_status,
       gov_issued_id: (storedUser as { kyc_gov_issued_id?: string | null })
         .kyc_gov_issued_id,
       proof_address: (storedUser as { kyc_proof_address?: string | null })
@@ -375,6 +380,7 @@ export function ProfilePage() {
       postal_code?: string;
       street_address?: string;
       id_type?: string;
+      status?: string | null;
       gov_issued_id?: string | null;
       proof_address?: string | null;
       // Artist-specific fields
@@ -393,6 +399,7 @@ export function ProfilePage() {
       postal_code?: string;
       street_address?: string;
       id_type?: string;
+      status?: string | null;
       gov_issued_id?: string;
       proof_address?: string;
       // Artist-specific fields
@@ -521,6 +528,48 @@ export function ProfilePage() {
     } catch {
       return dateString;
     }
+  };
+
+  // Get KYC status badge with appropriate styling
+  const getKYCStatusBadge = (status: string | null | undefined) => {
+    if (!status) return null;
+
+    const normalizedStatus = status.trim().toLowerCase();
+
+    if (normalizedStatus === "approved") {
+      return (
+        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 flex items-center gap-1.5 px-3 py-1 shadow-lg shadow-green-500/20">
+          <Shield className="w-3.5 h-3.5" />
+          <span className="font-semibold">{t.approved}</span>
+        </Badge>
+      );
+    }
+
+    if (normalizedStatus === "pending") {
+      return (
+        <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 flex items-center gap-1.5 px-3 py-1 shadow-lg shadow-yellow-500/20 animate-pulse">
+          <Shield className="w-3.5 h-3.5" />
+          <span className="font-semibold">{t.pending}</span>
+        </Badge>
+      );
+    }
+
+    if (normalizedStatus === "rejected") {
+      return (
+        <Badge className="bg-gradient-to-r from-red-500 to-rose-500 text-white border-0 flex items-center gap-1.5 px-3 py-1 shadow-lg shadow-red-500/20">
+          <Shield className="w-3.5 h-3.5" />
+          <span className="font-semibold">{t.rejected}</span>
+        </Badge>
+      );
+    }
+
+    // Fallback for unknown status
+    return (
+      <Badge className="bg-gradient-to-r from-gray-500 to-gray-600 text-white border-0 flex items-center gap-1.5 px-3 py-1">
+        <Shield className="w-3.5 h-3.5" />
+        <span className="font-semibold">{status.trim()}</span>
+      </Badge>
+    );
   };
 
   // Get website URL - handle both string and array formats
@@ -904,17 +953,23 @@ export function ProfilePage() {
                   }`}
               >
                 <div
-                  className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                  className={`flex items-start gap-4 ${isRTL ? "flex-row-reverse" : ""
                     }`}
                 >
-                  <div className="w-12 h-12 bg-[#1D112A] border border-[#45e3d3]/30 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#1D112A] border border-[#45e3d3]/30 rounded-xl flex items-center justify-center shrink-0">
                     <Shield className="w-6 h-6 text-[#45e3d3]" />
                   </div>
-                  <div className={isRTL ? "text-right" : "text-left"}>
-                    <h3 className="text-lg text-[#ffffff]">{t.kyc}</h3>
-                    <p className="text-xs text-[#808c99]">
-                      {kycData ? t.kycStatus : t.kycNotSubmitted}
-                    </p>
+                  <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
+                    <h3 className="text-lg text-[#ffffff] mb-2">{t.kyc}</h3>
+                    {kycData && 'status' in kycData && kycData.status ? (
+                      <div className={`flex flex-col gap-2 ${isRTL ? "items-end" : "items-start"}`}>
+                        {getKYCStatusBadge(kycData.status)}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-[#808c99]">
+                        {t.kycNotSubmitted}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <Button
@@ -949,6 +1004,34 @@ export function ProfilePage() {
                     >
                       <Shield className="w-4 h-4 mr-2" />
                       {t.addKYC}
+                    </Button>
+                  </div>
+                </div>
+              ) : kycData && 'status' in kycData && kycData.status?.toLowerCase() === "rejected" ? (
+                /* Rejected State - Show message to resubmit */
+                <div className="p-6 rounded-xl bg-gradient-to-br from-red-500/10 to-rose-500/10 border-2 border-red-500/30 mb-6">
+                  <div
+                    className={`flex flex-col items-center justify-center text-center ${isRTL ? "text-right" : "text-left"
+                      }`}
+                  >
+                    <div className="w-16 h-16 mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
+                      <Shield className="w-8 h-8 text-red-400" />
+                    </div>
+                    <h4 className="text-lg text-[#ffffff] mb-2">
+                      {language === "en" ? "Verification Rejected" : "تم رفض التحقق"}
+                    </h4>
+                    <p className="text-sm text-[#808c99] mb-4 max-w-md">
+                      {language === "en"
+                        ? "Your KYC verification was rejected. Please review your information and resubmit."
+                        : "تم رفض التحقق من هويتك. يرجى مراجعة معلوماتك وإعادة الإرسال."}
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                      onClick={() => setIsEditKYCOpen(true)}
+                    >
+                      <Edit2 className="w-4 h-4 mr-2" />
+                      {t.editKYC}
                     </Button>
                   </div>
                 </div>

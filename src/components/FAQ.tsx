@@ -448,11 +448,11 @@ export function FAQ({ language }: FAQProps) {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl mb-4">
+          <h2 className="text-4xl md:text-5xl mb-4 font-heading">
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-lg">
+          <p className="text-white/60 max-w-2xl mx-auto text-lg font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -477,10 +477,10 @@ export function FAQ({ language }: FAQProps) {
                   value={`item-${index}`}
                   className="rounded-2xl glass border border-orange-500/30 px-6 hover:border-orange-500/60 transition-all overflow-hidden group"
                 >
-                  <AccordionTrigger className="text-white hover:text-amber-400 text-left py-6 no-underline">
+                  <AccordionTrigger className="text-white hover:text-amber-400 text-left py-6 no-underline font-body">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/60 leading-relaxed pb-6">
+                  <AccordionContent className="text-white/60 leading-relaxed pb-6 font-body">
                     {typeof faq.answer === "string" ? (
                       <p>{faq.answer}</p>
                     ) : faq.answer && typeof faq.answer === "object" && "intro" in faq.answer ? (

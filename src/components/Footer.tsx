@@ -106,11 +106,11 @@ export function Footer({ language }: FooterProps) {
                 transition={{ duration: 2, repeat: Infinity }}
               />
             </motion.div>
-            <p className="mb-3">
+            <p className="mb-3 font-heading text-lg">
               <span className="text-white">{t.tagline.white}</span>
               <span className="text-[#ffcc33]">{t.tagline.gold}</span>
             </p>
-            <p className="text-[#ffffff]/60 text-sm mb-6 max-w-sm leading-relaxed">
+            <p className="text-[#ffffff]/60 text-sm mb-6 max-w-sm leading-relaxed font-body">
               {t.description}
             </p>
 
@@ -141,14 +141,14 @@ export function Footer({ language }: FooterProps) {
           {/* Links */}
           {t.sections.map((section, index) => (
             <div key={index}>
-              <h4 className="text-[#ffffff] mb-6">{section.title}</h4>
+              <h4 className="text-[#ffffff] mb-6 font-heading">{section.title}</h4>
               <ul className="space-y-3">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <motion.a
                       href="#"
                       whileHover={{ x: 5 }}
-                      className="text-[#ffffff]/60 hover:text-[#ffcc33] text-sm transition-colors inline-block"
+                      className="text-[#ffffff]/60 hover:text-[#ffcc33] text-sm transition-colors inline-block font-body"
                     >
                       {link}
                     </motion.a>
@@ -162,14 +162,14 @@ export function Footer({ language }: FooterProps) {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-[#ffcc33]/10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-[#ffffff]/60 text-sm">{t.copyright}</p>
+            <p className="text-[#ffffff]/60 text-sm font-body">{t.copyright}</p>
             <div className="flex items-center gap-4">
               <motion.div
                 className="flex items-center gap-2 px-4 py-2 rounded-full glass border border-[#45e3d3]/30"
                 whileHover={{ scale: 1.05 }}
               >
                 <div className="w-2 h-2 rounded-full bg-[#45e3d3] animate-pulse" />
-                <span className="text-[#ffffff]/60 text-xs">{t.compliance}</span>
+                <span className="text-[#ffffff]/60 text-xs font-body">{t.compliance}</span>
               </motion.div>
             </div>
           </div>

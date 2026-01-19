@@ -26,6 +26,8 @@ import { Button } from "@/components/ui/button";
 import { DashboardLayout } from "@/components/dashboard/shared/DashboardLayout";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { UserProfileModal } from "@/components/UserProfileModal";
+import { SEOHead } from "@/components/SEO/SEOHead";
+import { SchemaMarkup } from "@/components/SEO/SchemaMarkup";
 import { useLanguage } from "@/contexts/useLanguage";
 import {
   useGetLeaderboardQuery,
@@ -71,6 +73,7 @@ const content = {
     columns: ["Rank", "User", "Role", "Tier", "Points", ""],
     follow: "Follow",
     following: "Following",
+    unfollow: "Unfollow",
     stats: {
       totalParticipants: "Total Participants",
       topTier: "Founding Patrons",
@@ -117,6 +120,7 @@ const content = {
     columns: ["الترتيب", "المستخدم", "الدور", "المستوى", "النقاط", ""],
     follow: "متابعة",
     following: "متابع",
+    unfollow: "إلغاء المتابعة",
     stats: {
       totalParticipants: "إجمالي المشاركين",
       topTier: "الرعاة المؤسسون",
@@ -149,20 +153,6 @@ export function LeaderboardPage() {
   const [selectedUser, setSelectedUser] = useState<typeof currentLeaders[0] | null>(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
-  // Mock follower counts - will be replaced with API data after login
-  const followerCounts: Record<string, number> = {
-    "@sarahm": 245,
-    "@mchen": 189,
-    "@laylaart": 167,
-    "@jrodriguez": 142,
-    "@fatimak": 231,
-    "@alexart": 98,
-    "@dubaimodern": 134,
-    "@omark": 87,
-    "@sofiaart": 156,
-    "@ahmeds": 73,
-  };
-
   // Follow user mutation
   const [followUser] = useFollowUserMutation();
 
@@ -175,12 +165,8 @@ export function LeaderboardPage() {
     );
     const isFollowingFromApi = apiEntry?.is_follow === true;
 
-    // If already following, don't make API call
-    if (isFollowingFromApi) {
-      return;
-    }
-
-    const isCurrentlyFollowing = follows.has(username);
+    // Determine current follow state (check both API data and local state)
+    const isCurrentlyFollowing = isFollowingFromApi || follows.has(username);
 
     // Set loading state for this specific user
     setLoadingUserId(userId);
@@ -197,7 +183,7 @@ export function LeaderboardPage() {
         return newFollows;
       });
 
-      // Call API
+      // Call API (same API handles both follow and unfollow)
       await followUser({ follow_to: userId }).unwrap();
 
       // Manually refetch leaderboard to get updated is_follow status
@@ -223,7 +209,6 @@ export function LeaderboardPage() {
   };
 
   const isFollowing = (username: string) => follows.has(username);
-  const getFollowerCount = (username: string) => followerCounts[username] || 0;
 
   // Check authentication status
   const isAuthenticated = useSelector(
@@ -351,6 +336,26 @@ export function LeaderboardPage() {
     }
   }, [isAuthenticated, apiEntries]);
 
+  // Update selectedUser when apiEntries changes (to sync is_follow status in modal)
+  useEffect(() => {
+    if (selectedUser && selectedUser.id && apiEntries && apiEntries.length > 0) {
+      const updatedEntry = apiEntries.find(
+        (entry: LeaderboardEntry) => entry.id === selectedUser.id
+      );
+      if (updatedEntry && updatedEntry.is_follow !== selectedUser.is_follow) {
+        // Update selectedUser with new is_follow status
+        setSelectedUser((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            is_follow: updatedEntry.is_follow || false,
+          };
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiEntries, selectedUser?.id]);
+
   // Get user's rank and points from API
   // For authenticated users, data is nested: response.data.data.your_rank
   // For public users, there's no your_rank field
@@ -372,6 +377,11 @@ export function LeaderboardPage() {
     role_name?: string | null;
     user_type?: string | null;
     persona?: string | null;
+    followers?: number | null;
+    user_stats?: {
+      followers?: number | null;
+      [key: string]: unknown;
+    } | null;
   };
 
   const mapApiDataToLeaders = (entries: LeaderboardEntry[]) => {
@@ -390,6 +400,9 @@ export function LeaderboardPage() {
           ? rawRole
           : "Collector";
 
+      // Extract followers from API response (can be in followers or user_stats.followers)
+      const followers = withHints.followers ?? withHints.user_stats?.followers ?? 0;
+
       return {
         id: entry.id, // Include id for follow API
         rank: entry.rank || 0,
@@ -403,11 +416,11 @@ export function LeaderboardPage() {
         tier: entry.tier || "Explorer",
         avatar:
           entry.profile_image ||
-          `https://api.dicebear.com/7.x/avataaars/svg?seed=${
-            entry.first_name || entry.email || entry.id
+          `https://api.dicebear.com/7.x/avataaars/svg?seed=${entry.first_name || entry.email || entry.id
           }`,
         type: role,
         is_follow: entry.is_follow || false,
+        followers: followers,
       };
     });
   };
@@ -432,7 +445,7 @@ export function LeaderboardPage() {
 
   const totalPages = isAuthenticated
     ? userLeaderboardData?.data?.all_page ??
-      Math.ceil(totalCount / itemsPerPage)
+    Math.ceil(totalCount / itemsPerPage)
     : publicLeaderboardData?.all_page ?? Math.ceil(totalCount / itemsPerPage);
 
   const currentLeaders = personaFilteredLeaders;
@@ -441,21 +454,21 @@ export function LeaderboardPage() {
   // For authenticated users, use API stats if available
   const topTierCount =
     isAuthenticated &&
-    userLeaderboardData?.data?.total_founding_patron !== undefined
+      userLeaderboardData?.data?.total_founding_patron !== undefined
       ? userLeaderboardData.data.total_founding_patron
       : filteredLeaders.filter(
-          (l) => l.tier.includes("Founding") || l.tier.includes("مؤسس")
-        ).length;
+        (l) => l.tier.includes("Founding") || l.tier.includes("مؤسس")
+      ).length;
 
   const avgPoints =
     isAuthenticated && userLeaderboardData?.data?.average_points !== undefined
       ? Math.round(userLeaderboardData.data.average_points)
       : filteredLeaders.length > 0
-      ? Math.round(
+        ? Math.round(
           filteredLeaders.reduce((sum, l) => sum + l.points, 0) /
-            filteredLeaders.length
+          filteredLeaders.length
         )
-      : 0;
+        : 0;
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -567,16 +580,15 @@ export function LeaderboardPage() {
     <>
       {/* Back Button - Only show when accessed from homepage */}
       {fromHomepage && (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 mb-4">
+        <div className="container mx-auto mb-4 sm:mb-6 lg:mb-8">
           <motion.button
             initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
             animate={{ opacity: 1, x: 0 }}
             whileHover={{ scale: 1.05, x: isRTL ? 5 : -5 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate(ROUTES.HOME)}
-            className={`flex items-center gap-2 glass px-6 py-3 rounded-full border border-[#ffcc33]/30 text-white hover:border-[#ffcc33]/50 transition-all cursor-pointer ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center gap-2 glass px-6 py-3 rounded-full border border-[#ffcc33]/30 text-white hover:border-[#ffcc33]/50 transition-all cursor-pointer ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <ArrowLeft className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />
             <span>
@@ -594,9 +606,8 @@ export function LeaderboardPage() {
         className={`mb-8 ${isRTL ? "text-right" : "text-left"}`}
       >
         <div
-          className={`flex items-center gap-4 mb-4 ${
-            isRTL ? "flex-row-reverse" : ""
-          }`}
+          className={`flex items-center gap-4 mb-4 ${isRTL ? "flex-row-reverse" : ""
+            }`}
         >
           <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center shrink-0">
             <Trophy className="w-6 h-6 text-[#0F021C]" />
@@ -620,9 +631,8 @@ export function LeaderboardPage() {
         {/* Total Participants */}
         <div className="glass rounded-2xl p-6">
           <div
-            className={`flex items-center justify-between mb-4 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center justify-between mb-4 ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
               <Award className="w-6 h-6 text-[#0F021C]" />
@@ -642,9 +652,8 @@ export function LeaderboardPage() {
         {/* Top Tier */}
         <div className="glass rounded-2xl p-6">
           <div
-            className={`flex items-center justify-between mb-4 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center justify-between mb-4 ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
               <Crown className="w-6 h-6 text-[#0F021C]" />
@@ -664,9 +673,8 @@ export function LeaderboardPage() {
         {/* Average Points */}
         <div className="glass rounded-2xl p-6">
           <div
-            className={`flex items-center justify-between mb-4 ${
-              isRTL ? "flex-row-reverse" : ""
-            }`}
+            className={`flex items-center justify-between mb-4 ${isRTL ? "flex-row-reverse" : ""
+              }`}
           >
             <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
               <Sparkles className="w-6 h-6 text-[#0F021C]" />
@@ -735,11 +743,10 @@ export function LeaderboardPage() {
           whileHover={{ scale: 1.02, y: -2 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => setTimeFilter("allTime")}
-          className={`relative p-6 rounded-2xl transition-all duration-300 overflow-hidden cursor-pointer ${
-            timeFilter === "allTime"
-              ? "bg-gradient-to-br from-amber-500/20 via-yellow-500/20 to-amber-600/20 border-2 border-amber-500"
-              : "glass border border-white/10 hover:border-amber-500/30"
-          }`}
+          className={`relative p-6 rounded-2xl transition-all duration-300 overflow-hidden cursor-pointer ${timeFilter === "allTime"
+            ? "bg-gradient-to-br from-amber-500/20 via-yellow-500/20 to-amber-600/20 border-2 border-amber-500"
+            : "glass border border-white/10 hover:border-amber-500/30"
+            }`}
         >
           {timeFilter === "allTime" && (
             <motion.div
@@ -756,28 +763,24 @@ export function LeaderboardPage() {
           )}
 
           <div
-            className={`relative z-10 flex items-start gap-4 ${
-              isRTL ? "flex-row-reverse text-right" : "text-left"
-            }`}
+            className={`relative z-10 flex items-start gap-4 ${isRTL ? "flex-row-reverse text-right" : "text-left"
+              }`}
           >
             <div
-              className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
-                timeFilter === "allTime"
-                  ? "bg-gradient-to-br from-amber-500 to-yellow-600"
-                  : "bg-white/5"
-              }`}
+              className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${timeFilter === "allTime"
+                ? "bg-gradient-to-br from-amber-500 to-yellow-600"
+                : "bg-white/5"
+                }`}
             >
               <Trophy
-                className={`w-6 h-6 ${
-                  timeFilter === "allTime" ? "text-black" : "text-amber-400"
-                }`}
+                className={`w-6 h-6 ${timeFilter === "allTime" ? "text-black" : "text-amber-400"
+                  }`}
               />
             </div>
             <div className="flex-1">
               <div
-                className={`text-lg mb-1 ${
-                  timeFilter === "allTime" ? "text-amber-400" : "text-white/80"
-                }`}
+                className={`text-lg mb-1 ${timeFilter === "allTime" ? "text-amber-400" : "text-white/80"
+                  }`}
               >
                 {t.timePeriods.allTime}
               </div>
@@ -802,11 +805,10 @@ export function LeaderboardPage() {
           whileHover={{ scale: 1.02, y: -2 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => setTimeFilter("thisMonth")}
-          className={`relative p-6 rounded-2xl transition-all duration-300 overflow-hidden cursor-pointer ${
-            timeFilter === "thisMonth"
-              ? "bg-gradient-to-br from-amber-500/20 via-yellow-500/20 to-amber-600/20 border-2 border-amber-500"
-              : "glass border border-white/10 hover:border-amber-500/30"
-          }`}
+          className={`relative p-6 rounded-2xl transition-all duration-300 overflow-hidden cursor-pointer ${timeFilter === "thisMonth"
+            ? "bg-gradient-to-br from-amber-500/20 via-yellow-500/20 to-amber-600/20 border-2 border-amber-500"
+            : "glass border border-white/10 hover:border-amber-500/30"
+            }`}
         >
           {timeFilter === "thisMonth" && (
             <motion.div
@@ -823,30 +825,26 @@ export function LeaderboardPage() {
           )}
 
           <div
-            className={`relative z-10 flex items-start gap-4 ${
-              isRTL ? "flex-row-reverse text-right" : "text-left"
-            }`}
+            className={`relative z-10 flex items-start gap-4 ${isRTL ? "flex-row-reverse text-right" : "text-left"
+              }`}
           >
             <div
-              className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
-                timeFilter === "thisMonth"
-                  ? "bg-gradient-to-br from-amber-500 to-yellow-600"
-                  : "bg-white/5"
-              }`}
+              className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${timeFilter === "thisMonth"
+                ? "bg-gradient-to-br from-amber-500 to-yellow-600"
+                : "bg-white/5"
+                }`}
             >
               <Calendar
-                className={`w-6 h-6 ${
-                  timeFilter === "thisMonth" ? "text-black" : "text-teal-400"
-                }`}
+                className={`w-6 h-6 ${timeFilter === "thisMonth" ? "text-black" : "text-teal-400"
+                  }`}
               />
             </div>
             <div className="flex-1">
               <div
-                className={`text-lg mb-1 ${
-                  timeFilter === "thisMonth"
-                    ? "text-amber-400"
-                    : "text-white/80"
-                }`}
+                className={`text-lg mb-1 ${timeFilter === "thisMonth"
+                  ? "text-amber-400"
+                  : "text-white/80"
+                  }`}
               >
                 {t.timePeriods.thisMonth}
               </div>
@@ -871,11 +869,10 @@ export function LeaderboardPage() {
           whileHover={{ scale: 1.02, y: -2 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => setTimeFilter("thisWeek")}
-          className={`relative p-6 rounded-2xl transition-all duration-300 overflow-hidden cursor-pointer ${
-            timeFilter === "thisWeek"
-              ? "bg-gradient-to-br from-amber-500/20 via-yellow-500/20 to-amber-600/20 border-2 border-amber-500"
-              : "glass border border-white/10 hover:border-amber-500/30"
-          }`}
+          className={`relative p-6 rounded-2xl transition-all duration-300 overflow-hidden cursor-pointer ${timeFilter === "thisWeek"
+            ? "bg-gradient-to-br from-amber-500/20 via-yellow-500/20 to-amber-600/20 border-2 border-amber-500"
+            : "glass border border-white/10 hover:border-amber-500/30"
+            }`}
         >
           {timeFilter === "thisWeek" && (
             <motion.div
@@ -892,28 +889,24 @@ export function LeaderboardPage() {
           )}
 
           <div
-            className={`relative z-10 flex items-start gap-4 ${
-              isRTL ? "flex-row-reverse text-right" : "text-left"
-            }`}
+            className={`relative z-10 flex items-start gap-4 ${isRTL ? "flex-row-reverse text-right" : "text-left"
+              }`}
           >
             <div
-              className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
-                timeFilter === "thisWeek"
-                  ? "bg-gradient-to-br from-amber-500 to-yellow-600"
-                  : "bg-white/5"
-              }`}
+              className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${timeFilter === "thisWeek"
+                ? "bg-gradient-to-br from-amber-500 to-yellow-600"
+                : "bg-white/5"
+                }`}
             >
               <Zap
-                className={`w-6 h-6 ${
-                  timeFilter === "thisWeek" ? "text-black" : "text-purple-400"
-                }`}
+                className={`w-6 h-6 ${timeFilter === "thisWeek" ? "text-black" : "text-purple-400"
+                  }`}
               />
             </div>
             <div className="flex-1">
               <div
-                className={`text-lg mb-1 ${
-                  timeFilter === "thisWeek" ? "text-amber-400" : "text-white/80"
-                }`}
+                className={`text-lg mb-1 ${timeFilter === "thisWeek" ? "text-amber-400" : "text-white/80"
+                  }`}
               >
                 {t.timePeriods.thisWeek}
               </div>
@@ -944,9 +937,8 @@ export function LeaderboardPage() {
         {/* User Type Filter - Inside Table */}
         <div className="bg-white/5 border-b border-white/10 p-6">
           <div
-            className={`flex flex-wrap items-center gap-3 ${
-              isRTL ? "flex-row-reverse justify-end" : "justify-start"
-            }`}
+            className={`flex flex-wrap items-center gap-3 ${isRTL ? "flex-row-reverse justify-end" : "justify-start"
+              }`}
           >
             <span className="text-[#808c99] text-sm">{t.userType}:</span>
             {(Object.keys(t.personas) as PersonaFilter[]).map((persona) => (
@@ -955,11 +947,10 @@ export function LeaderboardPage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setPersonaFilter(persona)}
-                className={`px-4 py-1.5 rounded-full text-sm transition-all duration-300 cursor-pointer ${
-                  personaFilter === persona
-                    ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black"
-                    : "bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-amber-500/50"
-                }`}
+                className={`px-4 py-1.5 rounded-full text-sm transition-all duration-300 cursor-pointer ${personaFilter === persona
+                  ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black"
+                  : "bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-amber-500/50"
+                  }`}
               >
                 {t.personas[persona]}
               </motion.button>
@@ -1001,9 +992,8 @@ export function LeaderboardPage() {
                 className="bg-white/5 rounded-xl p-4 border border-white/10 hover:border-[#ffcc33]/30 transition-all cursor-pointer"
               >
                 <div
-                  className={`flex items-center gap-4 mb-3 ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center gap-4 mb-3 ${isRTL ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <div className="flex items-center justify-center w-12 shrink-0">
                     {getRankIcon(leader.rank)}
@@ -1022,13 +1012,13 @@ export function LeaderboardPage() {
                         <>
                           <span className="text-white/40">•</span>
                           <span className="text-white/60">
-                            {getFollowerCount(leader.username)} followers
+                            {leader.followers ?? 0} followers
                           </span>
                         </>
                       )}
                     </div>
                   </div>
-                  {/* Follow Button - Only show when authenticated and not the logged-in user */}
+                  {/* Follow/Unfollow Button - Only show when authenticated and not the logged-in user */}
                   {isAuthenticated && leader.id && loggedInUserEmail && leader.email !== loggedInUserEmail && (
                     <Button
                       size="sm"
@@ -1036,9 +1026,12 @@ export function LeaderboardPage() {
                         e.stopPropagation();
                         toggleFollow(leader.id, leader.username);
                       }}
-                      disabled={loadingUserId === leader.id || leader.is_follow}
+                      disabled={loadingUserId === leader.id}
                       variant={isFollowing(leader.username) || leader.is_follow ? "outline" : "default"}
-                      className="shrink-0 cursor-pointer"
+                      className={`shrink-0 cursor-pointer ${isFollowing(leader.username) || leader.is_follow
+                        ? "border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500"
+                        : ""
+                        }`}
                     >
                       {loadingUserId === leader.id ? (
                         <>
@@ -1048,7 +1041,7 @@ export function LeaderboardPage() {
                       ) : isFollowing(leader.username) || leader.is_follow ? (
                         <>
                           <UserCheck className="w-4 h-4 mr-1" />
-                          {t.following}
+                          {t.unfollow}
                         </>
                       ) : (
                         <>
@@ -1060,9 +1053,8 @@ export function LeaderboardPage() {
                   )}
                 </div>
                 <div
-                  className={`flex items-center justify-between gap-2 flex-wrap ${
-                    isRTL ? "flex-row-reverse" : ""
-                  }`}
+                  className={`flex items-center justify-between gap-2 flex-wrap ${isRTL ? "flex-row-reverse" : ""
+                    }`}
                 >
                   <Badge
                     variant="outline"
@@ -1071,9 +1063,8 @@ export function LeaderboardPage() {
                     )} border text-xs`}
                   >
                     <span
-                      className={`flex items-center gap-1 ${
-                        isRTL ? "flex-row-reverse" : ""
-                      }`}
+                      className={`flex items-center gap-1 ${isRTL ? "flex-row-reverse" : ""
+                        }`}
                     >
                       {getPersonaIcon(leader.type)}
                       {leader.type}
@@ -1103,18 +1094,16 @@ export function LeaderboardPage() {
                   {t.columns.map((column, index) => (
                     <th
                       key={index}
-                      className={`px-6 py-4 text-[#808c99] ${
-                        isRTL ? "text-right" : "text-left"
-                      }`}
+                      className={`px-6 py-4 text-[#808c99] ${isRTL ? "text-right" : "text-left"
+                        }`}
                     >
                       {column}
                     </th>
                   ))}
                   {isAuthenticated && (
                     <th
-                      className={`px-6 py-4 text-[#808c99] ${
-                        isRTL ? "text-right" : "text-left"
-                      }`}
+                      className={`px-6 py-4 text-[#808c99] ${isRTL ? "text-right" : "text-left"
+                        }`}
                     >
                       {/* Follow column header - empty */}
                     </th>
@@ -1144,9 +1133,8 @@ export function LeaderboardPage() {
                     {/* User */}
                     <td className="px-6 py-4">
                       <div
-                        className={`flex items-center gap-4 ${
-                          isRTL ? "flex-row-reverse" : ""
-                        }`}
+                        className={`flex items-center gap-4 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
                       >
                         <Avatar className="w-10 h-10 border-2 border-[#ffcc33]/50">
                           <AvatarImage src={leader.avatar} alt={leader.name} />
@@ -1162,7 +1150,7 @@ export function LeaderboardPage() {
                               <>
                                 <span className="text-white/40">•</span>
                                 <span className="text-white/60">
-                                  {getFollowerCount(leader.username)} followers
+                                  {leader.followers ?? 0} followers
                                 </span>
                               </>
                             )}
@@ -1180,9 +1168,8 @@ export function LeaderboardPage() {
                         )} border text-xs`}
                       >
                         <span
-                          className={`flex items-center gap-1 ${
-                            isRTL ? "flex-row-reverse" : ""
-                          }`}
+                          className={`flex items-center gap-1 ${isRTL ? "flex-row-reverse" : ""
+                            }`}
                         >
                           {getPersonaIcon(leader.type)}
                           {leader.type}
@@ -1207,7 +1194,7 @@ export function LeaderboardPage() {
                       </span>
                     </td>
 
-                    {/* Follow Button - Only show when authenticated and not the logged-in user */}
+                    {/* Follow/Unfollow Button - Only show when authenticated and not the logged-in user */}
                     {isAuthenticated && leader.id && loggedInUserEmail && leader.email !== loggedInUserEmail && (
                       <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                         <Button
@@ -1215,11 +1202,12 @@ export function LeaderboardPage() {
                           onClick={() =>
                             toggleFollow(leader.id, leader.username)
                           }
-                          disabled={
-                            loadingUserId === leader.id || leader.is_follow
-                          }
+                          disabled={loadingUserId === leader.id}
                           variant={isFollowing(leader.username) || leader.is_follow ? "outline" : "default"}
-                          className="cursor-pointer"
+                          className={`cursor-pointer ${isFollowing(leader.username) || leader.is_follow
+                            ? "border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500"
+                            : ""
+                            }`}
                         >
                           {loadingUserId === leader.id ? (
                             <>
@@ -1232,7 +1220,7 @@ export function LeaderboardPage() {
                             leader.is_follow ? (
                             <>
                               <UserCheck className="w-4 h-4 mr-1" />
-                              {t.following}
+                              {t.unfollow}
                             </>
                           ) : (
                             <>
@@ -1264,16 +1252,14 @@ export function LeaderboardPage() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-4 py-2 rounded-full border border-[#ffcc33]/50 text-white/60 hover:text-white hover:border-[#ffcc33]/30 transition-all ${
-              currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-            } ${isRTL ? "flex-row-reverse" : ""}`}
+            className={`px-4 py-2 rounded-full border border-[#ffcc33]/50 text-white/60 hover:text-white hover:border-[#ffcc33]/30 transition-all ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              } ${isRTL ? "flex-row-reverse" : ""}`}
           >
             <ChevronLeft className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />
           </motion.button>
           <div
-            className={`mx-4 text-[#808c99] ${
-              isRTL ? "text-right" : "text-left"
-            }`}
+            className={`mx-4 text-[#808c99] ${isRTL ? "text-right" : "text-left"
+              }`}
           >
             {t.pagination.showing}{" "}
             {currentPage * itemsPerPage - itemsPerPage + 1} {t.pagination.to}{" "}
@@ -1285,9 +1271,8 @@ export function LeaderboardPage() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded-full border border-[#ffcc33]/50 text-white/60 hover:text-white hover:border-[#ffcc33]/30 transition-all ${
-              currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-            } ${isRTL ? "flex-row-reverse" : ""}`}
+            className={`px-4 py-2 rounded-full border border-[#ffcc33]/50 text-white/60 hover:text-white hover:border-[#ffcc33]/30 transition-all ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
+              } ${isRTL ? "flex-row-reverse" : ""}`}
           >
             <ChevronRight className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />
           </motion.button>
@@ -1305,7 +1290,8 @@ export function LeaderboardPage() {
           user={selectedUser}
           isFollowing={
             isAuthenticated &&
-            (isFollowing(selectedUser.username) || selectedUser.is_follow === true)
+            (isFollowing(selectedUser.username) ||
+              (!follows.has(selectedUser.username) && selectedUser.is_follow === true))
           }
           isFollowLoading={loadingUserId === selectedUser.id}
           onToggleFollow={
@@ -1326,6 +1312,8 @@ export function LeaderboardPage() {
         className="min-h-screen bg-[#0F021C] relative"
         dir={isRTL ? "rtl" : "ltr"}
       >
+        <SEOHead />
+        <SchemaMarkup />
         {/* Background */}
         <div className="absolute inset-0 z-0">
           <ImageWithFallback
@@ -1351,8 +1339,12 @@ export function LeaderboardPage() {
 
   // Render with dashboard layout (authenticated user from dashboard)
   return (
-    <DashboardLayout currentPage="leaderboard">
-      {leaderboardContent}
-    </DashboardLayout>
+    <>
+      <SEOHead />
+      <SchemaMarkup />
+      <DashboardLayout currentPage="leaderboard">
+        {leaderboardContent}
+      </DashboardLayout>
+    </>
   );
 }

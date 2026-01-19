@@ -343,11 +343,11 @@ export function Leaderboard({
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl mb-4">
+          <h2 className="text-4xl md:text-5xl mb-4 font-heading">
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-lg">
+          <p className="text-white/60 max-w-2xl mx-auto text-lg font-body">
             {t.subtitle}
           </p>
         </motion.div>

@@ -141,11 +141,11 @@ export function HowItWorks({ language }: HowItWorksProps) {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <h2 className="mb-4 text-4xl md:text-5xl">
+          <h2 className="mb-4 text-4xl md:text-5xl font-heading">
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-[#ffffff]/60 max-w-2xl mx-auto text-lg">
+          <p className="text-[#ffffff]/60 max-w-2xl mx-auto text-lg font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -307,8 +307,8 @@ export function HowItWorks({ language }: HowItWorksProps) {
 
                     {/* Content */}
                     <div className="text-center">
-                      <h3 className="text-white mb-3 text-xl">{step.title}</h3>
-                      <p className="text-white/60 text-sm leading-relaxed">
+                      <h3 className="text-white mb-3 text-xl font-heading">{step.title}</h3>
+                      <p className="text-white/60 text-sm leading-relaxed font-body">
                         {step.description}
                       </p>
                     </div>

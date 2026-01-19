@@ -315,6 +315,9 @@ export interface ArtworkCollection {
   title: string;
   artist_name: string;
   year: string;
+  description?: string;
+  dimensions?: string;
+  image?: string;
   medium: string;
   category: string;
   acquisition_date?: string;
@@ -335,20 +338,26 @@ export interface ArtworkCollectionCreateRequest {
   title: string;
   artist_name: string;
   year: string;
+  description?: string;
+  dimensions?: string;
+  image?: File;
   medium: string;
   category: string;
   acquisition_date?: string;
-  purchase_value?: number;
+  purchase_value?: number | string;
 }
 
 export interface ArtworkCollectionUpdateRequest {
   title?: string;
   artist_name?: string;
   year?: string;
+  description?: string;
+  dimensions?: string;
+  image?: File;
   medium?: string;
   category?: string;
   acquisition_date?: string;
-  purchase_value?: number;
+  purchase_value?: number | string;
 }
 
 export interface ArtworkCollectionResponse {
@@ -750,11 +759,29 @@ export const dashboardApi = baseApi.injectEndpoints({
       ArtworkCollectionResponse,
       ArtworkCollectionCreateRequest
     >({
-      query: (body) => ({
-        url: "/market_final/artwork_collection/",
-        method: "POST",
-        body,
-      }),
+      query: (body) => {
+        const formData = new FormData();
+        formData.append("title", body.title);
+        formData.append("artist_name", body.artist_name);
+        formData.append("year", body.year);
+        formData.append("medium", body.medium);
+        formData.append("category", body.category);
+        if (body.description) formData.append("description", body.description);
+        if (body.dimensions) formData.append("dimensions", body.dimensions);
+        if (body.image) formData.append("image", body.image);
+        if (body.acquisition_date) formData.append("acquisition_date", body.acquisition_date);
+        if (body.purchase_value !== undefined) {
+          formData.append("purchase_value", String(body.purchase_value));
+        }
+        return {
+          url: "/market_final/artwork_collection/",
+          method: "POST",
+          body: formData,
+          headers: {
+            "Content-Type": undefined as unknown as string,
+          },
+        };
+      },
       invalidatesTags: ["Gallery"],
     }),
 
@@ -763,11 +790,31 @@ export const dashboardApi = baseApi.injectEndpoints({
       ArtworkCollectionResponse,
       { id: number; data: ArtworkCollectionUpdateRequest }
     >({
-      query: ({ id, data }) => ({
-        url: `/market_final/artwork_collection/${id}/`,
-        method: "PUT",
-        body: data,
-      }),
+      query: ({ id, data }) => {
+        const formData = new FormData();
+        if (data.title !== undefined) formData.append("title", data.title);
+        if (data.artist_name !== undefined) formData.append("artist_name", data.artist_name);
+        if (data.year !== undefined) formData.append("year", data.year);
+        if (data.medium !== undefined) formData.append("medium", data.medium);
+        if (data.category !== undefined) formData.append("category", data.category);
+        if (data.description !== undefined) formData.append("description", data.description);
+        if (data.dimensions !== undefined) formData.append("dimensions", data.dimensions);
+        if (data.image) formData.append("image", data.image);
+        if (data.acquisition_date !== undefined) {
+          formData.append("acquisition_date", data.acquisition_date);
+        }
+        if (data.purchase_value !== undefined) {
+          formData.append("purchase_value", String(data.purchase_value));
+        }
+        return {
+          url: `/market_final/artwork_collection/${id}/`,
+          method: "PUT",
+          body: formData,
+          headers: {
+            "Content-Type": undefined as unknown as string,
+          },
+        };
+      },
       invalidatesTags: (_result, _error, { id }) => [
         { type: "Gallery", id },
         "Gallery",

@@ -203,11 +203,11 @@ export function PersonaPaths({
           transition={{ duration: 0.6 }}
           className="text-center mb-12 sm:mb-16 lg:mb-20"
         >
-          <h2 className="mb-3 sm:mb-4 text-3xl sm:text-4xl md:text-5xl">
+          <h2 className="mb-3 sm:mb-4 text-3xl sm:text-4xl md:text-5xl font-heading">
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-base sm:text-lg px-4">
+          <p className="text-white/60 max-w-2xl mx-auto text-base sm:text-lg px-4 font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -321,7 +321,7 @@ export function PersonaPaths({
 
                       {/* Title Section */}
                       <div className="mb-5 sm:mb-6">
-                        <h3 className="text-white text-xl sm:text-2xl mb-1.5 sm:mb-2">
+                        <h3 className="text-white text-xl sm:text-2xl mb-1.5 sm:mb-2 font-heading">
                           {persona.name}
                         </h3>
                       </div>
@@ -347,7 +347,7 @@ export function PersonaPaths({
                                 className={`w-4 h-4 sm:w-5 sm:h-5 shrink-0 mt-0.5`}
                                 style={{ color: persona.accentColor }}
                               />
-                              <span className="text-white/70 text-sm leading-relaxed">
+                              <span className="text-white/70 text-sm leading-relaxed font-body">
                                 {benefit.split(" — ")[0]}
                               </span>
                             </motion.li>
@@ -380,7 +380,7 @@ export function PersonaPaths({
 
                         {/* Button Content */}
                         <div className="relative px-5 py-3 sm:px-6 sm:py-3.5 flex items-center justify-center gap-2">
-                          <span className="text-white text-sm sm:text-base">
+                          <span className="text-white text-sm sm:text-base font-body">
                             {t.cta}
                           </span>
                           <motion.div

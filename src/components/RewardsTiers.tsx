@@ -306,11 +306,11 @@ export function RewardsTiers({
           transition={{ duration: 0.6 }}
           className="text-center mb-24"
         >
-          <h2 className="mb-4 text-4xl md:text-5xl lg:text-6xl">
+          <h2 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-heading">
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-lg md:text-xl">
+          <p className="text-white/60 max-w-2xl mx-auto text-lg md:text-xl font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -387,7 +387,7 @@ export function RewardsTiers({
                             </div>
 
                             {/* Tier Name */}
-                            <h3 className="text-white text-center text-xl mb-2">
+                            <h3 className="text-white text-center text-xl mb-2 font-heading">
                               {tier.name}
                             </h3>
 
@@ -406,7 +406,7 @@ export function RewardsTiers({
                                   className="flex items-start gap-2 text-white/60 text-xs"
                                 >
                                   <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#45e3d3]" />
-                                  <span className="leading-tight">
+                                  <span className="leading-tight font-body">
                                     {benefit}
                                   </span>
                                 </li>
@@ -509,7 +509,7 @@ export function RewardsTiers({
 
                               <div className="flex-1">
                                 {/* Tier Name */}
-                                <h3 className="text-white text-xl mb-1">
+                                <h3 className="text-white text-xl mb-1 font-heading">
                                   {tier.name}
                                 </h3>
 
@@ -530,7 +530,7 @@ export function RewardsTiers({
                                   className="flex items-start gap-2 text-white/60 text-sm"
                                 >
                                   <Check className="w-4 h-4 shrink-0 mt-0.5 text-[#45e3d3]" />
-                                  <span>{benefit}</span>
+                                  <span className="font-body">{benefit}</span>
                                 </li>
                               ))}
                             </ul>

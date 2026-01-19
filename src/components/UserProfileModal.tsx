@@ -1,7 +1,7 @@
 import { useLanguage } from '@/contexts/useLanguage';
 import { Award, BarChart3, CheckCircle, Facebook, Flame, Heart, Instagram, Linkedin, Loader2, Share2, Shield, ShieldCheck, Target, TrendingUp, Twitter, UserCheck, UserPlus, Users, Video, X, Youtube } from 'lucide-react';
 import { motion } from 'motion/react';
-import { type ElementType } from 'react';
+import { type ElementType, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -9,6 +9,7 @@ import { Progress } from './ui/progress';
 import { CustomModal } from './ui/CustomModal';
 import { useGetUserProfileDetailsQuery } from '@/services/api/dashboardApi';
 import { API_BASE_URL } from '@/services/api/baseApi';
+import { ArtworkDetailModal, type ArtworkDetailData } from './ArtworkDetailModal';
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -63,6 +64,11 @@ interface ArtworkItem {
   image: string;
   price: string;
   status: 'available' | 'sold' | 'featured';
+  // Additional fields for detail view
+  dimensions?: string;
+  medium?: string;
+  description?: string;
+  created_at?: string;
 }
 
 interface ExhibitionItem {
@@ -128,6 +134,12 @@ interface ApiArtwork {
   title?: string;
   image?: string;
   price?: string | number;
+  dimensions?: string;
+  medium?: string;
+  description?: string;
+  created_at?: string;
+  no_artist?: number;
+  user_type?: string;
 }
 
 interface ApiProfile {
@@ -225,6 +237,7 @@ const content = {
     posts: "Posts",
     trend: "Trend",
     follow: "Follow",
+    unfollow: "Unfollow",
     noSocialMedia: "No social media links available",
     noSocialPerformance: "No social media performance data available",
   },
@@ -289,6 +302,7 @@ const content = {
     posts: "المنشورات",
     trend: "الاتجاه",
     follow: "تابع",
+    unfollow: "إلغاء المتابعة",
     noSocialMedia: "لا توجد روابط وسائل التواصل الاجتماعي متاحة",
     noSocialPerformance: "لا توجد بيانات أداء وسائل التواصل الاجتماعي متاحة",
   }
@@ -547,6 +561,9 @@ export function UserProfileModal({
   const t = content[language];
   const isRTL = language === 'ar';
 
+  const [selectedArtwork, setSelectedArtwork] = useState<ArtworkDetailData | null>(null);
+  const [isArtworkDetailOpen, setIsArtworkDetailOpen] = useState(false);
+
   const userId = typeof user?.id === 'number' ? user.id : undefined;
   const { data: userProfileResponse } = useGetUserProfileDetailsQuery(userId as number, {
     skip: !userId,
@@ -575,121 +592,126 @@ export function UserProfileModal({
   const profileData: UserProfileData | null =
     user && baseProfileData
       ? {
-          ...baseProfileData,
-          bio: (() => {
-            if (!apiProfile) return baseProfileData.bio;
-            const rawBio =
-              (apiProfile.bio as string | undefined) ||
-              (apiProfile.artist_statement as string | undefined);
-            return rawBio && rawBio.trim().length > 0 ? rawBio : baseProfileData.bio;
-          })(),
-          kycStatus: (() => {
-            if (!apiProfile) return baseProfileData.kycStatus;
-            const rawStatus = (apiProfile.kyc_status as string | undefined) || '';
-            // Backend now exposes `is_verify`; keep backwards-compatible support for `is_kyc_verified`
-            const isVerifiedFlag =
-              (apiProfile.is_kyc_verified as boolean | undefined) === true ||
-              (apiProfile.is_verify as boolean | undefined) === true;
+        ...baseProfileData,
+        bio: (() => {
+          if (!apiProfile) return baseProfileData.bio;
+          const rawBio =
+            (apiProfile.bio as string | undefined) ||
+            (apiProfile.artist_statement as string | undefined);
+          return rawBio && rawBio.trim().length > 0 ? rawBio : baseProfileData.bio;
+        })(),
+        kycStatus: (() => {
+          if (!apiProfile) return baseProfileData.kycStatus;
+          const rawStatus = (apiProfile.kyc_status as string | undefined) || '';
+          // Backend now exposes `is_verify`; keep backwards-compatible support for `is_kyc_verified`
+          const isVerifiedFlag =
+            (apiProfile.is_kyc_verified as boolean | undefined) === true ||
+            (apiProfile.is_verify as boolean | undefined) === true;
 
-            if (isVerifiedFlag) {
-              return 'verified';
-            }
+          if (isVerifiedFlag) {
+            return 'verified';
+          }
 
-            if (typeof rawStatus === 'string' && rawStatus.trim().length > 0) {
-              const s = rawStatus.toLowerCase();
-              if (s.includes('verify') || s === 'approved') return 'verified';
-              if (s.includes('pending')) return 'pending';
-              return 'notVerified';
-            }
+          if (typeof rawStatus === 'string' && rawStatus.trim().length > 0) {
+            const s = rawStatus.toLowerCase();
+            if (s.includes('verify') || s === 'approved') return 'verified';
+            if (s.includes('pending')) return 'pending';
+            return 'notVerified';
+          }
 
-            return baseProfileData.kycStatus;
-          })() as UserProfileData['kycStatus'],
-          social: {
-            ...baseProfileData.social,
-            // Use real API handles when present; otherwise leave empty so tiles are not clickable
-            instagram: (apiProfile?.instagram_handle as string | undefined) || '',
-            twitter: (apiProfile?.twitter_handle as string | undefined) || '',
-            facebook: (apiProfile?.facebook_handle as string | undefined) || '',
-            linkedin: (apiProfile?.linkedin_handle as string | undefined) || '',
-          },
-          // Map numeric stats from the new `user_stats` block while keeping role-based defaults
-          stats: {
-            ...baseProfileData.stats,
-            ...(apiUserStats && {
-              influencePoints:
-                typeof apiUserStats.influence_points === 'number'
-                  ? apiUserStats.influence_points
-                  : baseProfileData.stats.influencePoints,
-              provenancePoints:
-                typeof apiUserStats.provenance_points === 'number'
-                  ? apiUserStats.provenance_points
-                  : baseProfileData.stats.provenancePoints,
-              followers:
-                typeof apiUserStats.followers === 'number'
-                  ? apiUserStats.followers
-                  : baseProfileData.stats.followers,
-              following:
-                typeof apiUserStats.following === 'number'
-                  ? apiUserStats.following
-                  : baseProfileData.stats.following,
-              referrals:
-                typeof apiUserStats.referral_count === 'number'
-                  ? apiUserStats.referral_count
-                  : baseProfileData.stats.referrals,
-              artworksAdded:
-                typeof apiUserStats.artworks_added_count === 'number'
-                  ? apiUserStats.artworks_added_count
-                  : baseProfileData.stats.artworksAdded,
-              videosWatched:
-                typeof apiUserStats.video_watched === 'number'
-                  ? apiUserStats.video_watched
-                  : baseProfileData.stats.videosWatched,
-            }),
-            // Ambassador-specific stats: These fields (total_reach, engagement_rate, conversation, campaignsActive)
-            // are NOT available in the view_user_profile endpoint's user_stats object.
-            // They are only available in the dashboard_stats_ambassador endpoint.
-            // Set to 0 for ambassadors to avoid showing mock data from baseProfileData
-            ...(resolvedRole === 'ambassador' && {
-              totalReach: 0,
-              engagementRate: 0,
-              conversions: 0,
-              campaignsActive: 0,
-            }),
-          },
-          // Artworks come only from API; if none, show an empty state (no mock data)
-          artworks: (() => {
-            const apiArtworks = apiProfile?.artworks as ApiArtwork[] | undefined;
+          return baseProfileData.kycStatus;
+        })() as UserProfileData['kycStatus'],
+        social: {
+          ...baseProfileData.social,
+          // Use real API handles when present; otherwise leave empty so tiles are not clickable
+          instagram: (apiProfile?.instagram_handle as string | undefined) || '',
+          twitter: (apiProfile?.twitter_handle as string | undefined) || '',
+          facebook: (apiProfile?.facebook_handle as string | undefined) || '',
+          linkedin: (apiProfile?.linkedin_handle as string | undefined) || '',
+        },
+        // Map numeric stats from the new `user_stats` block while keeping role-based defaults
+        stats: {
+          ...baseProfileData.stats,
+          ...(apiUserStats && {
+            influencePoints:
+              typeof apiUserStats.influence_points === 'number'
+                ? apiUserStats.influence_points
+                : baseProfileData.stats.influencePoints,
+            provenancePoints:
+              typeof apiUserStats.provenance_points === 'number'
+                ? apiUserStats.provenance_points
+                : baseProfileData.stats.provenancePoints,
+            followers:
+              typeof apiUserStats.followers === 'number'
+                ? apiUserStats.followers
+                : baseProfileData.stats.followers,
+            following:
+              typeof apiUserStats.following === 'number'
+                ? apiUserStats.following
+                : baseProfileData.stats.following,
+            referrals:
+              typeof apiUserStats.referral_count === 'number'
+                ? apiUserStats.referral_count
+                : baseProfileData.stats.referrals,
+            artworksAdded:
+              typeof apiUserStats.artworks_added_count === 'number'
+                ? apiUserStats.artworks_added_count
+                : baseProfileData.stats.artworksAdded,
+            videosWatched:
+              typeof apiUserStats.video_watched === 'number'
+                ? apiUserStats.video_watched
+                : baseProfileData.stats.videosWatched,
+          }),
+          // Ambassador-specific stats: These fields (total_reach, engagement_rate, conversation, campaignsActive)
+          // are NOT available in the view_user_profile endpoint's user_stats object.
+          // They are only available in the dashboard_stats_ambassador endpoint.
+          // Set to 0 for ambassadors to avoid showing mock data from baseProfileData
+          ...(resolvedRole === 'ambassador' && {
+            totalReach: 0,
+            engagementRate: 0,
+            conversions: 0,
+            campaignsActive: 0,
+          }),
+        },
+        // Artworks come only from API; if none, show an empty state (no mock data)
+        artworks: (() => {
+          const apiArtworks = apiProfile?.artworks as ApiArtwork[] | undefined;
 
-            if (!Array.isArray(apiArtworks) || apiArtworks.length === 0) {
-              return [];
-            }
+          if (!Array.isArray(apiArtworks) || apiArtworks.length === 0) {
+            return [];
+          }
 
-            return apiArtworks.map((artwork, index): ArtworkItem => {
-              const rawImage = artwork.image as string | undefined;
-              const image =
-                typeof rawImage === 'string' && rawImage.trim().length > 0
-                  ? buildImageUrl(rawImage)
-                  : '';
+          return apiArtworks.map((artwork, index): ArtworkItem => {
+            const rawImage = artwork.image as string | undefined;
+            const image =
+              typeof rawImage === 'string' && rawImage.trim().length > 0
+                ? buildImageUrl(rawImage)
+                : '';
 
-              const rawPrice = artwork.price as string | number | undefined;
-              const price =
-                typeof rawPrice === 'number'
-                  ? `$${rawPrice}`
-                  : typeof rawPrice === 'string' && rawPrice.trim().length > 0
-                    ? rawPrice
-                    : '$0';
+            const rawPrice = artwork.price as string | number | undefined;
+            const price =
+              typeof rawPrice === 'number'
+                ? `$${rawPrice}`
+                : typeof rawPrice === 'string' && rawPrice.trim().length > 0
+                  ? rawPrice
+                  : '$0';
 
-              return {
-                id: typeof artwork.id === 'number' ? artwork.id : index,
-                title: (artwork.title as string | undefined) || 'Untitled',
-                image,
-                price,
-                // API does not expose artwork status on this endpoint yet
-                status: 'available',
-              };
-            });
-          })(),
-        }
+            return {
+              id: typeof artwork.id === 'number' ? artwork.id : index,
+              title: (artwork.title as string | undefined) || 'Untitled',
+              image,
+              price,
+              // API does not expose artwork status on this endpoint yet
+              status: 'available',
+              // Include additional fields from API for detail view
+              dimensions: artwork.dimensions,
+              medium: artwork.medium,
+              description: artwork.description,
+              created_at: artwork.created_at,
+            };
+          });
+        })(),
+      }
       : null;
 
   // Prefer explicit prop, otherwise fall back to API `user_stats.is_follow`
@@ -821,34 +843,34 @@ export function UserProfileModal({
               <p className="text-[#808c99] mb-3">{user.username}</p>
             </div>
             <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-              {/* Follow Button */}
+              {/* Follow/Unfollow Button */}
               {onToggleFollow && (
-              <Button
+                <Button
                   onClick={onToggleFollow}
-                size="sm"
-                  disabled={isFollowLoading || isFollowing}
-                className={`${isFollowing
-                  ? 'bg-gradient-to-r from-[#45e3d3] to-[#3bc4b5] hover:from-[#3bc4b5] hover:to-[#45e3d3]'
-                  : 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffb54d] hover:to-[#ffcc33]'
-                  } text-[#020e27] transition-all duration-300`}
-              >
+                  size="sm"
+                  disabled={isFollowLoading}
+                  className={`${isFollowing
+                    ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 border-red-500/50'
+                    : 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffb54d] hover:to-[#ffcc33]'
+                    } text-white transition-all duration-300`}
+                >
                   {isFollowLoading ? (
                     <>
                       <Loader2 className={`w-4 h-4 animate-spin ${isRTL ? 'ml-2' : 'mr-2'}`} />
                       {language === 'en' ? 'Loading...' : 'جاري التحميل...'}
                     </>
                   ) : isFollowing ? (
-                  <>
-                    <UserCheck className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {t.following}
-                  </>
-                ) : (
-                  <>
-                    <UserPlus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                    {t.follow}
-                  </>
-                )}
-              </Button>
+                    <>
+                      <UserCheck className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                      {t.unfollow}
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                      {t.follow}
+                    </>
+                  )}
+                </Button>
               )}
               {/* Close Button */}
               <Button
@@ -980,92 +1002,92 @@ export function UserProfileModal({
 
         {/* Social Media (role-aware) */}
         {(resolvedRole === 'ambassador' || hasAnySocial) && (
-        <div>
-          <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
-            {t.socialMedia}
-          </h3>
-          {hasAnySocial ? (
-            <div className="grid grid-cols-2 gap-3">
-              {profileData.social.instagram && (
-                <motion.a
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  href={`https://instagram.com/${profileData.social.instagram.replace('@', '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#e4405f]/50 transition-all"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] rounded-lg flex items-center justify-center shrink-0">
-                    <Instagram className="w-5 h-5 text-white" />
-                  </div>
-                  <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                    <p className="text-xs text-[#808c99]">{t.instagram}</p>
-                    <p className="text-sm text-[#ffffff]">{profileData.social.instagram}</p>
-                  </div>
-                </motion.a>
-              )}
-              {profileData.social.twitter && (
-                <motion.a
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  href={`https://twitter.com/${profileData.social.twitter.replace('@', '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1da1f2]/50 transition-all"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] rounded-lg flex items-center justify-center shrink-0">
-                    <Twitter className="w-5 h-5 text-white" />
-                  </div>
-                  <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                    <p className="text-xs text-[#808c99]">{t.twitter}</p>
-                    <p className="text-sm text-[#ffffff]">{profileData.social.twitter}</p>
-                  </div>
-                </motion.a>
-              )}
-              {profileData.social.facebook && (
-                <motion.a
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  href={`https://facebook.com/${profileData.social.facebook}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1877f2]/50 transition-all"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#1877f2] to-[#0e5fc6] rounded-lg flex items-center justify-center shrink-0">
-                    <Facebook className="w-5 h-5 text-white" />
-                  </div>
-                  <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                    <p className="text-xs text-[#808c99]">{t.facebook}</p>
-                    <p className="text-sm text-[#ffffff]">Facebook</p>
-                  </div>
-                </motion.a>
-              )}
-              {profileData.social.linkedin && (
-                <motion.a
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  href={`https://linkedin.com/in/${profileData.social.linkedin}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#0a66c2]/50 transition-all"
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#0a66c2] to-[#004182] rounded-lg flex items-center justify-center shrink-0">
-                    <Linkedin className="w-5 h-5 text-white" />
-                  </div>
-                  <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                    <p className="text-xs text-[#808c99]">{t.linkedin}</p>
-                    <p className="text-sm text-[#ffffff]">LinkedIn</p>
-                  </div>
-                </motion.a>
-              )}
-            </div>
-          ) : (
-            <div className="border border-dashed border-[#4e4e4e78] rounded-xl p-8 text-center">
-              <Share2 className={`w-12 h-12 text-[#808c99] mx-auto mb-3 ${isRTL ? 'ml-auto mr-auto' : ''}`} />
-              <p className="text-[#808c99] text-sm">{t.noSocialMedia}</p>
-            </div>
-          )}
-        </div>
+          <div>
+            <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+              {t.socialMedia}
+            </h3>
+            {hasAnySocial ? (
+              <div className="grid grid-cols-2 gap-3">
+                {profileData.social.instagram && (
+                  <motion.a
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    href={`https://instagram.com/${profileData.social.instagram.replace('@', '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#e4405f]/50 transition-all"
+                  >
+                    <div className="w-10 h-10 bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] rounded-lg flex items-center justify-center shrink-0">
+                      <Instagram className="w-5 h-5 text-white" />
+                    </div>
+                    <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                      <p className="text-xs text-[#808c99]">{t.instagram}</p>
+                      <p className="text-sm text-[#ffffff]">{profileData.social.instagram}</p>
+                    </div>
+                  </motion.a>
+                )}
+                {profileData.social.twitter && (
+                  <motion.a
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    href={`https://twitter.com/${profileData.social.twitter.replace('@', '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1da1f2]/50 transition-all"
+                  >
+                    <div className="w-10 h-10 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] rounded-lg flex items-center justify-center shrink-0">
+                      <Twitter className="w-5 h-5 text-white" />
+                    </div>
+                    <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                      <p className="text-xs text-[#808c99]">{t.twitter}</p>
+                      <p className="text-sm text-[#ffffff]">{profileData.social.twitter}</p>
+                    </div>
+                  </motion.a>
+                )}
+                {profileData.social.facebook && (
+                  <motion.a
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    href={`https://facebook.com/${profileData.social.facebook}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#1877f2]/50 transition-all"
+                  >
+                    <div className="w-10 h-10 bg-gradient-to-br from-[#1877f2] to-[#0e5fc6] rounded-lg flex items-center justify-center shrink-0">
+                      <Facebook className="w-5 h-5 text-white" />
+                    </div>
+                    <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                      <p className="text-xs text-[#808c99]">{t.facebook}</p>
+                      <p className="text-sm text-[#ffffff]">Facebook</p>
+                    </div>
+                  </motion.a>
+                )}
+                {profileData.social.linkedin && (
+                  <motion.a
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    href={`https://linkedin.com/in/${profileData.social.linkedin}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="glass rounded-xl p-4 flex items-center gap-3 border border-[#4e4e4e78] hover:border-[#0a66c2]/50 transition-all"
+                  >
+                    <div className="w-10 h-10 bg-gradient-to-br from-[#0a66c2] to-[#004182] rounded-lg flex items-center justify-center shrink-0">
+                      <Linkedin className="w-5 h-5 text-white" />
+                    </div>
+                    <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                      <p className="text-xs text-[#808c99]">{t.linkedin}</p>
+                      <p className="text-sm text-[#ffffff]">LinkedIn</p>
+                    </div>
+                  </motion.a>
+                )}
+              </div>
+            ) : (
+              <div className="border border-dashed border-[#4e4e4e78] rounded-xl p-8 text-center">
+                <Share2 className={`w-12 h-12 text-[#808c99] mx-auto mb-3 ${isRTL ? 'ml-auto mr-auto' : ''}`} />
+                <p className="text-[#808c99] text-sm">{t.noSocialMedia}</p>
+              </div>
+            )}
+          </div>
         )}
 
         {/* Overview - Dynamic based on user type */}
@@ -1148,50 +1170,69 @@ export function UserProfileModal({
             </div>
 
             {profileData.artworks && profileData.artworks.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {profileData.artworks.map((artwork: ArtworkItem) => (
-                <motion.div
-                  key={artwork.id}
-                  whileHover={{ scale: 1.03, y: -5 }}
-                  className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
-                >
-                  <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
-                    <img
-                      src={artwork.image}
-                      alt={artwork.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute top-2 right-2 z-10">
-                      {artwork.status === 'featured' && (
-                        <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 text-xs">
-                          {t.featured}
-                        </Badge>
-                      )}
-                      {artwork.status === 'sold' && (
-                        <Badge className="bg-gradient-to-r from-red-500 to-rose-500 text-white border-0 text-xs">
-                          {t.sold}
-                        </Badge>
-                      )}
-                      {artwork.status === 'available' && (
-                        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 text-xs">
-                          {t.available}
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="absolute bottom-0 left-0 right-0 p-3">
-                        <h4 className="text-white text-sm mb-1">{artwork.title}</h4>
-                        <p className="text-[#ffcc33] font-semibold">{artwork.price}</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {profileData.artworks.map((artwork: ArtworkItem) => (
+                  <motion.div
+                    key={artwork.id}
+                    whileHover={{ scale: 1.03, y: -5 }}
+                    onClick={() => {
+                      // Map ArtworkItem to ArtworkDetailData with all available fields
+                      const artworkDetail: ArtworkDetailData = {
+                        id: artwork.id,
+                        title: artwork.title,
+                        price: artwork.price,
+                        image: artwork.image,
+                        status: artwork.status,
+                        dimensions: artwork.dimensions,
+                        medium: artwork.medium,
+                        description: artwork.description,
+                        // Extract year from created_at if available
+                        year: artwork.created_at
+                          ? new Date(artwork.created_at).getFullYear().toString()
+                          : undefined,
+                      };
+                      setSelectedArtwork(artworkDetail);
+                      setIsArtworkDetailOpen(true);
+                    }}
+                    className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
+                  >
+                    <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
+                      <img
+                        src={artwork.image}
+                        alt={artwork.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute top-2 right-2 z-10">
+                        {artwork.status === 'featured' && (
+                          <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 text-xs">
+                            {t.featured}
+                          </Badge>
+                        )}
+                        {artwork.status === 'sold' && (
+                          <Badge className="bg-gradient-to-r from-red-500 to-rose-500 text-white border-0 text-xs">
+                            {t.sold}
+                          </Badge>
+                        )}
+                        {artwork.status === 'available' && (
+                          <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 text-xs">
+                            {t.available}
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="absolute bottom-0 left-0 right-0 p-3">
+                          <h4 className="text-white text-sm mb-1">{artwork.title}</h4>
+                          <p className="text-[#ffcc33] font-semibold">{artwork.price}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
-                    <h4 className="text-white text-sm mb-1 truncate">{artwork.title}</h4>
-                    <p className="text-[#ffcc33] text-xs">{artwork.price}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                    <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
+                      <h4 className="text-white text-sm mb-1 truncate">{artwork.title}</h4>
+                      <p className="text-[#ffcc33] text-xs">{artwork.price}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             ) : (
               <div className="border border-dashed border-[#4e4e4e78] rounded-xl p-6 text-center text-[#808c99] text-sm">
                 {t.noArtworks}
@@ -1366,6 +1407,16 @@ export function UserProfileModal({
           </div>
         </div> */}
       </div>
+
+      {/* Artwork Detail Modal */}
+      <ArtworkDetailModal
+        isOpen={isArtworkDetailOpen}
+        onClose={() => {
+          setIsArtworkDetailOpen(false);
+          setSelectedArtwork(null);
+        }}
+        artwork={selectedArtwork}
+      />
     </CustomModal>
   );
 }

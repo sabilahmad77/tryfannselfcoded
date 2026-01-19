@@ -1,3 +1,34 @@
+/* ============================================================================
+ * Typography CSS Variables
+ * ============================================================================
+ * 
+ * Font Selection:
+ * - Sora: Premium modern font for headings (English)
+ * - Inter: Clean, readable font for body text (English)
+ * - IBM Plex Sans Arabic: Premium Arabic font for RTL content
+ * 
+ * Loading Strategy:
+ * - Fonts are loaded via <link> tag in index.html for better performance
+ * - display=swap: Show fallback font immediately, swap when loaded
+ * - Preconnect: Added in index.html for faster DNS resolution
+ * 
+ * Note: Fonts are NOT imported here via @import to avoid conflicts with
+ * Tailwind v4 processing. All fonts are loaded from index.html.
+ */
+:root {
+  /* Font Families */
+  --font-heading: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-arabic-heading: 'IBM Plex Sans Arabic', 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-arabic-body: 'IBM Plex Sans Arabic', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* RTL Language Support - Arabic Typography */
+[dir="rtl"] {
+  --font-heading: var(--font-arabic-heading);
+  --font-body: var(--font-arabic-body);
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -267,6 +298,12 @@
 }
 
 @theme inline {
+  /* Font Families for Tailwind Utilities */
+  --font-family-heading: var(--font-heading);
+  --font-family-body: var(--font-body);
+  --font-family-arabic-heading: var(--font-arabic-heading);
+  --font-family-arabic-body: var(--font-arabic-body);
+  
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -343,6 +380,48 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Typography - Headings (only if no font utility class is applied) */
+  h1:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  h2:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  h3:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  h4:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  h5:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  h6:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body) {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  /* Typography - Body Text (only if no font utility class is applied) */
+  p:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  span:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  div:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  a:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  li:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  td:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  th:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body) {
+    font-family: var(--font-body);
+  }
+
+  /* Arabic Typography Adjustments (only if no font utility class is applied) */
+  [dir="rtl"]:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body) {
+    font-family: var(--font-arabic-body);
+  }
+
+  [dir="rtl"] h1:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  [dir="rtl"] h2:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  [dir="rtl"] h3:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  [dir="rtl"] h4:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  [dir="rtl"] h5:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body),
+  [dir="rtl"] h6:not(.font-heading):not(.font-body):not(.font-arabic-heading):not(.font-arabic-body) {
+    font-family: var(--font-arabic-heading);
+    letter-spacing: 0;
   }
 }
 
@@ -570,4 +649,41 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 /* Firefox - hide calendar icon */
 input[type="date"] {
   -moz-appearance: textfield;
+}
+
+/* ============================================================================
+ * Typography Utility Classes
+ * ============================================================================
+ * 
+ * These classes apply the correct font families based on language.
+ * Tailwind v4 requires explicit utility class definitions.
+ */
+
+@layer utilities {
+  /* English Font Classes - !important to ensure they override base layer */
+  .font-heading {
+    font-family: var(--font-heading) !important;
+  }
+
+  .font-body {
+    font-family: var(--font-body) !important;
+  }
+
+  /* Arabic Font Classes */
+  .font-arabic-heading {
+    font-family: var(--font-arabic-heading) !important;
+  }
+
+  .font-arabic-body {
+    font-family: var(--font-arabic-body) !important;
+  }
+
+  /* RTL Support - Automatically switch fonts when dir="rtl" */
+  [dir="rtl"] .font-heading {
+    font-family: var(--font-arabic-heading) !important;
+  }
+
+  [dir="rtl"] .font-body {
+    font-family: var(--font-arabic-body) !important;
+  }
 }

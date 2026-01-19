@@ -156,7 +156,7 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20" dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="max-w-5xl mx-auto text-center">
+        <div className="max-w-6xl mx-auto text-center">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -173,7 +173,7 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-6 text-4xl md:text-5xl leading-[1.1] md:leading-[1.1] overflow-visible"
+            className="mb-6 text-4xl md:text-5xl leading-[1.1] md:leading-[1.1] overflow-visible font-heading"
           >
             <span className="block text-[#ffffff] leading-[1.1] md:leading-[1.1] py-1">{t.headline}</span>
             <span className="block bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] bg-clip-text text-transparent animate-gradient text-3xl md:text-4xl leading-[1.2] md:leading-[1.2] py-1">
@@ -186,7 +186,7 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-8 text-[#ffffff]/60 text-lg md:text-xl leading-relaxed"
+            className="mb-8 text-[#ffffff]/60 text-lg md:text-xl leading-relaxed font-body"
           >
             {t.subheadline}
           </motion.p>
@@ -249,7 +249,7 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="mb-12 max-w-5xl mx-auto"
+            className="mb-12 max-w-6xl mx-auto"
           >
             <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-3">
               {t.trustBullets.map((bullet, index) => (
@@ -261,7 +261,7 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
                   className="flex items-center gap-2 px-4 py-2 rounded-full glass border border-[#ffcc33]/20 hover:border-[#ffcc33]/40 transition-all duration-300 group"
                 >
                   <CheckCircle2 className="w-4 h-4 text-[#ffcc33] shrink-0" />
-                  <span className="text-white/80 text-sm group-hover:text-white transition-colors whitespace-nowrap">
+                  <span className="text-white/80 text-sm group-hover:text-white transition-colors whitespace-nowrap font-body">
                     {bullet}
                   </span>
                 </motion.div>
@@ -325,12 +325,12 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
                       </div>
 
                       {/* Number */}
-                      <div className="text-4xl text-[#ffffff] mb-2">
+                      <div className="text-4xl text-[#ffffff] mb-2 font-heading">
                         {stat.number}
                       </div>
 
                       {/* Label */}
-                      <div className="text-sm text-[#ffffff]/70">
+                      <div className="text-sm text-[#ffffff]/70 font-body">
                         {stat.label}
                       </div>
                     </div>

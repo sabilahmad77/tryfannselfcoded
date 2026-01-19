@@ -12,8 +12,8 @@ import { extractErrorMessage } from "@/utils/errorMessages";
 
 // Get base URL from environment variable or use default
 // Vite requires VITE_ prefix for environment variables to be exposed to client
-// export const API_BASE_URL = "https://apifann.globaltechserivce.com/api";
-export const API_BASE_URL = "https://api.fann.art/api";
+export const API_BASE_URL = "https://apifann.globaltechserivce.com/api";
+// export const API_BASE_URL = "https://api.fann.art/api";
 export const FE_BASE_URL = "https://tryfann.com";
 const BASE_URL = API_BASE_URL;
 

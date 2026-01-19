@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { ArtworkModal, type ArtworkFormValues } from "./ArtworkModal";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { ProfileLockedState } from "@/components/dashboard/shared/ProfileLockedState";
+import { ArtworkDetailModal, type ArtworkDetailData } from "@/components/ArtworkDetailModal";
 
 interface AddArtworkProps {
   profileCompleted?: boolean;
@@ -134,6 +135,8 @@ export function AddArtwork({
   );
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<ArtworkItem | null>(null);
+  const [selectedArtworkForDetail, setSelectedArtworkForDetail] = useState<ArtworkDetailData | null>(null);
+  const [isArtworkDetailOpen, setIsArtworkDetailOpen] = useState(false);
   const {
     data: artworks,
     isLoading,
@@ -369,9 +372,29 @@ export function AddArtwork({
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                   className="group relative"
+                  onClick={() => {
+                    setSelectedArtworkForDetail({
+                      id: artwork.id,
+                      title: artwork.title,
+                      price: artwork.price,
+                      image: artwork.image,
+                      description: artwork.description || '',
+                      dimensions: artwork.dimensions || '',
+                      medium: artwork.medium || '',
+                      status: artwork.status,
+                      // Extract year from created_at if available (API might include it even if not in interface)
+                      year: (() => {
+                        const artworkWithDate = artwork as ArtworkItem & { created_at?: string };
+                        return artworkWithDate.created_at
+                          ? new Date(artworkWithDate.created_at).getFullYear().toString()
+                          : undefined;
+                      })(),
+                    });
+                    setIsArtworkDetailOpen(true);
+                  }}
                 >
                   {/* Artwork Tile */}
-                  <div className="relative overflow-hidden rounded-xl border border-[#ffcc33]/20 bg-[#0f021c] backdrop-blur-sm hover:border-[#ffcc33]/50 transition-all duration-300">
+                  <div className="relative overflow-hidden rounded-xl border border-[#ffcc33]/20 bg-[#0f021c] backdrop-blur-sm hover:border-[#ffcc33]/50 transition-all duration-300 cursor-pointer">
                     {/* Image */}
                     <div className="relative aspect-square overflow-hidden">
                       <img
@@ -387,7 +410,10 @@ export function AddArtwork({
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => handleOpenEdit(artwork)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenEdit(artwork);
+                          }}
                           className="w-10 h-10 bg-[#ffcc33]/90 hover:bg-[#ffcc33] rounded-lg flex items-center justify-center backdrop-blur-sm cursor-pointer"
                         >
                           <Pencil className="w-5 h-5 text-[#020e27]" />
@@ -395,7 +421,10 @@ export function AddArtwork({
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => handleDeleteClick(artwork)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(artwork);
+                          }}
                           className="w-10 h-10 bg-red-500/90 hover:bg-red-500 rounded-lg flex items-center justify-center backdrop-blur-sm cursor-pointer"
                         >
                           <Trash2 className="w-5 h-5 text-white" />
@@ -500,6 +529,16 @@ export function AddArtwork({
             ? "Are you sure you want to delete this artwork? This action cannot be undone."
             : "هل أنت متأكد من حذف هذا العمل الفني؟ لا يمكن التراجع عن هذا الإجراء."
         }
+      />
+
+      {/* Artwork Detail Modal */}
+      <ArtworkDetailModal
+        isOpen={isArtworkDetailOpen}
+        onClose={() => {
+          setIsArtworkDetailOpen(false);
+          setSelectedArtworkForDetail(null);
+        }}
+        artwork={selectedArtworkForDetail}
       />
     </>
   );

@@ -179,11 +179,11 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             <img src={fannLogo} alt="FANN" className="h-5 w-auto" />
             <span className="text-amber-300 text-sm">{t.badge}</span>
           </motion.div> */}
-          <h2 className="mb-4 text-4xl md:text-5xl max-w-3xl mx-auto">
+          <h2 className="mb-4 text-4xl md:text-5xl max-w-3xl mx-auto font-heading">
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-lg">{t.subtitle}</p>
+          <p className="text-white/60 max-w-2xl mx-auto text-lg font-body">{t.subtitle}</p>
         </motion.div>
 
         {/* Featured Code Card - Minimal Modern */}
@@ -291,7 +291,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
               
               <div className="flex items-center gap-2 mb-6 relative z-10">
                 <Target className="w-5 h-5 text-[#ffcc33]" />
-                <h3 className="text-white text-lg">{t.process.title}</h3>
+                <h3 className="text-white text-lg font-heading">{t.process.title}</h3>
               </div>
               <div className="space-y-4 relative z-10">
                 {t.process.steps.map((step, index) => {
@@ -310,8 +310,8 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                         <Icon className="w-5 h-5 text-[#ffcc33]" />
                       </div>
                       <div>
-                        <div className="text-white text-sm mb-1">{step.title}</div>
-                        <div className="text-white/60 text-xs">{step.desc}</div>
+                        <div className="text-white text-sm mb-1 font-body">{step.title}</div>
+                        <div className="text-white/60 text-xs font-body">{step.desc}</div>
                       </div>
                     </motion.div>
                   );
@@ -333,7 +333,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
               
               <div className="flex items-center gap-2 mb-6 relative z-10">
                 <Zap className="w-5 h-5 text-[#ffcc33]" />
-                <h3 className="text-white text-lg">{t.earnings.title}</h3>
+                <h3 className="text-white text-lg font-heading">{t.earnings.title}</h3>
               </div>
 
               {/* Current Rate Highlight */}
@@ -397,7 +397,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
               
               <div className="flex items-center gap-2 mb-6 relative z-10">
                 <Award className="w-5 h-5 text-[#45e3d3]" />
-                <h3 className="text-white text-lg">{t.milestones.title}</h3>
+                <h3 className="text-white text-lg font-heading">{t.milestones.title}</h3>
               </div>
 
               <div className="grid grid-cols-2 gap-3 relative z-10">

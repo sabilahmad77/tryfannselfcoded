@@ -24,6 +24,9 @@ import { Button } from "../../ui/button";
 import { ConfirmationDialog } from "../../ui/ConfirmationDialog";
 import { AddArtworkModal, type Artwork } from "./AddArtworkModal";
 import { ProfileLockedState } from "../shared/ProfileLockedState";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { getFullImageUrl } from "@/utils/filePreviewHelpers";
+import { ArtworkDetailModal, type ArtworkDetailData } from "@/components/ArtworkDetailModal";
 
 interface MyCollectionProps {
   profileCompleted?: boolean;
@@ -175,6 +178,8 @@ export function MyCollection({
   );
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [artworkToDelete, setArtworkToDelete] = useState<number | null>(null);
+  const [selectedArtworkForDetail, setSelectedArtworkForDetail] = useState<ArtworkDetailData | null>(null);
+  const [isArtworkDetailOpen, setIsArtworkDetailOpen] = useState(false);
 
   // Fetch artworks from API
   const {
@@ -206,6 +211,9 @@ export function MyCollection({
           title: artwork.title,
           artist: artwork.artist_name,
           year: artwork.year,
+          description: artwork.description,
+          dimensions: artwork.dimensions,
+          image: artwork.image || null,
           medium: artwork.medium,
           acquired: artwork.acquisition_date || "", // Keep original YYYY-MM-DD format for date input
           value: artwork.purchase_value
@@ -248,6 +256,9 @@ export function MyCollection({
             title: artwork.title,
             artist_name: artwork.artist,
             year: artwork.year,
+            description: artwork.description,
+            dimensions: artwork.dimensions,
+            image: artwork.image instanceof File ? artwork.image : undefined,
             medium: artwork.medium,
             category: artwork.category,
             acquisition_date: artwork.acquired || undefined,
@@ -260,6 +271,9 @@ export function MyCollection({
           title: artwork.title,
           artist_name: artwork.artist,
           year: artwork.year,
+          description: artwork.description,
+          dimensions: artwork.dimensions,
+          image: artwork.image instanceof File ? artwork.image : undefined,
           medium: artwork.medium,
           category: artwork.category,
           acquisition_date: artwork.acquired || undefined,
@@ -510,12 +524,42 @@ export function MyCollection({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.02 }}
-                className="bg-[#0f021c] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all"
+                onClick={() => {
+                  setSelectedArtworkForDetail({
+                    id: piece.id,
+                    title: piece.title,
+                    artist: piece.artist,
+                    artist_name: piece.artist,
+                    year: piece.year,
+                    description: piece.description,
+                    dimensions: piece.dimensions,
+                    image: typeof piece.image === 'string' ? piece.image : null,
+                    medium: piece.medium,
+                    category: piece.category,
+                    purchase_value: piece.value ? parseFloat(piece.value) : undefined,
+                    acquisition_date: piece.acquired || undefined,
+                  });
+                  setIsArtworkDetailOpen(true);
+                }}
+                className="bg-[#0f021c] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
               >
                 <div
-                  className={`flex items-start justify-between ${isRTL ? "flex-row-reverse" : ""
+                  className={`flex items-start gap-4 ${isRTL ? "flex-row-reverse" : ""
                     }`}
                 >
+                  {/* Artwork Image */}
+                  {piece.image && typeof piece.image === "string" && (
+                    <Avatar className="w-16 h-16 border-2 border-[#ffcc33]/50 shrink-0">
+                      <AvatarImage
+                        src={getFullImageUrl(piece.image) || piece.image}
+                        alt={piece.title}
+                      />
+                      <AvatarFallback className="bg-gradient-to-br from-[#ffcc33] to-[#9375b5] text-white">
+                        {piece.title.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+
                   <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
                     <div
                       className={`flex items-center gap-2 mb-1 ${isRTL ? "flex-row-reverse" : ""
@@ -537,7 +581,20 @@ export function MyCollection({
                     <p className="text-sm text-[#808c99]">
                       {t.by} {piece.artist} • {piece.year}
                     </p>
-                    <p className="text-xs text-[#BEC0C9] mt-1">{piece.medium}</p>
+                    {piece.medium && (
+                      <p className="text-xs text-[#BEC0C9] mt-1">{piece.medium}</p>
+                    )}
+                    {piece.dimensions && (
+                      <p className="text-xs text-[#BEC0C9] mt-1">
+                        {language === "en" ? "Dimensions: " : "الأبعاد: "}
+                        {piece.dimensions}
+                      </p>
+                    )}
+                    {piece.description && (
+                      <p className="text-xs text-[#808c99] mt-2 line-clamp-2">
+                        {piece.description}
+                      </p>
+                    )}
                   </div>
                   <div
                     className={`flex items-start gap-3 ${isRTL ? "flex-row-reverse" : ""
@@ -577,7 +634,7 @@ export function MyCollection({
                           deletingArtworkId === piece.id ||
                           !piece.id
                         }
-                        className="bg-primary/10 hover:bg-primary/20 hover:scale-110 text-primary hover:text-primary transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                        className="bg-red-500/10 hover:bg-red-500/20 hover:scale-110 text-red-400 hover:text-red-300 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                         title={t.actions.delete}
                       >
                         {deletingArtworkId === piece.id ? (
@@ -624,6 +681,16 @@ export function MyCollection({
         confirmText={language === "en" ? "Delete" : "حذف"}
         cancelText={language === "en" ? "Cancel" : "إلغاء"}
         isLoading={isDeleting && deletingArtworkId === artworkToDelete}
+      />
+
+      {/* Artwork Detail Modal */}
+      <ArtworkDetailModal
+        isOpen={isArtworkDetailOpen}
+        onClose={() => {
+          setIsArtworkDetailOpen(false);
+          setSelectedArtworkForDetail(null);
+        }}
+        artwork={selectedArtworkForDetail}
       />
     </div>
   );
