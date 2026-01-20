@@ -11,6 +11,7 @@ import { useLanguage } from "@/contexts/useLanguage";
 import { ROUTES } from "@/routes/paths";
 import { useGetUserDetailsQuery } from "@/services/api/authApi";
 import { API_BASE_URL } from "@/services/api/baseApi";
+import * as csc from "country-state-city";
 import {
   useGetDashboardStatsQuery,
   useGetDashboardStatsGalleryQuery,
@@ -79,7 +80,8 @@ const content = {
     kyc: "KYC Verification",
     idNumber: "ID Number",
     dateOfBirth: "Date of Birth",
-    nationality: "Nationality",
+    kycCountry: "Country",
+    kycState: "State/Province",
     kycCity: "City",
     kycStreetAddress: "Street Address",
     kycIdType: "ID Type",
@@ -179,7 +181,8 @@ const content = {
     kyc: "التحقق من الهوية",
     idNumber: "رقم الهوية",
     dateOfBirth: "تاريخ الميلاد",
-    nationality: "الجنسية",
+    kycCountry: "البلد",
+    kycState: "الولاية/المحافظة",
     kycCity: "المدينة",
     kycStreetAddress: "عنوان الشارع",
     kycIdType: "نوع الهوية",
@@ -283,7 +286,8 @@ export function ProfilePage() {
             id?: number;
             id_number?: string;
             dob?: string;
-            nationality?: string;
+            country?: string;
+            state?: string;
             city?: string;
             postal_code?: string;
             street_address?: string;
@@ -328,7 +332,8 @@ export function ProfilePage() {
           ...({
             kyc_id_number: kycVerification?.id_number,
             kyc_dob: kycVerification?.dob,
-            kyc_nationality: kycVerification?.nationality,
+            kyc_country: kycVerification?.country,
+            kyc_state: kycVerification?.state,
             kyc_city: kycVerification?.city,
             kyc_postal_code: kycVerification?.postal_code,
             kyc_street_address: kycVerification?.street_address,
@@ -354,8 +359,9 @@ export function ProfilePage() {
     ? ({
       id_number: (storedUser as { kyc_id_number?: string }).kyc_id_number,
       dob: (storedUser as { kyc_dob?: string }).kyc_dob,
-      nationality: (storedUser as { kyc_nationality?: string })
-        .kyc_nationality,
+      country: (storedUser as { kyc_country?: string })
+        .kyc_country,
+      state: (storedUser as { kyc_state?: string }).kyc_state,
       city: (storedUser as { kyc_city?: string }).kyc_city,
       postal_code: (storedUser as { kyc_postal_code?: string })
         .kyc_postal_code,
@@ -375,7 +381,8 @@ export function ProfilePage() {
     } as {
       id_number?: string;
       dob?: string;
-      nationality?: string;
+      country?: string;
+      state?: string;
       city?: string;
       postal_code?: string;
       street_address?: string;
@@ -394,7 +401,8 @@ export function ProfilePage() {
     | {
       id_number?: string;
       dob?: string;
-      nationality?: string;
+      country?: string;
+      state?: string;
       city?: string;
       postal_code?: string;
       street_address?: string;
@@ -527,6 +535,31 @@ export function ProfilePage() {
       });
     } catch {
       return dateString;
+    }
+  };
+
+  // Helper function to get country name from country code
+  const getCountryName = (countryCode: string | null | undefined): string => {
+    if (!countryCode) return "";
+    try {
+      const country = csc.Country.getCountryByCode(countryCode);
+      return country?.name || countryCode;
+    } catch {
+      return countryCode;
+    }
+  };
+
+  // Helper function to get state name from state code and country code
+  const getStateName = (
+    stateCode: string | null | undefined,
+    countryCode: string | null | undefined
+  ): string => {
+    if (!stateCode || !countryCode) return stateCode || "";
+    try {
+      const state = csc.State.getStateByCodeAndCountry(stateCode, countryCode);
+      return state?.name || stateCode;
+    } catch {
+      return stateCode;
     }
   };
 
@@ -1094,8 +1127,8 @@ export function ProfilePage() {
                       </div>
                     )}
 
-                    {/* Nationality */}
-                    {kycData.nationality && (
+                    {/* Country */}
+                    {kycData.country && (
                       <div
                         className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                           }`}
@@ -1105,10 +1138,30 @@ export function ProfilePage() {
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
                           <p className="text-xs text-[#808c99]">
-                            {t.nationality}
+                            {t.kycCountry}
                           </p>
                           <p className="text-[#ffffff]">
-                            {kycData.nationality}
+                            {getCountryName(kycData.country)}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* State */}
+                    {kycData.state && (
+                      <div
+                        className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
+                          }`}
+                      >
+                        <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
+                          <MapPin className="w-6 h-6 text-[#0ea5e9]" />
+                        </div>
+                        <div className={isRTL ? "text-right" : "text-left"}>
+                          <p className="text-xs text-[#808c99]">
+                            {t.kycState}
+                          </p>
+                          <p className="text-[#ffffff]">
+                            {getStateName(kycData.state, kycData.country)}
                           </p>
                         </div>
                       </div>
@@ -1599,7 +1652,8 @@ export function ProfilePage() {
             ? {
               id_number: kycData.id_number,
               dob: kycData.dob,
-              nationality: kycData.nationality,
+              country: kycData.country,
+              state: kycData.state,
               city: kycData.city,
               postal_code: kycData.postal_code,
               street_address: kycData.street_address,

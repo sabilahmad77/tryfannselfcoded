@@ -4,6 +4,8 @@ import {
   FileUploadField,
   InputField,
   SelectField,
+  LocationField,
+  type LocationFieldValue,
 } from "@/components/ui/custom-form-elements";
 import { ImagePreviewList } from "@/components/ui/image-preview-list";
 import { CustomModal } from "@/components/ui/CustomModal";
@@ -48,7 +50,8 @@ interface EditKYCProps {
   initialData?: {
     id_number?: string;
     dob?: string;
-    nationality?: string;
+    country?: string;
+    state?: string;
     city?: string;
     postal_code?: string;
     street_address?: string;
@@ -64,7 +67,8 @@ interface EditKYCProps {
 interface KYCFormData {
   id_number: string;
   dob: string;
-  nationality: string;
+  country: string;
+  state: string;
   city: string;
   postal_code: string;
   street_address: string;
@@ -99,7 +103,8 @@ export function EditKYC({
     () => ({
       id_number: initialData?.id_number || "",
       dob: initialData?.dob || "",
-      nationality: initialData?.nationality || "",
+      country: initialData?.country || "",
+      state: initialData?.state || "",
       city: initialData?.city || "",
       postal_code: initialData?.postal_code || "",
       street_address: initialData?.street_address || "",
@@ -132,7 +137,8 @@ export function EditKYC({
       reset({
         id_number: initialData.id_number || "",
         dob: initialData.dob || "",
-        nationality: initialData.nationality || "",
+        country: initialData.country || "",
+        state: initialData.state || "",
         city: initialData.city || "",
         postal_code: initialData.postal_code || "",
         street_address: initialData.street_address || "",
@@ -153,10 +159,10 @@ export function EditKYC({
         const idDocs = Array.isArray(initialData.gov_issued_id)
           ? initialData.gov_issued_id
           : [initialData.gov_issued_id];
-        
+
         const fileDocs: File[] = [];
         const urlDocs: string[] = [];
-        
+
         idDocs.forEach((doc) => {
           if (doc instanceof File) {
             fileDocs.push(doc);
@@ -265,22 +271,12 @@ export function EditKYC({
       idNumber: "ID Number",
       idNumberPlaceholder: "Enter your ID number",
       dateOfBirth: "Date of Birth",
-      nationality: {
-        label: "Nationality",
-        placeholder: "Select or enter your nationality",
-        options: [
-          { value: "Emirati", label: "Emirati" },
-          { value: "Saudi", label: "Saudi" },
-          { value: "Egyptian", label: "Egyptian" },
-          { value: "Lebanese", label: "Lebanese" },
-          { value: "Jordanian", label: "Jordanian" },
-          { value: "Pakistani", label: "Pakistani" },
-          { value: "Indian", label: "Indian" },
-          { value: "Other", label: "Other" },
-        ],
+      location: {
+        label: "Location",
+        country: "Country",
+        state: "State/Province",
+        city: "City",
       },
-      city: "City",
-      cityPlaceholder: "Your city",
       postalCode: "Postal Code",
       postalCodePlaceholder: "Postal/ZIP code",
       streetAddress: "Street Address",
@@ -348,22 +344,12 @@ export function EditKYC({
       idNumber: "رقم الهوية",
       idNumberPlaceholder: "أدخل رقم هويتك",
       dateOfBirth: "تاريخ الميلاد",
-      nationality: {
-        label: "الجنسية",
-        placeholder: "اختر أو أدخل جنسيتك",
-        options: [
-          { value: "Emirati", label: "إماراتي" },
-          { value: "Saudi", label: "سعودي" },
-          { value: "Egyptian", label: "مصري" },
-          { value: "Lebanese", label: "لبناني" },
-          { value: "Jordanian", label: "أردني" },
-          { value: "Pakistani", label: "باكستاني" },
-          { value: "Indian", label: "هندي" },
-          { value: "Other", label: "أخرى" },
-        ],
+      location: {
+        label: "الموقع",
+        country: "البلد",
+        state: "الولاية/المحافظة",
+        city: "المدينة",
       },
-      city: "المدينة",
-      cityPlaceholder: "مدينتك",
       postalCode: "الرمز البريدي",
       postalCodePlaceholder: "الرمز البريدي",
       streetAddress: "عنوان الشارع",
@@ -421,36 +407,32 @@ export function EditKYC({
 
   const content = t[language];
 
-  const nationalityOptions = content.nationality.options.map((opt) => ({
-    value: opt.value,
-    label: opt.label,
-  }));
-
-  // Watch nationality and id_type to filter ID type options
-  const selectedNationality = watch("nationality");
+  // Watch country and id_type to filter ID type options
+  const selectedCountry = watch("country");
   const currentIdType = watch("id_type");
-  
-  // Filter ID type options based on nationality
+
+  // Filter ID type options based on country
   const filteredIdTypeOptions = useMemo(() => {
     const allOptions = content.idType.options;
-    
-    if (selectedNationality === "Emirati") {
+
+    // UAE country code is "AE"
+    if (selectedCountry === "AE") {
       // Show Emirates ID, hide Iqama (Saudi Residency)
       return allOptions.filter(
         (opt) => opt.value !== "Iqama (Saudi Residency)"
       );
-    } else if (selectedNationality === "Saudi") {
+    } else if (selectedCountry === "SA") {
       // Show Iqama (Saudi Residency), hide Emirates ID
       return allOptions.filter((opt) => opt.value !== "Emirates ID");
     } else {
-      // For other nationalities, hide both Emirates ID and Iqama (Saudi Residency)
+      // For other countries, hide both Emirates ID and Iqama (Saudi Residency)
       return allOptions.filter(
         (opt) =>
           opt.value !== "Emirates ID" &&
           opt.value !== "Iqama (Saudi Residency)"
       );
     }
-  }, [selectedNationality, content.idType.options]);
+  }, [selectedCountry, content.idType.options]);
 
   // Clear id_type if it's not in the filtered options
   useEffect(() => {
@@ -476,7 +458,8 @@ export function EditKYC({
       const kycData: KYCVerificationRequest = {
         id_number: formData.id_number.trim(),
         dob: formData.dob,
-        nationality: formData.nationality.trim(),
+        country: formData.country.trim(),
+        state: formData.state.trim(),
         city: formData.city.trim(),
         postal_code: formData.postal_code.trim(),
         street_address: formData.street_address.trim(),
@@ -605,8 +588,10 @@ export function EditKYC({
                 kyc_id_number:
                   kycVerification.id_number || formData.id_number.trim(),
                 kyc_dob: kycVerification.dob || formData.dob,
-                kyc_nationality:
-                  kycVerification.nationality || formData.nationality.trim(),
+                kyc_country:
+                  kycVerification.country || formData.country.trim(),
+                kyc_state:
+                  kycVerification.state || formData.state.trim(),
                 kyc_city: kycVerification.city || formData.city.trim(),
                 kyc_postal_code:
                   kycVerification.postal_code || formData.postal_code.trim(),
@@ -649,7 +634,7 @@ export function EditKYC({
               }
             }
           }
-          
+
           let proofUrl =
             proofOfAddress?.name || initialData?.proof_address || null;
 
@@ -689,7 +674,8 @@ export function EditKYC({
               ...({
                 kyc_id_number: formData.id_number.trim(),
                 kyc_dob: formData.dob,
-                kyc_nationality: formData.nationality.trim(),
+                kyc_country: formData.country.trim(),
+                kyc_state: formData.state.trim(),
                 kyc_city: formData.city.trim(),
                 kyc_postal_code: formData.postal_code.trim(),
                 kyc_id_type: formData.id_type.trim(),
@@ -812,48 +798,34 @@ export function EditKYC({
             </motion.div>
           </div>
 
-          {/* Nationality & City */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <SelectField
-                label={content.nationality.label}
-                placeholder={content.nationality.placeholder}
-                options={nationalityOptions}
-                value={watch("nationality")}
-                onValueChange={(value) => {
-                  setValue("nationality", value, { shouldValidate: true });
-                }}
-                isRTL={isRTL}
-                required
-                error={errors.nationality?.message}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <InputField
-                {...register("city", {
-                  required:
-                    language === "en"
-                      ? "City is required"
-                      : "المدينة مطلوبة",
-                })}
-                label={content.city}
-                placeholder={content.cityPlaceholder}
-                icon={MapPin}
-                isRTL={isRTL}
-                required
-                error={errors.city?.message}
-              />
-            </motion.div>
-          </div>
+          {/* Location (Country, State, City) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <LocationField
+              label=""
+              value={{
+                country: watch("country") || "",
+                state: watch("state") || "",
+                city: watch("city") || "",
+              }}
+              onValueChange={(value: LocationFieldValue) => {
+                setValue("country", value.country, { shouldValidate: true });
+                setValue("state", value.state, { shouldValidate: true });
+                setValue("city", value.city, { shouldValidate: true });
+              }}
+              isRTL={isRTL}
+              required
+              errors={{
+                country: errors.country?.message,
+                state: errors.state?.message,
+                city: errors.city?.message,
+              }}
+              layout="grid"
+            />
+          </motion.div>
 
           {/* Street Address & Postal Code */}
           <div className="grid md:grid-cols-2 gap-6">
@@ -984,7 +956,7 @@ export function EditKYC({
                   // Map files: first = front, second = back
                   const front = files[0] || null;
                   const back = files[1] || null;
-                  
+
                   setIdDocumentFront(front);
                   setIdDocumentBack(back);
                   setValue("gov_issued_id_front", front);

@@ -13,6 +13,7 @@ import {
 import { Switch } from "./switch";
 import { cn } from "./utils";
 import { getPhoneValidationError } from "@/utils/phoneValidation";
+import * as csc from "country-state-city";
 
 // ============================================================================
 // Base Field Wrapper Props
@@ -1693,3 +1694,238 @@ export const SwitchField = React.forwardRef<
 );
 
 SwitchField.displayName = "SwitchField";
+
+// ============================================================================
+// Location Field Component (Country, State, City)
+// ============================================================================
+
+export interface LocationFieldValue {
+  country: string;
+  state: string;
+  city: string;
+}
+
+export interface LocationFieldProps extends BaseFieldProps {
+  /** Current value object with country, state, and city */
+  value?: LocationFieldValue;
+  /** Callback when location values change */
+  onValueChange?: (value: LocationFieldValue) => void;
+  /** Optional icon to display */
+  icon?: LucideIcon;
+  /** Icon position - 'left' for LTR, 'right' for RTL (auto-adjusted based on isRTL) */
+  iconPosition?: "left" | "right";
+  /** Custom icon className */
+  iconClassName?: string;
+  /** Error messages for each field */
+  errors?: {
+    country?: string;
+    state?: string;
+    city?: string;
+  };
+  /** Custom className for the wrapper */
+  className?: string;
+  /** Custom className for each select field */
+  selectClassName?: string;
+  /** Layout: 'grid' for 3 columns, 'vertical' for stacked */
+  layout?: "grid" | "vertical";
+}
+
+/**
+ * Reusable Location Field component with cascading Country, State, and City dropdowns
+ * Uses country-state-city library for hierarchical location data
+ *
+ * @example
+ * ```tsx
+ * <LocationField
+ *   label="Location"
+ *   value={{ country: "US", state: "CA", city: "Los Angeles" }}
+ *   onValueChange={(value) => setLocation(value)}
+ *   isRTL={false}
+ *   required
+ * />
+ * ```
+ */
+export const LocationField = React.forwardRef<
+  HTMLDivElement,
+  LocationFieldProps
+>(
+  (
+    {
+      label,
+      htmlFor,
+      error,
+      helperText,
+      required,
+      isRTL = false,
+      hideOptional = false,
+      icon: Icon,
+      iconPosition,
+      className,
+      labelClassName,
+      iconClassName,
+      value,
+      onValueChange,
+      errors,
+      selectClassName,
+      layout = "grid",
+    },
+    ref
+  ) => {
+    const generatedId = React.useId();
+    const fieldId = htmlFor || generatedId;
+    const hasIcon = !!Icon;
+    const hasError = !!error || !!errors?.country || !!errors?.state || !!errors?.city;
+    const effectiveIconPosition = iconPosition || (isRTL ? "right" : "left");
+
+    // Determine optional text based on isRTL
+    const optionalText = isRTL ? "(اختياري)" : "(Optional)";
+
+    // Get all countries
+    const countries = React.useMemo(() => {
+      return csc.Country.getAllCountries().map((country: { isoCode: string; name: string }) => ({
+        value: country.isoCode,
+        label: country.name,
+      }));
+    }, []);
+
+    // Get states for selected country
+    const states = React.useMemo(() => {
+      if (!value?.country) return [];
+      return csc.State.getStatesOfCountry(value.country).map((state: { isoCode: string; name: string }) => ({
+        value: state.isoCode,
+        label: state.name,
+      }));
+    }, [value?.country]);
+
+    // Get cities for selected country and state
+    const cities = React.useMemo(() => {
+      if (!value?.country || !value?.state) return [];
+      return csc.City.getCitiesOfState(value.country, value.state).map((city: { name: string }) => ({
+        value: city.name,
+        label: city.name,
+      }));
+    }, [value?.country, value?.state]);
+
+    // Handle country change
+    const handleCountryChange = (countryCode: string) => {
+      onValueChange?.({
+        country: countryCode,
+        state: "",
+        city: "",
+      });
+    };
+
+    // Handle state change
+    const handleStateChange = (stateCode: string) => {
+      if (!value?.country) return;
+      onValueChange?.({
+        country: value.country,
+        state: stateCode,
+        city: "",
+      });
+    };
+
+    // Handle city change
+    const handleCityChange = (cityName: string) => {
+      if (!value?.country || !value?.state) return;
+      onValueChange?.({
+        country: value.country,
+        state: value.state,
+        city: cityName,
+      });
+    };
+
+    // Get placeholders based on language
+    const countryPlaceholder = isRTL ? "اختر البلد" : "Select Country";
+    const statePlaceholder = isRTL ? "اختر الولاية/المحافظة" : "Select State/Province";
+    const cityPlaceholder = isRTL ? "اختر المدينة" : "Select City";
+
+    // Get labels based on language
+    const countryLabel = isRTL ? "البلد" : "Country";
+    const stateLabel = isRTL ? "الولاية/المحافظة" : "State/Province";
+    const cityLabel = isRTL ? "المدينة" : "City";
+
+    const containerClass = layout === "grid" 
+      ? "grid md:grid-cols-3 gap-6" 
+      : "space-y-6";
+
+    return (
+      <div ref={ref} className={cn("space-y-2", className)}>
+        {label && (
+          <Label
+            htmlFor={fieldId}
+            className={cn(
+              "text-[#ffffff]/80",
+              hasError && "text-destructive",
+              labelClassName
+            )}
+          >
+            {label}
+            {required ? (
+              <span className="text-red-500">*</span>
+            ) : !hideOptional ? (
+              <span className="opacity-50 text-xs ml-1">{optionalText}</span>
+            ) : null}
+          </Label>
+        )}
+
+        <div className={containerClass}>
+          {/* Country Field */}
+          <SelectField
+            label={countryLabel}
+            placeholder={countryPlaceholder}
+            options={countries}
+            value={value?.country || ""}
+            onValueChange={handleCountryChange}
+            isRTL={isRTL}
+            required={required}
+            error={errors?.country || error}
+            icon={hasIcon && effectiveIconPosition === (isRTL ? "right" : "left") ? Icon : undefined}
+            iconPosition={effectiveIconPosition}
+            iconClassName={iconClassName}
+            className={selectClassName}
+            // disableClear={required}
+          />
+
+          {/* State Field */}
+          <SelectField
+            label={stateLabel}
+            placeholder={statePlaceholder}
+            options={states}
+            value={value?.state || ""}
+            onValueChange={handleStateChange}
+            isRTL={isRTL}
+            required={required}
+            error={errors?.state}
+            disabled={!value?.country}
+            className={selectClassName}
+            // disableClear={required}
+          />
+
+          {/* City Field */}
+          <SelectField
+            label={cityLabel}
+            placeholder={cityPlaceholder}
+            options={cities}
+            value={value?.city || ""}
+            onValueChange={handleCityChange}
+            isRTL={isRTL}
+            required={required}
+            error={errors?.city}
+            disabled={!value?.country || !value?.state}
+            className={selectClassName}
+            // disableClear={required}
+          />
+        </div>
+
+        {helperText && !hasError && (
+          <p id={`${fieldId}-helper`} className="text-sm text-[#ffffff]/60">
+            {helperText}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
+
+LocationField.displayName = "LocationField";

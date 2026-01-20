@@ -4,6 +4,8 @@ import {
   FileUploadField,
   InputField,
   SelectField,
+  LocationField,
+  type LocationFieldValue,
 } from "@/components/ui/custom-form-elements";
 import { ImagePreviewList } from "@/components/ui/image-preview-list";
 import { Label } from "@/components/ui/label";
@@ -56,7 +58,8 @@ interface KYCStepProps {
 interface KYCFormData {
   id_number: string;
   dob: string;
-  nationality: string;
+  country: string;
+  state: string;
   city: string;
   postal_code: string;
   street_address: string;
@@ -89,7 +92,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
     ? ({
         id_number: (storedUser as { kyc_id_number?: string }).kyc_id_number,
         dob: (storedUser as { kyc_dob?: string }).kyc_dob,
-        nationality: (storedUser as { kyc_nationality?: string }).kyc_nationality,
+        country: (storedUser as { kyc_country?: string }).kyc_country,
+        state: (storedUser as { kyc_state?: string }).kyc_state,
         city: (storedUser as { kyc_city?: string }).kyc_city,
         postal_code: (storedUser as { kyc_postal_code?: string }).kyc_postal_code,
         street_address: (storedUser as { kyc_street_address?: string }).kyc_street_address,
@@ -120,7 +124,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
   const initialValues: KYCFormData = {
     id_number: (savedData.id_number as string) || "",
     dob: (savedData.dob as string) || "",
-    nationality: (savedData.nationality as string) || "",
+    country: (savedData.country as string) || "",
+    state: (savedData.state as string) || "",
     city: (savedData.city as string) || "",
     postal_code: (savedData.postal_code as string) || "",
     street_address: (savedData.street_address as string) || "",
@@ -172,7 +177,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       ? ({
           id_number: (storedUser as { kyc_id_number?: string }).kyc_id_number,
           dob: (storedUser as { kyc_dob?: string }).kyc_dob,
-          nationality: (storedUser as { kyc_nationality?: string }).kyc_nationality,
+          country: (storedUser as { kyc_country?: string }).kyc_country,
+          state: (storedUser as { kyc_state?: string }).kyc_state,
           city: (storedUser as { kyc_city?: string }).kyc_city,
           postal_code: (storedUser as { kyc_postal_code?: string }).kyc_postal_code,
           street_address: (storedUser as { kyc_street_address?: string }).kyc_street_address,
@@ -213,10 +219,14 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         kycDataFromUser.dob !== undefined
           ? kycDataFromUser.dob
           : onboardingKyc.dob,
-      nationality:
-        kycDataFromUser.nationality !== undefined
-          ? kycDataFromUser.nationality
-          : onboardingKyc.nationality,
+      country:
+        kycDataFromUser.country !== undefined
+          ? kycDataFromUser.country
+          : onboardingKyc.country,
+      state:
+        kycDataFromUser.state !== undefined
+          ? kycDataFromUser.state
+          : onboardingKyc.state,
       city:
         kycDataFromUser.city !== undefined
           ? kycDataFromUser.city
@@ -359,7 +369,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
     reset({
       id_number: (currentSavedData.id_number as string) || "",
       dob: (currentSavedData.dob as string) || "",
-      nationality: (currentSavedData.nationality as string) || "",
+      country: (currentSavedData.country as string) || "",
+      state: (currentSavedData.state as string) || "",
       city: (currentSavedData.city as string) || "",
       postal_code: (currentSavedData.postal_code as string) || "",
       street_address: (currentSavedData.street_address as string) || "",
@@ -404,8 +415,10 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       (currentValues.id_number?.trim() || "") ===
         ((submitted.id_number as string) || "") &&
       (currentValues.dob || "") === ((submitted.dob as string) || "") &&
-      (currentValues.nationality?.trim() || "") ===
-        ((submitted.nationality as string) || "") &&
+      (currentValues.country?.trim() || "") ===
+        ((submitted.country as string) || "") &&
+      (currentValues.state?.trim() || "") ===
+        ((submitted.state as string) || "") &&
       (currentValues.city?.trim() || "") ===
         ((submitted.city as string) || "") &&
       (currentValues.postal_code?.trim() || "") ===
@@ -491,22 +504,12 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       idNumber: "ID Number",
       idNumberPlaceholder: "Enter your ID number",
       dateOfBirth: "Date of Birth",
-      nationality: {
-        label: "Nationality",
-        placeholder: "Select or enter your nationality",
-        options: [
-          { value: "Emirati", label: "Emirati" },
-          { value: "Saudi", label: "Saudi" },
-          { value: "Egyptian", label: "Egyptian" },
-          { value: "Lebanese", label: "Lebanese" },
-          { value: "Jordanian", label: "Jordanian" },
-          { value: "Pakistani", label: "Pakistani" },
-          { value: "Indian", label: "Indian" },
-          { value: "Other", label: "Other" },
-        ],
+      location: {
+        label: "Location",
+        country: "Country",
+        state: "State/Province",
+        city: "City",
       },
-      city: "City",
-      cityPlaceholder: "Your city",
       postalCode: "Postal Code",
       postalCodePlaceholder: "Postal/ZIP code",
       streetAddress: "Street Address",
@@ -575,22 +578,12 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       idNumber: "رقم الهوية",
       idNumberPlaceholder: "أدخل رقم هويتك",
       dateOfBirth: "تاريخ الميلاد",
-      nationality: {
-        label: "الجنسية",
-        placeholder: "اختر أو أدخل جنسيتك",
-        options: [
-          { value: "Emirati", label: "إماراتي" },
-          { value: "Saudi", label: "سعودي" },
-          { value: "Egyptian", label: "مصري" },
-          { value: "Lebanese", label: "لبناني" },
-          { value: "Jordanian", label: "أردني" },
-          { value: "Pakistani", label: "باكستاني" },
-          { value: "Indian", label: "هندي" },
-          { value: "Other", label: "أخرى" },
-        ],
+      location: {
+        label: "الموقع",
+        country: "البلد",
+        state: "الولاية/المحافظة",
+        city: "المدينة",
       },
-      city: "المدينة",
-      cityPlaceholder: "مدينتك",
       postalCode: "الرمز البريدي",
       postalCodePlaceholder: "الرمز البريدي",
       streetAddress: "عنوان الشارع",
@@ -649,36 +642,32 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
 
   const content = t[language];
 
-  const nationalityOptions = content.nationality.options.map((opt) => ({
-    value: opt.value,
-    label: opt.label,
-  }));
-
-  // Watch nationality and id_type to filter ID type options
-  const selectedNationality = watch("nationality");
+  // Watch country and id_type to filter ID type options
+  const selectedCountry = watch("country");
   const currentIdType = watch("id_type");
   
-  // Filter ID type options based on nationality
+  // Filter ID type options based on country
   const filteredIdTypeOptions = useMemo(() => {
     const allOptions = content.idType.options;
     
-    if (selectedNationality === "Emirati") {
+    // UAE country code is "AE"
+    if (selectedCountry === "AE") {
       // Show Emirates ID, hide Iqama (Saudi Residency)
       return allOptions.filter(
         (opt) => opt.value !== "Iqama (Saudi Residency)"
       );
-    } else if (selectedNationality === "Saudi") {
+    } else if (selectedCountry === "SA") {
       // Show Iqama (Saudi Residency), hide Emirates ID
       return allOptions.filter((opt) => opt.value !== "Emirates ID");
     } else {
-      // For other nationalities, hide both Emirates ID and Iqama (Saudi Residency)
+      // For other countries, hide both Emirates ID and Iqama (Saudi Residency)
       return allOptions.filter(
         (opt) =>
           opt.value !== "Emirates ID" &&
           opt.value !== "Iqama (Saudi Residency)"
       );
     }
-  }, [selectedNationality, content.idType.options]);
+  }, [selectedCountry, content.idType.options]);
 
   // Clear id_type if it's not in the filtered options
   useEffect(() => {
@@ -700,7 +689,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       onNext({
         id_number: formData.id_number,
         dob: formData.dob,
-        nationality: formData.nationality,
+        country: formData.country,
+        state: formData.state,
         city: formData.city,
         postal_code: formData.postal_code,
         street_address: formData.street_address,
@@ -735,7 +725,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
       const kycData: KYCVerificationRequest = {
         id_number: formData.id_number.trim(),
         dob: formData.dob, // Format: YYYY-MM-DD (from date input)
-        nationality: formData.nationality.trim(),
+        country: formData.country.trim(),
+        state: formData.state.trim(),
         city: formData.city.trim(),
         postal_code: formData.postal_code.trim(),
         street_address: formData.street_address.trim(),
@@ -775,7 +766,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
             id?: number;
             id_number?: string;
             dob?: string;
-            nationality?: string;
+            country?: string;
+            state?: string;
             city?: string;
             postal_code?: string;
             street_address?: string;
@@ -832,7 +824,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
             id?: number;
             id_number?: string;
             dob?: string;
-            nationality?: string;
+            country?: string;
+            state?: string;
             city?: string;
             postal_code?: string;
             street_address?: string;
@@ -866,8 +859,10 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 kyc_id_number:
                   kycVerification.id_number || formData.id_number.trim(),
                 kyc_dob: kycVerification.dob || formData.dob,
-                kyc_nationality:
-                  kycVerification.nationality || formData.nationality.trim(),
+                kyc_country:
+                  kycVerification.country || formData.country.trim(),
+                kyc_state:
+                  kycVerification.state || formData.state.trim(),
                 kyc_city: kycVerification.city || formData.city.trim(),
                 kyc_postal_code:
                   kycVerification.postal_code || formData.postal_code.trim(),
@@ -936,7 +931,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
               ...({
                 kyc_id_number: formData.id_number.trim(),
                 kyc_dob: formData.dob,
-                kyc_nationality: formData.nationality.trim(),
+                kyc_country: formData.country.trim(),
+                kyc_state: formData.state.trim(),
                 kyc_city: formData.city.trim(),
                 kyc_postal_code: formData.postal_code.trim(),
                 kyc_id_type: formData.id_type.trim(),
@@ -997,7 +993,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         let savedIdType: string = formData.id_type;
         let savedIdNumber: string = formData.id_number;
         let savedDob: string = formData.dob;
-        let savedNationality: string = formData.nationality;
+        let savedCountry: string = formData.country;
+        let savedState: string = formData.state;
         let savedCity: string = formData.city;
         let savedPostalCode: string = formData.postal_code;
         let savedStreetAddress: string = formData.street_address;
@@ -1010,7 +1007,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
           if (kycVerification.id_type) savedIdType = kycVerification.id_type;
           if (kycVerification.id_number) savedIdNumber = kycVerification.id_number;
           if (kycVerification.dob) savedDob = kycVerification.dob;
-          if (kycVerification.nationality) savedNationality = kycVerification.nationality;
+          if (kycVerification.country) savedCountry = kycVerification.country;
+          if (kycVerification.state) savedState = kycVerification.state;
           if (kycVerification.city) savedCity = kycVerification.city;
           if (kycVerification.postal_code) savedPostalCode = kycVerification.postal_code;
           if (kycVerification.street_address) savedStreetAddress = kycVerification.street_address;
@@ -1033,7 +1031,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
               id_type?: string;
               id_number?: string;
               dob?: string;
-              nationality?: string;
+              country?: string;
+              state?: string;
               city?: string;
               postal_code?: string;
               street_address?: string;
@@ -1047,7 +1046,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
             if (responseData.id_type) savedIdType = responseData.id_type;
             if (responseData.id_number) savedIdNumber = responseData.id_number;
             if (responseData.dob) savedDob = responseData.dob;
-            if (responseData.nationality) savedNationality = responseData.nationality;
+            if (responseData.country) savedCountry = responseData.country;
+            if (responseData.state) savedState = responseData.state;
             if (responseData.city) savedCity = responseData.city;
             if (responseData.postal_code) savedPostalCode = responseData.postal_code;
             if (responseData.street_address) savedStreetAddress = responseData.street_address;
@@ -1090,7 +1090,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
         const stepData = {
           id_number: savedIdNumber,
           dob: savedDob,
-          nationality: savedNationality,
+          country: savedCountry,
+          state: savedState,
           city: savedCity,
           postal_code: savedPostalCode,
           street_address: savedStreetAddress,
@@ -1224,46 +1225,34 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
             </motion.div>
           </div>
 
-          {/* Nationality & City */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <SelectField
-                label={content.nationality.label}
-                placeholder={content.nationality.placeholder}
-                options={nationalityOptions}
-                value={watch("nationality")}
-                onValueChange={(value) => {
-                  setValue("nationality", value, { shouldValidate: true });
-                }}
-                isRTL={isRTL}
-                required
-                error={errors.nationality?.message}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <InputField
-                {...register("city", {
-                  required:
-                    language === "en" ? "City is required" : "المدينة مطلوبة",
-                })}
-                label={content.city}
-                placeholder={content.cityPlaceholder}
-                icon={MapPin}
-                isRTL={isRTL}
-                required
-                error={errors.city?.message}
-              />
-            </motion.div>
-          </div>
+          {/* Location (Country, State, City) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <LocationField
+              label=""
+              value={{
+                country: watch("country") || "",
+                state: watch("state") || "",
+                city: watch("city") || "",
+              }}
+              onValueChange={(value: LocationFieldValue) => {
+                setValue("country", value.country, { shouldValidate: true });
+                setValue("state", value.state, { shouldValidate: true });
+                setValue("city", value.city, { shouldValidate: true });
+              }}
+              isRTL={isRTL}
+              required
+              errors={{
+                country: errors.country?.message,
+                state: errors.state?.message,
+                city: errors.city?.message,
+              }}
+              layout="grid"
+            />
+          </motion.div>
 
           {/* Street Address & Postal Code */}
           <div className="grid md:grid-cols-2 gap-6">

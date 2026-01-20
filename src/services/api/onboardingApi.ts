@@ -75,7 +75,8 @@ export interface InterestsResponse {
 export interface KYCVerificationRequest {
   id_number: string;
   dob: string; // Format: YYYY-MM-DD
-  nationality: string;
+  country: string;
+  state: string;
   city: string;
   postal_code: string;
   street_address?: string;
@@ -290,7 +291,8 @@ export const onboardingApi = baseApi.injectEndpoints({
         const body = new FormData();
         body.append("id_number", formData.id_number);
         body.append("dob", formData.dob);
-        body.append("nationality", formData.nationality);
+        body.append("country", formData.country);
+        body.append("state", formData.state);
         body.append("city", formData.city);
         body.append("postal_code", formData.postal_code);
         if (formData.street_address) {
