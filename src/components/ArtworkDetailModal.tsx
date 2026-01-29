@@ -151,7 +151,7 @@ export function ArtworkDetailModal({
                         transition={{ duration: 0.3 }}
                         className="space-y-4"
                     >
-                        <div className="relative aspect-square rounded-xl overflow-hidden bg-[#1D112A] border border-[#4e4e4e78]">
+                        <div className="relative aspect-square rounded-xl overflow-hidden bg-[#191922] border border-[#2A2A3A]">
                             {imageUrl ? (
                                 <img
                                     src={imageUrl}
@@ -179,7 +179,7 @@ export function ArtworkDetailModal({
                         {/* Title */}
                         <div>
                             <h2
-                                className={`text-2xl font-bold text-[#ffffff] mb-2 ${isRTL ? "text-right" : "text-left"}`}
+                                className={`text-2xl font-bold text-[#F2F2F3] mb-2 ${isRTL ? "text-right" : "text-left"}`}
                             >
                                 {artwork.title}
                             </h2>
@@ -195,12 +195,12 @@ export function ArtworkDetailModal({
                             {/* Artist */}
                             {artistName && (
                                 <div
-                                    className={`flex items-start gap-3 p-3 bg-[#1D112A] rounded-lg border border-[#4e4e4e78] ${isRTL ? "flex-row-reverse" : ""}`}
+                                    className={`flex items-start gap-3 p-3 bg-[#191922] rounded-lg border border-[#2A2A3A] ${isRTL ? "flex-row-reverse" : ""}`}
                                 >
-                                    <User className="w-5 h-5 text-[#ffcc33] shrink-0 mt-0.5" />
+                                    <User className="w-5 h-5 text-[#C59B48] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
                                         <p className="text-xs text-[#808c99] mb-1">{t.artist}</p>
-                                        <p className="text-sm text-[#ffffff]">{artistName}</p>
+                                        <p className="text-sm text-[#F2F2F3]">{artistName}</p>
                                     </div>
                                 </div>
                             )}
@@ -208,12 +208,12 @@ export function ArtworkDetailModal({
                             {/* Year */}
                             {artwork.year && (
                                 <div
-                                    className={`flex items-start gap-3 p-3 bg-[#1D112A] rounded-lg border border-[#4e4e4e78] ${isRTL ? "flex-row-reverse" : ""}`}
+                                    className={`flex items-start gap-3 p-3 bg-[#191922] rounded-lg border border-[#2A2A3A] ${isRTL ? "flex-row-reverse" : ""}`}
                                 >
                                     <Calendar className="w-5 h-5 text-[#45e3d3] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
                                         <p className="text-xs text-[#808c99] mb-1">{t.year}</p>
-                                        <p className="text-sm text-[#ffffff]">{artwork.year}</p>
+                                        <p className="text-sm text-[#F2F2F3]">{artwork.year}</p>
                                     </div>
                                 </div>
                             )}
@@ -221,12 +221,12 @@ export function ArtworkDetailModal({
                             {/* Price */}
                             {price && (
                                 <div
-                                    className={`flex items-start gap-3 p-3 bg-[#1D112A] rounded-lg border border-[#4e4e4e78] ${isRTL ? "flex-row-reverse" : ""}`}
+                                    className={`flex items-start gap-3 p-3 bg-[#191922] rounded-lg border border-[#2A2A3A] ${isRTL ? "flex-row-reverse" : ""}`}
                                 >
                                     <DollarSign className="w-5 h-5 text-[#45e3d3] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
                                         <p className="text-xs text-[#808c99] mb-1">{t.price}</p>
-                                        <p className="text-sm text-[#ffcc33] font-semibold">{price}</p>
+                                        <p className="text-sm text-[#C59B48] font-semibold">{price}</p>
                                     </div>
                                 </div>
                             )}
@@ -234,12 +234,12 @@ export function ArtworkDetailModal({
                             {/* Medium */}
                             {artwork.medium && (
                                 <div
-                                    className={`flex items-start gap-3 p-3 bg-[#1D112A] rounded-lg border border-[#4e4e4e78] ${isRTL ? "flex-row-reverse" : ""}`}
+                                    className={`flex items-start gap-3 p-3 bg-[#191922] rounded-lg border border-[#2A2A3A] ${isRTL ? "flex-row-reverse" : ""}`}
                                 >
-                                    <Palette className="w-5 h-5 text-[#ffcc33] shrink-0 mt-0.5" />
+                                    <Palette className="w-5 h-5 text-[#C59B48] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
                                         <p className="text-xs text-[#808c99] mb-1">{t.medium}</p>
-                                        <p className="text-sm text-[#ffffff]">{artwork.medium}</p>
+                                        <p className="text-sm text-[#F2F2F3]">{artwork.medium}</p>
                                     </div>
                                 </div>
                             )}
@@ -247,12 +247,12 @@ export function ArtworkDetailModal({
                             {/* Category */}
                             {artwork.category && (
                                 <div
-                                    className={`flex items-start gap-3 p-3 bg-[#1D112A] rounded-lg border border-[#4e4e4e78] ${isRTL ? "flex-row-reverse" : ""}`}
+                                    className={`flex items-start gap-3 p-3 bg-[#191922] rounded-lg border border-[#2A2A3A] ${isRTL ? "flex-row-reverse" : ""}`}
                                 >
                                     <Tag className="w-5 h-5 text-[#9375b5] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
                                         <p className="text-xs text-[#808c99] mb-1">{t.category}</p>
-                                        <p className="text-sm text-[#ffffff]">{artwork.category}</p>
+                                        <p className="text-sm text-[#F2F2F3]">{artwork.category}</p>
                                     </div>
                                 </div>
                             )}
@@ -260,12 +260,12 @@ export function ArtworkDetailModal({
                             {/* Dimensions */}
                             {artwork.dimensions && (
                                 <div
-                                    className={`flex items-start gap-3 p-3 bg-[#1D112A] rounded-lg border border-[#4e4e4e78] ${isRTL ? "flex-row-reverse" : ""}`}
+                                    className={`flex items-start gap-3 p-3 bg-[#191922] rounded-lg border border-[#2A2A3A] ${isRTL ? "flex-row-reverse" : ""}`}
                                 >
                                     <Ruler className="w-5 h-5 text-[#45e3d3] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
                                         <p className="text-xs text-[#808c99] mb-1">{t.dimensions}</p>
-                                        <p className="text-sm text-[#ffffff]">{artwork.dimensions}</p>
+                                        <p className="text-sm text-[#F2F2F3]">{artwork.dimensions}</p>
                                     </div>
                                 </div>
                             )}
@@ -273,14 +273,14 @@ export function ArtworkDetailModal({
                             {/* Acquisition Date (for collector artworks) */}
                             {artwork.acquisition_date && (
                                 <div
-                                    className={`flex items-start gap-3 p-3 bg-[#1D112A] rounded-lg border border-[#4e4e4e78] ${isRTL ? "flex-row-reverse" : ""}`}
+                                    className={`flex items-start gap-3 p-3 bg-[#191922] rounded-lg border border-[#2A2A3A] ${isRTL ? "flex-row-reverse" : ""}`}
                                 >
                                     <Calendar className="w-5 h-5 text-[#9375b5] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
                                         <p className="text-xs text-[#808c99] mb-1">
                                             {t.acquisitionDate}
                                         </p>
-                                        <p className="text-sm text-[#ffffff]">
+                                        <p className="text-sm text-[#F2F2F3]">
                                             {new Date(artwork.acquisition_date).toLocaleDateString(
                                                 language === "en" ? "en-US" : "ar-SA",
                                                 {
@@ -298,13 +298,13 @@ export function ArtworkDetailModal({
                         {/* Description */}
                         {artwork.description && (
                             <div
-                                className={`p-4 bg-[#1D112A] rounded-lg border border-[#4e4e4e78] ${isRTL ? "text-right" : "text-left"}`}
+                                className={`p-4 bg-[#191922] rounded-lg border border-[#2A2A3A] ${isRTL ? "text-right" : "text-left"}`}
                             >
                                 <div className="flex items-center gap-2 mb-2">
-                                    <FileText className="w-4 h-4 text-[#ffcc33]" />
+                                    <FileText className="w-4 h-4 text-[#C59B48]" />
                                     <p className="text-xs text-[#808c99]">{t.description}</p>
                                 </div>
-                                <p className="text-sm text-[#ffffff] leading-relaxed whitespace-pre-wrap">
+                                <p className="text-sm text-[#F2F2F3] leading-relaxed whitespace-pre-wrap">
                                     {artwork.description}
                                 </p>
                             </div>
@@ -312,7 +312,7 @@ export function ArtworkDetailModal({
 
                         {!artwork.description && (
                             <div
-                                className={`p-4 bg-[#1D112A] rounded-lg border border-[#4e4e4e78] ${isRTL ? "text-right" : "text-left"}`}
+                                className={`p-4 bg-[#191922] rounded-lg border border-[#2A2A3A] ${isRTL ? "text-right" : "text-left"}`}
                             >
                                 <p className="text-sm text-[#808c99]">{t.noDescription}</p>
                             </div>

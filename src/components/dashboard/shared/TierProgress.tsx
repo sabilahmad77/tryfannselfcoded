@@ -64,12 +64,12 @@ const getTierConfig = (tierName: string) => {
     },
     Ambassador: {
       icon: Crown,
-      color: "from-[#ffcc33] to-[#ffb54d]",
+      color: "from-[#C59B48] to-[#D6AE5A]",
       multiplier: "3x",
     },
     "Founding Patron": {
       icon: Award,
-      color: "from-[#ffcc33] to-[#ffb54d]",
+      color: "from-[#C59B48] to-[#D6AE5A]",
       multiplier: "5x",
     },
   };
@@ -146,11 +146,11 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-2xl p-6 border border-[#ffcc33]/20"
+        className="glass rounded-2xl p-6 border border-[#C59B48]/20"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <div className="flex flex-col items-center justify-center py-12 gap-4">
-          <Loader2 className="w-8 h-8 text-[#ffcc33] animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#C59B48] animate-spin" />
           <p className="text-[#808c99]">
             {language === "en"
               ? "Loading tier progress..."
@@ -167,7 +167,7 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-2xl p-6 border border-[#ffcc33]/20"
+        className="glass rounded-2xl p-6 border border-[#C59B48]/20"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <div className="flex flex-col items-center justify-center py-12 gap-4 text-center">
@@ -188,7 +188,7 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass rounded-2xl p-6 border border-[#ffcc33]/20"
+      className="glass rounded-2xl p-6 border border-[#C59B48]/20"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Header */}
@@ -201,8 +201,8 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
         <div
           className={`flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r ${currentTierConfig.color}`}
         >
-          <Zap className="w-4 h-4 text-[#0F021C]" />
-          <span className="text-[#0F021C]">{currentTierConfig.multiplier}</span>
+          <Zap className="w-4 h-4 text-[#0B0B0D]" />
+          <span className="text-[#0B0B0D]">{currentTierConfig.multiplier}</span>
         </div>
       </div>
 
@@ -210,16 +210,16 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
       <div className="grid grid-cols-2 gap-4 mb-6">
         {/* Current */}
         <div
-          className={`bg-gradient-to-br ${currentTierConfig.color} bg-opacity-20 border border-[#ffcc33]/40 rounded-xl p-4 relative overflow-hidden`}
+          className={`bg-gradient-to-br ${currentTierConfig.color} bg-opacity-20 border border-[#C59B48]/40 rounded-xl p-4 relative overflow-hidden`}
         >
-          <div className="absolute inset-0 bg-[#0f021c]/60"></div>
+          <div className="absolute inset-0 bg-[#0B0B0D]/60"></div>
           <div className="relative z-10">
             <div
               className={`flex items-center gap-2 mb-2 ${
                 isRTL ? "flex-row-reverse" : ""
               }`}
             >
-              <CurrentTierIcon className="w-5 h-5 text-[#ffcc33]" />
+              <CurrentTierIcon className="w-5 h-5 text-[#C59B48]" />
               <span className="text-xs text-[#ffffff]/80">{t.currentTier}</span>
             </div>
             <p className="text-xl text-[#ffffff]">{currentTierName}</p>
@@ -228,13 +228,13 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
         </div>
 
         {/* Next */}
-        <div className="bg-[#0f021c] border border-[#ffcc33]/20 rounded-xl p-4">
+        <div className="bg-[#0B0B0D] border border-[#C59B48]/20 rounded-xl p-4">
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <NextTierIcon className="w-5 h-5 text-[#ffcc33]" />
+            <NextTierIcon className="w-5 h-5 text-[#C59B48]" />
             <span className="text-xs text-[#808c99]">
               {nextTierName ? t.nextTier : t.currentTier}
             </span>
@@ -254,7 +254,7 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
 
       {/* Progress Bar */}
       <div className="mb-6">
-        <div className="relative h-3 bg-[#0f021c] rounded-full overflow-hidden border border-[#4e4e4e78]">
+        <div className="relative h-3 bg-[#0B0B0D] rounded-full overflow-hidden border border-[#4e4e4e78]">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${Math.min(progress, 100)}%` }}
@@ -270,7 +270,7 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
           }`}
         >
           <span>{tierMinPoints}</span>
-          <span className="text-[#ffcc33]">{Math.round(progress)}%</span>
+          <span className="text-[#C59B48]">{Math.round(progress)}%</span>
           <span>
             {tierMaxPoints || (nextTierName ? "∞" : "∞")}
           </span>
@@ -298,16 +298,16 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
                     isCurrent
                       ? `bg-gradient-to-br ${tierConfig.color} glow-gold`
                       : isUnlocked
-                      ? "bg-[#0f021c] border border-[#ffcc33]/30"
-                      : "bg-[#0f021c] border border-[#4e4e4e78]"
+                      ? "bg-[#0B0B0D] border border-[#C59B48]/30"
+                      : "bg-[#0B0B0D] border border-[#4e4e4e78]"
                   }`}
                 >
                   <TierIcon
                     className={`w-5 h-5 ${
                       isCurrent
-                        ? "text-[#0F021C]"
+                        ? "text-[#0B0B0D]"
                         : isUnlocked
-                        ? "text-[#ffcc33]"
+                        ? "text-[#C59B48]"
                         : "text-[#808c99]"
                     }`}
                   />

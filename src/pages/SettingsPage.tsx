@@ -403,7 +403,7 @@ export function SettingsPage() {
     return (
       <DashboardLayout currentPage="settings">
         <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="w-8 h-8 animate-spin text-[#ffcc33]" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#C59B48]" />
         </div>
       </DashboardLayout>
     );
@@ -442,8 +442,8 @@ export function SettingsPage() {
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
-            <SettingsIcon className="w-6 h-6 text-[#0F021C]" />
+          <div className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#45e3d3] rounded-xl flex items-center justify-center">
+            <SettingsIcon className="w-6 h-6 text-[#0B0B0D]" />
           </div>
           <h1 className="text-4xl text-[#ffffff]">{t.settings}</h1>
         </div>

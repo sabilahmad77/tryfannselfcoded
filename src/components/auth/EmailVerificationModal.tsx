@@ -62,7 +62,7 @@ export function EmailVerificationModal() {
         className="w-full max-w-lg mx-4"
         dir={isRTL ? "rtl" : "ltr"}
       >
-        <div className="glass border border-cyan-500/40 rounded-3xl p-8 md:p-10 shadow-2xl bg-[#0F021C]/95">
+        <div className="glass border border-cyan-500/40 rounded-3xl p-8 md:p-10 shadow-2xl bg-[#0B0B0D]/95">
           <div className="flex flex-col items-center text-center gap-4">
             <div className="w-16 h-16 rounded-2xl bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center shadow-[0_0_40px_rgba(6,182,212,0.4)] mb-2">
               <Mail className="w-8 h-8 text-cyan-400" />
@@ -104,7 +104,7 @@ export function EmailVerificationModal() {
             <Button
               type="button"
               onClick={handleSignOut}
-              className="h-11 md:h-12 w-full flex items-center justify-center gap-2 bg-cyan-500 text-[#0F021C] hover:bg-cyan-400 font-medium cursor-pointer"
+              className="h-11 md:h-12 w-full flex items-center justify-center gap-2 bg-cyan-500 text-[#0B0B0D] hover:bg-cyan-400 font-medium cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
               <span>{t.signOut}</span>

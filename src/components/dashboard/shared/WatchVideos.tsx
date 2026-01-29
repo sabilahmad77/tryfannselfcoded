@@ -100,7 +100,7 @@ const content = {
 };
 
 const thumbnailGradients: { [key: string]: string } = {
-  intro: "from-[#ffcc33] to-[#fbbf24]",
+  intro: "from-[#C59B48] to-[#fbbf24]",
   collection: "from-[#45e3d3] to-[#0ea5e9]",
   auth: "from-[#9375b5] to-[#fface3]",
   referral: "from-[#0ea5e9] to-[#45e3d3]",
@@ -314,14 +314,14 @@ export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
       <div className="grid grid-cols-2 gap-4 mb-6">
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#ffcc33]/20 to-[#ffcc33]/5 rounded-xl p-4 border border-[#ffcc33]/30"
+          className="bg-gradient-to-br from-[#C59B48]/20 to-[#C59B48]/5 rounded-xl p-4 border border-[#C59B48]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${
               isRTL ? "flex-row-reverse" : ""
             }`}
           >
-            <Award className="w-5 h-5 text-[#ffcc33]" />
+            <Award className="w-5 h-5 text-[#C59B48]" />
             <span className="text-xs text-[#808c99]">{t.totalEarned}</span>
           </div>
           <p className="text-2xl text-[#ffffff]">{totalPointsEarned}</p>
@@ -353,11 +353,11 @@ export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
           }`}
         >
           <span className="text-sm text-[#808c99]">{t.progress}</span>
-          <span className="text-sm text-[#ffcc33]">
+          <span className="text-sm text-[#C59B48]">
             {Math.round(progressPercent)}%
           </span>
         </div>
-        <Progress value={progressPercent} className="h-2 bg-[#0f021c]" />
+        <Progress value={progressPercent} className="h-2 bg-[#0B0B0D]" />
       </div>
 
       {/* Video List */}
@@ -398,8 +398,8 @@ export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
                 whileHover={{ scale: 1.02 }}
                 className={`relative overflow-hidden rounded-xl border transition-all ${
                   isCompleted
-                    ? "border-[#45e3d3]/30 bg-[#0f021c]"
-                    : "border-[#4e4e4e78] bg-[#0f021c] hover:border-[#ffcc33]/30"
+                    ? "border-[#45e3d3]/30 bg-[#0B0B0D]"
+                    : "border-[#4e4e4e78] bg-[#0B0B0D] hover:border-[#C59B48]/30"
                 }`}
               >
                 <div
@@ -442,7 +442,7 @@ export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
                         className={`${
                           isCompleted
                             ? "border-[#45e3d3] text-[#45e3d3]"
-                            : "border-[#ffcc33] text-[#ffcc33]"
+                            : "border-[#C59B48] text-[#C59B48]"
                         }`}
                       >
                         +{videoPoints} {t.points}

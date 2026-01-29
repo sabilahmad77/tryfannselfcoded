@@ -211,7 +211,7 @@ export function URLEncoder({
           }`}
       >
         <div className="w-12 h-12 bg-gradient-to-br from-[#45e3d3] to-[#0ea5e9] rounded-xl flex items-center justify-center">
-          <Link2 className="w-6 h-6 text-[#0F021C]" />
+          <Link2 className="w-6 h-6 text-[#0B0B0D]" />
         </div>
         <div className={isRTL ? "text-right" : "text-left"}>
           <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
@@ -257,7 +257,7 @@ export function URLEncoder({
                 ? "No referral link yet"
                 : "لا يوجد رابط إحالة بعد"
             }
-            className="flex-1 bg-[#0f021c] border-[#4e4e4e78] text-[#ffffff] focus:border-[#ffcc33]"
+            className="flex-1 bg-[#0B0B0D] border-[#4e4e4e78] text-[#ffffff] focus:border-[#C59B48]"
           />
           <Button
             onClick={handleCopy}
@@ -297,7 +297,7 @@ export function URLEncoder({
         </motion.div>
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-[#ffb54d]/20 to-[#ffb54d]/5 rounded-xl p-4 border border-[#ffb54d]/30 text-center"
+          className="bg-gradient-to-br from-[#D6AE5A]/20 to-[#D6AE5A]/5 rounded-xl p-4 border border-[#D6AE5A]/30 text-center"
         >
           <p className="text-2xl text-[#ffffff] mb-1">{stats.pending}</p>
           <p className="text-xs text-[#808c99]">{t.stats.pending}</p>
@@ -358,7 +358,7 @@ export function URLEncoder({
             disabled={!referralLink}
             className="w-12 h-12 bg-primary hover:bg-primary/90 rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-primary/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Mail className="w-6 h-6 text-[#0F021C]" />
+            <Mail className="w-6 h-6 text-[#0B0B0D]" />
           </motion.button>
         </div>
       </div>
@@ -376,7 +376,7 @@ export function URLEncoder({
               value={referralLink}
               size={128}
               level="H"
-              fgColor="#0F021C"
+              fgColor="#0B0B0D"
               bgColor="#ffffff"
             />
           </div>
@@ -391,7 +391,7 @@ export function URLEncoder({
           whileHover={{ scale: 1.02 }}
           className="mt-6 p-4 bg-white/5 rounded-xl flex items-center justify-center"
         >
-          <div className="w-32 h-32 bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 rounded-lg flex items-center justify-center border-2 border-dashed border-[#4e4e4e78]">
+          <div className="w-32 h-32 bg-gradient-to-br from-[#C59B48]/20 to-[#45e3d3]/20 rounded-lg flex items-center justify-center border-2 border-dashed border-[#4e4e4e78]">
             <Share2 className="w-16 h-16 text-[#808c99] opacity-30" />
           </div>
         </motion.div>

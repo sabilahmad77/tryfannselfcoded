@@ -124,8 +124,8 @@ export function BugReportPage() {
       label: t.medium,
       desc: t.mediumDesc,
       icon: Info,
-      color: '#ffcc33',
-      bgColor: '#ffcc33/20'
+      color: '#C59B48',
+      bgColor: '#C59B48/20'
     },
     {
       value: 'low',
@@ -225,8 +225,8 @@ export function BugReportPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className={`p-4 rounded-xl transition-all cursor-pointer ${isSelected
-                        ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10'
-                        : 'bg-[#0f021c] border border-[#4e4e4e78]'
+                        ? 'border-2 border-[#C59B48] bg-[#C59B48]/10'
+                        : 'bg-[#0B0B0D] border border-[#4e4e4e78]'
                         }`}
                     >
                       <Icon
@@ -263,8 +263,8 @@ export function BugReportPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className={`p-3 rounded-lg transition-all cursor-pointer ${isSelected
-                        ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10 text-[#ffffff]'
-                        : 'bg-[#0f021c] border border-[#4e4e4e78] text-[#808c99] hover:border-[#ffcc33]/30'
+                        ? 'border-2 border-[#C59B48] bg-[#C59B48]/10 text-[#ffffff]'
+                        : 'bg-[#0B0B0D] border border-[#4e4e4e78] text-[#808c99] hover:border-[#C59B48]/30'
                         } ${isRTL ? 'text-right' : 'text-left'}`}
                     >
                       <span className="text-sm">{label}</span>

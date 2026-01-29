@@ -1252,7 +1252,7 @@ export function EditProfile({
                     <Oval
                       height={20}
                       width={20}
-                      color="#0F021C"
+                      color="#0B0B0D"
                       ariaLabel="loading"
                       visible={true}
                     />

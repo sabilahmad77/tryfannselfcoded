@@ -65,7 +65,7 @@ export function ContactUsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F021C]">
+    <div className="min-h-screen bg-[#0B0B0D]">
       <Navigation onNavigateToSignIn={() => { }} />
 
       <main>
@@ -77,7 +77,7 @@ export function ContactUsPage() {
               alt="Background"
               className="w-full h-full object-cover opacity-50"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/60 via-transparent to-[#0F021C]/60" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/60 via-transparent to-[#0B0B0D]/60" />
           </div>
 
           <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,7 +99,7 @@ export function ContactUsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0F021C]/80 rounded-2xl border-2 border-[#ffcc33]/30 p-8 shadow-2xl"
+                className="backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0B0B0D]/80 rounded-2xl border-2 border-[#ffcc33]/30 p-8 shadow-2xl"
               >
                 <div className="space-y-6">
                   <div>
@@ -155,11 +155,11 @@ export function ContactUsPage() {
                     disabled={isSubmitting}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full px-8 py-4 rounded-xl bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#0F021C] shadow-xl shadow-[#ffcc33]/30 hover:shadow-2xl hover:shadow-[#ffcc33]/50 transition-all duration-300 inline-flex items-center justify-center gap-2 cursor-pointer font-body font-medium disabled:opacity-50"
+                    className="w-full px-8 py-4 rounded-xl bg-gradient-to-r from-[#ffcc33] to-[] text-[#0B0B0D] shadow-xl shadow-[#ffcc33]/30 hover:shadow-2xl hover:shadow-[#ffcc33]/50 transition-all duration-300 inline-flex items-center justify-center gap-2 cursor-pointer font-body font-medium disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-[#0F021C]/30 border-t-[#0F021C] rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-[#0B0B0D]/30 border-t-[#0B0B0D] rounded-full animate-spin" />
                         {t.form.sending}
                       </>
                     ) : (

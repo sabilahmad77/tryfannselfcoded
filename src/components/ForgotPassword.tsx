@@ -82,7 +82,7 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
   };
 
   return (
-    <div className="min-h-screen bg-[#0F021C] flex" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-[#0B0B0D] flex" dir={isRTL ? 'rtl' : 'ltr'}>
       
       {/* LEFT PANEL - Branding & Info */}
       <motion.div 
@@ -93,8 +93,8 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
       >
         {/* Background Effects */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc33]/10 via-[#45e3d3]/5 to-[#4de3ed]/10" />
-          <div className="absolute top-20 -left-20 w-80 h-80 bg-[#ffcc33]/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#C59B48]/10 via-[#45e3d3]/5 to-[#4de3ed]/10" />
+          <div className="absolute top-20 -left-20 w-80 h-80 bg-[#C59B48]/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-20 -right-20 w-80 h-80 bg-[#45e3d3]/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,204,51,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,204,51,0.05)_1px,transparent_1px)] bg-[size:50px_50px]" />
         </div>
@@ -106,15 +106,15 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
             <motion.button
               onClick={onNavigateToHome}
               whileHover={{ scale: 1.02 }}
-              className="flex items-center gap-2 text-[#808c99] hover:text-[#ffcc33] transition-colors group mb-8"
+              className="flex items-center gap-2 text-[#808c99] hover:text-[#C59B48] transition-colors group mb-8"
             >
               <ChevronLeft className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${isRTL ? 'rotate-180' : ''}`} />
               <span className="text-sm">{content.backToHome}</span>
             </motion.button>
 
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-[#020e27]" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C59B48] to-[#D6AE5A] flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-[#121217]" />
               </div>
               <h1 className="text-3xl text-[#ffffff]">FANN</h1>
             </div>
@@ -129,8 +129,8 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
               transition={{ duration: 0.3 }}
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-lg bg-[#ffcc33]/10 border border-[#ffcc33]/30 flex items-center justify-center">
-                  <Shield className="w-6 h-6 text-[#ffcc33]" />
+                <div className="w-12 h-12 rounded-lg bg-[#C59B48]/10 border border-[#C59B48]/30 flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-[#C59B48]" />
                 </div>
                 <div>
                   <h2 className="text-xl text-[#ffffff] mb-1">
@@ -142,7 +142,7 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                 </div>
               </div>
 
-              <div className="space-y-4 p-6 rounded-xl bg-[#1D112A]/50 border border-[#ffcc33]/20">
+              <div className="space-y-4 p-6 rounded-xl bg-[#1D112A]/50 border border-[#C59B48]/20">
                 {content.instructions.map((instruction, idx) => (
                   <motion.div
                     key={idx}
@@ -151,8 +151,8 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                     transition={{ delay: 0.1 * idx }}
                     className="flex items-start gap-3"
                   >
-                    <div className="w-6 h-6 rounded-full bg-[#ffcc33]/20 border border-[#ffcc33]/40 flex items-center justify-center shrink-0 mt-0.5">
-                      <span className="text-[#ffcc33] text-xs">{idx + 1}</span>
+                    <div className="w-6 h-6 rounded-full bg-[#C59B48]/20 border border-[#C59B48]/40 flex items-center justify-center shrink-0 mt-0.5">
+                      <span className="text-[#C59B48] text-xs">{idx + 1}</span>
                     </div>
                     <p className="text-[#808c99] text-sm">{instruction}</p>
                   </motion.div>
@@ -200,7 +200,7 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder={content.emailPlaceholder}
-                            className={`bg-[#0f021c] border border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#808c99] h-11 focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20 ${isRTL ? 'pr-10' : 'pl-10'}`}
+                            className={`bg-[#0B0B0D] border border-[#C59B48]/20 text-[#ffffff] placeholder:text-[#808c99] h-11 focus:border-[#C59B48]/50 focus:ring-[#C59B48]/20 ${isRTL ? 'pr-10' : 'pl-10'}`}
                             required
                           />
                         </div>
@@ -211,7 +211,7 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                         <Button
                           type="submit"
                           disabled={isLoading}
-                          className="w-full h-12 bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] text-[#020e27] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-full h-12 bg-gradient-to-r from-[#C59B48] to-[#45e3d3] text-[#121217] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <span className="relative z-10 flex items-center justify-center gap-2">
                             {isLoading ? content.sending : content.sendButton}
@@ -226,7 +226,7 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                       <button
                         type="button"
                         onClick={onNavigateToSignIn}
-                        className="text-[#ffcc33] hover:text-[#ffb54d] transition-colors text-sm flex items-center justify-center gap-2 mx-auto"
+                        className="text-[#C59B48] hover:text-[#D6AE5A] transition-colors text-sm flex items-center justify-center gap-2 mx-auto"
                       >
                         <ChevronLeft className={`w-4 h-4 ${isRTL ? 'rotate-180' : ''}`} />
                         {content.backToSignIn}
@@ -256,17 +256,17 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                     {/* Success Message */}
                     <h2 className="text-3xl text-[#ffffff] mb-3">{content.successTitle}</h2>
                     <p className="text-[#808c99] mb-2">{content.successSubtitle}</p>
-                    <p className="text-[#ffcc33] mb-8">{email}</p>
+                    <p className="text-[#C59B48] mb-8">{email}</p>
 
                     {/* Info Box */}
-                    <div className="p-6 rounded-xl bg-[#1D112A]/50 border border-[#ffcc33]/20 mb-6">
+                    <div className="p-6 rounded-xl bg-[#1D112A]/50 border border-[#C59B48]/20 mb-6">
                       <p className="text-[#808c99] text-sm mb-4">{content.checkSpam}</p>
                       <div className="flex items-center justify-center gap-2 text-sm">
                         <span className="text-[#808c99]">{content.resendLink}</span>
                         <button
                           onClick={handleResend}
                           disabled={isLoading}
-                          className="text-[#ffcc33] hover:text-[#ffb54d] transition-colors disabled:opacity-50"
+                          className="text-[#C59B48] hover:text-[#D6AE5A] transition-colors disabled:opacity-50"
                         >
                           {content.resend}
                         </button>
@@ -276,7 +276,7 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                     {/* Back to Sign In Button */}
                     <Button
                       onClick={onNavigateToSignIn}
-                      className="w-full h-12 bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] text-[#020e27] hover:opacity-90 transition-opacity"
+                      className="w-full h-12 bg-gradient-to-r from-[#C59B48] to-[#45e3d3] text-[#121217] hover:opacity-90 transition-opacity"
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         <ChevronLeft className={`w-5 h-5 ${isRTL ? 'rotate-180' : ''}`} />

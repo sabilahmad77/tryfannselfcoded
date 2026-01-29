@@ -119,7 +119,7 @@ export function ProfileCompletion({
 
   return (
     <div
-      className="min-h-screen bg-[#0F021C] relative overflow-hidden"
+      className="min-h-screen bg-[#0B0B0D] relative overflow-hidden"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Animated Background */}
@@ -192,7 +192,7 @@ export function ProfileCompletion({
                         className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${isCompleted || isCurrent
                           ? "border-amber-500"
                           : "border-white/20"
-                          } relative z-10 bg-[#0F021C]`}
+                          } relative z-10 bg-[#0B0B0D]`}
                       >
                         {isCompleted ? (
                           <motion.div

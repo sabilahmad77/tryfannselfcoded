@@ -40,7 +40,7 @@ export function DashboardWelcome({
           <div className="flex items-center gap-3 mb-2 flex-wrap">
             <h1 className="text-4xl md:text-5xl">
               <span className="text-[#ffffff]">{t.welcome}, </span>
-              <span className="bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] bg-clip-text text-transparent animate-gradient">
+              <span className="bg-gradient-to-r from-[#C59B48] via-[#fbbf24] to-[#C59B48] bg-clip-text text-transparent animate-gradient">
                 {userName}
               </span>
             </h1>

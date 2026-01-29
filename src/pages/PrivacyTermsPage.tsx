@@ -639,7 +639,7 @@ export function PrivacyTermsPage() {
   const t = content[language];
 
   return (
-    <div className="min-h-screen bg-[#0F021C]">
+    <div className="min-h-screen bg-[#0B0B0D]">
       <Navigation onNavigateToSignIn={() => {}} />
       
       <main>
@@ -650,7 +650,7 @@ export function PrivacyTermsPage() {
               alt="Background"
               className="w-full h-full object-cover opacity-50"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/60 via-transparent to-[#0F021C]/60" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/60 via-transparent to-[#0B0B0D]/60" />
           </div>
 
           <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -672,7 +672,7 @@ export function PrivacyTermsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0F021C]/80 rounded-2xl border-2 border-[#ffcc33]/30 p-8 md:p-12"
+                className="backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0B0B0D]/80 rounded-2xl border-2 border-[#ffcc33]/30 p-8 md:p-12"
               >
                 <div className="flex items-center gap-3 mb-6">
                   <Shield className="w-6 h-6 text-[#ffcc33]" />
@@ -862,7 +862,7 @@ export function PrivacyTermsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0F021C]/80 rounded-2xl border-2 border-[#ffcc33]/30 p-8 md:p-12"
+                className="backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0B0B0D]/80 rounded-2xl border-2 border-[#ffcc33]/30 p-8 md:p-12"
               >
                 <div className="flex items-center gap-3 mb-6">
                   <FileText className="w-6 h-6 text-[#ffcc33]" />

@@ -131,7 +131,7 @@ export function Watchlist() {
             initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#fface3]/50 transition-all group"
+            className="bg-gradient-to-br from-[#1D112A] to-[#0B0B0D] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#fface3]/50 transition-all group"
           >
             <div
               className={`flex items-start justify-between ${isRTL ? "flex-row-reverse" : ""}`}
@@ -154,7 +154,7 @@ export function Watchlist() {
                     <div
                       className={`flex items-center gap-4 ${isRTL ? "flex-row-reverse" : ""}`}
                     >
-                      <span className="text-lg text-[#ffcc33]">{item.price}</span>
+                      <span className="text-lg text-[#C59B48]">{item.price}</span>
                       <div
                         className={`flex items-center gap-1 ${isRTL ? "flex-row-reverse" : ""}`}
                       >

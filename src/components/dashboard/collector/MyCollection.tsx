@@ -392,19 +392,19 @@ export function MyCollection({
             }`}
         >
           <div className="relative">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#9375b5] rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#9375b5] rounded-xl flex items-center justify-center">
               <Gem className="w-6 h-6 text-white" />
             </div>
             {/* Subtle pulsing glow (match AddArtwork) */}
             <motion.div
-              className="absolute inset-0 bg-[#ffcc33]/30 rounded-xl blur-xl"
+              className="absolute inset-0 bg-[#C59B48]/30 rounded-xl blur-xl"
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
             {/* Lock overlay if profile not completed */}
             {!profileCompleted && (
-              <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-[#ffb54d] to-[#ffcc33] rounded-full flex items-center justify-center border-2 border-[#0F021C]">
-                <Lock className="w-3 h-3 text-[#0F021C]" />
+              <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-[#D6AE5A] to-[#C59B48] rounded-full flex items-center justify-center border-2 border-[#0B0B0D]">
+                <Lock className="w-3 h-3 text-[#0B0B0D]" />
               </div>
             )}
           </div>
@@ -428,7 +428,7 @@ export function MyCollection({
       <div className="grid grid-cols-3 gap-4 mb-6">
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-[#0f021c] rounded-xl p-4 border border-[#9375b5]/30"
+          className="bg-[#0B0B0D] rounded-xl p-4 border border-[#9375b5]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
@@ -444,7 +444,7 @@ export function MyCollection({
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-[#0f021c] rounded-xl p-4 border border-[#45e3d3]/30"
+          className="bg-[#0B0B0D] rounded-xl p-4 border border-[#45e3d3]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
@@ -462,13 +462,13 @@ export function MyCollection({
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-[#0f021c] rounded-xl p-4 border border-[#ffcc33]/30"
+          className="bg-[#0B0B0D] rounded-xl p-4 border border-[#C59B48]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
               }`}
           >
-            <TrendingUp className="w-4 h-4 text-[#ffcc33]" />
+            <TrendingUp className="w-4 h-4 text-[#C59B48]" />
             <span className="text-xs text-[#808c99]">{t.growth}</span>
           </div>
           <p className="text-2xl text-emerald-400">
@@ -497,7 +497,7 @@ export function MyCollection({
           />
         ) : isLoadingArtworks ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 text-[#ffcc33] animate-spin" />
+            <Loader2 className="w-6 h-6 text-[#C59B48] animate-spin" />
           </div>
         ) : artworksError ? (
           <div className="text-center py-8 text-[#808c99]">
@@ -541,7 +541,7 @@ export function MyCollection({
                   });
                   setIsArtworkDetailOpen(true);
                 }}
-                className="bg-[#0f021c] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
+                className="bg-[#0B0B0D] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#C59B48]/50 transition-all cursor-pointer"
               >
                 <div
                   className={`flex items-start gap-4 ${isRTL ? "flex-row-reverse" : ""
@@ -549,12 +549,12 @@ export function MyCollection({
                 >
                   {/* Artwork Image */}
                   {piece.image && typeof piece.image === "string" && (
-                    <Avatar className="w-16 h-16 border-2 border-[#ffcc33]/50 shrink-0">
+                    <Avatar className="w-16 h-16 border-2 border-[#C59B48]/50 shrink-0">
                       <AvatarImage
                         src={getFullImageUrl(piece.image) || piece.image}
                         alt={piece.title}
                       />
-                      <AvatarFallback className="bg-gradient-to-br from-[#ffcc33] to-[#9375b5] text-white">
+                      <AvatarFallback className="bg-gradient-to-br from-[#C59B48] to-[#9375b5] text-white">
                         {piece.title.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
@@ -601,7 +601,7 @@ export function MyCollection({
                       }`}
                   >
                     <div className={isRTL ? "text-left" : "text-right"}>
-                      <p className="text-lg text-[#ffcc33]">
+                      <p className="text-lg text-[#C59B48]">
                         ${parseFloat(piece.value || "0").toLocaleString()}
                       </p>
                       <p className="text-xs text-[#BEC0C9]">

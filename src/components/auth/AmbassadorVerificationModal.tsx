@@ -63,7 +63,7 @@ export function AmbassadorVerificationModal() {
         className="w-full max-w-lg mx-4"
         dir={isRTL ? "rtl" : "ltr"}
       >
-        <div className="glass border border-amber-500/40 rounded-3xl p-8 md:p-10 shadow-2xl bg-[#0F021C]/95">
+        <div className="glass border border-amber-500/40 rounded-3xl p-8 md:p-10 shadow-2xl bg-[#0B0B0D]/95">
           <div className="flex flex-col items-center text-center gap-4">
             <div className="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex items-center justify-center shadow-[0_0_40px_rgba(245,158,11,0.4)] mb-2">
               <ShieldAlert className="w-8 h-8 text-amber-400" />
@@ -105,7 +105,7 @@ export function AmbassadorVerificationModal() {
             <Button
               type="button"
               onClick={handleSignOut}
-              className="h-11 md:h-12 w-full flex items-center justify-center gap-2 bg-amber-500 text-[#0F021C] hover:bg-amber-400 font-medium cursor-pointer"
+              className="h-11 md:h-12 w-full flex items-center justify-center gap-2 bg-amber-500 text-[#0B0B0D] hover:bg-amber-400 font-medium cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
               <span>{t.signOut}</span>

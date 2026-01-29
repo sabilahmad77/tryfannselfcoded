@@ -78,7 +78,7 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
       >
         <div className={`flex items-center gap-3 mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#45e3d3] to-[#3bc4b5] flex items-center justify-center">
-            <BarChart3 className="w-5 h-5 text-[#020e27]" />
+            <BarChart3 className="w-5 h-5 text-[#121217]" />
           </div>
           <div className={isRTL ? 'text-right' : 'text-left'}>
             <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
@@ -104,7 +104,7 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
       >
         <div className={`flex items-center gap-3 mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#45e3d3] to-[#3bc4b5] flex items-center justify-center">
-            <BarChart3 className="w-5 h-5 text-[#020e27]" />
+            <BarChart3 className="w-5 h-5 text-[#121217]" />
           </div>
           <div className={isRTL ? 'text-right' : 'text-left'}>
             <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
@@ -129,7 +129,7 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
       >
         <div className={`flex items-center gap-3 mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#45e3d3] to-[#3bc4b5] flex items-center justify-center">
-            <BarChart3 className="w-5 h-5 text-[#020e27]" />
+            <BarChart3 className="w-5 h-5 text-[#121217]" />
           </div>
           <div className={isRTL ? 'text-right' : 'text-left'}>
             <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
@@ -152,7 +152,7 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
     >
       <div className={`flex items-center gap-3 mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#45e3d3] to-[#3bc4b5] flex items-center justify-center">
-          <BarChart3 className="w-5 h-5 text-[#020e27]" />
+          <BarChart3 className="w-5 h-5 text-[#121217]" />
         </div>
         <div className={isRTL ? 'text-right' : 'text-left'}>
           <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
@@ -173,7 +173,7 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ x: isRTL ? -5 : 5 }}
-              className="bg-[#0f021c] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#45e3d3]/30 transition-all"
+              className="bg-[#0B0B0D] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#45e3d3]/30 transition-all"
             >
               <div className={`flex items-start justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <div className={isRTL ? 'text-right' : 'text-left'}>
@@ -184,7 +184,7 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
                     ? 'text-[#45e3d3]'
                     : trend === 'down'
                       ? 'text-[#f87171]'
-                      : 'text-[#ffcc33]'
+                      : 'text-[#C59B48]'
                   }`}>
                   {trend === 'up' ? (
                     <TrendingUp className="w-5 h-5" />
@@ -201,7 +201,7 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
                   <DollarSign className="w-4 h-4 text-[#808c99]" />
                   <div className={isRTL ? 'text-right' : 'text-left'}>
                     <p className="text-xs text-[#808c99]">{t.avgPrice}</p>
-                    <p className="text-[#ffcc33]">{avgPriceFormatted}</p>
+                    <p className="text-[#C59B48]">{avgPriceFormatted}</p>
                   </div>
                 </div>
                 <div className="flex-1" />
@@ -209,7 +209,7 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
                     ? 'bg-[#45e3d3]/20 text-[#45e3d3] border-[#45e3d3]/30'
                     : trend === 'down'
                       ? 'bg-[#f87171]/20 text-[#f87171] border-[#f87171]/30'
-                      : 'bg-[#ffcc33]/20 text-[#ffcc33] border-[#ffcc33]/30'
+                      : 'bg-[#C59B48]/20 text-[#C59B48] border-[#C59B48]/30'
                   }`}>
                   {percentageFormatted}
                 </Badge>

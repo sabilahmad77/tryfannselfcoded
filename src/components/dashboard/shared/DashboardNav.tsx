@@ -231,7 +231,7 @@ export function DashboardNav({
   return (
     <>
       {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-[#ffcc33]/20">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-[#C59B48]/20">
         <div className="flex items-center justify-between h-16 px-4">
           {/* Logo */}
           <div className="flex items-center gap-3">
@@ -245,7 +245,7 @@ export function DashboardNav({
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-[#ffffff] p-2 hover:text-[#ffcc33] hover:bg-[#ffcc33]/10 rounded-lg transition-all cursor-pointer"
+            className="text-[#ffffff] p-2 hover:text-[#C59B48] hover:bg-[#C59B48]/10 rounded-lg transition-all cursor-pointer"
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6" />
@@ -262,7 +262,7 @@ export function DashboardNav({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="border-t border-[#ffcc33]/20"
+              className="border-t border-[#C59B48]/20"
             >
               <div className="flex flex-col gap-2 p-4">
                 {navItems
@@ -279,8 +279,8 @@ export function DashboardNav({
                           setMobileMenuOpen(false);
                         }}
                         className={`justify-start gap-3 transition-all duration-200 cursor-pointer ${isActive
-                            ? "bg-[#ffcc33]/20 text-[#ffcc33] border border-[#ffcc33]/30"
-                            : "text-[#808c99] hover:text-[#ffcc33] hover:bg-[#ffcc33]/20"
+                            ? "bg-[#C59B48]/20 text-[#C59B48] border border-[#C59B48]/30"
+                            : "text-[#808c99] hover:text-[#C59B48] hover:bg-[#C59B48]/20"
                           }`}
                       >
                         <Icon className="w-5 h-5" />
@@ -290,7 +290,7 @@ export function DashboardNav({
                   })}
 
                 {/* Support Items Separator */}
-                <div className="h-px bg-[#ffcc33]/20 my-2" />
+                <div className="h-px bg-[#C59B48]/20 my-2" />
 
                 {supportItems
                   .filter((item) => item.show)
@@ -306,8 +306,8 @@ export function DashboardNav({
                           setMobileMenuOpen(false);
                         }}
                         className={`justify-start gap-3 transition-all duration-200 cursor-pointer ${isActive
-                            ? "bg-[#ffcc33]/20 text-[#ffcc33] border border-[#ffcc33]/30"
-                            : "text-[#808c99] hover:text-[#ffcc33] hover:bg-[#ffcc33]/20"
+                            ? "bg-[#C59B48]/20 text-[#C59B48] border border-[#C59B48]/30"
+                            : "text-[#808c99] hover:text-[#C59B48] hover:bg-[#C59B48]/20"
                           }`}
                       >
                         <Icon className="w-5 h-5" />
@@ -316,7 +316,7 @@ export function DashboardNav({
                     );
                   })}
 
-                <div className="h-px bg-[#ffcc33]/20 my-2" />
+                <div className="h-px bg-[#C59B48]/20 my-2" />
                 <Button
                   variant="ghost"
                   onClick={() => {
@@ -337,11 +337,11 @@ export function DashboardNav({
       {/* Desktop Sidebar */}
       <div
         className={`hidden lg:flex fixed ${isRTL ? "right-0 border-l" : "left-0 border-r"
-          } top-0 h-screen glass border-[#ffcc33]/20 flex-col z-40 transition-all duration-300 ${isCollapsed ? 'w-[80px]' : 'w-[280px]'
+          } top-0 h-screen glass border-[#C59B48]/20 flex-col z-40 transition-all duration-300 ${isCollapsed ? 'w-[80px]' : 'w-[280px]'
           }`}
       >
         {/* Header */}
-        <div className="p-6 border-b border-[#ffcc33]/20">
+        <div className="p-6 border-b border-[#C59B48]/20">
           <motion.div
             className="flex items-center justify-between"
             initial={false}
@@ -367,7 +367,7 @@ export function DashboardNav({
               onClick={() => setIsCollapsed(!isCollapsed)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className={`${isCollapsed ? 'mx-auto' : ''} p-2 rounded-lg text-[#808c99]/60 hover:text-[#ffcc33] hover:bg-[#ffcc33]/10 transition-all cursor-pointer`}
+              className={`${isCollapsed ? 'mx-auto' : ''} p-2 rounded-lg text-[#808c99]/60 hover:text-[#C59B48] hover:bg-[#C59B48]/10 transition-all cursor-pointer`}
               title={isCollapsed ? t.expand : t.collapse}
             >
               {isRTL ? (
@@ -380,21 +380,21 @@ export function DashboardNav({
         </div>
 
         {/* User Profile Section */}
-        <div className="p-6 border-b border-[#ffcc33]/20">
+        <div className="p-6 border-b border-[#C59B48]/20">
           <motion.div
             className={`flex items-center gap-3 ${isCollapsed ? "justify-center" : ""
               }`}
             initial={false}
           >
             <Avatar
-              className="w-12 h-12 border-2 border-[#ffcc33] cursor-pointer shrink-0 hover:scale-105 transition-transform"
+              className="w-12 h-12 border-2 border-[#C59B48] cursor-pointer shrink-0 hover:scale-105 transition-transform"
               onClick={() => navigate(ROUTES.PROFILE)}
             >
               <AvatarImage
                 src={storedUser?.profile_image || ""}
                 alt={userName}
               />
-              <AvatarFallback className="bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] text-[#0F021C]">
+              <AvatarFallback className="bg-gradient-to-br from-[#C59B48] to-[#45e3d3] text-[#0B0B0D]">
                 {userInitials}
               </AvatarFallback>
             </Avatar>
@@ -452,7 +452,7 @@ export function DashboardNav({
         <div className="p-4">
           {/* Separator */}
           {!isCollapsed && (
-            <div className="h-px bg-[#ffcc33]/20 mb-4" />
+            <div className="h-px bg-[#C59B48]/20 mb-4" />
           )}
 
           <div className="space-y-2">
@@ -490,7 +490,7 @@ export function DashboardNav({
         </div>
 
         {/* Bottom Section */}
-        <div className="p-4 border-t border-[#ffcc33]/20 space-y-2">
+        <div className="p-4 border-t border-[#C59B48]/20 space-y-2">
           {/* Logout Button */}
           <motion.button
             onClick={handleLogout}
