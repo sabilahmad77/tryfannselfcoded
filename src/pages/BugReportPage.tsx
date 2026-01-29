@@ -193,10 +193,10 @@ export function BugReportPage() {
         transition={{ duration: 0.6 }}
         className={`mb-8 ${isRTL ? 'text-right' : 'text-left'}`}
       >
-        <h1 className="text-4xl md:text-5xl mb-2 text-[#ffffff]">
+        <h1 className="text-4xl md:text-5xl mb-2 text-[#F2F2F3]">
           {t.title}
         </h1>
-        <p className="text-[#808c99] text-lg">{t.subtitle}</p>
+        <p className="text-[#8A8EA0] text-lg">{t.subtitle}</p>
       </motion.div>
 
       <div className="space-y-6">
@@ -210,7 +210,7 @@ export function BugReportPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Severity Level */}
             <div>
-              <label className={`block text-[#ffffff] mb-4 ${isRTL ? 'text-right' : 'text-left'}`}>
+              <label className={`block text-[#F2F2F3] mb-4 ${isRTL ? 'text-right' : 'text-left'}`}>
                 {t.severityLabel} <span className="text-[#ef4444]">*</span>
               </label>
               <div className={`grid grid-cols-2 md:grid-cols-4 gap-3`}>
@@ -231,13 +231,13 @@ export function BugReportPage() {
                     >
                       <Icon
                         className={`w-6 h-6 mx-auto mb-2 transition-colors`}
-                        style={{ color: isSelected ? level.color : '#808c99' }}
+                        style={{ color: isSelected ? level.color : '#8A8EA0' }}
                       />
-                      <p className={`text-sm mb-1 text-center ${isSelected ? 'text-[#ffffff]' : 'text-[#808c99]'
+                      <p className={`text-sm mb-1 text-center ${isSelected ? 'text-[#F2F2F3]' : 'text-[#8A8EA0]'
                         }`}>
                         {level.label}
                       </p>
-                      <p className={`text-xs text-center ${isSelected ? 'text-[#808c99]' : 'text-[#4e4e4e]'
+                      <p className={`text-xs text-center ${isSelected ? 'text-[#8A8EA0]' : 'text-[#4e4e4e]'
                         }`}>
                         {level.desc}
                       </p>
@@ -249,7 +249,7 @@ export function BugReportPage() {
 
             {/* Category Selection */}
             <div>
-              <label className={`block text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+              <label className={`block text-[#F2F2F3] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
                 {t.categoryLabel} <span className="text-[#ef4444]">*</span>
               </label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -263,8 +263,8 @@ export function BugReportPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className={`p-3 rounded-lg transition-all cursor-pointer ${isSelected
-                        ? 'border-2 border-[#C59B48] bg-[#C59B48]/10 text-[#ffffff]'
-                        : 'bg-[#0B0B0D] border border-[#4e4e4e78] text-[#808c99] hover:border-[#C59B48]/30'
+                        ? 'border-2 border-[#C59B48] bg-[#C59B48]/10 text-[#F2F2F3]'
+                        : 'bg-[#0B0B0D] border border-[#4e4e4e78] text-[#8A8EA0] hover:border-[#C59B48]/30'
                         } ${isRTL ? 'text-right' : 'text-left'}`}
                     >
                       <span className="text-sm">{label}</span>
@@ -361,10 +361,10 @@ export function BugReportPage() {
                 <Bug className="w-5 h-5 text-[#ef4444]" />
               </div>
               <div>
-                <h3 className="text-[#ffffff] mb-1">
+                <h3 className="text-[#F2F2F3] mb-1">
                   {language === 'en' ? 'Quick Response' : 'استجابة سريعة'}
                 </h3>
-                <p className="text-sm text-[#808c99]">
+                <p className="text-sm text-[#8A8EA0]">
                   {language === 'en'
                     ? 'Critical bugs are prioritized and addressed within 24 hours.'
                     : 'يتم إعطاء الأولوية للأخطاء الحرجة ومعالجتها خلال 24 ساعة.'}
@@ -376,10 +376,10 @@ export function BugReportPage() {
                 <CheckCircle className="w-5 h-5 text-[#45e3d3]" />
               </div>
               <div>
-                <h3 className="text-[#ffffff] mb-1">
+                <h3 className="text-[#F2F2F3] mb-1">
                   {language === 'en' ? 'Track Progress' : 'تتبع التقدم'}
                 </h3>
-                <p className="text-sm text-[#808c99]">
+                <p className="text-sm text-[#8A8EA0]">
                   {language === 'en'
                     ? 'Receive updates on the status of your reported bugs via email.'
                     : 'احصل على تحديثات حول حالة الأخطاء المبلغ عنها عبر البريد الإلكتروني.'}
@@ -391,10 +391,10 @@ export function BugReportPage() {
                 <AlertCircle className="w-5 h-5 text-[#8b5cf6]" />
               </div>
               <div>
-                <h3 className="text-[#ffffff] mb-1">
+                <h3 className="text-[#F2F2F3] mb-1">
                   {language === 'en' ? 'Detailed Reports' : 'تقارير مفصلة'}
                 </h3>
-                <p className="text-sm text-[#808c99]">
+                <p className="text-sm text-[#8A8EA0]">
                   {language === 'en'
                     ? 'The more details you provide, the faster we can fix the issue.'
                     : 'كلما قدمت تفاصيل أكثر، كلما تمكنا من حل المشكلة بشكل أسرع.'}

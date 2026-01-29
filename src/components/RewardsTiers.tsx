@@ -309,7 +309,7 @@ export function RewardsTiers({
         {/* Empty State - No tiers from API */}
         {!isLoading && !isError && tiers.length === 0 && (
           <div className="text-center py-24">
-            <p className="text-white/60 text-lg">
+            <p className="text-[#B9BBC6] text-lg">
               {language === "en"
                 ? "No progression tiers available."
                 : "لا توجد مراحل تقدم متاحة."}
@@ -328,7 +328,7 @@ export function RewardsTiers({
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#C59B48]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-4xl mx-auto text-lg md:text-xl font-body">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg md:text-xl font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -437,9 +437,9 @@ export function RewardsTiers({
                               {tier.benefits.slice(0, 4).map((benefit, idx) => (
                                 <li
                                   key={idx}
-                                  className="flex items-start gap-2 text-white/60 text-xs"
+                                  className="flex items-start gap-2 text-[#B9BBC6] text-xs"
                                 >
-                                  <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-white/60" />
+                                  <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#B9BBC6]" />
                                   <span className="leading-tight font-body">
                                     {benefit}
                                   </span>
@@ -449,7 +449,7 @@ export function RewardsTiers({
 
                             {/* View More */}
                             {tier.benefits.length > 4 && (
-                              <button className="mt-4 w-full text-xs text-white/40 hover:text-white/60 transition-colors flex items-center justify-center gap-1">
+                              <button className="mt-4 w-full text-xs text-white/40 hover:text-[#B9BBC6] transition-colors flex items-center justify-center gap-1">
                                 +{tier.benefits.length - 4} more
                                 <ChevronRight className="w-3 h-3" />
                               </button>
@@ -565,9 +565,9 @@ export function RewardsTiers({
                                 {tier.benefits.slice(0, 4).map((benefit, idx) => (
                                   <li
                                     key={idx}
-                                    className="flex items-start gap-2 text-white/60 text-xs"
+                                    className="flex items-start gap-2 text-[#B9BBC6] text-xs"
                                   >
-                                    <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-white/60" />
+                                    <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#B9BBC6]" />
                                     <span className="leading-tight font-body">
                                       {benefit}
                                     </span>
@@ -577,7 +577,7 @@ export function RewardsTiers({
 
                               {/* View More */}
                               {tier.benefits.length > 4 && (
-                                <button className="mt-4 w-full text-xs text-white/40 hover:text-white/60 transition-colors flex items-center justify-center gap-1">
+                                <button className="mt-4 w-full text-xs text-white/40 hover:text-[#B9BBC6] transition-colors flex items-center justify-center gap-1">
                                   +{tier.benefits.length - 4} more
                                   <ChevronRight className="w-3 h-3" />
                                 </button>
@@ -706,9 +706,9 @@ export function RewardsTiers({
                               {tier.benefits.map((benefit, idx) => (
                                 <li
                                   key={idx}
-                                  className="flex items-start gap-2 text-white/60 text-sm"
+                                  className="flex items-start gap-2 text-[#B9BBC6] text-sm"
                                 >
-                                  <Check className="w-4 h-4 shrink-0 mt-0.5 text-white/60" />
+                                  <Check className="w-4 h-4 shrink-0 mt-0.5 text-[#B9BBC6]" />
                                   <span className="font-body">{benefit}</span>
                                 </li>
                               ))}

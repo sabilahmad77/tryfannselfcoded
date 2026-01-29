@@ -75,7 +75,7 @@ export function EmailVerificationModal() {
               {t.subtitle}
             </p>
 
-            <p className="text-white/60 text-sm leading-relaxed mt-2 max-w-xl">
+            <p className="text-[#B9BBC6] text-sm leading-relaxed mt-2 max-w-xl">
               {t.body}
             </p>
 

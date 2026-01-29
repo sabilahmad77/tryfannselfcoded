@@ -427,7 +427,7 @@ export function GamificationStep({
             <Trophy className="w-8 h-8 text-amber-400" />
           </div>
           <h2 className="text-3xl text-white mb-2">{content.title}</h2>
-          <p className="text-white/60">{content.subtitle}</p>
+          <p className="text-[#B9BBC6]">{content.subtitle}</p>
         </motion.div>
 
         {/* Current Status */}
@@ -446,19 +446,19 @@ export function GamificationStep({
               <div className="text-2xl text-amber-400 mb-1">
                 {content.currentStatus.tier}
               </div>
-              <div className="text-xs text-white/60">Tier</div>
+              <div className="text-xs text-[#B9BBC6]">Tier</div>
             </div>
             <div className="text-center p-4 rounded-lg glass">
               <div className="text-2xl text-white mb-1">
                 {content.currentStatus.points}
               </div>
-              <div className="text-xs text-white/60">Total</div>
+              <div className="text-xs text-[#B9BBC6]">Total</div>
             </div>
             <div className="text-center p-4 rounded-lg glass">
-              <div className="text-2xl text-white/60 mb-1">
+              <div className="text-2xl text-[#B9BBC6] mb-1">
                 {content.currentStatus.rank}
               </div>
-              <div className="text-xs text-white/60">Position</div>
+              <div className="text-xs text-[#B9BBC6]">Position</div>
             </div>
           </div>
         </motion.div>
@@ -472,11 +472,11 @@ export function GamificationStep({
         >
           <div className="mb-6 text-center">
             <h3 className="text-2xl text-white mb-2">{content.goals.title}</h3>
-            <p className="text-white/60">{content.goals.subtitle}</p>
+            <p className="text-[#B9BBC6]">{content.goals.subtitle}</p>
           </div>
 
           <div className="mb-4 text-center">
-            <p className="text-white/60 text-sm">
+            <p className="text-[#B9BBC6] text-sm">
               {language === "en"
                 ? `Select up to ${MAX_SELECTIONS} goals (${selectedGoals.length}/${MAX_SELECTIONS} selected)`
                 : `اختر حتى ${MAX_SELECTIONS} أهداف (${selectedGoals.length}/${MAX_SELECTIONS} محدد)`}
@@ -505,7 +505,7 @@ export function GamificationStep({
                       : isDisabled
                       ? "glass border-white/5 opacity-50"
                       : "glass border-white/10 hover:border-amber-500/30"
-                  } disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer`}
+                  } disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer`}
                 >
                   {isSelected && (
                     <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-amber-400 flex items-center justify-center">
@@ -537,7 +537,7 @@ export function GamificationStep({
                           {goal.reward}
                         </span>
                       </div>
-                      <p className="text-white/60 text-sm mb-3">{goal.desc}</p>
+                      <p className="text-[#B9BBC6] text-sm mb-3">{goal.desc}</p>
                       {isSelected && (
                         <motion.div
                           initial={{ scale: 0, opacity: 0 }}
@@ -573,7 +573,7 @@ export function GamificationStep({
               onClick={onBack}
               variant="outline"
               disabled={isLoading}
-              className="flex-1 h-12 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex-1 h-12 disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
             >
               <ChevronLeft
                 className={`w-5 h-5 mr-2 ${isRTL ? "rotate-180" : ""}`}
@@ -585,7 +585,7 @@ export function GamificationStep({
             type="button"
             onClick={handleSubmit}
             disabled={isLoading || selectedGoals.length === 0}
-            className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50"
+            className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:bg-disabled disabled:cursor-not-allowed"
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
               {isLoading ? (

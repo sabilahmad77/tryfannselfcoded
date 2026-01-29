@@ -18,8 +18,8 @@ function AppContent() {
         toastOptions={{
           style: {
             background: 'rgba(15, 2, 28, 0.9)',
-            color: '#ffffff',
-            border: '1px solid rgba(255, 204, 51, 0.3)',
+            color: '#F2F2F3',
+            border: '1px solid rgba(197, 155, 72, 0.22)',
             backdropFilter: 'blur(10px)'
           }
         }}

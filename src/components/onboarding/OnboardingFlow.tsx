@@ -160,7 +160,7 @@ export function OnboardingFlow({
             >
               {/* Progress Text */}
               <div className="text-center mb-6">
-                <p className="text-white/60 text-sm">
+                <p className="text-[#B9BBC6] text-sm">
                   {content.stepOf
                     .replace("{current}", (currentStep + 1).toString())
                     .replace("{total}", steps.length.toString())}
@@ -201,7 +201,7 @@ export function OnboardingFlow({
                             </motion.div>
                           ) : (
                             <span
-                              className={`text-sm ${isCurrent ? "text-black" : "text-white/60"
+                              className={`text-sm ${isCurrent ? "text-black" : "text-[#B9BBC6]"
                                 }`}
                             >
                               {index + 1}
@@ -220,7 +220,7 @@ export function OnboardingFlow({
 
                         {/* Step Label */}
                         <p
-                          className={`text-xs mt-2 text-center absolute top-14 whitespace-nowrap ${isCurrent ? "text-amber-400" : "text-white/60"
+                          className={`text-xs mt-2 text-center absolute top-14 whitespace-nowrap ${isCurrent ? "text-amber-400" : "text-[#B9BBC6]"
                             }`}
                         >
                           {step}

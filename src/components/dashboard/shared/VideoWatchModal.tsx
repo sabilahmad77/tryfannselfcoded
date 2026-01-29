@@ -552,7 +552,7 @@ export function VideoWatchModal({
                   }`}
               >
                 <Clock className="w-4 h-4 text-[#C59B48]" />
-                <span className="text-[#808c99]">
+                <span className="text-[#8A8EA0]">
                   {t.watchProgress.replace(
                     "{seconds}",
                     Math.min(Math.floor(currentWatchTime), MIN_WATCH_SECONDS).toString()
@@ -574,7 +574,7 @@ export function VideoWatchModal({
               <div className="absolute inset-0 flex items-center justify-center z-10">
                 <div className="flex flex-col items-center gap-2">
                   <Loader2 className="w-8 h-8 text-[#0ea5e9] animate-spin" />
-                  <span className="text-sm text-[#808c99]">{t.videoLoading}</span>
+                  <span className="text-sm text-[#8A8EA0]">{t.videoLoading}</span>
                 </div>
               </div>
             )}
@@ -583,7 +583,7 @@ export function VideoWatchModal({
               <div className="absolute inset-0 flex items-center justify-center z-10">
                 <div className="flex flex-col items-center gap-2 text-center p-4">
                   <AlertCircle className="w-8 h-8 text-[#ef4444]" />
-                  <span className="text-sm text-[#808c99]">{error}</span>
+                  <span className="text-sm text-[#8A8EA0]">{error}</span>
                   <button
                     onClick={() => {
                       setError(null);
@@ -631,7 +631,7 @@ export function VideoWatchModal({
           {/* Fallback for unsupported platforms - only show if video failed to load */}
           {error && (
             <div className="mt-4 text-center">
-              <p className="text-xs text-[#808c99] mb-2">
+              <p className="text-xs text-[#8A8EA0] mb-2">
                 {language === "en"
                   ? "If video doesn't load, you can"
                   : "إذا لم يتم تحميل الفيديو، يمكنك"}

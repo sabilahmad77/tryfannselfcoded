@@ -287,8 +287,8 @@ export function ArtistRoster({
             )}
           </div>
           <div className={isRTL ? "text-right" : "text-left"}>
-            <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
-            <p className="text-sm text-[#808c99]">
+            <h2 className="text-2xl text-[#F2F2F3]">{t.title}</h2>
+            <p className="text-sm text-[#8A8EA0]">
               {t.totalArtists}: {artists.length}
             </p>
           </div>
@@ -297,7 +297,7 @@ export function ArtistRoster({
           size="sm"
           onClick={handleAddArtistClick}
           disabled={!profileCompleted}
-          className="hover:shadow-lg hover:shadow-primary/50 border-0 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="hover:shadow-lg hover:shadow-primary/50 border-0 transition-all duration-200 cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed"
         >
           {!profileCompleted && <Lock className={`w-3 h-3 ${isRTL ? "ml-2" : "mr-2"}`} />}
           <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
@@ -320,7 +320,7 @@ export function ArtistRoster({
             <Loader2 className="w-6 h-6 text-[#45e3d3] animate-spin" />
           </div>
         ) : artistsError ? (
-          <div className="text-center py-8 text-[#808c99]">
+          <div className="text-center py-8 text-[#8A8EA0]">
             <p className="text-sm">
               {language === "en"
                 ? "Failed to load artists. Showing default data."
@@ -328,7 +328,7 @@ export function ArtistRoster({
             </p>
           </div>
         ) : artists.length === 0 ? (
-          <div className="text-center py-8 text-[#808c99]">
+          <div className="text-center py-8 text-[#8A8EA0]">
             <p className="text-sm">
               {language === "en"
                 ? "No artists found. Add your first artist!"
@@ -361,14 +361,14 @@ export function ArtistRoster({
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
-                  <h3 className="text-[#ffffff]">{artist.name}</h3>
+                  <h3 className="text-[#F2F2F3]">{artist.name}</h3>
                   <Badge
                     className={`${getStatusBadge(artist.status).className} border text-xs`}
                   >
                     {getStatusBadge(artist.status).label}
                   </Badge>
                 </div>
-                <p className="text-sm text-[#808c99] mb-1">{artist.specialty}</p>
+                <p className="text-sm text-[#8A8EA0] mb-1">{artist.specialty}</p>
                 {artist.email && (
                   <p className="text-xs text-[#94a3b8] mb-3">{artist.email}</p>
                 )}
@@ -385,7 +385,7 @@ export function ArtistRoster({
                     }`}
                   >
                     <TrendingUp className="w-4 h-4 text-[#9375b5]" />
-                    <span className="text-[#808c99]">
+                    <span className="text-[#8A8EA0]">
                       {artist.artworks} {t.artworks}
                     </span>
                   </div>
@@ -395,7 +395,7 @@ export function ArtistRoster({
                     }`}
                   >
                     <Award className="w-4 h-4 text-[#C59B48]" />
-                    <span className="text-[#808c99]">
+                    <span className="text-[#8A8EA0]">
                       {artist.exhibitions} {t.exhibitions}
                     </span>
                   </div>
@@ -407,7 +407,7 @@ export function ArtistRoster({
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="hover:scale-110 transition-all duration-200 cursor-pointer"
+                  className="hover:scale-110 transition-all duration-200 cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed"
                   onClick={() => void handleCopyEmail(artist.email)}
                   disabled={!artist.email}
                   aria-label={

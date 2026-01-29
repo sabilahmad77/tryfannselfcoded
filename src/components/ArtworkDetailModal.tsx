@@ -161,8 +161,8 @@ export function ArtworkDetailModal({
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center">
                                     <div className="text-center">
-                                        <ImageIcon className="w-16 h-16 text-[#808c99] mx-auto mb-2" />
-                                        <p className="text-sm text-[#808c99]">{t.noImage}</p>
+                                        <ImageIcon className="w-16 h-16 text-[#8A8EA0] mx-auto mb-2" />
+                                        <p className="text-sm text-[#8A8EA0]">{t.noImage}</p>
                                     </div>
                                 </div>
                             )}
@@ -199,7 +199,7 @@ export function ArtworkDetailModal({
                                 >
                                     <User className="w-5 h-5 text-[#C59B48] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
-                                        <p className="text-xs text-[#808c99] mb-1">{t.artist}</p>
+                                        <p className="text-xs text-[#8A8EA0] mb-1">{t.artist}</p>
                                         <p className="text-sm text-[#F2F2F3]">{artistName}</p>
                                     </div>
                                 </div>
@@ -212,7 +212,7 @@ export function ArtworkDetailModal({
                                 >
                                     <Calendar className="w-5 h-5 text-[#45e3d3] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
-                                        <p className="text-xs text-[#808c99] mb-1">{t.year}</p>
+                                        <p className="text-xs text-[#8A8EA0] mb-1">{t.year}</p>
                                         <p className="text-sm text-[#F2F2F3]">{artwork.year}</p>
                                     </div>
                                 </div>
@@ -225,7 +225,7 @@ export function ArtworkDetailModal({
                                 >
                                     <DollarSign className="w-5 h-5 text-[#45e3d3] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
-                                        <p className="text-xs text-[#808c99] mb-1">{t.price}</p>
+                                        <p className="text-xs text-[#8A8EA0] mb-1">{t.price}</p>
                                         <p className="text-sm text-[#C59B48] font-semibold">{price}</p>
                                     </div>
                                 </div>
@@ -238,7 +238,7 @@ export function ArtworkDetailModal({
                                 >
                                     <Palette className="w-5 h-5 text-[#C59B48] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
-                                        <p className="text-xs text-[#808c99] mb-1">{t.medium}</p>
+                                        <p className="text-xs text-[#8A8EA0] mb-1">{t.medium}</p>
                                         <p className="text-sm text-[#F2F2F3]">{artwork.medium}</p>
                                     </div>
                                 </div>
@@ -251,7 +251,7 @@ export function ArtworkDetailModal({
                                 >
                                     <Tag className="w-5 h-5 text-[#9375b5] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
-                                        <p className="text-xs text-[#808c99] mb-1">{t.category}</p>
+                                        <p className="text-xs text-[#8A8EA0] mb-1">{t.category}</p>
                                         <p className="text-sm text-[#F2F2F3]">{artwork.category}</p>
                                     </div>
                                 </div>
@@ -264,7 +264,7 @@ export function ArtworkDetailModal({
                                 >
                                     <Ruler className="w-5 h-5 text-[#45e3d3] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
-                                        <p className="text-xs text-[#808c99] mb-1">{t.dimensions}</p>
+                                        <p className="text-xs text-[#8A8EA0] mb-1">{t.dimensions}</p>
                                         <p className="text-sm text-[#F2F2F3]">{artwork.dimensions}</p>
                                     </div>
                                 </div>
@@ -277,7 +277,7 @@ export function ArtworkDetailModal({
                                 >
                                     <Calendar className="w-5 h-5 text-[#9375b5] shrink-0 mt-0.5" />
                                     <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
-                                        <p className="text-xs text-[#808c99] mb-1">
+                                        <p className="text-xs text-[#8A8EA0] mb-1">
                                             {t.acquisitionDate}
                                         </p>
                                         <p className="text-sm text-[#F2F2F3]">
@@ -302,7 +302,7 @@ export function ArtworkDetailModal({
                             >
                                 <div className="flex items-center gap-2 mb-2">
                                     <FileText className="w-4 h-4 text-[#C59B48]" />
-                                    <p className="text-xs text-[#808c99]">{t.description}</p>
+                                    <p className="text-xs text-[#8A8EA0]">{t.description}</p>
                                 </div>
                                 <p className="text-sm text-[#F2F2F3] leading-relaxed whitespace-pre-wrap">
                                     {artwork.description}
@@ -314,7 +314,7 @@ export function ArtworkDetailModal({
                             <div
                                 className={`p-4 bg-[#191922] rounded-lg border border-[#2A2A3A] ${isRTL ? "text-right" : "text-left"}`}
                             >
-                                <p className="text-sm text-[#808c99]">{t.noDescription}</p>
+                                <p className="text-sm text-[#8A8EA0]">{t.noDescription}</p>
                             </div>
                         )}
                     </motion.div>

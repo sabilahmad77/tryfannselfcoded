@@ -414,7 +414,7 @@ export function SettingsPage() {
     return (
       <DashboardLayout currentPage="settings">
         <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-          <p className="text-[#808c99]">
+          <p className="text-[#8A8EA0]">
             {language === "en"
               ? "Failed to load settings. Please try again."
               : "فشل تحميل الإعدادات. يرجى المحاولة مرة أخرى."}
@@ -445,9 +445,9 @@ export function SettingsPage() {
           <div className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#45e3d3] rounded-xl flex items-center justify-center">
             <SettingsIcon className="w-6 h-6 text-[#0B0B0D]" />
           </div>
-          <h1 className="text-4xl text-[#ffffff]">{t.settings}</h1>
+          <h1 className="text-4xl text-[#F2F2F3]">{t.settings}</h1>
         </div>
-        <p className="text-[#808c99]">
+        <p className="text-[#8A8EA0]">
           {language === "en"
             ? "Manage your account settings and preferences"
             : "إدارة إعدادات حسابك وتفضيلاتك"}
@@ -488,7 +488,7 @@ export function SettingsPage() {
           >
             {/* Change Password Section */}
             <h3
-              className={`text-xl text-[#ffffff] mb-6 ${
+              className={`text-xl text-[#F2F2F3] mb-6 ${
                 isRTL ? "text-right" : "text-left"
               }`}
             >
@@ -531,7 +531,7 @@ export function SettingsPage() {
               <Button
                 onClick={handleChangePassword}
                 disabled={isChangingPassword}
-                className="disabled:opacity-50"
+                className="disabled:bg-disabled disabled:cursor-not-allowed"
               >
                 {isChangingPassword ? (
                   <>
@@ -553,7 +553,7 @@ export function SettingsPage() {
               }`}
             >
               <h4 className="text-destructive mb-2">{t.deleteAccount}</h4>
-              <p className="text-sm text-[#808c99] mb-4">{t.deleteWarning}</p>
+              <p className="text-sm text-[#8A8EA0] mb-4">{t.deleteWarning}</p>
               <Button variant="destructive" size="sm">
                 {t.deleteAccount}
               </Button>
@@ -570,7 +570,7 @@ export function SettingsPage() {
           >
             <div className="space-y-6">
               <h2
-                className={`text-2xl text-[#ffffff] mb-6 ${
+                className={`text-2xl text-[#F2F2F3] mb-6 ${
                   isRTL ? "text-right" : "text-left"
                 }`}
               >
@@ -665,7 +665,7 @@ export function SettingsPage() {
             className="glass rounded-2xl p-6"
           >
             <h2
-              className={`text-2xl text-[#ffffff] mb-6 ${
+              className={`text-2xl text-[#F2F2F3] mb-6 ${
                 isRTL ? "text-right" : "text-left"
               }`}
             >
@@ -738,8 +738,8 @@ export function SettingsPage() {
                 >
                   <Shield className="w-6 h-6 text-[#45e3d3]" />
                   <div>
-                    <h3 className="text-[#ffffff]">{t.twoFactor}</h3>
-                    <p className="text-sm text-[#808c99]">{t.twoFactorDesc}</p>
+                    <h3 className="text-[#F2F2F3]">{t.twoFactor}</h3>
+                    <p className="text-sm text-[#8A8EA0]">{t.twoFactorDesc}</p>
                   </div>
                 </div>
                 <Button
@@ -759,12 +759,12 @@ export function SettingsPage() {
 
               {/* Active Sessions */}
               {/* <div
-                className={`p-4 bg-[#1D112A]/50 rounded-xl ${
+                className={`p-4 bg-[#191922]/50 rounded-xl ${
                   isRTL ? "text-right" : "text-left"
                 }`}
               >
-                <h3 className="text-[#ffffff] mb-2">{t.sessions}</h3>
-                <p className="text-sm text-[#808c99] mb-4">
+                <h3 className="text-[#F2F2F3] mb-2">{t.sessions}</h3>
+                <p className="text-sm text-[#8A8EA0] mb-4">
                   {language === "en"
                     ? "Manage devices where you're logged in"
                     : "إدارة الأجهزة التي قمت بتسجيل الدخول منها"}
@@ -848,7 +848,7 @@ export function SettingsPage() {
               <Button
                 onClick={handleSavePreferences}
                 disabled={isSavingSettings}
-                className="w-full md:w-auto disabled:opacity-50"
+                className="w-full md:w-auto disabled:bg-disabled disabled:cursor-not-allowed"
               >
                 {isSavingSettings ? (
                   <>

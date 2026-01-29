@@ -186,9 +186,9 @@ export function Footer({ language }: FooterProps) {
                 className="h-8 w-auto"
                 animate={{
                   filter: [
-                    'drop-shadow(0 0 8px rgba(255, 204, 51, 0.3))',
-                    'drop-shadow(0 0 16px rgba(255, 204, 51, 0.5))',
-                    'drop-shadow(0 0 8px rgba(255, 204, 51, 0.3))',
+                    'drop-shadow(0 0 8px rgba(197, 155, 72, 0.22))',
+                    'drop-shadow(0 0 16px rgba(197, 155, 72, 0.4))',
+                    'drop-shadow(0 0 8px rgba(197, 155, 72, 0.22))',
                   ]
                 }}
                 transition={{ duration: 2, repeat: Infinity }}
@@ -198,7 +198,7 @@ export function Footer({ language }: FooterProps) {
               <span className="text-white">{t.tagline.white}</span>
               <span className="text-[#C59B48]">{t.tagline.gold}</span>
             </p>
-            <p className="text-[#ffffff]/60 text-sm mb-6 max-w-sm leading-relaxed font-body">
+            <p className="text-[#F2F2F3]/60 text-sm mb-6 max-w-sm leading-relaxed font-body">
               {t.description}
             </p>
 
@@ -217,13 +217,13 @@ export function Footer({ language }: FooterProps) {
                       className="w-11 h-11 rounded-full glass border border-[#C59B48]/30 hover:border-[#C59B48] flex items-center justify-center transition-all group"
                       aria-label={social.label}
                     >
-                      <Icon className="w-5 h-5 text-[#ffffff]/60 group-hover:text-[#C59B48] transition-colors" />
+                      <Icon className="w-5 h-5 text-[#F2F2F3]/60 group-hover:text-[#C59B48] transition-colors" />
                     </motion.a>
                     {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded-lg bg-[#1D112A] border border-[#C59B48]/30 text-white text-xs font-body whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity duration-200 z-50 shadow-lg">
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded-lg bg-[#191922] border border-[#C59B48]/30 text-white text-xs font-body whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity duration-200 z-50 shadow-lg">
                       {social.label}
                       <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
-                        <div className="w-2 h-2 bg-[#1D112A] border-r border-b border-[#C59B48]/30 rotate-45"></div>
+                        <div className="w-2 h-2 bg-[#191922] border-r border-b border-[#C59B48]/30 rotate-45"></div>
                       </div>
                     </div>
                   </div>
@@ -235,7 +235,7 @@ export function Footer({ language }: FooterProps) {
           {/* Links */}
           {t.sections.map((section, index) => (
             <div key={index}>
-              <h4 className="text-[#ffffff] mb-6 font-heading">{section.title}</h4>
+              <h4 className="text-[#F2F2F3] mb-6 font-heading">{section.title}</h4>
               <ul className="space-y-3">
                 {section.links.map((link, linkIndex) => {
                   const isComingSoonLink = isComingSoon(link);
@@ -248,7 +248,7 @@ export function Footer({ language }: FooterProps) {
                         <motion.button
                           onClick={() => handleLinkClick(link)}
                           disabled={isComingSoonLink}
-                          className={`text-[#ffffff]/60 hover:text-[#C59B48] text-sm transition-colors inline-block font-body ${isComingSoonLink ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                          className={`text-[#F2F2F3]/60 hover:text-[#C59B48] text-sm disabled:bg-disabled transition-colors inline-block font-body ${isComingSoonLink ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
                         >
                           {link}
                         </motion.button>
@@ -269,14 +269,14 @@ export function Footer({ language }: FooterProps) {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-[#C59B48]/10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-[#ffffff]/60 text-sm font-body">{t.copyright}</p>
+            <p className="text-[#F2F2F3]/60 text-sm font-body">{t.copyright}</p>
             <div className="flex items-center gap-4">
               <motion.div
                 className="flex items-center gap-2 px-4 py-2 rounded-full glass border border-[#45e3d3]/30"
                 whileHover={{ scale: 1.05 }}
               >
                 <div className="w-2 h-2 rounded-full bg-[#45e3d3] animate-pulse" />
-                <span className="text-[#ffffff]/60 text-xs font-body">GDPR Compliant</span>
+                <span className="text-[#F2F2F3]/60 text-xs font-body">GDPR Compliant</span>
               </motion.div>
             </div>
           </div>

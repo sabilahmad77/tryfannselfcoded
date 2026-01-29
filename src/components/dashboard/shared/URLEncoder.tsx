@@ -193,7 +193,7 @@ export function URLEncoder({
       <div className="glass rounded-2xl p-6 h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-8 h-8 text-[#45e3d3] animate-spin" />
-          <p className="text-[#808c99]">
+          <p className="text-[#8A8EA0]">
             {language === "en"
               ? "Loading referral data..."
               : "جاري تحميل بيانات الإحالة..."}
@@ -214,8 +214,8 @@ export function URLEncoder({
           <Link2 className="w-6 h-6 text-[#0B0B0D]" />
         </div>
         <div className={isRTL ? "text-right" : "text-left"}>
-          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
-          <p className="text-sm text-[#808c99]">{t.description}</p>
+          <h2 className="text-2xl text-[#F2F2F3]">{t.title}</h2>
+          <p className="text-sm text-[#8A8EA0]">{t.description}</p>
         </div>
       </div>
 
@@ -226,7 +226,7 @@ export function URLEncoder({
             }`}
         >
           <label
-            className={`text-sm text-[#808c99] block ${isRTL ? "text-right" : "text-left"
+            className={`text-sm text-[#8A8EA0] block ${isRTL ? "text-right" : "text-left"
               }`}
           >
             {t.yourLink}
@@ -236,7 +236,7 @@ export function URLEncoder({
             disabled={isGenerating || isReferralCode || !profileCompleted}
             size="sm"
             variant="outline"
-            className="text-xs transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-xs transition-all duration-200 cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed"
           >
             {isGenerating ? (
               <>
@@ -257,12 +257,12 @@ export function URLEncoder({
                 ? "No referral link yet"
                 : "لا يوجد رابط إحالة بعد"
             }
-            className="flex-1 bg-[#0B0B0D] border-[#4e4e4e78] text-[#ffffff] focus:border-[#C59B48]"
+            className="flex-1 bg-[#0B0B0D] border-[#4e4e4e78] text-[#F2F2F3] focus:border-[#C59B48]"
           />
           <Button
             onClick={handleCopy}
             disabled={!referralLink}
-            className="hover:shadow-lg hover:shadow-primary/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="hover:shadow-lg hover:shadow-primary/50 transition-all disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
           >
             {copied ? (
               <>
@@ -285,35 +285,35 @@ export function URLEncoder({
           whileHover={{ scale: 1.05 }}
           className="bg-gradient-to-br from-[#0ea5e9]/20 to-[#0ea5e9]/5 rounded-xl p-4 border border-[#0ea5e9]/30 text-center"
         >
-          <p className="text-2xl text-[#ffffff] mb-1">{stats.clicks}</p>
-          <p className="text-xs text-[#808c99]">{t.stats.clicks}</p>
+          <p className="text-2xl text-[#F2F2F3] mb-1">{stats.clicks}</p>
+          <p className="text-xs text-[#8A8EA0]">{t.stats.clicks}</p>
         </motion.div>
         <motion.div
           whileHover={{ scale: 1.05 }}
           className="bg-gradient-to-br from-[#45e3d3]/20 to-[#45e3d3]/5 rounded-xl p-4 border border-[#45e3d3]/30 text-center"
         >
-          <p className="text-2xl text-[#ffffff] mb-1">{stats.conversions}</p>
-          <p className="text-xs text-[#808c99]">{t.stats.conversions}</p>
+          <p className="text-2xl text-[#F2F2F3] mb-1">{stats.conversions}</p>
+          <p className="text-xs text-[#8A8EA0]">{t.stats.conversions}</p>
         </motion.div>
         <motion.div
           whileHover={{ scale: 1.05 }}
           className="bg-gradient-to-br from-[#D6AE5A]/20 to-[#D6AE5A]/5 rounded-xl p-4 border border-[#D6AE5A]/30 text-center"
         >
-          <p className="text-2xl text-[#ffffff] mb-1">{stats.pending}</p>
-          <p className="text-xs text-[#808c99]">{t.stats.pending}</p>
+          <p className="text-2xl text-[#F2F2F3] mb-1">{stats.pending}</p>
+          <p className="text-xs text-[#8A8EA0]">{t.stats.pending}</p>
         </motion.div>
       </div>
 
       {/* Share Buttons */}
       <div className={isRTL ? "text-right" : "text-left"}>
-        <p className="text-sm text-[#808c99] mb-3">{t.shareOn}</p>
+        <p className="text-sm text-[#8A8EA0] mb-3">{t.shareOn}</p>
         <div className={`flex gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
           <motion.button
             whileHover={referralLink ? { scale: 1.1, rotate: 5 } : {}}
             whileTap={referralLink ? { scale: 0.95 } : {}}
             onClick={() => handleShare("facebook")}
             disabled={!referralLink}
-            className="w-12 h-12 bg-gradient-to-br from-[#1877f2] to-[#0c63d4] hover:from-[#0c63d4] hover:to-[#1877f2] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1877f2]/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-12 h-12 bg-gradient-to-br from-[#1877f2] to-[#0c63d4] hover:from-[#0c63d4] hover:to-[#1877f2] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1877f2]/50 transition-all cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed"
           >
             <Facebook className="w-6 h-6 text-white" />
           </motion.button>
@@ -322,7 +322,7 @@ export function URLEncoder({
             whileTap={referralLink ? { scale: 0.95 } : {}}
             onClick={() => handleShare("twitter")}
             disabled={!referralLink}
-            className="w-12 h-12 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] hover:from-[#0c85d0] hover:to-[#1da1f2] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1da1f2]/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-12 h-12 bg-gradient-to-br from-[#1da1f2] to-[#0c85d0] hover:from-[#0c85d0] hover:to-[#1da1f2] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#1da1f2]/50 transition-all cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed"
           >
             <Twitter className="w-6 h-6 text-white" />
           </motion.button>
@@ -347,7 +347,7 @@ export function URLEncoder({
               }
             }}
             disabled={!referralLink}
-            className="w-12 h-12 bg-gradient-to-br from-[#e4405f] to-[#c13584] hover:from-[#c13584] hover:to-[#e4405f] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#e4405f]/50 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-12 h-12 bg-gradient-to-br from-[#e4405f] to-[#c13584] hover:from-[#c13584] hover:to-[#e4405f] rounded-xl flex items-center justify-center hover:shadow-lg hover:shadow-[#e4405f]/50 transition-all cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed"
           >
             <Instagram className="w-6 h-6 text-white" />
           </motion.button>
@@ -377,10 +377,10 @@ export function URLEncoder({
               size={128}
               level="H"
               fgColor="#0B0B0D"
-              bgColor="#ffffff"
+              bgColor="#F2F2F3"
             />
           </div>
-          <p className="text-xs text-[#808c99] text-center mt-2">
+          <p className="text-xs text-[#8A8EA0] text-center mt-2">
             {language === "en"
               ? "Scan QR Code to share"
               : "امسح رمز QR للمشاركة"}
@@ -392,7 +392,7 @@ export function URLEncoder({
           className="mt-6 p-4 bg-white/5 rounded-xl flex items-center justify-center"
         >
           <div className="w-32 h-32 bg-gradient-to-br from-[#C59B48]/20 to-[#45e3d3]/20 rounded-lg flex items-center justify-center border-2 border-dashed border-[#4e4e4e78]">
-            <Share2 className="w-16 h-16 text-[#808c99] opacity-30" />
+            <Share2 className="w-16 h-16 text-[#8A8EA0] opacity-30" />
           </div>
         </motion.div>
       )}

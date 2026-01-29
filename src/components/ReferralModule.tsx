@@ -184,7 +184,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#C59B48]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-4xl mx-auto text-lg font-body">{t.subtitle}</p>
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg font-body">{t.subtitle}</p>
         </motion.div>
 
         {/* Featured Code Card - Minimal Modern */}
@@ -194,7 +194,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
           viewport={{ once: true }}
           className="mb-8"
         >
-          <div className="p-8 md:p-12 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 relative overflow-hidden shadow-2xl shadow-[#C59B48]/30">
+          <div className="p-8 md:p-12 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/80 via-[#191922]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 relative overflow-hidden shadow-2xl shadow-[#C59B48]/30">
             {/* Gradient top accent */}
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#C59B48] to-transparent" />
             
@@ -204,8 +204,8 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             <div className="relative z-10 max-w-5xl mx-auto">
               {/* Code Section */}
               <div className="mb-8 text-center">
-                <div className="text-white/60 text-sm mb-4 uppercase tracking-wider">{t.codeCard.label}</div>
-                <div className="inline-flex items-center gap-4 p-6 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#1D112A]/60 to-[#0B0B0D]/60 border-2 border-[#C59B48]/40 mb-6 shadow-lg hover:shadow-[#C59B48]/30 transition-shadow">
+                <div className="text-[#B9BBC6] text-sm mb-4 uppercase tracking-wider">{t.codeCard.label}</div>
+                <div className="inline-flex items-center gap-4 p-6 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#191922]/60 to-[#0B0B0D]/60 border-2 border-[#C59B48]/40 mb-6 shadow-lg hover:shadow-[#C59B48]/30 transition-shadow">
                   <div className="text-3xl md:text-4xl tracking-[0.3em] text-white font-mono">
                     {referralCode}
                   </div>
@@ -218,7 +218,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                     {copied ? (
                       <Check className="w-5 h-5 text-green-400" />
                     ) : (
-                      <Copy className="w-5 h-5 text-white/60 hover:text-amber-400 transition-colors" />
+                      <Copy className="w-5 h-5 text-[#B9BBC6] hover:text-amber-400 transition-colors" />
                     )}
                   </motion.button>
                 </div>
@@ -238,7 +238,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleShare(social.platform)}
-                        className="h-10 px-6 rounded-md backdrop-blur-md bg-gradient-to-br from-[#1D112A]/40 to-[#0B0B0D]/40 border border-[#C59B48]/30 hover:border-[#C59B48]/70 flex items-center gap-2 transition-all text-sm text-white/60 hover:text-white shadow-md hover:shadow-[#C59B48]/20 cursor-pointer font-body"
+                        className="h-10 px-6 rounded-md backdrop-blur-md bg-gradient-to-br from-[#191922]/40 to-[#0B0B0D]/40 border border-[#C59B48]/30 hover:border-[#C59B48]/70 flex items-center gap-2 transition-all text-sm text-[#B9BBC6] hover:text-white shadow-md hover:shadow-[#C59B48]/20 cursor-pointer font-body"
                       >
                         <Icon className="w-4 h-4" />
                         <span className="hidden sm:inline">{social.label}</span>
@@ -263,11 +263,11 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                       viewport={{ once: true }}
                       transition={{ delay: 0.1 + index * 0.1 }}
                       whileHover={{ y: -3, scale: 1.02 }}
-                      className="text-center p-5 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#1D112A]/40 via-[#1D112A]/30 to-[#0B0B0D]/40 border border-[#C59B48]/20 hover:border-[#C59B48]/50 transition-all shadow-lg hover:shadow-[#C59B48]/20"
+                      className="text-center p-5 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#191922]/40 via-[#191922]/30 to-[#0B0B0D]/40 border border-[#C59B48]/20 hover:border-[#C59B48]/50 transition-all shadow-lg hover:shadow-[#C59B48]/20"
                     >
                       <Icon className="w-5 h-5 text-amber-500/60 mx-auto mb-3" />
                       <div className="text-3xl text-white mb-2">{stat.value}</div>
-                      <div className="text-white/60 text-sm mb-1">{stat.label}</div>
+                      <div className="text-[#B9BBC6] text-sm mb-1">{stat.label}</div>
                       <div className="text-xs text-white/50">{stat.sublabel}</div>
                     </motion.div>
                   );
@@ -288,7 +288,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             transition={{ delay: 0.2 }}
             className="lg:col-span-1"
           >
-            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/70 via-[#1D112A]/60 to-[#0B0B0D]/70 border-2 border-[#C59B48]/40 h-full shadow-xl hover:shadow-[#C59B48]/30 transition-shadow duration-300 overflow-hidden group">
+            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/70 via-[#191922]/60 to-[#0B0B0D]/70 border-2 border-[#C59B48]/40 h-full shadow-xl hover:shadow-[#C59B48]/30 transition-shadow duration-300 overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-[#C59B48]/5 via-transparent to-[#45e3d3]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               <div className="flex items-center gap-2 mb-6 relative z-10">
@@ -306,14 +306,14 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                       viewport={{ once: true }}
                       transition={{ delay: 0.3 + index * 0.1 }}
                       whileHover={{ scale: 1.02, x: 4 }}
-                      className="flex items-center gap-4 p-3 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#1D112A]/50 to-[#0B0B0D]/50 border border-[#C59B48]/20 hover:border-[#C59B48]/50 transition-all"
+                      className="flex items-center gap-4 p-3 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#191922]/50 to-[#0B0B0D]/50 border border-[#C59B48]/20 hover:border-[#C59B48]/50 transition-all"
                     >
                       <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#C59B48]/40 to-[#45e3d3]/40 flex items-center justify-center shrink-0 shadow-lg border border-[#C59B48]/30">
                         <Icon className="w-5 h-5 text-[#C59B48]" />
                       </div>
                       <div>
                         <div className="text-white text-sm mb-1 font-body">{step.title}</div>
-                        <div className="text-white/60 text-xs font-body">{step.desc}</div>
+                        <div className="text-[#B9BBC6] text-xs font-body">{step.desc}</div>
                       </div>
                     </motion.div>
                   );
@@ -330,7 +330,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             transition={{ delay: 0.3 }}
             className="lg:col-span-1"
           >
-            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/70 via-[#1D112A]/60 to-[#0B0B0D]/70 border-2 border-[#C59B48]/40 h-full shadow-xl hover:shadow-[#C59B48]/30 transition-shadow duration-300 overflow-hidden group">
+            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/70 via-[#191922]/60 to-[#0B0B0D]/70 border-2 border-[#C59B48]/40 h-full shadow-xl hover:shadow-[#C59B48]/30 transition-shadow duration-300 overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-[#C59B48]/5 via-transparent to-[#45e3d3]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               <div className="flex items-center gap-2 mb-6 relative z-10">
@@ -345,7 +345,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                   animate={{ x: ['-100%', '100%'] }}
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
                 />
-                <div className="text-white/60 text-xs mb-1">{t.earnings.current.label}</div>
+                <div className="text-[#B9BBC6] text-xs mb-1">{t.earnings.current.label}</div>
                 <div className="text-4xl bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent mb-1">
                   {t.earnings.current.value}
                 </div>
@@ -364,10 +364,10 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-white/60 text-sm">
+                      <span className="text-[#B9BBC6] text-sm">
                         {tier.min}-{tier.max || '∞'}
                       </span>
-                      <span className={`text-sm ${tier.active ? 'text-amber-400' : 'text-white/60'}`}>
+                      <span className={`text-sm ${tier.active ? 'text-amber-400' : 'text-[#B9BBC6]'}`}>
                         {tier.rate} pts
                       </span>
                     </div>
@@ -377,7 +377,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
 
               {/* Next Unlock */}
               <div className="p-3 rounded-xl glass border border-amber-500/30 flex items-center justify-between">
-                <span className="text-white/60 text-sm">{t.earnings.next.label}</span>
+                <span className="text-[#B9BBC6] text-sm">{t.earnings.next.label}</span>
                 <div className="flex items-center gap-2">
                   <span className="text-amber-400">{t.earnings.next.value}</span>
                   <ArrowUpRight className="w-4 h-4 text-amber-400" />
@@ -394,7 +394,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             transition={{ delay: 0.4 }}
             className="lg:col-span-1"
           >
-            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/70 via-[#1D112A]/60 to-[#0B0B0D]/70 border-2 border-[#45e3d3]/40 h-full shadow-xl hover:shadow-[#45e3d3]/30 transition-shadow duration-300 overflow-hidden group">
+            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/70 via-[#191922]/60 to-[#0B0B0D]/70 border-2 border-[#45e3d3]/40 h-full shadow-xl hover:shadow-[#45e3d3]/30 transition-shadow duration-300 overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-[#45e3d3]/5 via-transparent to-[#C59B48]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
               <div className="flex items-center gap-2 mb-6 relative z-10">
@@ -414,7 +414,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                       className={`relative p-4 rounded-xl border-2 text-center backdrop-blur-md ${
                         isUnlocked
                           ? 'bg-gradient-to-br from-[#45e3d3]/30 to-[#3bc4b5]/30 border-[#45e3d3] shadow-lg shadow-[#45e3d3]/30'
-                          : 'bg-gradient-to-br from-[#1D112A]/50 to-[#0B0B0D]/50 border-[#C59B48]/20'
+                          : 'bg-gradient-to-br from-[#191922]/50 to-[#0B0B0D]/50 border-[#C59B48]/20'
                       }`}
                     >
                       {isUnlocked && (
@@ -462,7 +462,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                       <div className={`text-sm mb-1 ${isUnlocked ? 'text-green-400' : 'text-white'}`}>
                         +{milestone.reward.toLocaleString()}
                       </div>
-                      <div className={`text-xs ${isUnlocked ? 'text-green-500' : 'text-white/60'}`}>
+                      <div className={`text-xs ${isUnlocked ? 'text-green-500' : 'text-[#B9BBC6]'}`}>
                         {milestone.label}
                       </div>
                     </motion.div>

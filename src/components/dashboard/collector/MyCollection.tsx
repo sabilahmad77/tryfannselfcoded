@@ -408,14 +408,14 @@ export function MyCollection({
               </div>
             )}
           </div>
-          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
+          <h2 className="text-2xl text-[#F2F2F3]">{t.title}</h2>
         </div>
         <div className={`flex gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
           <Button
             size="sm"
             onClick={handleAddClick}
             disabled={!profileCompleted}
-            className="border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="border-0 cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed"
           >
             {!profileCompleted && <Lock className={`w-3 h-3 ${isRTL ? "ml-2" : "mr-2"}`} />}
             <Plus className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
@@ -435,9 +435,9 @@ export function MyCollection({
               }`}
           >
             <Gem className="w-4 h-4 text-[#9375b5]" />
-            <span className="text-xs text-[#808c99]">{t.totalPieces}</span>
+            <span className="text-xs text-[#8A8EA0]">{t.totalPieces}</span>
           </div>
-          <p className="text-2xl text-[#ffffff]">
+          <p className="text-2xl text-[#F2F2F3]">
             {statsData?.artwork_count ?? artworkList.length}
           </p>
         </motion.div>
@@ -451,9 +451,9 @@ export function MyCollection({
               }`}
           >
             <TrendingUp className="w-4 h-4 text-[#45e3d3]" />
-            <span className="text-xs text-[#808c99]">{t.totalValue}</span>
+            <span className="text-xs text-[#8A8EA0]">{t.totalValue}</span>
           </div>
-          <p className="text-2xl text-[#ffffff]">
+          <p className="text-2xl text-[#F2F2F3]">
             {statsData?.portfolio_value
               ? `$${statsData.portfolio_value.toFixed(1)}K`
               : "$0K"}
@@ -469,7 +469,7 @@ export function MyCollection({
               }`}
           >
             <TrendingUp className="w-4 h-4 text-[#C59B48]" />
-            <span className="text-xs text-[#808c99]">{t.growth}</span>
+            <span className="text-xs text-[#8A8EA0]">{t.growth}</span>
           </div>
           <p className="text-2xl text-emerald-400">
             {statsData?.growth !== undefined
@@ -482,7 +482,7 @@ export function MyCollection({
       {/* Recent Acquisitions */}
       <div>
         <h3
-          className={`text-sm text-[#808c99] mb-4 ${isRTL ? "text-right" : "text-left"
+          className={`text-sm text-[#8A8EA0] mb-4 ${isRTL ? "text-right" : "text-left"
             }`}
         >
           {t.recent}
@@ -500,7 +500,7 @@ export function MyCollection({
             <Loader2 className="w-6 h-6 text-[#C59B48] animate-spin" />
           </div>
         ) : artworksError ? (
-          <div className="text-center py-8 text-[#808c99]">
+          <div className="text-center py-8 text-[#8A8EA0]">
             <p className="text-sm">
               {language === "en"
                 ? "Failed to load artworks. Showing default data."
@@ -508,7 +508,7 @@ export function MyCollection({
             </p>
           </div>
         ) : artworkList.length === 0 ? (
-          <div className="text-center py-8 text-[#808c99]">
+          <div className="text-center py-8 text-[#8A8EA0]">
             <p className="text-sm">
               {language === "en"
                 ? "No artworks found. Add your first artwork!"
@@ -565,7 +565,7 @@ export function MyCollection({
                       className={`flex items-center gap-2 mb-1 ${isRTL ? "flex-row-reverse" : ""
                         }`}
                     >
-                      <h3 className="text-[#ffffff]">{piece.title}</h3>
+                      <h3 className="text-[#F2F2F3]">{piece.title}</h3>
                       <Badge
                         className={`${getCategoryColor(
                           piece.category
@@ -578,20 +578,20 @@ export function MyCollection({
                         }
                       </Badge>
                     </div>
-                    <p className="text-sm text-[#808c99]">
+                    <p className="text-sm text-[#8A8EA0]">
                       {t.by} {piece.artist} • {piece.year}
                     </p>
                     {piece.medium && (
-                      <p className="text-xs text-[#BEC0C9] mt-1">{piece.medium}</p>
+                      <p className="text-xs text-[#B9BBC6] mt-1">{piece.medium}</p>
                     )}
                     {piece.dimensions && (
-                      <p className="text-xs text-[#BEC0C9] mt-1">
+                      <p className="text-xs text-[#B9BBC6] mt-1">
                         {language === "en" ? "Dimensions: " : "الأبعاد: "}
                         {piece.dimensions}
                       </p>
                     )}
                     {piece.description && (
-                      <p className="text-xs text-[#808c99] mt-2 line-clamp-2">
+                      <p className="text-xs text-[#8A8EA0] mt-2 line-clamp-2">
                         {piece.description}
                       </p>
                     )}
@@ -604,7 +604,7 @@ export function MyCollection({
                       <p className="text-lg text-[#C59B48]">
                         ${parseFloat(piece.value || "0").toLocaleString()}
                       </p>
-                      <p className="text-xs text-[#BEC0C9]">
+                      <p className="text-xs text-[#B9BBC6]">
                         {piece.acquired ? formatDateForDisplay(piece.acquired, language) : ""}
                       </p>
                     </div>
@@ -617,7 +617,7 @@ export function MyCollection({
                           handleEditArtwork(piece);
                         }}
                         disabled={isUpdating || isDeleting}
-                        className="bg-primary/10 hover:bg-primary/20 hover:scale-110 text-primary hover:text-primary transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                        className="bg-primary/10 hover:bg-primary/20 hover:scale-110 text-primary hover:text-primary transition-all duration-200 cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed disabled:hover:scale-100"
                         title={t.actions.edit}
                       >
                         <Edit2 className="w-4 h-4" />
@@ -634,7 +634,7 @@ export function MyCollection({
                           deletingArtworkId === piece.id ||
                           !piece.id
                         }
-                        className="bg-red-500/10 hover:bg-red-500/20 hover:scale-110 text-red-400 hover:text-red-300 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                        className="bg-red-500/10 hover:bg-red-500/20 hover:scale-110 text-red-400 hover:text-red-300 transition-all duration-200 cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed"
                         title={t.actions.delete}
                       >
                         {deletingArtworkId === piece.id ? (

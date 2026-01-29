@@ -725,7 +725,7 @@ export function PersonaDetailsStep({
             <Icon className="w-8 h-8 text-amber-400" />
           </div>
           <h2 className="text-3xl text-white mb-2">{content.title}</h2>
-          <p className="text-white/60">{content.subtitle}</p>
+          <p className="text-[#B9BBC6]">{content.subtitle}</p>
         </motion.div>
 
         {/* Form */}
@@ -773,7 +773,7 @@ export function PersonaDetailsStep({
             {/* Show current profile image preview if exists and no new file selected */}
             {profileImagePreview && !profileImage && (
               <div className="mt-4 space-y-2">
-                <p className="text-xs text-white/60">
+                <p className="text-xs text-[#B9BBC6]">
                   {language === "en"
                     ? "Current profile image"
                     : "صورة الملف الشخصي الحالية"}
@@ -1318,7 +1318,7 @@ export function PersonaDetailsStep({
                 onClick={onBack}
                 variant="outline"
                 disabled={isLoading}
-                className="flex-1 h-12 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="flex-1 h-12 disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
               >
                 <ChevronLeft
                   className={`w-5 h-5 mr-2 ${isRTL ? "rotate-180" : ""}`}
@@ -1330,7 +1330,7 @@ export function PersonaDetailsStep({
               type="button"
               onClick={handleSubmit(onSubmit)}
               disabled={isLoading}
-              className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {isLoading ? (

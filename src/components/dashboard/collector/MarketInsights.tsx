@@ -81,13 +81,13 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
             <BarChart3 className="w-5 h-5 text-[#121217]" />
           </div>
           <div className={isRTL ? 'text-right' : 'text-left'}>
-            <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
-            <p className="text-sm text-[#808c99]">{t.subtitle}</p>
+            <h2 className="text-2xl text-[#F2F2F3]">{t.title}</h2>
+            <p className="text-sm text-[#8A8EA0]">{t.subtitle}</p>
           </div>
         </div>
         <div className={`flex items-center justify-center py-8 ${isRTL ? 'flex-row-reverse' : ''}`}>
           <Loader2 className="w-6 h-6 text-[#45e3d3] animate-spin" />
-          <p className={`ml-2 text-[#808c99] ${isRTL ? 'mr-2 ml-0' : ''}`}>{t.loading}</p>
+          <p className={`ml-2 text-[#8A8EA0] ${isRTL ? 'mr-2 ml-0' : ''}`}>{t.loading}</p>
         </div>
       </motion.div>
     );
@@ -107,8 +107,8 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
             <BarChart3 className="w-5 h-5 text-[#121217]" />
           </div>
           <div className={isRTL ? 'text-right' : 'text-left'}>
-            <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
-            <p className="text-sm text-[#808c99]">{t.subtitle}</p>
+            <h2 className="text-2xl text-[#F2F2F3]">{t.title}</h2>
+            <p className="text-sm text-[#8A8EA0]">{t.subtitle}</p>
           </div>
         </div>
         <div className={`flex items-center justify-center py-8 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -132,12 +132,12 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
             <BarChart3 className="w-5 h-5 text-[#121217]" />
           </div>
           <div className={isRTL ? 'text-right' : 'text-left'}>
-            <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
-            <p className="text-sm text-[#808c99]">{t.subtitle}</p>
+            <h2 className="text-2xl text-[#F2F2F3]">{t.title}</h2>
+            <p className="text-sm text-[#8A8EA0]">{t.subtitle}</p>
           </div>
         </div>
         <div className={`flex items-center justify-center py-8 ${isRTL ? 'flex-row-reverse' : ''}`}>
-          <p className="text-[#808c99]">{t.noData}</p>
+          <p className="text-[#8A8EA0]">{t.noData}</p>
         </div>
       </motion.div>
     );
@@ -155,8 +155,8 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
           <BarChart3 className="w-5 h-5 text-[#121217]" />
         </div>
         <div className={isRTL ? 'text-right' : 'text-left'}>
-          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
-          <p className="text-sm text-[#808c99]">{t.subtitle}</p>
+          <h2 className="text-2xl text-[#F2F2F3]">{t.title}</h2>
+          <p className="text-sm text-[#8A8EA0]">{t.subtitle}</p>
         </div>
       </div>
 
@@ -177,8 +177,8 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
             >
               <div className={`flex items-start justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <div className={isRTL ? 'text-right' : 'text-left'}>
-                  <h3 className="text-[#ffffff] mb-1">{insight.category}</h3>
-                  <p className="text-xs text-[#808c99]">{insight.description}</p>
+                  <h3 className="text-[#F2F2F3] mb-1">{insight.category}</h3>
+                  <p className="text-xs text-[#8A8EA0]">{insight.description}</p>
                 </div>
                 <div className={`flex items-center gap-1 ${trend === 'up'
                     ? 'text-[#45e3d3]'
@@ -198,9 +198,9 @@ export function MarketInsights({ statsData, isLoadingStats = false }: MarketInsi
 
               <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <DollarSign className="w-4 h-4 text-[#808c99]" />
+                  <DollarSign className="w-4 h-4 text-[#8A8EA0]" />
                   <div className={isRTL ? 'text-right' : 'text-left'}>
-                    <p className="text-xs text-[#808c99]">{t.avgPrice}</p>
+                    <p className="text-xs text-[#8A8EA0]">{t.avgPrice}</p>
                     <p className="text-[#C59B48]">{avgPriceFormatted}</p>
                   </div>
                 </div>

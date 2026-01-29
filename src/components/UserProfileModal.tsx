@@ -839,8 +839,8 @@ export function UserProfileModal({
         <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
           <div className={`flex items-start justify-between gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
             <div>
-              <h2 className="text-2xl text-[#ffffff] mb-1">{user.name}</h2>
-              <p className="text-[#808c99] mb-3">{user.username}</p>
+              <h2 className="text-2xl text-[#F2F2F3] mb-1">{user.name}</h2>
+              <p className="text-[#8A8EA0] mb-3">{user.username}</p>
             </div>
             <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
               {/* Follow/Unfollow Button */}
@@ -850,7 +850,7 @@ export function UserProfileModal({
                   size="sm"
                   disabled={isFollowLoading}
                   className={`${isFollowing
-                    ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 border-red-500/50'
+                    ? 'bg-gradient-to-r from-red-500 to-red-600 disabled:bg-disabled disabled:cursor-not-allowed hover:from-red-600 hover:to-red-700 border-red-500/50'
                     : 'bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] hover:from-[#D6AE5A] hover:to-[#C59B48]'
                     } text-white transition-all duration-300`}
                 >
@@ -877,7 +877,7 @@ export function UserProfileModal({
                 onClick={onClose}
                 variant="ghost"
                 size="icon"
-                className="text-[#808c99] hover:text-[#ffffff] hover:bg-[#1D112A] transition-colors"
+                className="text-[#8A8EA0] hover:text-[#F2F2F3] hover:bg-[#191922] transition-colors"
               >
                 <X className="w-5 h-5" />
               </Button>
@@ -889,7 +889,7 @@ export function UserProfileModal({
               <span className="text-xs font-semibold opacity-80">{t.tier}:</span>
               <span className={`${isRTL ? 'mr-1' : 'ml-1'}`}>{displayedTier}</span>
             </Badge>
-            <Badge variant="outline" className="border-[#4e4e4e78] text-[#808c99]">
+            <Badge variant="outline" className="border-[#4e4e4e78] text-[#8A8EA0]">
               <span className="text-xs font-semibold opacity-80">{language === 'ar' ? 'الدور' : 'Role'}:</span>
               <span className={`${isRTL ? 'mr-1' : 'ml-1'}`}>{user.type}</span>
             </Badge>
@@ -903,7 +903,7 @@ export function UserProfileModal({
 
       {/* Bio */}
       {profileData.bio && (
-        <p className={`mt-4 text-[#808c99] text-sm ${isRTL ? 'text-right' : 'text-left'}`}>
+        <p className={`mt-4 text-[#8A8EA0] text-sm ${isRTL ? 'text-right' : 'text-left'}`}>
           {profileData.bio}
         </p>
       )}
@@ -950,7 +950,7 @@ export function UserProfileModal({
 
         {/* Stats Grid */}
         <div>
-          <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+          <h3 className={`text-lg text-[#F2F2F3] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
             {t.stats}
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -960,9 +960,9 @@ export function UserProfileModal({
             >
               <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <Flame className="w-5 h-5 text-[#8b5cf6]" />
-                <span className="text-xs text-[#808c99]">{t.influencePoints}</span>
+                <span className="text-xs text-[#8A8EA0]">{t.influencePoints}</span>
               </div>
-              <p className="text-2xl text-[#ffffff]">{profileData.stats.influencePoints}</p>
+              <p className="text-2xl text-[#F2F2F3]">{profileData.stats.influencePoints}</p>
             </motion.div>
 
             <motion.div
@@ -971,9 +971,9 @@ export function UserProfileModal({
             >
               <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <Shield className="w-5 h-5 text-[#0ea5e9]" />
-                <span className="text-xs text-[#808c99]">{t.provenancePoints}</span>
+                <span className="text-xs text-[#8A8EA0]">{t.provenancePoints}</span>
               </div>
-              <p className="text-2xl text-[#ffffff]">{profileData.stats.provenancePoints}</p>
+              <p className="text-2xl text-[#F2F2F3]">{profileData.stats.provenancePoints}</p>
             </motion.div>
 
             <motion.div
@@ -982,9 +982,9 @@ export function UserProfileModal({
             >
               <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <Users className="w-5 h-5 text-[#ec4899]" />
-                <span className="text-xs text-[#808c99]">{t.followers}</span>
+                <span className="text-xs text-[#8A8EA0]">{t.followers}</span>
               </div>
-              <p className="text-2xl text-[#ffffff]">{profileData.stats.followers}</p>
+              <p className="text-2xl text-[#F2F2F3]">{profileData.stats.followers}</p>
             </motion.div>
 
             <motion.div
@@ -993,9 +993,9 @@ export function UserProfileModal({
             >
               <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <TrendingUp className="w-5 h-5 text-[#f59e0b]" />
-                <span className="text-xs text-[#808c99]">{t.referrals}</span>
+                <span className="text-xs text-[#8A8EA0]">{t.referrals}</span>
               </div>
-              <p className="text-2xl text-[#ffffff]">{profileData.stats.referrals}</p>
+              <p className="text-2xl text-[#F2F2F3]">{profileData.stats.referrals}</p>
             </motion.div>
           </div>
         </div>
@@ -1003,7 +1003,7 @@ export function UserProfileModal({
         {/* Social Media (role-aware) */}
         {(resolvedRole === 'ambassador' || hasAnySocial) && (
           <div>
-            <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+            <h3 className={`text-lg text-[#F2F2F3] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
               {t.socialMedia}
             </h3>
             {hasAnySocial ? (
@@ -1021,8 +1021,8 @@ export function UserProfileModal({
                       <Instagram className="w-5 h-5 text-white" />
                     </div>
                     <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      <p className="text-xs text-[#808c99]">{t.instagram}</p>
-                      <p className="text-sm text-[#ffffff]">{profileData.social.instagram}</p>
+                      <p className="text-xs text-[#8A8EA0]">{t.instagram}</p>
+                      <p className="text-sm text-[#F2F2F3]">{profileData.social.instagram}</p>
                     </div>
                   </motion.a>
                 )}
@@ -1039,8 +1039,8 @@ export function UserProfileModal({
                       <Twitter className="w-5 h-5 text-white" />
                     </div>
                     <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      <p className="text-xs text-[#808c99]">{t.twitter}</p>
-                      <p className="text-sm text-[#ffffff]">{profileData.social.twitter}</p>
+                      <p className="text-xs text-[#8A8EA0]">{t.twitter}</p>
+                      <p className="text-sm text-[#F2F2F3]">{profileData.social.twitter}</p>
                     </div>
                   </motion.a>
                 )}
@@ -1057,8 +1057,8 @@ export function UserProfileModal({
                       <Facebook className="w-5 h-5 text-white" />
                     </div>
                     <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      <p className="text-xs text-[#808c99]">{t.facebook}</p>
-                      <p className="text-sm text-[#ffffff]">Facebook</p>
+                      <p className="text-xs text-[#8A8EA0]">{t.facebook}</p>
+                      <p className="text-sm text-[#F2F2F3]">Facebook</p>
                     </div>
                   </motion.a>
                 )}
@@ -1075,16 +1075,16 @@ export function UserProfileModal({
                       <Linkedin className="w-5 h-5 text-white" />
                     </div>
                     <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      <p className="text-xs text-[#808c99]">{t.linkedin}</p>
-                      <p className="text-sm text-[#ffffff]">LinkedIn</p>
+                      <p className="text-xs text-[#8A8EA0]">{t.linkedin}</p>
+                      <p className="text-sm text-[#F2F2F3]">LinkedIn</p>
                     </div>
                   </motion.a>
                 )}
               </div>
             ) : (
               <div className="border border-dashed border-[#4e4e4e78] rounded-xl p-8 text-center">
-                <Share2 className={`w-12 h-12 text-[#808c99] mx-auto mb-3 ${isRTL ? 'ml-auto mr-auto' : ''}`} />
-                <p className="text-[#808c99] text-sm">{t.noSocialMedia}</p>
+                <Share2 className={`w-12 h-12 text-[#8A8EA0] mx-auto mb-3 ${isRTL ? 'ml-auto mr-auto' : ''}`} />
+                <p className="text-[#8A8EA0] text-sm">{t.noSocialMedia}</p>
               </div>
             )}
           </div>
@@ -1092,7 +1092,7 @@ export function UserProfileModal({
 
         {/* Overview - Dynamic based on user type */}
         <div>
-          <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+          <h3 className={`text-lg text-[#F2F2F3] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
             {t.overview}
           </h3>
           <div className="grid grid-cols-2 gap-3">
@@ -1102,30 +1102,30 @@ export function UserProfileModal({
                 <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
                   <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Users className="w-5 h-5 text-[#45e3d3]" />
-                    <span className="text-xs text-[#808c99]">{t.totalReach}</span>
+                    <span className="text-xs text-[#8A8EA0]">{t.totalReach}</span>
                   </div>
-                  <p className="text-2xl text-[#ffffff]">{profileData.stats.totalReach.toLocaleString()}</p>
+                  <p className="text-2xl text-[#F2F2F3]">{profileData.stats.totalReach.toLocaleString()}</p>
                 </div>
                 <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
                   <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Heart className="w-5 h-5 text-[#ec4899]" />
-                    <span className="text-xs text-[#808c99]">{t.engagementRate}</span>
+                    <span className="text-xs text-[#8A8EA0]">{t.engagementRate}</span>
                   </div>
-                  <p className="text-2xl text-[#ffffff]">{profileData.stats.engagementRate}%</p>
+                  <p className="text-2xl text-[#F2F2F3]">{profileData.stats.engagementRate}%</p>
                 </div>
                 <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
                   <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Target className="w-5 h-5 text-[#10b981]" />
-                    <span className="text-xs text-[#808c99]">{t.conversions}</span>
+                    <span className="text-xs text-[#8A8EA0]">{t.conversions}</span>
                   </div>
-                  <p className="text-2xl text-[#ffffff]">{profileData.stats.conversions}</p>
+                  <p className="text-2xl text-[#F2F2F3]">{profileData.stats.conversions}</p>
                 </div>
                 <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
                   <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Share2 className="w-5 h-5 text-[#8b5cf6]" />
-                    <span className="text-xs text-[#808c99]">{t.campaignsActive}</span>
+                    <span className="text-xs text-[#8A8EA0]">{t.campaignsActive}</span>
                   </div>
-                  <p className="text-2xl text-[#ffffff]">{profileData.stats.campaignsActive}</p>
+                  <p className="text-2xl text-[#F2F2F3]">{profileData.stats.campaignsActive}</p>
                 </div>
               </>
             ) : (
@@ -1134,23 +1134,23 @@ export function UserProfileModal({
                 <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
                   <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Award className="w-5 h-5 text-[#C59B48]" />
-                    <span className="text-xs text-[#808c99]">{t.artworksAdded}</span>
+                    <span className="text-xs text-[#8A8EA0]">{t.artworksAdded}</span>
                   </div>
-                  <p className="text-2xl text-[#ffffff]">{profileData.stats.artworksAdded}</p>
+                  <p className="text-2xl text-[#F2F2F3]">{profileData.stats.artworksAdded}</p>
                 </div>
                 <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
                   <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <TrendingUp className="w-5 h-5 text-[#45e3d3]" />
-                    <span className="text-xs text-[#808c99]">{t.videosWatched}</span>
+                    <span className="text-xs text-[#8A8EA0]">{t.videosWatched}</span>
                   </div>
-                  <p className="text-2xl text-[#ffffff]">{profileData.stats.videosWatched}</p>
+                  <p className="text-2xl text-[#F2F2F3]">{profileData.stats.videosWatched}</p>
                 </div>
                 <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
                   <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <Users className="w-5 h-5 text-[#8b5cf6]" />
-                    <span className="text-xs text-[#808c99]">{t.following}</span>
+                    <span className="text-xs text-[#8A8EA0]">{t.following}</span>
                   </div>
-                  <p className="text-2xl text-[#ffffff]">{profileData.stats.following}</p>
+                  <p className="text-2xl text-[#F2F2F3]">{profileData.stats.following}</p>
                 </div>
               </>
             )}
@@ -1161,10 +1161,10 @@ export function UserProfileModal({
         {(resolvedRole === 'artist' || resolvedRole === 'gallery' || resolvedRole === 'collector') && (
           <div>
             <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-              <h3 className={`text-lg text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
+              <h3 className={`text-lg text-[#F2F2F3] ${isRTL ? 'text-right' : 'text-left'}`}>
                 {t.artworks}
               </h3>
-              <span className="text-sm text-[#808c99]">
+              <span className="text-sm text-[#8A8EA0]">
                 {(profileData.artworks?.length ?? 0)} {language === 'en' ? 'pieces' : 'قطعة'}
               </span>
             </div>
@@ -1196,7 +1196,7 @@ export function UserProfileModal({
                     }}
                     className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#C59B48]/50 transition-all cursor-pointer"
                   >
-                    <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
+                    <div className="aspect-square relative overflow-hidden bg-[#191922]">
                       <img
                         src={artwork.image}
                         alt={artwork.title}
@@ -1226,7 +1226,7 @@ export function UserProfileModal({
                         </div>
                       </div>
                     </div>
-                    <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
+                    <div className="md:hidden p-3 bg-[#191922]/80 backdrop-blur-sm">
                       <h4 className="text-white text-sm mb-1 truncate">{artwork.title}</h4>
                       <p className="text-[#C59B48] text-xs">{artwork.price}</p>
                     </div>
@@ -1234,7 +1234,7 @@ export function UserProfileModal({
                 ))}
               </div>
             ) : (
-              <div className="border border-dashed border-[#4e4e4e78] rounded-xl p-6 text-center text-[#808c99] text-sm">
+              <div className="border border-dashed border-[#4e4e4e78] rounded-xl p-6 text-center text-[#8A8EA0] text-sm">
                 {t.noArtworks}
               </div>
             )}
@@ -1305,10 +1305,10 @@ export function UserProfileModal({
             <div>
               <div className={`flex items-center gap-2 mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <BarChart3 className="w-6 h-6 text-cyan-400" />
-                <h3 className={`text-2xl text-[#ffffff] ${isRTL ? 'text-right' : 'text-left'}`}>
+                <h3 className={`text-2xl text-[#F2F2F3] ${isRTL ? 'text-right' : 'text-left'}`}>
                   {t.socialPerformance}
                 </h3>
-                <span className={`ml-auto text-[#808c99] text-sm ${isRTL ? 'mr-auto ml-0' : ''}`}>
+                <span className={`ml-auto text-[#8A8EA0] text-sm ${isRTL ? 'mr-auto ml-0' : ''}`}>
                   {language === 'en' ? 'Last updated 2 hours ago' : 'آخر تحديث منذ ساعتين'}
                 </span>
               </div>
@@ -1323,7 +1323,7 @@ export function UserProfileModal({
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: index * 0.05 }}
-                        className="p-5 rounded-lg glass border border-[#C59B48]/10 hover:border-[#C59B48]/30 transition-all bg-gradient-to-br from-[#0B0B0D]/50 to-[#1D112A]/50"
+                        className="p-5 rounded-lg glass border border-[#C59B48]/10 hover:border-[#C59B48]/30 transition-all bg-gradient-to-br from-[#0B0B0D]/50 to-[#191922]/50"
                       >
                         {/* Header Row */}
                         <div className={`flex items-center gap-3 mb-4 pb-3 border-b border-[#C59B48]/10 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -1333,10 +1333,10 @@ export function UserProfileModal({
                             <Icon className={`w-6 h-6 ${stat.iconColor}`} />
                           </div>
                           <div className="flex-1">
-                            <h4 className={`text-[#ffffff] text-lg ${isRTL ? 'text-right' : 'text-left'}`}>
+                            <h4 className={`text-[#F2F2F3] text-lg ${isRTL ? 'text-right' : 'text-left'}`}>
                               {stat.platform}
                             </h4>
-                            <p className={`text-[#808c99] text-xs ${isRTL ? 'text-right' : 'text-left'}`}>
+                            <p className={`text-[#8A8EA0] text-xs ${isRTL ? 'text-right' : 'text-left'}`}>
                               {stat.followers}
                             </p>
                           </div>
@@ -1346,22 +1346,22 @@ export function UserProfileModal({
                         {/* Metrics Grid - Tile Layout */}
                         <div className="grid grid-cols-3 gap-3">
                           <div className="p-3 rounded-lg bg-[#0B0B0D]/80 border border-[#C59B48]/10 text-center">
-                            <p className="text-[#808c99] text-xs mb-1">{t.followers}</p>
-                            <p className="text-[#ffffff]">{stat.followers}</p>
+                            <p className="text-[#8A8EA0] text-xs mb-1">{t.followers}</p>
+                            <p className="text-[#F2F2F3]">{stat.followers}</p>
                           </div>
 
                           <div className="p-3 rounded-lg bg-[#0B0B0D]/80 border border-[#C59B48]/10 text-center">
-                            <p className="text-[#808c99] text-xs mb-1">
+                            <p className="text-[#8A8EA0] text-xs mb-1">
                               {t.engagementRate}
                             </p>
-                            <p className="text-[#ffffff]">{stat.engagement}</p>
+                            <p className="text-[#F2F2F3]">{stat.engagement}</p>
                           </div>
 
                           <div className="p-3 rounded-lg bg-[#0B0B0D]/80 border border-[#C59B48]/10 text-center">
-                            <p className="text-[#808c99] text-xs mb-1">
+                            <p className="text-[#8A8EA0] text-xs mb-1">
                               {t.posts}
                             </p>
-                            <p className="text-[#ffffff]">{stat.posts}</p>
+                            <p className="text-[#F2F2F3]">{stat.posts}</p>
                           </div>
                         </div>
                       </motion.div>
@@ -1370,8 +1370,8 @@ export function UserProfileModal({
                 </div>
               ) : (
                 <div className="border border-dashed border-[#4e4e4e78] rounded-xl p-8 text-center">
-                  <BarChart3 className={`w-12 h-12 text-[#808c99] mx-auto mb-3 ${isRTL ? 'ml-auto mr-auto' : ''}`} />
-                  <p className="text-[#808c99] text-sm">{t.noSocialPerformance}</p>
+                  <BarChart3 className={`w-12 h-12 text-[#8A8EA0] mx-auto mb-3 ${isRTL ? 'ml-auto mr-auto' : ''}`} />
+                  <p className="text-[#8A8EA0] text-sm">{t.noSocialPerformance}</p>
                 </div>
               )}
             </div>
@@ -1380,7 +1380,7 @@ export function UserProfileModal({
 
         {/* Achievements */}
         {/* <div>
-          <h3 className={`text-lg text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+          <h3 className={`text-lg text-[#F2F2F3] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
             {t.achievements}
           </h3>
           <div className="grid grid-cols-1 gap-3">
@@ -1397,8 +1397,8 @@ export function UserProfileModal({
                       <Icon className="w-6 h-6 text-[#121217]" />
                     </div>
                     <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
-                      <p className="text-[#ffffff] mb-1">{achievement.title}</p>
-                      <p className="text-[#808c99] text-sm">{achievement.description}</p>
+                      <p className="text-[#F2F2F3] mb-1">{achievement.title}</p>
+                      <p className="text-[#8A8EA0] text-sm">{achievement.description}</p>
                     </div>
                   </div>
                 </motion.div>

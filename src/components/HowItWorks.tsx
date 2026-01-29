@@ -125,7 +125,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#C59B48]">{t.title.gold}</span>
           </h2>
-          <p className="text-[#ffffff]/60 max-w-4xl mx-auto text-lg font-body">
+          <p className="text-[#F2F2F3]/60 max-w-4xl mx-auto text-lg font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -228,7 +228,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
                     </motion.div>
 
                     {/* Main Badge */}
-                    <div className="absolute inset-[3px] rounded-full bg-gradient-to-br from-[#C59B48] via-[#D6AE5A] to-[#A98237] flex items-center justify-center shadow-2xl border border-[#ffffff]/30">
+                    <div className="absolute inset-[3px] rounded-full bg-gradient-to-br from-[#C59B48] via-[#D6AE5A] to-[#A98237] flex items-center justify-center shadow-2xl border border-[#F2F2F3]/30">
                       {/* Inner Glass Effect */}
                       <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 via-transparent to-transparent" />
 
@@ -293,7 +293,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
                           {step.subtitle}
                         </p>
                       )}
-                      <p className="text-white/60 text-sm leading-relaxed font-body">
+                      <p className="text-[#B9BBC6] text-sm leading-relaxed font-body">
                         {step.description}
                       </p>
                     </div>

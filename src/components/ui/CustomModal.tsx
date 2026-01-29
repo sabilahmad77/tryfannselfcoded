@@ -149,7 +149,7 @@ export function CustomModal({
                       {title && (
                         <h2
                           className={cn(
-                            "text-2xl text-[#ffffff] flex-1",
+                            "text-2xl text-[#F2F2F3] flex-1",
                             isRTL ? "text-right" : "text-left"
                           )}
                         >
@@ -171,7 +171,7 @@ export function CustomModal({
                           variant="ghost"
                           size="icon"
                           onClick={onClose}
-                          className="text-[#808c99] hover:text-[#ffffff] hover:bg-[#1D112A] transition-colors"
+                          className="text-[#8A8EA0] hover:text-[#F2F2F3] hover:bg-[#191922] transition-colors"
                         >
                           <X className="w-5 h-5" />
                         </Button>

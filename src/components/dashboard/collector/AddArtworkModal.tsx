@@ -235,7 +235,7 @@ export function AddArtworkModal({
         onClick={onClose}
         variant="outline"
         disabled={isLoading}
-        className="flex-1 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex-1 transition-all duration-200 cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed"
       >
         {t.cancel}
       </Button>
@@ -248,7 +248,7 @@ export function AddArtworkModal({
           !formData.year.trim() || 
           isLoading
         }
-        className="flex-1 bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] hover:from-[#A98237] hover:to-[#A98237] hover:shadow-lg hover:shadow-[#C59B48]/50 text-[#0B0B0D] border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
+        className="flex-1 bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] hover:from-[#A98237] hover:to-[#A98237] hover:shadow-lg hover:shadow-[#C59B48]/50 text-[#0B0B0D] border-0 disabled:opacity-50 disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer transition-all duration-200"
       >
         {isLoading ? (
           <>
@@ -315,7 +315,7 @@ export function AddArtworkModal({
             {/* Show current artwork image preview if exists and no new file selected */}
             {artworkImagePreviews.length > 0 && !artworkImage && (
               <div className="mt-4 space-y-2">
-                <p className="text-xs text-white/60">
+                <p className="text-xs text-[#B9BBC6]">
                   {language === "en"
                     ? "Current artwork image"
                     : "صورة العمل الفني الحالية"}

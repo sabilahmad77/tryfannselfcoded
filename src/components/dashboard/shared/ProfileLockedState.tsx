@@ -25,8 +25,8 @@ export function ProfileLockedState({
             <Lock className="w-12 h-12 text-[#D6AE5A]" />
           </div>
         </div>
-        <h4 className="text-[#ffffff] mb-2">{title}</h4>
-        <p className="text-sm text-[#808c99] mb-6">{description}</p>
+        <h4 className="text-[#F2F2F3] mb-2">{title}</h4>
+        <p className="text-sm text-[#8A8EA0] mb-6">{description}</p>
         <motion.button
           onClick={onCta}
           className="relative overflow-hidden group w-full"

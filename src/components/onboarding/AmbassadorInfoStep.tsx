@@ -680,7 +680,7 @@ export function AmbassadorInfoStep({
             <Megaphone className="w-8 h-8 text-amber-400" />
           </div>
           <h2 className="text-3xl text-white mb-2">{content.title}</h2>
-          <p className="text-white/60">{content.subtitle}</p>
+          <p className="text-[#B9BBC6]">{content.subtitle}</p>
           {storedUser?.email && (
             <div
               className={`mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-white/70 ${
@@ -705,7 +705,7 @@ export function AmbassadorInfoStep({
           <Megaphone className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
           <div>
             <p className="text-amber-400 text-sm mb-1">{content.tips.title}</p>
-            <p className="text-white/60 text-sm">{content.tips.message}</p>
+            <p className="text-[#B9BBC6] text-sm">{content.tips.message}</p>
           </div>
         </motion.div>
 
@@ -749,7 +749,7 @@ export function AmbassadorInfoStep({
             />
             {profileImagePreview && !profileImage && (
               <div className="mt-4 space-y-2">
-                <p className="text-xs text-white/60">
+                <p className="text-xs text-[#B9BBC6]">
                   {language === "en"
                     ? "Current profile image"
                     : "صورة الملف الشخصي الحالية"}
@@ -1082,7 +1082,7 @@ export function AmbassadorInfoStep({
               onClick={onBack}
               variant="outline"
               disabled={isLoading}
-              className="flex-1 h-12 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex-1 h-12 disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
             >
               <ChevronLeft
                 className={`w-5 h-5 mr-2 ${isRTL ? "rotate-180" : ""}`}
@@ -1094,7 +1094,7 @@ export function AmbassadorInfoStep({
             type="button"
             onClick={handleSubmit(onSubmit)}
             disabled={isLoading || !isFormValid}
-            className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
               {isLoading ? (

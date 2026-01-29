@@ -111,7 +111,7 @@ export function ExhibitionPlanner() {
           <div className="w-12 h-12 bg-gradient-to-br from-[#9375b5] to-[#9375b5] rounded-xl flex items-center justify-center">
             <Calendar className="w-6 h-6 text-white" />
           </div>
-          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
+          <h2 className="text-2xl text-[#F2F2F3]">{t.title}</h2>
         </div>
         <Button
           size="sm"
@@ -131,7 +131,7 @@ export function ExhibitionPlanner() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
             whileHover={{ scale: 1.02 }}
-            className="bg-gradient-to-br from-[#1D112A] to-[#0B0B0D] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
+            className="bg-gradient-to-br from-[#191922] to-[#0B0B0D] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#C59B48]/50 transition-all cursor-pointer"
           >
             <div
               className={`flex items-start justify-between mb-3 ${
@@ -139,9 +139,9 @@ export function ExhibitionPlanner() {
               }`}
             >
               <div className={isRTL ? "text-right" : "text-left"}>
-                <h3 className="text-[#ffffff] mb-1">{exhibition.title}</h3>
+                <h3 className="text-[#F2F2F3] mb-1">{exhibition.title}</h3>
                 <div
-                  className={`flex items-center gap-2 text-sm text-[#808c99] ${
+                  className={`flex items-center gap-2 text-sm text-[#8A8EA0] ${
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
@@ -155,7 +155,7 @@ export function ExhibitionPlanner() {
             </div>
 
             <div
-              className={`flex items-center gap-2 mb-3 text-sm text-[#808c99] ${
+              className={`flex items-center gap-2 mb-3 text-sm text-[#8A8EA0] ${
                 isRTL ? "flex-row-reverse" : ""
               }`}
             >
@@ -170,7 +170,7 @@ export function ExhibitionPlanner() {
                 className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}
               >
                 <Eye className="w-4 h-4 text-[#45e3d3]" />
-                <span className="text-sm text-[#808c99]">
+                <span className="text-sm text-[#8A8EA0]">
                   {exhibition.visitors} {t.visitors}
                 </span>
               </div>
@@ -178,7 +178,7 @@ export function ExhibitionPlanner() {
                 className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}
               >
                 <TrendingUp className="w-4 h-4 text-[#9375b5]" />
-                <span className="text-sm text-[#808c99]">
+                <span className="text-sm text-[#8A8EA0]">
                   {exhibition.artworks} {t.artworks}
                 </span>
               </div>
