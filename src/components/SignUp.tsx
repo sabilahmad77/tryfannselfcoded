@@ -693,7 +693,7 @@ export function SignUp({
   }
 
   return (
-    <div className="min-h-screen bg-[#0F021C] flex" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-[#0B0B0D] flex" dir={isRTL ? "rtl" : "ltr"}>
       {/* LEFT PANEL - Branding & Info */}
       <motion.div
         initial={{ opacity: 0, x: isRTL ? 50 : -50 }}
@@ -703,8 +703,8 @@ export function SignUp({
       >
         {/* Background Effects */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc33]/10 via-[#45e3d3]/5 to-[#0ea5e9]/10" />
-          <div className="absolute top-20 -left-20 w-80 h-80 bg-[#ffcc33]/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#C59B48]/10 via-[#45e3d3]/5 to-[#0ea5e9]/10" />
+          <div className="absolute top-20 -left-20 w-80 h-80 bg-[#C59B48]/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-20 -right-20 w-80 h-80 bg-[#45e3d3]/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,204,51,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,204,51,0.05)_1px,transparent_1px)] bg-[size:50px_50px]" />
         </div>
@@ -716,7 +716,7 @@ export function SignUp({
             <motion.button
               onClick={onNavigateToHome}
               whileHover={{ scale: 1.02 }}
-              className="flex items-center gap-2 text-[#ffffff]/70 hover:text-[#ffcc33] transition-colors group mb-8 cursor-pointer"
+              className="flex items-center gap-2 text-[#ffffff]/70 hover:text-[#C59B48] transition-colors group mb-8 cursor-pointer"
             >
               <ChevronLeft
                 className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
@@ -726,8 +726,8 @@ export function SignUp({
             </motion.button>
 
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ffcc33] to-[#fbbf24] flex items-center justify-center glow-gold">
-                <Sparkles className="w-6 h-6 text-[#0F021C]" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C59B48] to-[#fbbf24] flex items-center justify-center glow-gold">
+                <Sparkles className="w-6 h-6 text-[#0B0B0D]" />
               </div>
               <h1 className="text-3xl text-[#ffffff]">FANN</h1>
             </div>
@@ -763,8 +763,8 @@ export function SignUp({
                           transition={{ delay: 0.1 * idx }}
                           className="flex gap-4"
                         >
-                          <div className="w-12 h-12 rounded-lg bg-[#ffffff]/5 border border-[#ffcc33]/20 flex items-center justify-center shrink-0">
-                            <Icon className="w-6 h-6 text-[#ffcc33]" />
+                          <div className="w-12 h-12 rounded-lg bg-[#ffffff]/5 border border-[#C59B48]/20 flex items-center justify-center shrink-0">
+                            <Icon className="w-6 h-6 text-[#C59B48]" />
                           </div>
                           <div>
                             <h3 className="text-[#ffffff] mb-1">
@@ -793,7 +793,7 @@ export function SignUp({
                       <p className="text-[#ffffff]/60 text-sm mb-3">
                         {content.leftPanel.selectedPersona}
                       </p>
-                      <div className="p-6 rounded-2xl glass border border-[#ffcc33]/30 bg-gradient-to-br from-[#ffcc33]/10 to-[#45e3d3]/10">
+                      <div className="p-6 rounded-2xl glass border border-[#C59B48]/30 bg-gradient-to-br from-[#C59B48]/10 to-[#45e3d3]/10">
                         <div className="flex items-center gap-4 mb-4">
                           {(() => {
                             const Icon = selectedPersonaData.icon;
@@ -801,7 +801,7 @@ export function SignUp({
                               <div
                                 className={`w-14 h-14 rounded-xl bg-gradient-to-br ${selectedPersonaData.gradient} flex items-center justify-center shrink-0`}
                               >
-                                <Icon className="w-7 h-7 text-[#0F021C]" />
+                                <Icon className="w-7 h-7 text-[#0B0B0D]" />
                               </div>
                             );
                           })()}
@@ -814,9 +814,9 @@ export function SignUp({
                             </p>
                           </div>
                         </div>
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#ffcc33]/20 border border-[#ffcc33]/30">
-                          <Gift className="w-4 h-4 text-[#ffcc33]" />
-                          <span className="text-[#ffcc33] text-sm">
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C59B48]/20 border border-[#C59B48]/30">
+                          <Gift className="w-4 h-4 text-[#C59B48]" />
+                          <span className="text-[#C59B48] text-sm">
                             {selectedPersonaData.points}
                           </span>
                         </div>
@@ -838,8 +838,8 @@ export function SignUp({
                           transition={{ delay: 0.1 * idx }}
                           className="flex items-center gap-3 text-[#ffffff]/80"
                         >
-                          <div className="w-5 h-5 rounded-full bg-[#ffcc33]/20 border border-[#ffcc33]/30 flex items-center justify-center shrink-0">
-                            <Check className="w-3 h-3 text-[#ffcc33]" />
+                          <div className="w-5 h-5 rounded-full bg-[#C59B48]/20 border border-[#C59B48]/30 flex items-center justify-center shrink-0">
+                            <Check className="w-3 h-3 text-[#C59B48]" />
                           </div>
                           <span className="text-sm">{benefit}</span>
                         </motion.div>
@@ -856,7 +856,7 @@ export function SignUp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="pt-8 border-t border-[#ffcc33]/20"
+            className="pt-8 border-t border-[#C59B48]/20"
           >
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
@@ -890,12 +890,12 @@ export function SignUp({
               {/* Step Indicator */}
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-[#ffcc33] text-sm">
+                  <span className="text-[#C59B48] text-sm">
                     {content.step} {step} {content.of} 2
                   </span>
                   <div className="flex-1 h-1 bg-[#ffffff]/10 rounded-full overflow-hidden">
                     <motion.div
-                      className="h-full bg-gradient-to-r from-[#ffcc33] to-[#45e3d3]"
+                      className="h-full bg-gradient-to-r from-[#C59B48] to-[#45e3d3]"
                       initial={{ width: "0%" }}
                       animate={{ width: `${(step / 2) * 100}%` }}
                       transition={{ duration: 0.3 }}
@@ -933,8 +933,8 @@ export function SignUp({
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
                             className={`w-full p-5 rounded-xl border transition-all text-left relative overflow-hidden group cursor-pointer ${isSelected
-                              ? "bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 border-[#ffcc33]/50 shadow-lg shadow-[#ffcc33]/20"
-                              : "glass border-[#ffcc33]/20 hover:border-[#ffcc33]/40"
+                              ? "bg-gradient-to-br from-[#C59B48]/20 to-[#45e3d3]/20 border-[#C59B48]/50 shadow-lg shadow-[#C59B48]/20"
+                              : "glass border-[#C59B48]/20 hover:border-[#C59B48]/40"
                               }`}
                           >
                             <div className="flex items-center gap-4">
@@ -943,7 +943,7 @@ export function SignUp({
                                   } flex items-center justify-center shrink-0 ${isSelected ? "scale-110" : ""
                                   } transition-transform`}
                               >
-                                <Icon className="w-6 h-6 text-[#0F021C]" />
+                                <Icon className="w-6 h-6 text-[#0B0B0D]" />
                               </div>
                               <div className="flex-1">
                                 <div className="flex items-center justify-between gap-3 mb-1">
@@ -957,7 +957,7 @@ export function SignUp({
                                   </h3>
                                   <div className="flex items-center gap-2 shrink-0">
                                     <span
-                                      className={`text-xs px-2 py-1 rounded-full bg-gradient-to-r ${persona.gradient} text-[#0F021C]`}
+                                      className={`text-xs px-2 py-1 rounded-full bg-gradient-to-r ${persona.gradient} text-[#0B0B0D]`}
                                     >
                                       {persona.points}
                                     </span>
@@ -965,9 +965,9 @@ export function SignUp({
                                       <motion.div
                                         initial={{ scale: 0 }}
                                         animate={{ scale: 1 }}
-                                        className="w-6 h-6 rounded-full bg-[#ffcc33] flex items-center justify-center glow-gold"
+                                        className="w-6 h-6 rounded-full bg-[#C59B48] flex items-center justify-center glow-gold"
                                       >
-                                        <Check className="w-4 h-4 text-[#0F021C]" />
+                                        <Check className="w-4 h-4 text-[#0B0B0D]" />
                                       </motion.div>
                                     )}
                                   </div>
@@ -1258,7 +1258,7 @@ export function SignUp({
                                 <Oval
                                   height={20}
                                   width={20}
-                                  color="#0F021C"
+                                  color="#0B0B0D"
                                   ariaLabel="loading"
                                   visible={true}
                                 />

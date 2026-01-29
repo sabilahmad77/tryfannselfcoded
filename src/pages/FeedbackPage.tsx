@@ -175,7 +175,7 @@ export function FeedbackPage() {
   const satisfactionLevels = [
     { value: 1, label: t.veryDissatisfied, icon: Frown, color: '#ef4444' },
     { value: 2, label: t.dissatisfied, icon: Frown, color: '#f97316' },
-    { value: 3, label: t.neutral, icon: Meh, color: '#ffcc33' },
+    { value: 3, label: t.neutral, icon: Meh, color: '#C59B48' },
     { value: 4, label: t.satisfied, icon: Smile, color: '#45e3d3' },
     { value: 5, label: t.verySatisfied, icon: Smile, color: '#10b981' },
   ];
@@ -284,7 +284,7 @@ export function FeedbackPage() {
               onClick={() => setActiveTab(tab)}
               className={`flex-1 px-4 py-3 rounded-xl text-sm md:text-base transition-all ${
                 isActive
-                  ? 'bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] text-[#0f021c] shadow-lg shadow-[#fbbf24]/30'
+                  ? 'bg-gradient-to-r from-[#C59B48] via-[#fbbf24] to-[#C59B48] text-[#0B0B0D] shadow-lg shadow-[#fbbf24]/30'
                   : 'text-[#808c99] hover:text-[#ffffff]'
               }`}
             >
@@ -322,8 +322,8 @@ export function FeedbackPage() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           className={`p-4 rounded-xl transition-all cursor-pointer ${isSelected
-                            ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10'
-                            : 'bg-[#0f021c] border border-[#4e4e4e78]'
+                            ? 'border-2 border-[#C59B48] bg-[#C59B48]/10'
+                            : 'bg-[#0B0B0D] border border-[#4e4e4e78]'
                             }`}
                         >
                           <Icon
@@ -357,8 +357,8 @@ export function FeedbackPage() {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         className={`p-3 rounded-lg transition-all cursor-pointer ${isSelected
-                          ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10 text-[#ffffff]'
-                          : 'bg-[#0f021c] border border-[#4e4e4e78] text-[#808c99] hover:border-[#ffcc33]/30'
+                          ? 'border-2 border-[#C59B48] bg-[#C59B48]/10 text-[#ffffff]'
+                          : 'bg-[#0B0B0D] border border-[#4e4e4e78] text-[#808c99] hover:border-[#C59B48]/30'
                           } ${isRTL ? 'text-right' : 'text-left'}`}
                       >
                         <span className="text-sm">{label}</span>
@@ -409,8 +409,8 @@ export function FeedbackPage() {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           className={`p-3 rounded-lg transition-all cursor-pointer ${isSelected
-                            ? 'border-2 border-[#ffcc33] bg-[#ffcc33]/10 text-[#ffffff]'
-                            : 'bg-[#0f021c] border border-[#4e4e4e78] text-[#808c99] hover:border-[#ffcc33]/30'
+                            ? 'border-2 border-[#C59B48] bg-[#C59B48]/10 text-[#ffffff]'
+                            : 'bg-[#0B0B0D] border border-[#4e4e4e78] text-[#808c99] hover:border-[#C59B48]/30'
                             } ${isRTL ? 'text-right' : 'text-left'}`}
                         >
                           <span className="text-sm">{label}</span>
@@ -477,8 +477,8 @@ export function FeedbackPage() {
               </div>
             </div>
             <div className={`flex items-start gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-              <div className="w-10 h-10 bg-[#ffcc33]/20 rounded-lg flex items-center justify-center shrink-0">
-                <MessageSquare className="w-5 h-5 text-[#ffcc33]" />
+              <div className="w-10 h-10 bg-[#C59B48]/20 rounded-lg flex items-center justify-center shrink-0">
+                <MessageSquare className="w-5 h-5 text-[#C59B48]" />
               </div>
               <div>
                 <h3 className="text-[#ffffff] mb-1">

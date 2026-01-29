@@ -476,7 +476,7 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
 
   return (
     <section
-      className="relative py-16 overflow-hidden bg-[#0F021C]"
+      className="relative py-16 overflow-hidden bg-[#0B0B0D]"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -487,12 +487,12 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
           className="w-full h-full object-cover opacity-65"
           style={{ transform: "rotate(180deg) scale(1.1)" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/50 via-transparent to-[#0F021C]/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/50 via-transparent to-[#0B0B0D]/55" />
       </div>
 
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#ffcc33]/12 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#C59B48]/12 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -505,7 +505,7 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
         >
           <h2 className="text-4xl md:text-5xl mb-4 font-heading">
             <span className="text-white">{t.title.white}</span>
-            <span className="text-[#ffcc33]">{t.title.gold}</span>
+            <span className="text-[#C59B48]">{t.title.gold}</span>
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto text-lg font-body">
             {t.subtitle}
@@ -576,7 +576,7 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
                 onClick={() => navigate(ROUTES.CONTACT_US)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#0F021C] shadow-xl shadow-[#ffcc33]/30 hover:shadow-2xl hover:shadow-[#ffcc33]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer font-body font-medium"
+                className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer font-body font-medium"
               >
                 <span>{language === "en" ? "View All FAQs" : "عرض جميع الأسئلة الشائعة"}</span>
               </motion.button>

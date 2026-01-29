@@ -587,7 +587,7 @@ export function LeaderboardPage() {
             whileHover={{ scale: 1.05, x: isRTL ? 5 : -5 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate(ROUTES.HOME)}
-            className={`flex items-center gap-2 glass px-6 py-3 rounded-full border border-[#ffcc33]/30 text-white hover:border-[#ffcc33]/50 transition-all cursor-pointer ${isRTL ? "flex-row-reverse" : ""
+            className={`flex items-center gap-2 glass px-6 py-3 rounded-full border border-[#C59B48]/30 text-white hover:border-[#C59B48]/50 transition-all cursor-pointer ${isRTL ? "flex-row-reverse" : ""
               }`}
           >
             <ArrowLeft className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />
@@ -609,8 +609,8 @@ export function LeaderboardPage() {
           className={`flex items-center gap-4 mb-4 ${isRTL ? "flex-row-reverse" : ""
             }`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center shrink-0">
-            <Trophy className="w-6 h-6 text-[#0F021C]" />
+          <div className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#45e3d3] rounded-xl flex items-center justify-center shrink-0">
+            <Trophy className="w-6 h-6 text-[#0B0B0D]" />
           </div>
           <div>
             <h1 className="text-4xl md:text-5xl">
@@ -634,15 +634,15 @@ export function LeaderboardPage() {
             className={`flex items-center justify-between mb-4 ${isRTL ? "flex-row-reverse" : ""
               }`}
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
-              <Award className="w-6 h-6 text-[#0F021C]" />
+            <div className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#45e3d3] rounded-xl flex items-center justify-center">
+              <Award className="w-6 h-6 text-[#0B0B0D]" />
             </div>
           </div>
           <motion.div
             key={`total-${totalCount}`}
             initial={{ scale: 1.2, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-4xl mb-2 bg-gradient-to-r from-[#ffcc33] via-[#ffb54d] to-[#ffcc33] bg-clip-text text-transparent"
+            className="text-4xl mb-2 bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent"
           >
             {totalCount}
           </motion.div>
@@ -655,15 +655,15 @@ export function LeaderboardPage() {
             className={`flex items-center justify-between mb-4 ${isRTL ? "flex-row-reverse" : ""
               }`}
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
-              <Crown className="w-6 h-6 text-[#0F021C]" />
+            <div className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#45e3d3] rounded-xl flex items-center justify-center">
+              <Crown className="w-6 h-6 text-[#0B0B0D]" />
             </div>
           </div>
           <motion.div
             key={`tier-${topTierCount}`}
             initial={{ scale: 1.2, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-4xl mb-2 bg-gradient-to-r from-[#ffcc33] via-[#ffb54d] to-[#ffcc33] bg-clip-text text-transparent"
+            className="text-4xl mb-2 bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent"
           >
             {topTierCount}
           </motion.div>
@@ -676,15 +676,15 @@ export function LeaderboardPage() {
             className={`flex items-center justify-between mb-4 ${isRTL ? "flex-row-reverse" : ""
               }`}
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-[#0F021C]" />
+            <div className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#45e3d3] rounded-xl flex items-center justify-center">
+              <Sparkles className="w-6 h-6 text-[#0B0B0D]" />
             </div>
           </div>
           <motion.div
             key={`avg-${avgPoints}`}
             initial={{ scale: 1.2, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-4xl mb-2 bg-gradient-to-r from-[#ffcc33] via-[#ffb54d] to-[#ffcc33] bg-clip-text text-transparent"
+            className="text-4xl mb-2 bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent"
           >
             {avgPoints.toLocaleString()}
           </motion.div>
@@ -698,10 +698,10 @@ export function LeaderboardPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0F021C]/80 border-2 border-[#ffcc33]/50 relative overflow-hidden shadow-xl shadow-[#ffcc33]/20"
+          className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 relative overflow-hidden shadow-xl shadow-[#C59B48]/20"
         >
           <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-[#ffcc33]/15 via-[#45e3d3]/15 to-[#ffcc33]/15"
+            className="absolute inset-0 bg-gradient-to-r from-[#C59B48]/15 via-[#45e3d3]/15 to-[#C59B48]/15"
             animate={{
               x: ["-100%", "100%"],
             }}
@@ -961,7 +961,7 @@ export function LeaderboardPage() {
         {/* Loading & Error States */}
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <Loader2 className="w-8 h-8 text-[#ffcc33] animate-spin" />
+            <Loader2 className="w-8 h-8 text-[#C59B48] animate-spin" />
             <span className="text-white/70">{t.loading}</span>
           </div>
         )}
@@ -989,7 +989,7 @@ export function LeaderboardPage() {
                 transition={{ duration: 0.3, delay: index * 0.02 }}
                 whileHover={{ scale: 1.01 }}
                 onClick={() => handleUserClick(leader)}
-                className="bg-white/5 rounded-xl p-4 border border-white/10 hover:border-[#ffcc33]/30 transition-all cursor-pointer"
+                className="bg-white/5 rounded-xl p-4 border border-white/10 hover:border-[#C59B48]/30 transition-all cursor-pointer"
               >
                 <div
                   className={`flex items-center gap-4 mb-3 ${isRTL ? "flex-row-reverse" : ""
@@ -998,7 +998,7 @@ export function LeaderboardPage() {
                   <div className="flex items-center justify-center w-12 shrink-0">
                     {getRankIcon(leader.rank)}
                   </div>
-                  <Avatar className="w-12 h-12 border-2 border-[#ffcc33]/50">
+                  <Avatar className="w-12 h-12 border-2 border-[#C59B48]/50">
                     <AvatarImage src={leader.avatar} alt={leader.name} />
                     <AvatarFallback>{leader.name.charAt(0)}</AvatarFallback>
                   </Avatar>
@@ -1070,7 +1070,7 @@ export function LeaderboardPage() {
                       {leader.type}
                     </span>
                   </Badge>
-                  <div className="text-transparent bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] bg-clip-text">
+                  <div className="text-transparent bg-gradient-to-r from-[#C59B48] to-[#45e3d3] bg-clip-text">
                     {leader.points.toLocaleString()}
                   </div>
                   <Badge
@@ -1089,7 +1089,7 @@ export function LeaderboardPage() {
         {!isLoading && !isError && personaFilteredLeaders.length > 0 && (
           <div className="hidden lg:block">
             <table className="w-full">
-              <thead className="sticky top-0 z-10 bg-gradient-to-br from-[#1D112A]/95 via-[#1D112A]/95 to-[#0F021C]/95 backdrop-blur-sm">
+              <thead className="sticky top-0 z-10 bg-gradient-to-br from-[#1D112A]/95 via-[#1D112A]/95 to-[#0B0B0D]/95 backdrop-blur-sm">
                 <tr className="bg-white/5 border-b border-white/10">
                   {t.columns.map((column, index) => (
                     <th
@@ -1136,7 +1136,7 @@ export function LeaderboardPage() {
                         className={`flex items-center gap-4 ${isRTL ? "flex-row-reverse" : ""
                           }`}
                       >
-                        <Avatar className="w-10 h-10 border-2 border-[#ffcc33]/50">
+                        <Avatar className="w-10 h-10 border-2 border-[#C59B48]/50">
                           <AvatarImage src={leader.avatar} alt={leader.name} />
                           <AvatarFallback>
                             {leader.name.charAt(0)}
@@ -1189,7 +1189,7 @@ export function LeaderboardPage() {
 
                     {/* Points */}
                     <td className="px-6 py-4">
-                      <span className="text-transparent bg-gradient-to-r from-[#ffcc33] to-[#45e3d3] bg-clip-text text-lg">
+                      <span className="text-transparent bg-gradient-to-r from-[#C59B48] to-[#45e3d3] bg-clip-text text-lg">
                         {leader.points.toLocaleString()}
                       </span>
                     </td>
@@ -1252,7 +1252,7 @@ export function LeaderboardPage() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-4 py-2 rounded-full border border-[#ffcc33]/50 text-white/60 hover:text-white hover:border-[#ffcc33]/30 transition-all ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+            className={`px-4 py-2 rounded-full border border-[#C59B48]/50 text-white/60 hover:text-white hover:border-[#C59B48]/30 transition-all ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
               } ${isRTL ? "flex-row-reverse" : ""}`}
           >
             <ChevronLeft className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />
@@ -1271,7 +1271,7 @@ export function LeaderboardPage() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded-full border border-[#ffcc33]/50 text-white/60 hover:text-white hover:border-[#ffcc33]/30 transition-all ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
+            className={`px-4 py-2 rounded-full border border-[#C59B48]/50 text-white/60 hover:text-white hover:border-[#C59B48]/30 transition-all ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
               } ${isRTL ? "flex-row-reverse" : ""}`}
           >
             <ChevronRight className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />
@@ -1309,7 +1309,7 @@ export function LeaderboardPage() {
     // Render without dashboard layout (public access or from homepage)
     return (
       <div
-        className="min-h-screen bg-[#0F021C] relative"
+        className="min-h-screen bg-[#0B0B0D] relative"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <SEOHead />
@@ -1321,7 +1321,7 @@ export function LeaderboardPage() {
             alt="Background"
             className="w-full h-full object-cover opacity-30"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/90 via-[#0F021C]/95 to-[#0F021C]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/90 via-[#0B0B0D]/95 to-[#0B0B0D]" />
         </div>
 
         {/* Main Content */}

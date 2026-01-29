@@ -142,8 +142,8 @@ export function CustomModal({
                       )}
                     >
                       {HeaderIcon && (
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] flex items-center justify-center shrink-0">
-                          <HeaderIcon className="w-6 h-6 text-[#020e27]" />
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#C59B48] to-[#D6AE5A] flex items-center justify-center shrink-0">
+                          <HeaderIcon className="w-6 h-6 text-[#121217]" />
                         </div>
                       )}
                       {title && (

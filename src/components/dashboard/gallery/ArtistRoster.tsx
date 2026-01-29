@@ -213,7 +213,7 @@ export function ArtistRoster({
     if (status === "established") {
       return {
         label: t.established,
-        className: "bg-[#ffcc33]/20 text-[#ffcc33] border-[#ffcc33]/30",
+        className: "bg-[#C59B48]/20 text-[#C59B48] border-[#C59B48]/30",
       };
     }
     return {
@@ -270,19 +270,19 @@ export function ArtistRoster({
           className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""}`}
         >
           <div className="relative">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] rounded-xl flex items-center justify-center">
-              <Users className="w-6 h-6 text-[#0F021C]" />
+            <div className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#D6AE5A] rounded-xl flex items-center justify-center">
+              <Users className="w-6 h-6 text-[#0B0B0D]" />
             </div>
             {/* Subtle pulsing glow (match AddArtwork) */}
             <motion.div
-              className="absolute inset-0 bg-[#ffcc33]/30 rounded-xl blur-xl"
+              className="absolute inset-0 bg-[#C59B48]/30 rounded-xl blur-xl"
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
             {/* Lock overlay if profile not completed */}
             {!profileCompleted && (
-              <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-[#ffb54d] to-[#ffcc33] rounded-full flex items-center justify-center border-2 border-[#0F021C]">
-                <Lock className="w-3 h-3 text-[#0F021C]" />
+              <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-[#D6AE5A] to-[#C59B48] rounded-full flex items-center justify-center border-2 border-[#0B0B0D]">
+                <Lock className="w-3 h-3 text-[#0B0B0D]" />
               </div>
             )}
           </div>
@@ -342,14 +342,14 @@ export function ArtistRoster({
             initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-[#0f021c] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#45e3d3]/50 transition-all"
+            className="bg-[#0B0B0D] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#45e3d3]/50 transition-all"
           >
             <div
               className={`flex items-start gap-4 ${isRTL ? "flex-row-reverse" : ""}`}
             >
               {/* Avatar */}
-              <Avatar className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] border-2 border-[#ffcc33]/30">
-                <AvatarFallback className="bg-transparent text-[#0F021C]">
+              <Avatar className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#45e3d3] border-2 border-[#C59B48]/30">
+                <AvatarFallback className="bg-transparent text-[#0B0B0D]">
                   {artist.initials}
                 </AvatarFallback>
               </Avatar>
@@ -394,7 +394,7 @@ export function ArtistRoster({
                       isRTL ? "flex-row-reverse" : ""
                     }`}
                   >
-                    <Award className="w-4 h-4 text-[#ffcc33]" />
+                    <Award className="w-4 h-4 text-[#C59B48]" />
                     <span className="text-[#808c99]">
                       {artist.exhibitions} {t.exhibitions}
                     </span>

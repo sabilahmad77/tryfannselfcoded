@@ -753,7 +753,7 @@ export function UserProfileModal({
   }
 
   const getTierColor = (tier: string) => {
-    if (tier.includes('Patron') || tier.includes('مؤسس')) return 'from-[#ffcc33] to-[#ffb54d]';
+    if (tier.includes('Patron') || tier.includes('مؤسس')) return 'from-[#C59B48] to-[#D6AE5A]';
     if (tier.includes('Ambassador') || tier.includes('سفير')) return 'from-[#8b5cf6] to-[#ec4899]';
     return 'from-[#45e3d3] to-[#3bc4b5]';
   };
@@ -822,14 +822,14 @@ export function UserProfileModal({
       <div className={`flex items-start gap-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
         {/* Avatar */}
         <div className="relative">
-          <Avatar className="w-24 h-24 border-4 border-[#ffcc33]">
+          <Avatar className="w-24 h-24 border-4 border-[#C59B48]">
             <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback className="bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] text-[#020e27] text-2xl">
+            <AvatarFallback className="bg-gradient-to-br from-[#C59B48] to-[#45e3d3] text-[#121217] text-2xl">
               {user.name.substring(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           {profileData.kycStatus === 'verified' && (
-            <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-[#020e27]">
+            <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-[#121217]">
               <CheckCircle className="w-5 h-5 text-white" />
             </div>
           )}
@@ -851,7 +851,7 @@ export function UserProfileModal({
                   disabled={isFollowLoading}
                   className={`${isFollowing
                     ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 border-red-500/50'
-                    : 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#ffb54d] hover:to-[#ffcc33]'
+                    : 'bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] hover:from-[#D6AE5A] hover:to-[#C59B48]'
                     } text-white transition-all duration-300`}
                 >
                   {isFollowLoading ? (
@@ -885,7 +885,7 @@ export function UserProfileModal({
           </div>
 
           <div className={`flex items-center gap-3 flex-wrap ${isRTL ? 'flex-row-reverse' : ''}`}>
-            <Badge className={`bg-gradient-to-r ${getTierColor(displayedTier)} text-[#020e27] border-0`}>
+            <Badge className={`bg-gradient-to-r ${getTierColor(displayedTier)} text-[#121217] border-0`}>
               <span className="text-xs font-semibold opacity-80">{t.tier}:</span>
               <span className={`${isRTL ? 'mr-1' : 'ml-1'}`}>{displayedTier}</span>
             </Badge>
@@ -934,16 +934,16 @@ export function UserProfileModal({
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full blur-xl" />
           </div>
           <div className={`relative z-10 ${isRTL ? 'text-right' : 'text-left'}`}>
-            <p className="text-[#020e27] opacity-80 text-sm mb-1">{t.totalPoints}</p>
-            <p className="text-5xl text-[#020e27] mb-4">{displayedPoints.toLocaleString()}</p>
+            <p className="text-[#121217] opacity-80 text-sm mb-1">{t.totalPoints}</p>
+            <p className="text-5xl text-[#121217] mb-4">{displayedPoints.toLocaleString()}</p>
 
             {/* Progress to Next Tier */}
             <div>
               <div className={`flex items-center justify-between mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                <span className="text-sm text-[#020e27] opacity-80">{t.nextTier}</span>
-                <span className="text-sm text-[#020e27]">{pointsNeeded} {t.pointsNeeded}</span>
+                <span className="text-sm text-[#121217] opacity-80">{t.nextTier}</span>
+                <span className="text-sm text-[#121217]">{pointsNeeded} {t.pointsNeeded}</span>
               </div>
-              <Progress value={progress} className="h-2 bg-[#0f021c]" />
+              <Progress value={progress} className="h-2 bg-[#0B0B0D]" />
             </div>
           </div>
         </motion.div>
@@ -1133,7 +1133,7 @@ export function UserProfileModal({
               <>
                 <div className="glass rounded-xl p-4 border border-[#4e4e4e78]">
                   <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <Award className="w-5 h-5 text-[#ffcc33]" />
+                    <Award className="w-5 h-5 text-[#C59B48]" />
                     <span className="text-xs text-[#808c99]">{t.artworksAdded}</span>
                   </div>
                   <p className="text-2xl text-[#ffffff]">{profileData.stats.artworksAdded}</p>
@@ -1194,7 +1194,7 @@ export function UserProfileModal({
                       setSelectedArtwork(artworkDetail);
                       setIsArtworkDetailOpen(true);
                     }}
-                    className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
+                    className="group relative overflow-hidden rounded-xl border border-[#4e4e4e78] hover:border-[#C59B48]/50 transition-all cursor-pointer"
                   >
                     <div className="aspect-square relative overflow-hidden bg-[#1D112A]">
                       <img
@@ -1222,13 +1222,13 @@ export function UserProfileModal({
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="absolute bottom-0 left-0 right-0 p-3">
                           <h4 className="text-white text-sm mb-1">{artwork.title}</h4>
-                          <p className="text-[#ffcc33] font-semibold">{artwork.price}</p>
+                          <p className="text-[#C59B48] font-semibold">{artwork.price}</p>
                         </div>
                       </div>
                     </div>
                     <div className="md:hidden p-3 bg-[#1D112A]/80 backdrop-blur-sm">
                       <h4 className="text-white text-sm mb-1 truncate">{artwork.title}</h4>
-                      <p className="text-[#ffcc33] text-xs">{artwork.price}</p>
+                      <p className="text-[#C59B48] text-xs">{artwork.price}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -1323,10 +1323,10 @@ export function UserProfileModal({
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: index * 0.05 }}
-                        className="p-5 rounded-lg glass border border-[#ffcc33]/10 hover:border-[#ffcc33]/30 transition-all bg-gradient-to-br from-[#0F021C]/50 to-[#1D112A]/50"
+                        className="p-5 rounded-lg glass border border-[#C59B48]/10 hover:border-[#C59B48]/30 transition-all bg-gradient-to-br from-[#0B0B0D]/50 to-[#1D112A]/50"
                       >
                         {/* Header Row */}
-                        <div className={`flex items-center gap-3 mb-4 pb-3 border-b border-[#ffcc33]/10 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className={`flex items-center gap-3 mb-4 pb-3 border-b border-[#C59B48]/10 ${isRTL ? 'flex-row-reverse' : ''}`}>
                           <div
                             className={`w-12 h-12 rounded-xl ${stat.bgClass} flex items-center justify-center`}
                           >
@@ -1345,19 +1345,19 @@ export function UserProfileModal({
 
                         {/* Metrics Grid - Tile Layout */}
                         <div className="grid grid-cols-3 gap-3">
-                          <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
+                          <div className="p-3 rounded-lg bg-[#0B0B0D]/80 border border-[#C59B48]/10 text-center">
                             <p className="text-[#808c99] text-xs mb-1">{t.followers}</p>
                             <p className="text-[#ffffff]">{stat.followers}</p>
                           </div>
 
-                          <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
+                          <div className="p-3 rounded-lg bg-[#0B0B0D]/80 border border-[#C59B48]/10 text-center">
                             <p className="text-[#808c99] text-xs mb-1">
                               {t.engagementRate}
                             </p>
                             <p className="text-[#ffffff]">{stat.engagement}</p>
                           </div>
 
-                          <div className="p-3 rounded-lg bg-[#0F021C]/80 border border-[#ffcc33]/10 text-center">
+                          <div className="p-3 rounded-lg bg-[#0B0B0D]/80 border border-[#C59B48]/10 text-center">
                             <p className="text-[#808c99] text-xs mb-1">
                               {t.posts}
                             </p>
@@ -1390,11 +1390,11 @@ export function UserProfileModal({
                 <motion.div
                   key={index}
                   whileHover={{ scale: 1.02 }}
-                  className="glass rounded-xl p-4 border border-[#ffcc33]/30"
+                  className="glass rounded-xl p-4 border border-[#C59B48]/30"
                 >
                   <div className={`flex items-start gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] rounded-lg flex items-center justify-center shrink-0">
-                      <Icon className="w-6 h-6 text-[#020e27]" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#D6AE5A] rounded-lg flex items-center justify-center shrink-0">
+                      <Icon className="w-6 h-6 text-[#121217]" />
                     </div>
                     <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
                       <p className="text-[#ffffff] mb-1">{achievement.title}</p>

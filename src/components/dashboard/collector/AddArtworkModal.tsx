@@ -248,7 +248,7 @@ export function AddArtworkModal({
           !formData.year.trim() || 
           isLoading
         }
-        className="flex-1 bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] hover:from-[#e6b800] hover:to-[#e6b800] hover:shadow-lg hover:shadow-[#ffcc33]/50 text-[#0F021C] border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
+        className="flex-1 bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] hover:from-[#A98237] hover:to-[#A98237] hover:shadow-lg hover:shadow-[#C59B48]/50 text-[#0B0B0D] border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
       >
         {isLoading ? (
           <>

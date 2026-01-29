@@ -551,7 +551,7 @@ export function VideoWatchModal({
                 className={`flex items-center gap-2 text-sm ${isRTL ? "flex-row-reverse" : ""
                   }`}
               >
-                <Clock className="w-4 h-4 text-[#ffcc33]" />
+                <Clock className="w-4 h-4 text-[#C59B48]" />
                 <span className="text-[#808c99]">
                   {t.watchProgress.replace(
                     "{seconds}",
@@ -565,11 +565,11 @@ export function VideoWatchModal({
                 </span>
               )}
             </div>
-            <Progress value={progressPercent} className="h-2 bg-[#0f021c]" />
+            <Progress value={progressPercent} className="h-2 bg-[#0B0B0D]" />
           </div>
 
           {/* Video Player */}
-          <div className="relative w-full aspect-video bg-[#0f021c] rounded-lg overflow-hidden">
+          <div className="relative w-full aspect-video bg-[#0B0B0D] rounded-lg overflow-hidden">
             {isLoading && (
               <div className="absolute inset-0 flex items-center justify-center z-10">
                 <div className="flex flex-col items-center gap-2">

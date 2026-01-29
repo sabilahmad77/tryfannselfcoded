@@ -269,19 +269,19 @@ export function AddArtwork({
               }`}
           >
             <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] rounded-xl flex items-center justify-center">
-                <Camera className="w-6 h-6 text-[#020e27]" />
+              <div className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#D6AE5A] rounded-xl flex items-center justify-center">
+                <Camera className="w-6 h-6 text-[#121217]" />
               </div>
               {/* Pulsing glow */}
               <motion.div
-                className="absolute inset-0 bg-[#ffcc33]/30 rounded-xl blur-xl"
+                className="absolute inset-0 bg-[#C59B48]/30 rounded-xl blur-xl"
                 animate={{ opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
               {/* Lock overlay if profile not completed */}
               {!profileCompleted && (
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-[#ffb54d] to-[#ffcc33] rounded-full flex items-center justify-center border-2 border-[#020e27]">
-                  <Lock className="w-3 h-3 text-[#020e27]" />
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-[#D6AE5A] to-[#C59B48] rounded-full flex items-center justify-center border-2 border-[#121217]">
+                  <Lock className="w-3 h-3 text-[#121217]" />
                 </div>
               )}
             </div>
@@ -299,7 +299,7 @@ export function AddArtwork({
             type="button"
             onClick={handleAddClick}
             disabled={!profileCompleted}
-            className="relative overflow-hidden bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#020e27] px-4 py-2 rounded-xl hover:opacity-90 transition-all group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="relative overflow-hidden bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#121217] px-4 py-2 rounded-xl hover:opacity-90 transition-all group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span
               className={`relative flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""
@@ -337,16 +337,16 @@ export function AddArtwork({
                 variant="outline"
                 size="sm"
                 onClick={() => refetch()}
-                className="border-[#ffcc33]/40 text-[#ffcc33] hover:bg-[#ffcc33]/10"
+                className="border-[#C59B48]/40 text-[#C59B48] hover:bg-[#C59B48]/10"
               >
                 {language === "en" ? "Retry" : "إعادة المحاولة"}
               </Button>
             </div>
           ) : !artworks || artworks.length === 0 ? (
             <div className="h-full flex items-center justify-center">
-              <div className="bg-[#0f021c] border border-[#ffcc33]/20 rounded-xl p-8 text-center max-w-sm mx-auto">
-                <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-[#ffcc33]/10 to-[#45e3d3]/10 border border-[#ffcc33]/30 rounded-2xl flex items-center justify-center">
-                  <Upload className="w-10 h-10 text-[#ffcc33]/70" />
+              <div className="bg-[#0B0B0D] border border-[#C59B48]/20 rounded-xl p-8 text-center max-w-sm mx-auto">
+                <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-[#C59B48]/10 to-[#45e3d3]/10 border border-[#C59B48]/30 rounded-2xl flex items-center justify-center">
+                  <Upload className="w-10 h-10 text-[#C59B48]/70" />
                 </div>
                 <p className="text-[#ffffff] mb-2">{t.noArtworks}</p>
                 <p className="text-sm text-[#808c99] mb-4">{t.startAdding}</p>
@@ -355,9 +355,9 @@ export function AddArtwork({
                     <Sparkles className="w-4 h-4 text-[#45e3d3]" />
                     <span className="text-sm text-[#45e3d3]">{t.earnPoints}</span>
                   </div>
-                  <div className="w-px h-4 bg-[#ffcc33]/30" />
+                  <div className="w-px h-4 bg-[#C59B48]/30" />
                   <div className="flex items-center gap-2">
-                    <ImageIcon className="w-4 h-4 text-[#ffcc33]" />
+                    <ImageIcon className="w-4 h-4 text-[#C59B48]" />
                     <span className="text-sm text-[#808c99]">JPG, PNG</span>
                   </div>
                 </div>
@@ -394,7 +394,7 @@ export function AddArtwork({
                   }}
                 >
                   {/* Artwork Tile */}
-                  <div className="relative overflow-hidden rounded-xl border border-[#ffcc33]/20 bg-[#0f021c] backdrop-blur-sm hover:border-[#ffcc33]/50 transition-all duration-300 cursor-pointer">
+                  <div className="relative overflow-hidden rounded-xl border border-[#C59B48]/20 bg-[#0B0B0D] backdrop-blur-sm hover:border-[#C59B48]/50 transition-all duration-300 cursor-pointer">
                     {/* Image */}
                     <div className="relative aspect-square overflow-hidden">
                       <img
@@ -403,7 +403,7 @@ export function AddArtwork({
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                       {/* Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0F021C] via-[#0F021C]/40 to-transparent opacity-80" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0D] via-[#0B0B0D]/40 to-transparent opacity-80" />
 
                       {/* Hover Actions */}
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
@@ -414,9 +414,9 @@ export function AddArtwork({
                             e.stopPropagation();
                             handleOpenEdit(artwork);
                           }}
-                          className="w-10 h-10 bg-[#ffcc33]/90 hover:bg-[#ffcc33] rounded-lg flex items-center justify-center backdrop-blur-sm cursor-pointer"
+                          className="w-10 h-10 bg-[#C59B48]/90 hover:bg-[#C59B48] rounded-lg flex items-center justify-center backdrop-blur-sm cursor-pointer"
                         >
-                          <Pencil className="w-5 h-5 text-[#020e27]" />
+                          <Pencil className="w-5 h-5 text-[#121217]" />
                         </motion.button>
                         <motion.button
                           whileHover={{ scale: 1.1 }}
@@ -463,16 +463,16 @@ export function AddArtwork({
                         </div>
 
                         {/* Medium Badge */}
-                        <div className="flex items-center gap-1 px-2 py-1 bg-[#ffcc33]/10 border border-[#ffcc33]/30 rounded-lg max-w-[100px]">
-                          <Palette className="w-3 h-3 text-[#ffcc33] flex-shrink-0" />
-                          <span className="text-xs text-[#ffcc33] truncate">{artwork.medium}</span>
+                        <div className="flex items-center gap-1 px-2 py-1 bg-[#C59B48]/10 border border-[#C59B48]/30 rounded-lg max-w-[100px]">
+                          <Palette className="w-3 h-3 text-[#C59B48] flex-shrink-0" />
+                          <span className="text-xs text-[#C59B48] truncate">{artwork.medium}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Glow Effect on Hover */}
                     <motion.div
-                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#ffcc33]/0 to-[#45e3d3]/0 group-hover:from-[#ffcc33]/10 group-hover:to-[#45e3d3]/10 pointer-events-none transition-all duration-300"
+                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#C59B48]/0 to-[#45e3d3]/0 group-hover:from-[#C59B48]/10 group-hover:to-[#45e3d3]/10 pointer-events-none transition-all duration-300"
                     />
                   </div>
                 </motion.div>

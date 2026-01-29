@@ -101,7 +101,7 @@ export function ConfirmationDialog({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-2xl p-6 max-w-md w-full border border-[#4e4e4e78] shadow-2xl"
+        className="bg-gradient-to-br from-[#1D112A] to-[#0B0B0D] rounded-2xl p-6 max-w-md w-full border border-[#4e4e4e78] shadow-2xl"
       >
         {/* Header */}
         <div

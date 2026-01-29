@@ -131,7 +131,7 @@ export function ExhibitionPlanner() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
             whileHover={{ scale: 1.02 }}
-            className="bg-gradient-to-br from-[#1D112A] to-[#0F021C] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
+            className="bg-gradient-to-br from-[#1D112A] to-[#0B0B0D] rounded-xl p-4 border border-[#4e4e4e78] hover:border-[#ffcc33]/50 transition-all cursor-pointer"
           >
             <div
               className={`flex items-start justify-between mb-3 ${

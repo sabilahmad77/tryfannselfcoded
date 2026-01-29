@@ -54,15 +54,15 @@ export function CompleteProfile({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.6 }}
-        className="glass border border-[#ffcc33]/30 p-4 rounded-xl mb-6 shadow-2xl"
+        className="glass border border-[#C59B48]/30 p-4 rounded-xl mb-6 shadow-2xl"
       >
         <div className={`flex items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
-          <AlertCircle className={`w-5 h-5 text-[#ffcc33] flex-shrink-0 ${isRTL ? 'ml-3' : 'mr-3'}`} />
+          <AlertCircle className={`w-5 h-5 text-[#C59B48] flex-shrink-0 ${isRTL ? 'ml-3' : 'mr-3'}`} />
           <p className={`text-[#808c99] text-sm flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
             {t.profileIncomplete}
           </p>
           <button
-          className={`text-[#ffcc33] hover:text-[#ffb54d] underline text-sm transition-colors flex-shrink-0 cursor-pointer ${isRTL ? 'mr-3' : 'ml-3'}`}
+          className={`text-[#C59B48] hover:text-[#D6AE5A] underline text-sm transition-colors flex-shrink-0 cursor-pointer ${isRTL ? 'mr-3' : 'ml-3'}`}
             onClick={handleOpenPrompt}
           >
             {t.completeNow}

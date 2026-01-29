@@ -336,8 +336,8 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             id={fieldId}
             type={type}
             className={cn(
-              "bg-background border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
-              "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20",
+              "bg-background border-[#C59B48]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
+              "focus:border-[#C59B48]/50 focus:ring-[#C59B48]/20",
               hasError &&
               "border-destructive focus:border-destructive focus:ring-destructive/20",
               hasIcon &&
@@ -393,7 +393,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
               type="button"
               onClick={handleCalendarClick}
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-white hover:text-[#ffcc33] transition-colors cursor-pointer z-10",
+                "absolute top-1/2 -translate-y-1/2 w-5 h-5 text-white hover:text-[#C59B48] transition-colors cursor-pointer z-10",
                 isRTL ? "left-3" : "right-3"
               )}
               aria-label={isRTL ? "فتح التقويم" : "Open calendar"}
@@ -583,8 +583,8 @@ export const PasswordField = React.forwardRef<
             id={fieldId}
             type={showPassword ? "text" : "password"}
             className={cn(
-              "bg-background border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
-              "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20",
+              "bg-background border-[#C59B48]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 h-11",
+              "focus:border-[#C59B48]/50 focus:ring-[#C59B48]/20",
               hasError &&
               "border-destructive focus:border-destructive focus:ring-destructive/20",
               // Icon padding (left side for LTR, right side for RTL)
@@ -797,11 +797,11 @@ export const SelectField = React.forwardRef<
               id={fieldId}
               size="default"
               className={cn(
-                "bg-background border-[#ffcc33]/20 text-[#ffffff]",
+                "bg-background border-[#C59B48]/20 text-[#ffffff]",
                 "h-11 data-[size=default]:!h-11",
                 "!py-1 px-3",
-                "focus-visible:border-[#ffcc33]/50 focus-visible:ring-[#ffcc33]/20 focus-visible:ring-[3px]",
-                "hover:bg-[#0f021c]/80 transition-colors",
+                "focus-visible:border-[#C59B48]/50 focus-visible:ring-[#C59B48]/20 focus-visible:ring-[3px]",
+                "hover:bg-[#0B0B0D]/80 transition-colors",
                 '[&_svg:not([class*="text-"])]:text-[#ffffff]/40',
                 hasError &&
                 "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
@@ -1039,8 +1039,8 @@ export const TextareaField = React.forwardRef<
             ref={registerRef || ref}
             id={fieldId}
             className={cn(
-              "bg-background border-[#ffcc33]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 min-h-32",
-              "focus:border-[#ffcc33]/50 focus:ring-[#ffcc33]/20 resize-none",
+              "bg-background border-[#C59B48]/20 text-[#ffffff] placeholder:text-[#ffffff]/30 min-h-32",
+              "focus:border-[#C59B48]/50 focus:ring-[#C59B48]/20 resize-none",
               hasError &&
               "border-destructive focus:border-destructive focus:ring-destructive/20",
               hasIcon &&
@@ -1633,7 +1633,7 @@ export const SwitchField = React.forwardRef<
           >
             {hasIcon && (
               <Icon
-                className={cn("w-5 h-5 text-[#ffcc33] shrink-0", iconClassName)}
+                className={cn("w-5 h-5 text-[#C59B48] shrink-0", iconClassName)}
               />
             )}
             <div className={cn(isRTL ? "text-right" : "text-left", "flex-1")}>

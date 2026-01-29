@@ -52,7 +52,7 @@
   /* Lighter teal */
   --secondary-dark: #3bc4b5;
   /* Darker teal */
-  --secondary-foreground: #020e27;
+  --secondary-foreground: #121217;
   /* Dark background for teal text */
 
   /* ACCENT COLORS */
@@ -62,7 +62,7 @@
   /* Accent pink */
   --accent-purple: #9375b5;
   /* Accent purple */
-  --accent-foreground: #020e27;
+  --accent-foreground: #121217;
 
   /* BACKGROUND COLORS - New Charcoal System */
   --background: #0B0B0D;
@@ -112,13 +112,13 @@
   --destructive-foreground: #ffffff;
   --success: #90f2a6;
   /* Success green */
-  --success-foreground: #020e27;
-  --warning: #ffcc33;
+  --success-foreground: #121217;
+  --warning: #C59B48;
   /* Warning gold (same as primary) */
-  --warning-foreground: #020e27;
+  --warning-foreground: #121217;
   --info: #4de3ed;
   /* Info cyan */
-  --info-foreground: #020e27;
+  --info-foreground: #121217;
 
   /* BORDER COLORS */
   --border: #2A2A3A;
@@ -214,13 +214,13 @@
   --secondary: #45e3d3;
   --secondary-light: #5ee7d8;
   --secondary-dark: #3bc4b5;
-  --secondary-foreground: #020e27;
+  --secondary-foreground: #121217;
 
   /* ACCENT COLORS */
   --accent: #ffc936;
   --accent-pink: #fface3;
   --accent-purple: #9375b5;
-  --accent-foreground: #020e27;
+  --accent-foreground: #121217;
 
   /* BACKGROUND COLORS - FANN Dark Purple System */
   /* BACKGROUND COLORS - New Charcoal System */
@@ -255,11 +255,11 @@
   --destructive: #ff6b6b;
   --destructive-foreground: #ffffff;
   --success: #90f2a6;
-  --success-foreground: #020e27;
-  --warning: #ffcc33;
-  --warning-foreground: #020e27;
+  --success-foreground: #121217;
+  --warning: #C59B48;
+  --warning-foreground: #121217;
   --info: #4de3ed;
-  --info-foreground: #020e27;
+  --info-foreground: #121217;
 
   /* BORDER COLORS */
   --border: #2A2A3A;
@@ -611,7 +611,7 @@ html {
 }
 
 .midnight-gradient {
-  background: linear-gradient(135deg, #0F021C 0%, #1D112A 50%, #4e4e4e 100%);
+  background: linear-gradient(135deg, #0B0B0D 0%, #1D112A 50%, #4e4e4e 100%);
 }
 
 /* Glowing buttons for gamification */

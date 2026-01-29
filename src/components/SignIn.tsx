@@ -348,7 +348,7 @@ export function SignIn({
     {
       value: "500+",
       label: content.stats.artists,
-      color: "from-[#ffcc33] to-[#ffb54d]",
+      color: "from-[#C59B48] to-[#D6AE5A]",
     },
     {
       value: "1.2K+",
@@ -363,7 +363,7 @@ export function SignIn({
   ];
 
   return (
-    <div className="min-h-screen bg-[#0F021C] flex" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-[#0B0B0D] flex" dir={isRTL ? "rtl" : "ltr"}>
       {/* LEFT PANEL - Branding & Info */}
       <motion.div
         initial={{ opacity: 0, x: isRTL ? 50 : -50 }}
@@ -373,8 +373,8 @@ export function SignIn({
       >
         {/* Background Effects */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc33]/10 via-[#45e3d3]/5 to-[#4de3ed]/10" />
-          <div className="absolute top-20 -left-20 w-80 h-80 bg-[#ffcc33]/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#C59B48]/10 via-[#45e3d3]/5 to-[#4de3ed]/10" />
+          <div className="absolute top-20 -left-20 w-80 h-80 bg-[#C59B48]/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-20 -right-20 w-80 h-80 bg-[#45e3d3]/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,204,51,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,204,51,0.05)_1px,transparent_1px)] bg-[size:50px_50px]" />
         </div>
@@ -386,7 +386,7 @@ export function SignIn({
             <motion.button
               onClick={onNavigateToHome}
               whileHover={{ scale: 1.02 }}
-              className="flex items-center gap-2 text-cream/70 hover:text-[#ffcc33] transition-colors group mb-8 cursor-pointer"
+              className="flex items-center gap-2 text-cream/70 hover:text-[#C59B48] transition-colors group mb-8 cursor-pointer"
             >
               <ChevronLeft
                 className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
@@ -396,8 +396,8 @@ export function SignIn({
             </motion.button>
 
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] flex items-center justify-center glow-gold">
-                <Sparkles className="w-6 h-6 text-[#0F021C]" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C59B48] to-[#D6AE5A] flex items-center justify-center glow-gold">
+                <Sparkles className="w-6 h-6 text-[#0B0B0D]" />
               </div>
               <h1 className="text-3xl text-[#ffffff]">FANN</h1>
             </div>
@@ -429,8 +429,8 @@ export function SignIn({
                       transition={{ delay: 0.1 * idx }}
                       className="flex gap-4"
                     >
-                      <div className="w-12 h-12 rounded-lg bg-[#ffffff]/5 border border-[#ffcc33]/20 flex items-center justify-center shrink-0">
-                        <Icon className="w-6 h-6 text-[#ffcc33]" />
+                      <div className="w-12 h-12 rounded-lg bg-[#ffffff]/5 border border-[#C59B48]/20 flex items-center justify-center shrink-0">
+                        <Icon className="w-6 h-6 text-[#C59B48]" />
                       </div>
                       <div>
                         <h3 className="text-[#ffffff] mb-1">{feature.title}</h3>
@@ -451,7 +451,7 @@ export function SignIn({
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 + index * 0.1 }}
-                    className="glass border border-[#ffcc33]/20 rounded-lg p-3 text-center hover:border-[#ffcc33]/50 transition-all"
+                    className="glass border border-[#C59B48]/20 rounded-lg p-3 text-center hover:border-[#C59B48]/50 transition-all"
                   >
                     <div
                       className={`text-xl mb-1 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}
@@ -556,7 +556,7 @@ export function SignIn({
                         onCheckedChange={(checked) =>
                           setValue("rememberMe", checked === true)
                         }
-                        className="border-[#ffcc33]/30 data-[state=checked]:bg-[#ffcc33] data-[state=checked]:border-[#ffcc33]"
+                        className="border-[#C59B48]/30 data-[state=checked]:bg-[#C59B48] data-[state=checked]:border-[#C59B48]"
                       />
                       <Label
                         htmlFor="rememberMe"
@@ -570,7 +570,7 @@ export function SignIn({
                     <button
                       type="button"
                       onClick={() => navigate(ROUTES.FORGOT_PASSWORD)}
-                      className="text-sm text-[#ffcc33] hover:text-[#ffb54d] transition-colors cursor-pointer"
+                      className="text-sm text-[#C59B48] hover:text-[#D6AE5A] transition-colors cursor-pointer"
                     >
                       {content.forgotPassword}
                     </button>
@@ -593,7 +593,7 @@ export function SignIn({
                             <Oval
                               height={20}
                               width={20}
-                              color="#0F021C"
+                              color="#0B0B0D"
                               ariaLabel="loading"
                               visible={true}
                             />
@@ -621,7 +621,7 @@ export function SignIn({
                   <button
                     type="button"
                     onClick={onNavigateToSignUp}
-                    className="text-[#ffcc33] hover:text-[#ffb54d] transition-colors text-sm cursor-pointer"
+                    className="text-[#C59B48] hover:text-[#D6AE5A] transition-colors text-sm cursor-pointer"
                   >
                     {content.signUp}
                   </button>

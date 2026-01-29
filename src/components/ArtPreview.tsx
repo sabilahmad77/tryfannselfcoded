@@ -46,7 +46,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
   const isRTL = language === 'ar';
 
   return (
-    <section className="relative py-16 overflow-hidden bg-[#0F021C]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="relative py-16 overflow-hidden bg-[#0B0B0D]" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -54,7 +54,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
           alt="Abstract Art Pattern"
           className="w-full h-full object-cover opacity-50"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/60 via-transparent to-[#0F021C]/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/60 via-transparent to-[#0B0B0D]/60" />
       </div>
 
       {/* Background effects */}
@@ -105,7 +105,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent" />
 
                 {/* Artwork Image Placeholder */}
-                <div className="relative h-64 bg-gradient-to-br from-[#191922] to-[#0F021C] flex items-center justify-center overflow-hidden">
+                <div className="relative h-64 bg-gradient-to-br from-[#191922] to-[#0B0B0D] flex items-center justify-center overflow-hidden">
                   <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.05)_50%,transparent_75%,transparent_100%)] bg-[length:20px_20px]" />
                   <Image className="w-16 h-16 text-white/20" />
 

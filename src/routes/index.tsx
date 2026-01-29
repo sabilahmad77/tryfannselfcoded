@@ -7,9 +7,9 @@ import { ROUTES } from '@/routes/paths';
 // Loading component
 function PageLoader() {
   return (
-    <div className="min-h-screen bg-[#0F021C] flex items-center justify-center">
+    <div className="min-h-screen bg-[#0B0B0D] flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
-        <div className="w-16 h-16 border-4 border-[#ffcc33]/30 border-t-[#ffcc33] rounded-full animate-spin" />
+        <div className="w-16 h-16 border-4 border-[#C59B48]/30 border-t-[#C59B48] rounded-full animate-spin" />
         <p className="text-white/70">Loading...</p>
       </div>
     </div>

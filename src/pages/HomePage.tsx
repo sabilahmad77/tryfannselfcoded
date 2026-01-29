@@ -55,7 +55,7 @@ export function HomePage() {
   }, [language]);
 
   return (
-    <div className="min-h-screen bg-[#0F021C]">
+    <div className="min-h-screen bg-[#0B0B0D]">
       <SEOHead />
       <SchemaMarkup faqData={faqData} />
       <Navigation 

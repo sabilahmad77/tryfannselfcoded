@@ -41,7 +41,7 @@ const content = {
         ],
         cta: "Start as a Founding Artist",
         gradient: "from-amber-500 via-yellow-500 to-amber-600",
-        accentColor: "#ffcc33",
+        accentColor: "#C59B48",
       },
       {
         id: "gallery",
@@ -136,7 +136,7 @@ const content = {
         ],
         cta: "ابدأ كفنان مؤسس",
         gradient: "from-amber-500 via-yellow-500 to-amber-600",
-        accentColor: "#ffcc33",
+        accentColor: "#C59B48",
       },
       {
         id: "gallery",
@@ -244,7 +244,7 @@ export function PersonaPaths({
 
   return (
     <section
-      className="relative py-16 overflow-hidden bg-[#0F021C]"
+      className="relative py-16 overflow-hidden bg-[#0B0B0D]"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -255,12 +255,12 @@ export function PersonaPaths({
           className="w-full h-full object-cover opacity-80"
           style={{ transform: "scaleY(-1)" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/40 via-transparent to-[#0F021C]/40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/40 via-transparent to-[#0B0B0D]/40" />
       </div>
 
       {/* Background gradient mesh */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#ffcc33]/15 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#C59B48]/15 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#fbbf24]/15 rounded-full blur-3xl" />
       </div>
 
@@ -274,7 +274,7 @@ export function PersonaPaths({
         >
           <h2 className="mb-3 sm:mb-4 text-3xl sm:text-4xl md:text-5xl font-heading">
             <span className="text-white">{t.title.white}</span>
-            <span className="text-[#ffcc33]">{t.title.gold}</span>
+            <span className="text-[#C59B48]">{t.title.gold}</span>
           </h2>
           <p className="text-white/60 max-w-4xl mx-auto text-base sm:text-lg px-4 font-body">
             {t.subtitle}
@@ -317,7 +317,7 @@ export function PersonaPaths({
                       ease: "linear",
                     }}
                   >
-                    <div className="w-full h-full rounded-3xl bg-[#0F021C]" />
+                    <div className="w-full h-full rounded-3xl bg-[#0B0B0D]" />
                   </motion.div>
 
                   {/* Card Content */}

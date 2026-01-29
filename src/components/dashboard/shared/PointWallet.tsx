@@ -141,7 +141,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
     return (
       <div className="glass rounded-2xl p-6 h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 text-[#ffcc33] animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#C59B48] animate-spin" />
           <p className="text-[#808c99]">
             {language === "en" ? "Loading points..." : "جاري تحميل النقاط..."}
           </p>
@@ -179,12 +179,12 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
           className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
             }`}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-xl flex items-center justify-center">
-            <Wallet className="w-6 h-6 text-[#0F021C]" />
+          <div className="w-12 h-12 bg-gradient-to-br from-[#C59B48] to-[#45e3d3] rounded-xl flex items-center justify-center">
+            <Wallet className="w-6 h-6 text-[#0B0B0D]" />
           </div>
           <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
         </div>
-        <Badge className="bg-gradient-to-r from-[#ffcc33] to-[#fbbf24] text-[#0F021C] border-0">
+        <Badge className="bg-gradient-to-r from-[#C59B48] to-[#fbbf24] text-[#0B0B0D] border-0">
           {t.currentTier}: {currentTier}
         </Badge>
       </div>
@@ -193,7 +193,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
       <motion.div
         className="relative overflow-hidden rounded-xl p-6 mb-6"
         style={{
-          background: "linear-gradient(135deg, #ffcc33 0%, #45e3d3 100%)",
+          background: "linear-gradient(135deg, #C59B48 0%, #45e3d3 100%)",
         }}
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.3 }}
@@ -203,8 +203,8 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full blur-xl" />
         </div>
         <div className={`relative z-10 ${isRTL ? "text-right" : "text-left"}`}>
-          <p className="text-[#0F021C] opacity-80 mb-2">{t.totalPoints}</p>
-          <p className="text-5xl text-[#0F021C]">
+          <p className="text-[#0B0B0D] opacity-80 mb-2">{t.totalPoints}</p>
+          <p className="text-5xl text-[#0B0B0D]">
             {totalPoints.toLocaleString()}
           </p>
           {nextTier ? (
@@ -212,8 +212,8 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
               className={`flex items-center gap-2 mt-3 ${isRTL ? "flex-row-reverse" : ""
                 }`}
             >
-              <TrendingUp className="w-4 h-4 text-[#0F021C]" />
-              <span className="text-sm text-[#0F021C]">
+              <TrendingUp className="w-4 h-4 text-[#0B0B0D]" />
+              <span className="text-sm text-[#0B0B0D]">
                 {pointsNeeded} {t.pointsNeeded}
               </span>
             </div>
@@ -222,8 +222,8 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
               className={`flex items-center gap-2 mt-3 ${isRTL ? "flex-row-reverse" : ""
                 }`}
             >
-              <TrendingUp className="w-4 h-4 text-[#0F021C]" />
-              <span className="text-sm text-[#0F021C]">{t.maxTierReached}</span>
+              <TrendingUp className="w-4 h-4 text-[#0B0B0D]" />
+              <span className="text-sm text-[#0B0B0D]">{t.maxTierReached}</span>
             </div>
           )}
         </div>
@@ -239,11 +239,11 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
             <span className="text-sm text-[#808c99]">
               {t.progress} {nextTier}
             </span>
-            <span className="text-sm text-[#ffcc33]">
+            <span className="text-sm text-[#C59B48]">
               {Math.round(progress)}%
             </span>
           </div>
-          <Progress value={progress} className="h-2 bg-[#0f021c]" />
+          <Progress value={progress} className="h-2 bg-[#0B0B0D]" />
         </div>
       ) : (
         <div className="mb-6">
@@ -252,9 +252,9 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
               }`}
           >
             <span className="text-sm text-[#808c99]">{t.maxTierReached}</span>
-            <span className="text-sm text-[#ffcc33]">100%</span>
+            <span className="text-sm text-[#C59B48]">100%</span>
           </div>
-          <Progress value={100} className="h-2 bg-[#0f021c]" />
+          <Progress value={100} className="h-2 bg-[#0B0B0D]" />
         </div>
       )}
 
@@ -262,7 +262,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-[#0f021c] rounded-xl p-4 border border-[#9375b5]/30"
+          className="bg-[#0B0B0D] rounded-xl p-4 border border-[#9375b5]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
@@ -276,7 +276,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-[#0f021c] rounded-xl p-4 border border-[#0ea5e9]/30"
+          className="bg-[#0B0B0D] rounded-xl p-4 border border-[#0ea5e9]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
@@ -290,7 +290,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-[#0f021c] rounded-xl p-4 border border-[#fface3]/30"
+          className="bg-[#0B0B0D] rounded-xl p-4 border border-[#fface3]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
@@ -304,7 +304,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
 
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="bg-[#0f021c] rounded-xl p-4 border border-[#45e3d3]/30"
+          className="bg-[#0B0B0D] rounded-xl p-4 border border-[#45e3d3]/30"
         >
           <div
             className={`flex items-center gap-2 mb-2 ${isRTL ? "flex-row-reverse" : ""
@@ -322,7 +322,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
         <button
           onClick={() => setActiveTab('activity')}
           className={`flex-1 px-4 py-2 rounded-md text-sm transition-all ${activeTab === 'activity'
-              ? 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#020e27]'
+              ? 'bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#121217]'
               : 'text-[#808c99] hover:text-[#ffffff]'
             }`}
         >
@@ -331,7 +331,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
         <button
           onClick={() => setActiveTab('nextSteps')}
           className={`flex-1 px-4 py-2 rounded-md text-sm transition-all ${activeTab === 'nextSteps'
-              ? 'bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#020e27]'
+              ? 'bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#121217]'
               : 'text-[#808c99] hover:text-[#ffffff]'
             }`}
         >
@@ -350,7 +350,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
                   initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`flex items-center justify-between p-3 bg-background rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${isRTL ? "flex-row-reverse" : ""
+                  className={`flex items-center justify-between p-3 bg-background rounded-lg border border-[#4e4e4e78] hover:border-[#C59B48]/30 transition-all ${isRTL ? "flex-row-reverse" : ""
                     }`}
                 >
                   <div
@@ -402,7 +402,7 @@ export function PointWallet({ statsData, isLoadingStats = false }: PointWalletPr
                   initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`flex items-center justify-between p-3 bg-background rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${isRTL ? "flex-row-reverse" : ""
+                  className={`flex items-center justify-between p-3 bg-background rounded-lg border border-[#4e4e4e78] hover:border-[#C59B48]/30 transition-all ${isRTL ? "flex-row-reverse" : ""
                     }`}
                 >
                   <div

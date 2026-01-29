@@ -84,14 +84,14 @@ export function RecommendedArtworks() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass rounded-2xl p-6 border border-[#ffcc33]/20"
+      className="glass rounded-2xl p-6 border border-[#C59B48]/20"
       dir={isRTL ? "rtl" : "ltr"}
     >
       <div
         className={`flex items-center gap-3 mb-6 ${isRTL ? "flex-row-reverse" : ""}`}
       >
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ffcc33] to-[#ffb54d] flex items-center justify-center">
-          <Sparkles className="w-5 h-5 text-[#0F021C]" />
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C59B48] to-[#D6AE5A] flex items-center justify-center">
+          <Sparkles className="w-5 h-5 text-[#0B0B0D]" />
         </div>
         <div className={isRTL ? "text-right" : "text-left"}>
           <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
@@ -107,17 +107,17 @@ export function RecommendedArtworks() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.1 }}
             whileHover={{ y: -5 }}
-            className="glass rounded-xl overflow-hidden border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all group"
+            className="glass rounded-xl overflow-hidden border border-[#4e4e4e78] hover:border-[#C59B48]/30 transition-all group"
           >
             {/* Image */}
-            <div className="relative h-48 bg-gradient-to-br from-[#1D112A] to-[#0F021C]">
-              <div className="absolute inset-0 bg-[#ffcc33]/5 group-hover:bg-[#ffcc33]/10 transition-colors" />
+            <div className="relative h-48 bg-gradient-to-br from-[#1D112A] to-[#0B0B0D]">
+              <div className="absolute inset-0 bg-[#C59B48]/5 group-hover:bg-[#C59B48]/10 transition-colors" />
               <div className="absolute top-3 right-3 z-10">
-                <Badge className="bg-[#45e3d3] text-[#0F021C] border-0">
+                <Badge className="bg-[#45e3d3] text-[#0B0B0D] border-0">
                   {t.available}
                 </Badge>
               </div>
-              <button className="absolute top-3 left-3 z-10 w-8 h-8 rounded-full glass border border-[#4e4e4e78] flex items-center justify-center hover:border-[#ffcc33]/50 hover:bg-[#ffcc33]/20 hover:scale-110 transition-all duration-200 cursor-pointer">
+              <button className="absolute top-3 left-3 z-10 w-8 h-8 rounded-full glass border border-[#4e4e4e78] flex items-center justify-center hover:border-[#C59B48]/50 hover:bg-[#C59B48]/20 hover:scale-110 transition-all duration-200 cursor-pointer">
                 <Heart className="w-4 h-4 text-[#ffffff]" />
               </button>
             </div>
@@ -142,7 +142,7 @@ export function RecommendedArtworks() {
                   isRTL ? "flex-row-reverse" : ""
                 }`}
               >
-                <span className="text-[#ffcc33]">{artwork.price}</span>
+                <span className="text-[#C59B48]">{artwork.price}</span>
                 <div
                   className={`flex items-center gap-3 text-xs text-[#808c99]/70 ${
                     isRTL ? "flex-row-reverse" : ""
