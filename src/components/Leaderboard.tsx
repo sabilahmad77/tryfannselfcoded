@@ -315,7 +315,7 @@ export function Leaderboard({
 
   return (
     <section
-      className="relative py-32 overflow-hidden bg-[#0F021C]"
+      className="relative py-16 overflow-hidden bg-[#0F021C]"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -347,7 +347,7 @@ export function Leaderboard({
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-lg font-body">
+          <p className="text-white/60 max-w-4xl mx-auto text-lg font-body">
             {t.subtitle}
           </p>
         </motion.div>

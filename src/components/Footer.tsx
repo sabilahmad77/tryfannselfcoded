@@ -1,8 +1,10 @@
-import { motion } from 'motion/react';
-import { Twitter, Instagram, Linkedin, Mail } from 'lucide-react';
+import { ROUTES } from '@/routes/paths';
 import fannLogo from 'figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png';
-import { ImageWithFallback } from './figma/ImageWithFallback';
 import bgImage from 'figma:asset/c85d96c5ec679934a6c95c18a6db9da4a5b2bc2d.png';
+import { BookOpen, Facebook, FileText, Globe, Image as ImageIcon, Instagram, Layers, Linkedin, Palette, Twitter, Video, Youtube } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
+import { ImageWithFallback } from './figma/ImageWithFallback';
 
 interface FooterProps {
   language: 'en' | 'ar';
@@ -20,7 +22,7 @@ const content = {
       },
       {
         title: "Resources",
-        links: ["FAQ", "Terms of Service", "Privacy Policy", "Contact Us"]
+        links: ["FAQ", "Privacy & Terms", "Contact Us"]
       },
       {
         title: "Community",
@@ -32,8 +34,8 @@ const content = {
       placeholder: "Enter your email",
       button: "Subscribe"
     },
-    copyright: "© 2025 TRYFANN. All rights reserved.",
-    compliance: "KYC powered by SumSub • GDPR Compliant"
+    copyright: "© 2026 FANN All Rights Reserved",
+    comingSoon: "Coming Soon"
   },
   ar: {
     tagline: { white: "ابدأ اليوم", gold: " انضم إلى مستقبل الفن" },
@@ -45,7 +47,7 @@ const content = {
       },
       {
         title: "الموارد",
-        links: ["الأسئلة الشائعة", "شروط الخدمة", "سياسة الخصوصية", "اتصل بنا"]
+        links: ["الأسئلة الشائعة", "الخصوصية والشروط", "اتصل بنا"]
       },
       {
         title: "المجتمع",
@@ -57,14 +59,100 @@ const content = {
       placeholder: "أدخل بريدك الإلكتروني",
       button: "اشترك"
     },
-    copyright: "© 2025 TRYFANN. جميع الحقوق محفوظة.",
-    compliance: "التحقق من الهوية بواسطة SumSub • متوافق مع GDPR"
+    copyright: "© 2026 FANN جميع الحقوق محفوظة",
+    comingSoon: "قريباً"
   }
 };
 
 export function Footer({ language }: FooterProps) {
   const t = content[language];
   const isRTL = language === 'ar';
+  const navigate = useNavigate();
+
+  // All 14 social media icons with links - using professional icons
+  const socialLinks = [
+    { icon: Linkedin, href: 'https://www.linkedin.com/company/fannarttech', label: 'LinkedIn' },
+    { icon: Facebook, href: 'https://www.facebook.com/FannKuwait', label: 'Facebook' },
+    { icon: Instagram, href: 'https://www.instagram.com/fannarttech', label: 'Instagram' },
+    { icon: Youtube, href: 'https://www.youtube.com/@fannarttech', label: 'YouTube' },
+    { icon: Twitter, href: 'https://x.com/fannarttech', label: 'Twitter / X' },
+    { icon: Video, href: 'https://www.tiktok.com/@fannarttech', label: 'TikTok' },
+    { icon: Layers, href: 'https://www.pinterest.com/fannarttech', label: 'Pinterest' }, // Layers icon for Pinterest
+    { icon: Globe, href: 'https://www.reddit.com/user/Fun-Commercial-7646', label: 'Reddit' },
+    { icon: BookOpen, href: 'https://medium.com/@fannarttech', label: 'Medium' }, // BookOpen for Medium
+    { icon: Palette, href: 'https://dribbble.com/fannarttech', label: 'Dribbble' },
+    { icon: ImageIcon, href: 'https://www.behance.net/infoart', label: 'Behance' },
+    { icon: FileText, href: 'https://app.lottiefiles.com/public-animations', label: 'Lottiefiles' }, // FileText for Lottiefiles
+    { icon: Palette, href: 'https://www.artstation.com/fannarttech6', label: 'Artstation' },
+  ];
+
+  const scrollToSection = (sectionId: string) => {
+    const navbarHeight = 80; // h-20 = 80px
+    if (window.location.pathname === '/') {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    } else {
+      navigate(ROUTES.HOME);
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    }
+  };
+
+  const handleLinkClick = (link: string) => {
+    if (link === 'Blog' || link === 'المدونة') {
+      window.open('https://medium.com/@fannarttech', '_blank');
+      return;
+    }
+    if (link === 'Privacy & Terms' || link === 'الخصوصية والشروط') {
+      navigate(ROUTES.PRIVACY_TERMS);
+      return;
+    }
+    if (link === 'Contact Us' || link === 'اتصل بنا') {
+      navigate(ROUTES.CONTACT_US);
+      return;
+    }
+    if (link === 'FAQ' || link === 'الأسئلة الشائعة') {
+      scrollToSection('faq');
+      return;
+    }
+    if (link === 'How It Works' || link === 'كيف يعمل') {
+      scrollToSection('how');
+      return;
+    }
+    if (link === 'Rewards' || link === 'المكافآت') {
+      scrollToSection('rewards');
+      return;
+    }
+    if (link === 'Leaderboard' || link === 'لوحة المتصدرين') {
+      scrollToSection('leaderboard');
+      return;
+    }
+    if (link === 'Referrals' || link === 'الإحالات') {
+      scrollToSection('referrals');
+      return;
+    }
+  };
+
+  const isComingSoon = (link: string) => {
+    const comingSoonLinks = ['Events', 'Partners', 'Careers', 'الأحداث', 'الشركاء', 'الوظائف'];
+    return comingSoonLinks.includes(link);
+  };
 
   return (
     <footer className="relative bg-[#0F021C] border-t border-[#ffcc33]/20" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -114,25 +202,31 @@ export function Footer({ language }: FooterProps) {
               {t.description}
             </p>
 
-            {/* Social Links */}
-            <div className="flex items-center gap-3">
-              {[
-                { icon: Twitter, href: '#' },
-                { icon: Instagram, href: '#' },
-                { icon: Linkedin, href: '#' },
-                { icon: Mail, href: '#' },
-              ].map((social, index) => {
+            {/* Social Links - All 14 icons with tooltips */}
+            <div className="flex flex-wrap items-center gap-3">
+              {socialLinks.map((social, index) => {
                 const Icon = social.icon;
                 return (
-                  <motion.a
-                    key={index}
-                    href={social.href}
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="w-11 h-11 rounded-full glass border border-[#ffcc33]/30 hover:border-[#ffcc33] flex items-center justify-center transition-all group"
-                  >
-                    <Icon className="w-5 h-5 text-[#ffffff]/60 group-hover:text-[#ffcc33] transition-colors" />
-                  </motion.a>
+                  <div key={index} className="relative group/tooltip">
+                    <motion.a
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="w-11 h-11 rounded-full glass border border-[#ffcc33]/30 hover:border-[#ffcc33] flex items-center justify-center transition-all group"
+                      aria-label={social.label}
+                    >
+                      <Icon className="w-5 h-5 text-[#ffffff]/60 group-hover:text-[#ffcc33] transition-colors" />
+                    </motion.a>
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded-lg bg-[#1D112A] border border-[#ffcc33]/30 text-white text-xs font-body whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity duration-200 z-50 shadow-lg">
+                      {social.label}
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
+                        <div className="w-2 h-2 bg-[#1D112A] border-r border-b border-[#ffcc33]/30 rotate-45"></div>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </div>
@@ -143,17 +237,30 @@ export function Footer({ language }: FooterProps) {
             <div key={index}>
               <h4 className="text-[#ffffff] mb-6 font-heading">{section.title}</h4>
               <ul className="space-y-3">
-                {section.links.map((link, linkIndex) => (
-                  <li key={linkIndex}>
-                    <motion.a
-                      href="#"
-                      whileHover={{ x: 5 }}
-                      className="text-[#ffffff]/60 hover:text-[#ffcc33] text-sm transition-colors inline-block font-body"
-                    >
-                      {link}
-                    </motion.a>
-                  </li>
-                ))}
+                {section.links.map((link, linkIndex) => {
+                  const isComingSoonLink = isComingSoon(link);
+                  return (
+                    <li key={linkIndex}>
+                      <motion.div
+                        whileHover={{ x: 5 }}
+                        className="flex items-center gap-2"
+                      >
+                        <motion.button
+                          onClick={() => handleLinkClick(link)}
+                          disabled={isComingSoonLink}
+                          className={`text-[#ffffff]/60 hover:text-[#ffcc33] text-sm transition-colors inline-block font-body ${isComingSoonLink ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                        >
+                          {link}
+                        </motion.button>
+                        {isComingSoonLink && (
+                          <span className="text-[#ffcc33] text-xs font-body px-2 py-0.5 rounded-full border border-[#ffcc33]/30">
+                            {t.comingSoon}
+                          </span>
+                        )}
+                      </motion.div>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
@@ -169,7 +276,7 @@ export function Footer({ language }: FooterProps) {
                 whileHover={{ scale: 1.05 }}
               >
                 <div className="w-2 h-2 rounded-full bg-[#45e3d3] animate-pulse" />
-                <span className="text-[#ffffff]/60 text-xs font-body">{t.compliance}</span>
+                <span className="text-[#ffffff]/60 text-xs font-body">GDPR Compliant</span>
               </motion.div>
             </div>
           </div>

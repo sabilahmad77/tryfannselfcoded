@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { ArrowRight, Sparkles, Hexagon, Users, Palette, Building2, Info, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Sparkles, Hexagon, Users, Palette, Building2, CheckCircle2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import bgImage from 'figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png';
@@ -7,7 +7,6 @@ import bgImage from 'figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png';
 interface HeroProps {
   language: 'en' | 'ar';
   onNavigateToSignUp?: () => void;
-  onNavigateToRewards?: () => void;
 }
 
 const content = {
@@ -28,8 +27,7 @@ const content = {
       "Verified participants",
       "Verified listings at launch",
       "Provenance-first records",
-      "Resale royalties",
-      "Founder advantages"
+      "Resale royalties"
     ],
     stats: [
       { number: "20K+", label: "Early Adopters", icon: Users, gradient: "from-[#ffcc33] to-[#fbbf24]" },
@@ -54,8 +52,7 @@ const content = {
       "مشاركون موثقون",
       "قوائم موثقة عند الإطلاق",
       "سجلات المصداقية أولاً",
-      "إتاوات إعادة البيع",
-      "مزايا المؤسس"
+      "إتاوات إعادة البيع"
     ],
     stats: [
       { number: "+20K", label: "مستخدم مبكر", icon: Users, gradient: "from-[#ffcc33] to-[#fbbf24]" },
@@ -65,7 +62,7 @@ const content = {
   }
 };
 
-export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: HeroProps) {
+export function Hero({ language, onNavigateToSignUp }: HeroProps) {
   const t = content[language];
   const isRTL = language === 'ar';
 
@@ -191,12 +188,12 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
             {t.subheadline}
           </motion.p>
 
-          {/* CTAs */}
+          {/* Single CTA */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+            className="flex items-center justify-center mb-16"
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
               <Button
@@ -222,46 +219,26 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
                 />
               </Button>
             </motion.div>
-
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={onNavigateToRewards}
-                className="relative px-8 py-6 glass border-2 backdrop-blur-xl overflow-hidden group transition-all duration-300 cursor-pointer"
-              >
-                <motion.div
-                  className="absolute inset-0 bg-primary/20"
-                  initial={{ x: '-100%' }}
-                  whileHover={{ x: '100%' }}
-                  transition={{ duration: 0.8 }}
-                />
-                <span className="relative z-10 flex items-center gap-2">
-                  <Info className="w-5 h-5" />
-                  {t.watchDemo}
-                </span>
-              </Button>
-            </motion.div>
           </motion.div>
 
-          {/* Trust Bullets */}
+          {/* Trust Bullets - Centered Single Row */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="mb-12 max-w-6xl mx-auto"
+            className="mb-16 max-w-6xl mx-auto"
           >
-            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 lg:gap-12">
               {t.trustBullets.map((bullet, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full glass border border-[#ffcc33]/20 hover:border-[#ffcc33]/40 transition-all duration-300 group"
+                  className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}
                 >
-                  <CheckCircle2 className="w-4 h-4 text-[#ffcc33] shrink-0" />
-                  <span className="text-white/80 text-sm group-hover:text-white transition-colors whitespace-nowrap font-body">
+                  <CheckCircle2 className="w-5 h-5 text-[#ffcc33] shrink-0" />
+                  <span className="text-white/80 text-base font-body whitespace-nowrap">
                     {bullet}
                   </span>
                 </motion.div>
@@ -269,78 +246,39 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
             </div>
           </motion.div>
 
-          {/* Stats */}
+          {/* Stats Overlay on Background */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto"
+            className="relative max-w-5xl mx-auto"
           >
-            {t.stats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.9 + index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                  className="relative group"
-                >
-                  {/* Card */}
-                  <div className="relative h-full rounded-2xl overflow-hidden">
-                    {/* Frosted glass background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/12 via-white/8 to-white/4 backdrop-blur-2xl" />
-
-                    {/* Gradient background - each card gets unique gradient */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-[0.08] group-hover:opacity-[0.15] transition-opacity duration-500`} />
-
-                    {/* Diagonal stripes pattern */}
-                    <div
-                      className="absolute inset-0 opacity-[0.04]"
-                      style={{
-                        backgroundImage: `repeating-linear-gradient(
-                          45deg,
-                          transparent,
-                          transparent 20px,
-                          rgba(255,255,255,0.1) 20px,
-                          rgba(255,255,255,0.1) 40px
-                        )`
-                      }}
-                    />
-
-                    {/* Border */}
-                    <div className="absolute inset-0 rounded-2xl border border-white/20 group-hover:border-white/30 transition-colors duration-500" />
-
-                    {/* Top gradient accent */}
-                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.gradient} opacity-60`} />
-
-                    {/* Content */}
-                    <div className="relative p-6 flex flex-col h-full">
-                      {/* Icon */}
-                      <div className="mb-4">
-                        <div className="inline-flex p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 group-hover:bg-white/15 group-hover:border-white/30 transition-all duration-300">
-                          <Icon className="w-6 h-6 text-[#ffffff]" />
-                        </div>
-                      </div>
-
-                      {/* Number */}
-                      <div className="text-4xl text-[#ffffff] mb-2 font-heading">
-                        {stat.number}
-                      </div>
-
-                      {/* Label */}
-                      <div className="text-sm text-[#ffffff]/70 font-body">
-                        {stat.label}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {t.stats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.9 + index * 0.1 }}
+                    className="relative backdrop-blur-md bg-white/5 rounded-xl border border-white/10 p-6 text-center"
+                  >
+                    <div className="flex justify-center mb-3">
+                      <div className="p-2 rounded-lg bg-white/10 border border-white/20">
+                        <Icon className="w-6 h-6 text-[#ffcc33]" />
                       </div>
                     </div>
-
-                    {/* Floating orb decoration */}
-                    <div className={`absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-br ${stat.gradient} opacity-[0.15] blur-3xl rounded-full group-hover:opacity-[0.25] transition-opacity duration-500`} />
-                  </div>
-                </motion.div>
-              );
-            })}
+                    <div className="text-3xl text-white mb-1 font-heading">
+                      {stat.number}
+                    </div>
+                    <div className="text-sm text-white/70 font-body">
+                      {stat.label}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </motion.div>
         </div>
 

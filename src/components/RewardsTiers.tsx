@@ -121,12 +121,17 @@ export function RewardsTiers({
       color: string;
       glowColor: string;
       benefits: string[];
+      iconColor?: string;
+      iconBg?: string;
+      iconAccent?: string;
     }
   > = {
     Explorer: {
       icon: Compass,
       color: "from-gray-600 to-gray-500",
       glowColor: "shadow-gray-500/50",
+      iconColor: "text-[#ffcc33]",
+      iconBg: "border-[#ffcc33]/60",
       benefits:
         language === "en"
           ? [
@@ -142,8 +147,11 @@ export function RewardsTiers({
     },
     Curator: {
       icon: Crown,
-      color: "from-sky-500 to-cyan-400",
-      glowColor: "shadow-sky-400/50",
+      color: "from-gray-600 to-gray-500",
+      glowColor: "shadow-gray-500/50",
+      iconColor: "text-[#ffcc33]",
+      iconBg: "border-[#ffcc33]/40",
+      iconAccent: "text-[#45e3d3]",
       benefits:
         language === "en"
           ? [
@@ -159,8 +167,11 @@ export function RewardsTiers({
     },
     Patron: {
       icon: Crown,
-      color: "from-purple-500 to-violet-500",
-      glowColor: "shadow-purple-500/50",
+      color: "from-gray-600 to-gray-500",
+      glowColor: "shadow-gray-500/50",
+      iconColor: "text-[#ffcc33]",
+      iconBg: "border-[#ffcc33]/40",
+      iconAccent: "text-[#9375b5]",
       benefits:
         language === "en"
           ? [
@@ -226,10 +237,14 @@ export function RewardsTiers({
       const config = tierConfigMap[apiTier.name];
       if (!config) return null; // Skip if tier name not found in config
 
-      // Parse points from API (e.g., "5K+ pts" -> "5K+", "2K-5K pts" -> "2K-5K")
-      const points = apiTier.points
+      // Parse points from API and standardize to en-dash format
+      // Convert "0-500", "501-1500" to "0–500", "501–1500" (en-dash)
+      let points = apiTier.points
         ? apiTier.points.replace(/\s*pts$/i, "").trim()
         : "";
+      
+      // Replace hyphens with en-dash for consistency
+      points = points.replace(/-/g, "–");
 
       return {
         name: apiTier.name,
@@ -237,6 +252,9 @@ export function RewardsTiers({
         points: points,
         color: config.color,
         glowColor: config.glowColor,
+        iconColor: config.iconColor || "text-[#ffcc33]",
+        iconBg: config.iconBg || "border-[#ffcc33]/40",
+        iconAccent: config.iconAccent,
         benefits: config.benefits,
       };
     })
@@ -244,7 +262,7 @@ export function RewardsTiers({
 
   return (
     <section
-      className="relative py-32 overflow-hidden bg-[#0F021C]"
+      className="relative py-16 overflow-hidden bg-[#0F021C]"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -304,13 +322,13 @@ export function RewardsTiers({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-24"
+          className="text-center mb-12"
         >
-          <h2 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-heading">
+          <h2 className="mb-4 text-4xl md:text-5xl font-heading">
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-lg md:text-xl font-body">
+          <p className="text-white/60 max-w-4xl mx-auto text-lg md:text-xl font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -319,7 +337,7 @@ export function RewardsTiers({
         {tiers.length > 0 && (
           <div className="hidden lg:block max-w-7xl mx-auto">
             {/* Progress Bar Container */}
-            <div className="relative mb-32">
+            <div className="relative mb-12">
               {/* Background Track */}
               <div className="absolute top-20 left-0 right-0 h-1 bg-white/10" />
 
@@ -332,9 +350,9 @@ export function RewardsTiers({
                 transition={{ duration: 2, ease: "easeOut" }}
               />
 
-              {/* Tier Cards */}
-              <div className="grid grid-cols-3 gap-8 max-w-5xl mx-auto">
-                {tiers.map((tier, index) => {
+              {/* Top Row - First 3 Tiers */}
+              <div className="grid grid-cols-3 gap-6 max-w-5xl mx-auto mb-8">
+                {tiers.slice(0, 3).map((tier, index) => {
                   const Icon = tier.icon;
                   return (
                     <motion.div
@@ -377,13 +395,31 @@ export function RewardsTiers({
 
                           {/* Card Content */}
                           <div className="p-6">
-                            {/* Icon */}
+                            {/* Icon - Accent colors only in icon */}
                             <div className="mb-4 flex justify-center">
-                              <div
-                                className={`w-16 h-16 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center shadow-lg`}
-                              >
-                                <Icon className="w-8 h-8 text-white" />
-                              </div>
+                              {tier.name === "Explorer" ? (
+                                <div className="w-16 h-16 rounded-xl border-2 border-[#ffcc33]/60 flex items-center justify-center bg-transparent">
+                                  <Icon className={`w-8 h-8 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                </div>
+                              ) : tier.name === "Curator" ? (
+                                <div className={`w-16 h-16 rounded-xl border-2 ${tier.iconBg || 'border-[#ffcc33]/40'} flex items-center justify-center bg-transparent`}>
+                                  <div className="relative">
+                                    <Icon className={`w-8 h-8 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                    <Icon className={`w-8 h-8 absolute inset-0 ${tier.iconAccent || 'text-[#45e3d3]'} opacity-40`} />
+                                  </div>
+                                </div>
+                              ) : tier.name === "Patron" ? (
+                                <div className={`w-16 h-16 rounded-xl border-2 ${tier.iconBg || 'border-[#ffcc33]/40'} flex items-center justify-center bg-transparent`}>
+                                  <div className="relative">
+                                    <Icon className={`w-8 h-8 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                    <Icon className={`w-8 h-8 absolute inset-0 ${tier.iconAccent || 'text-[#9375b5]'} opacity-40`} />
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className={`w-16 h-16 rounded-xl border-2 ${tier.iconBg || 'border-[#ffcc33]/40'} flex items-center justify-center bg-transparent`}>
+                                  <Icon className={`w-8 h-8 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                </div>
+                              )}
                             </div>
 
                             {/* Tier Name */}
@@ -392,9 +428,7 @@ export function RewardsTiers({
                             </h3>
 
                             {/* Points */}
-                            <div
-                              className={`text-center mb-6 text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent font-semibold`}
-                            >
+                            <div className="text-center mb-6 text-sm text-white/80 font-semibold font-body">
                               {tier.points} pts
                             </div>
 
@@ -405,7 +439,7 @@ export function RewardsTiers({
                                   key={idx}
                                   className="flex items-start gap-2 text-white/60 text-xs"
                                 >
-                                  <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#45e3d3]" />
+                                  <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-white/60" />
                                   <span className="leading-tight font-body">
                                     {benefit}
                                   </span>
@@ -424,8 +458,8 @@ export function RewardsTiers({
                         </div>
                       </motion.div>
 
-                      {/* Arrow Connector (except last) */}
-                      {index < tiers.length - 1 && (
+                      {/* Arrow Connector (except last in row) */}
+                      {index < 2 && (
                         <motion.div
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
@@ -440,6 +474,135 @@ export function RewardsTiers({
                   );
                 })}
               </div>
+
+              {/* Bottom Row - Last 2 Tiers (Ambassador & Founding Patron) - Centered with same width */}
+              {tiers.length > 3 && (
+                <div className="flex justify-center items-start gap-6 max-w-5xl mx-auto">
+                  {tiers.slice(3).map((tier, index) => {
+                    const Icon = tier.icon;
+                    const actualIndex = 3 + index;
+                    return (
+                      <motion.div
+                        key={actualIndex}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.2 + actualIndex * 0.15 }}
+                        className="relative"
+                        style={{ width: 'calc((100% - 3rem) / 3)' }}
+                      >
+                        {/* Connector Dot */}
+                        <motion.div
+                          className={`absolute top-20 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br ${tier.color} border-4 border-[#0F021C] z-20`}
+                          initial={{ scale: 0 }}
+                          whileInView={{ scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{
+                            delay: 0.5 + actualIndex * 0.15,
+                            type: "spring",
+                            stiffness: 200,
+                          }}
+                        />
+
+                        {/* Card */}
+                        <motion.div
+                          whileHover={{ y: -8 }}
+                          className="relative group"
+                        >
+                          {/* Glow Effect */}
+                          <div
+                            className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500`}
+                          />
+
+                          {/* Main Card */}
+                          <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+                            {/* Top Gradient Bar */}
+                            <div
+                              className={`h-1.5 bg-gradient-to-r ${tier.color}`}
+                            />
+
+                            {/* Card Content */}
+                            <div className="p-6">
+                              {/* Icon - Accent colors only in icon */}
+                              <div className="mb-4 flex justify-center">
+                                {tier.name === "Explorer" ? (
+                                  <div className="w-16 h-16 rounded-xl border-2 border-[#ffcc33]/60 flex items-center justify-center bg-transparent">
+                                    <Icon className={`w-8 h-8 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                  </div>
+                                ) : tier.name === "Curator" ? (
+                                  <div className={`w-16 h-16 rounded-xl border-2 ${tier.iconBg || 'border-[#ffcc33]/40'} flex items-center justify-center bg-transparent`}>
+                                    <div className="relative">
+                                      <Icon className={`w-8 h-8 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                      <Icon className={`w-8 h-8 absolute inset-0 ${tier.iconAccent || 'text-[#45e3d3]'} opacity-40`} />
+                                    </div>
+                                  </div>
+                                ) : tier.name === "Patron" ? (
+                                  <div className={`w-16 h-16 rounded-xl border-2 ${tier.iconBg || 'border-[#ffcc33]/40'} flex items-center justify-center bg-transparent`}>
+                                    <div className="relative">
+                                      <Icon className={`w-8 h-8 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                      <Icon className={`w-8 h-8 absolute inset-0 ${tier.iconAccent || 'text-[#9375b5]'} opacity-40`} />
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className={`w-16 h-16 rounded-xl border-2 ${tier.iconBg || 'border-[#ffcc33]/40'} flex items-center justify-center bg-transparent`}>
+                                    <Icon className={`w-8 h-8 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Tier Name */}
+                              <h3 className="text-white text-center text-xl mb-2 font-heading">
+                                {tier.name}
+                              </h3>
+
+                              {/* Points */}
+                              <div className="text-center mb-6 text-sm text-white/80 font-semibold font-body">
+                                {tier.points} pts
+                              </div>
+
+                              {/* Benefits */}
+                              <ul className="space-y-2.5">
+                                {tier.benefits.slice(0, 4).map((benefit, idx) => (
+                                  <li
+                                    key={idx}
+                                    className="flex items-start gap-2 text-white/60 text-xs"
+                                  >
+                                    <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-white/60" />
+                                    <span className="leading-tight font-body">
+                                      {benefit}
+                                    </span>
+                                  </li>
+                                ))}
+                              </ul>
+
+                              {/* View More */}
+                              {tier.benefits.length > 4 && (
+                                <button className="mt-4 w-full text-xs text-white/40 hover:text-white/60 transition-colors flex items-center justify-center gap-1">
+                                  +{tier.benefits.length - 4} more
+                                  <ChevronRight className="w-3 h-3" />
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </motion.div>
+
+                        {/* Arrow Connector (except last) */}
+                        {index < tiers.slice(3).length - 1 && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.8 + actualIndex * 0.15 }}
+                            className="absolute top-20 -right-3 z-10"
+                          >
+                            <ChevronRight className="w-6 h-6 text-white/20" />
+                          </motion.div>
+                        )}
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -500,12 +663,30 @@ export function RewardsTiers({
                           {/* Card Content */}
                           <div className="p-6">
                             <div className="flex items-start gap-4 mb-4">
-                              {/* Icon */}
-                              <div
-                                className={`w-14 h-14 rounded-xl bg-gradient-to-br ${tier.color} flex items-center justify-center shadow-lg shrink-0`}
-                              >
-                                <Icon className="w-7 h-7 text-white" />
-                              </div>
+                              {/* Icon - Accent colors only in icon */}
+                              {tier.name === "Explorer" ? (
+                                <div className="w-14 h-14 rounded-xl border-2 border-[#ffcc33]/60 flex items-center justify-center bg-transparent shrink-0">
+                                  <Icon className={`w-7 h-7 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                </div>
+                              ) : tier.name === "Curator" ? (
+                                <div className={`w-14 h-14 rounded-xl border-2 ${tier.iconBg || 'border-[#ffcc33]/40'} flex items-center justify-center bg-transparent shrink-0`}>
+                                  <div className="relative">
+                                    <Icon className={`w-7 h-7 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                    <Icon className={`w-7 h-7 absolute inset-0 ${tier.iconAccent || 'text-[#45e3d3]'} opacity-40`} />
+                                  </div>
+                                </div>
+                              ) : tier.name === "Patron" ? (
+                                <div className={`w-14 h-14 rounded-xl border-2 ${tier.iconBg || 'border-[#ffcc33]/40'} flex items-center justify-center bg-transparent shrink-0`}>
+                                  <div className="relative">
+                                    <Icon className={`w-7 h-7 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                    <Icon className={`w-7 h-7 absolute inset-0 ${tier.iconAccent || 'text-[#9375b5]'} opacity-40`} />
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className={`w-14 h-14 rounded-xl border-2 ${tier.iconBg || 'border-[#ffcc33]/40'} flex items-center justify-center bg-transparent shrink-0`}>
+                                  <Icon className={`w-7 h-7 ${tier.iconColor || 'text-[#ffcc33]'}`} />
+                                </div>
+                              )}
 
                               <div className="flex-1">
                                 {/* Tier Name */}
@@ -514,9 +695,7 @@ export function RewardsTiers({
                                 </h3>
 
                                 {/* Points */}
-                                <div
-                                  className={`text-sm bg-gradient-to-r ${tier.color} bg-clip-text text-transparent font-semibold`}
-                                >
+                                <div className="text-sm text-white/80 font-semibold font-body">
                                   {tier.points} pts
                                 </div>
                               </div>
@@ -529,7 +708,7 @@ export function RewardsTiers({
                                   key={idx}
                                   className="flex items-start gap-2 text-white/60 text-sm"
                                 >
-                                  <Check className="w-4 h-4 shrink-0 mt-0.5 text-[#45e3d3]" />
+                                  <Check className="w-4 h-4 shrink-0 mt-0.5 text-white/60" />
                                   <span className="font-body">{benefit}</span>
                                 </li>
                               ))}
@@ -551,7 +730,7 @@ export function RewardsTiers({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-20 text-center"
+          className="text-center"
         >
           <motion.button
             whileHover={{ scale: 1.05 }}

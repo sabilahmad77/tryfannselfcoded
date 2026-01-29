@@ -161,6 +161,26 @@ export const routes: RouteConfig[] = [
     title: "Bug Report",
     description: "Bug report page - requires token (private route)",
   },
+  {
+    path: ROUTES.CONTACT_US,
+    component: () =>
+      import("@/pages/ContactUsPage").then((module) => ({
+        default: module.ContactUsPage,
+      })),
+    type: "public",
+    title: "Contact Us",
+    description: "Contact us page with FAQs - accessible without token",
+  },
+  {
+    path: ROUTES.PRIVACY_TERMS,
+    component: () =>
+      import("@/pages/PrivacyTermsPage").then((module) => ({
+        default: module.PrivacyTermsPage,
+      })),
+    type: "public",
+    title: "Privacy & Terms",
+    description: "Privacy Policy and Terms of Service combined page - accessible without token",
+  },
 ];
 
 // Helper function to get route by path

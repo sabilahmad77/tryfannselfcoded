@@ -7,13 +7,17 @@ import {
 } from "./ui/accordion";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import bgImage from "figma:asset/3fa9b9de7e4b1421a708a7c88cd0672cee3504e2.png";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/routes/paths";
 
 interface FAQProps {
   language: "en" | "ar";
   onNavigateToSignUp?: () => void;
+  showAll?: boolean; // If true, show all FAQs instead of just 5
+  showViewAllCTA?: boolean; // If true, show "View All FAQs" button
 }
 
-const content = {
+const faqContent = {
   en: {
     title: { white: "Frequently Asked", gold: " Questions" },
     subtitle: "Everything you need to know about FANN",
@@ -208,6 +212,30 @@ const content = {
             No.
             <p className="mt-2">FANN is dedicated to <span className="font-bold text-white">physical art only</span> — paintings, sculptures, installations, and tangible works.</p>
             <p className="mt-2">Technology is used to <span className="font-bold text-white">support authenticity, documentation, and presentation</span>, not replace the artwork itself.</p>
+          </>
+        ),
+      },
+      {
+        question: "What blockchain is used for verification?",
+        answer: (
+          <>
+            FANN uses a blockchain-backed provenance layer to record verification events and ownership history in a tamper-resistant way. The specific chain and architecture may evolve by phase to optimize cost, reliability, and compliance, while keeping records verifiable.
+          </>
+        ),
+      },
+      {
+        question: "How is artwork custody/storage handled?",
+        answer: (
+          <>
+            For verified pieces, artworks may pass through our hub or custody partners for intake, scanning, and secure tagging before shipping to the buyer. We follow structured handling procedures and use trackable logistics. High-value pieces may include optional third-party authentication and enhanced handling.
+          </>
+        ),
+      },
+      {
+        question: "What happens if FANN shuts down?",
+        answer: (
+          <>
+            If we discontinue service, we will provide notice and a reasonable window for users to export key records. We will also take commercially reasonable steps to complete or unwind any in-process custody/shipping. Certain records may be retained for legal/compliance purposes.
           </>
         ),
       },
@@ -410,18 +438,45 @@ const content = {
           </>
         ),
       },
+      {
+        question: "ما هي تقنية البلوك تشين المستخدمة للتحقق؟",
+        answer: (
+          <>
+            يستخدم FANN طبقة مصداقية مدعومة بتقنية البلوك تشين لتسجيل أحداث التحقق وتاريخ الملكية بطريقة مقاومة للعبث. قد تتطور السلسلة المحددة والهندسة المعمارية حسب المرحلة لتحسين التكلفة والموثوقية والامتثال، مع الحفاظ على قابلية التحقق من السجلات.
+          </>
+        ),
+      },
+      {
+        question: "كيف يتم التعامل مع الحفظ/التخزين للأعمال الفنية؟",
+        answer: (
+          <>
+            بالنسبة للقطع الموثقة، قد تمر الأعمال الفنية عبر مركزنا أو شركاء الحفظ لدينا للاستلام والمسح والوسم الآمن قبل الشحن إلى المشتري. نتبع إجراءات معالجة منظمة ونستخدم لوجستيات قابلة للتتبع. قد تشمل القطع عالية القيمة مصادقة اختيارية من طرف ثالث ومعالجة محسّنة.
+          </>
+        ),
+      },
+      {
+        question: "ماذا يحدث إذا توقف FANN عن العمل؟",
+        answer: (
+          <>
+            إذا توقفنا عن الخدمة، سنقدم إشعارًا ونافذة معقولة للمستخدمين لتصدير السجلات الرئيسية. سنتخذ أيضًا خطوات معقولة تجاريًا لإكمال أو حل أي حفظ/شحن قيد المعالجة. قد يتم الاحتفاظ ببعض السجلات لأغراض قانونية/امتثال.
+          </>
+        ),
+      },
     ],
   },
 };
 
-export function FAQ({ language }: FAQProps) {
-  const t = content[language];
+export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQProps) {
+  const t = faqContent[language];
   const isRTL = language === "ar";
-  const faqs = t.faqs;
+  const navigate = useNavigate();
+  // Show all FAQs if showAll is true, otherwise show only first 5
+  const displayedFaqs = showAll ? t.faqs : t.faqs.slice(0, 5);
+  const hasMoreFaqs = !showAll && t.faqs.length > 5;
 
   return (
     <section
-      className="relative py-32 overflow-hidden bg-[#0F021C]"
+      className="relative py-16 overflow-hidden bg-[#0F021C]"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -465,7 +520,7 @@ export function FAQ({ language }: FAQProps) {
           className="max-w-4xl mx-auto"
         >
           <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, index) => (
+            {displayedFaqs.map((faq, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
@@ -507,6 +562,26 @@ export function FAQ({ language }: FAQProps) {
               </motion.div>
             ))}
           </Accordion>
+
+          {/* View All FAQs CTA */}
+          {hasMoreFaqs && showViewAllCTA && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-8 text-center"
+            >
+              <motion.button
+                onClick={() => navigate(ROUTES.CONTACT_US)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#0F021C] shadow-xl shadow-[#ffcc33]/30 hover:shadow-2xl hover:shadow-[#ffcc33]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer font-body font-medium"
+              >
+                <span>{language === "en" ? "View All FAQs" : "عرض جميع الأسئلة الشائعة"}</span>
+              </motion.button>
+            </motion.div>
+          )}
         </motion.div>
       </div>
     </section>

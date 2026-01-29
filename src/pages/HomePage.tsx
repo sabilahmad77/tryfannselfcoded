@@ -1,6 +1,7 @@
 import { useLanguage } from '@/contexts/useLanguage';
 import { Navigation } from '@/components/Navigation';
 import { Hero } from '@/components/Hero';
+import { ArtPreview } from '@/components/ArtPreview';
 import { HowItWorks } from '@/components/HowItWorks';
 import { PersonaPaths } from '@/components/PersonaPaths';
 import { RewardsTiers } from '@/components/RewardsTiers';
@@ -68,12 +69,20 @@ export function HomePage() {
           onNavigateToRewards={() => {
             const element = document.getElementById('rewards');
             if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              const navbarHeight = 80; // h-20 = 80px
+              const elementPosition = element.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+              });
             }
           }}
         />
         
-        <div id="how">
+        <ArtPreview language={language} />
+        
+        <div id="how" className="scroll-mt-20">
           <HowItWorks 
             language={language}
             onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
@@ -85,14 +94,14 @@ export function HomePage() {
           onNavigateToSignUp={(personaId) => navigate(ROUTES.SIGN_UP, { state: { personaId } })}
         />
         
-        <div id="rewards">
+        <div id="rewards" className="scroll-mt-20">
           <RewardsTiers 
             language={language}
             onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
           />
         </div>
         
-        <div id="leaderboard">
+        <div id="leaderboard" className="scroll-mt-20">
           <Leaderboard 
             language={language}
             onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
@@ -100,14 +109,14 @@ export function HomePage() {
           />
         </div>
         
-        <div id="referrals">
+        <div id="referrals" className="scroll-mt-20">
           <ReferralModule 
             language={language}
             onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
           />
         </div>
         
-        <div id="faq">
+        <div id="faq" className="scroll-mt-20">
           <FAQ 
             language={language}
             onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
