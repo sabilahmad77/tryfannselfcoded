@@ -57,12 +57,12 @@ export interface TypographyConfig {
 export const typographyConfig: TypographyConfig = {
   fontFamily: {
     // English fonts (LTR)
-    heading: "'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    heading: "'Playfair Display', serif",
     body: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     
     // Arabic fonts (RTL)
     arabic: {
-      heading: "'IBM Plex Sans Arabic', 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      heading: "'IBM Plex Sans Arabic', 'Playfair Display', serif",
       body: "'IBM Plex Sans Arabic', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     },
   },
@@ -148,13 +148,13 @@ export const headingStyles = {
   },
   h5: {
     fontSize: typographyConfig.fontSize.xl,
-    fontWeight: typographyConfig.fontWeights.medium,
+    fontWeight: typographyConfig.fontWeights.semibold,
     lineHeight: typographyConfig.lineHeights.normal,
     letterSpacing: typographyConfig.letterSpacing.normal,
   },
   h6: {
     fontSize: typographyConfig.fontSize.lg,
-    fontWeight: typographyConfig.fontWeights.medium,
+    fontWeight: typographyConfig.fontWeights.semibold,
     lineHeight: typographyConfig.lineHeights.normal,
     letterSpacing: typographyConfig.letterSpacing.normal,
   },

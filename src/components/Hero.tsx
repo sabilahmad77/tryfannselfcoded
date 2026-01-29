@@ -32,7 +32,7 @@ const content = {
       "Founder advantages"
     ],
     stats: [
-      { number: "20K+", label: "Early Adopters", icon: Users, gradient: "from-[#ffcc33] to-[#fbbf24]" },
+      { number: "20K+", label: "Early Adopters", icon: Users, gradient: "from-[#C59B48] to-[#D6AE5A]" },
       { number: "2K+", label: "Verified Artists", icon: Palette, gradient: "from-[#45e3d3] to-[#4de3ed]" },
       { number: "1K+", label: "Galleries & Museums", icon: Building2, gradient: "from-[#4de3ed] to-[#45e3d3]" }
     ]
@@ -58,7 +58,7 @@ const content = {
       "مزايا المؤسس"
     ],
     stats: [
-      { number: "+20K", label: "مستخدم مبكر", icon: Users, gradient: "from-[#ffcc33] to-[#fbbf24]" },
+      { number: "+20K", label: "مستخدم مبكر", icon: Users, gradient: "from-[#C59B48] to-[#D6AE5A]" },
       { number: "+2K", label: "فنان موثق", icon: Palette, gradient: "from-[#45e3d3] to-[#4de3ed]" },
       { number: "+1K", label: "معرض ومتحف", icon: Building2, gradient: "from-[#4de3ed] to-[#45e3d3]" }
     ]
@@ -70,7 +70,7 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
   const isRTL = language === 'ar';
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0F021C]">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0B0B0D]">
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -79,14 +79,14 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
           className="w-full h-full object-cover opacity-90"
         />
         {/* Lighter Gradient Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F021C]/40 via-transparent to-[#0F021C]/50" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0F021C]/30 via-transparent to-[#0F021C]/30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/40 via-transparent to-[#0B0B0D]/50" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B0D]/30 via-transparent to-[#0B0B0D]/30" />
       </div>
 
       {/* Animated gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute -top-40 -right-40 w-96 h-96 bg-[#ffcc33]/20 rounded-full blur-3xl"
+          className="absolute -top-40 -right-40 w-96 h-96 bg-[#C59B48]/20 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.5, 0.3],
@@ -149,7 +149,7 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
               delay: i * 0.5,
             }}
           >
-            <Hexagon className="w-16 h-16 text-[#ffcc33]/20" />
+            <Hexagon className="w-16 h-16 text-[#C59B48]/20" />
           </motion.div>
         ))}
       </div>
@@ -162,10 +162,10 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 mt-12 border border-[#ffcc33]/30"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 mt-12 border border-[#C59B48]/30"
           >
-            <Sparkles className="w-4 h-4 text-[#ffcc33]" />
-            <span className="text-[#ffcc33] tracking-wider text-sm">{t.badge}</span>
+            <Sparkles className="w-4 h-4 text-[#C59B48]" />
+            <span className="text-[#C59B48] tracking-wider text-sm">{t.badge}</span>
           </motion.div>
 
           {/* Headline */}
@@ -175,8 +175,8 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-6 text-4xl md:text-5xl leading-[1.1] md:leading-[1.1] overflow-visible font-heading"
           >
-            <span className="block text-[#ffffff] leading-[1.1] md:leading-[1.1] py-1">{t.headline}</span>
-            <span className="block bg-gradient-to-r from-[#ffcc33] via-[#fbbf24] to-[#ffcc33] bg-clip-text text-transparent animate-gradient text-3xl md:text-4xl leading-[1.2] md:leading-[1.2] py-1">
+            <span className="block text-[#F2F2F3] leading-[1.1] md:leading-[1.1] py-1">{t.headline}</span>
+            <span className="block bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent animate-gradient text-3xl md:text-4xl leading-[1.2] md:leading-[1.2] py-1">
               {t.headlineAccent}
             </span>
           </motion.h1>
@@ -186,7 +186,7 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-8 text-[#ffffff]/60 text-lg md:text-xl leading-relaxed font-body"
+            className="mb-8 text-[#F2F2F3]/60 text-lg md:text-xl leading-relaxed font-body"
           >
             {t.subheadline}
           </motion.p>
@@ -258,9 +258,9 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full glass border border-[#ffcc33]/20 hover:border-[#ffcc33]/40 transition-all duration-300 group"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full glass border border-[#C59B48]/20 hover:border-[#C59B48]/40 transition-all duration-300 group"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-[#ffcc33] shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-[#C59B48] shrink-0" />
                   <span className="text-white/80 text-sm group-hover:text-white transition-colors whitespace-nowrap font-body">
                     {bullet}
                   </span>
@@ -320,17 +320,17 @@ export function Hero({ language, onNavigateToSignUp, onNavigateToRewards }: Hero
                       {/* Icon */}
                       <div className="mb-4">
                         <div className="inline-flex p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 group-hover:bg-white/15 group-hover:border-white/30 transition-all duration-300">
-                          <Icon className="w-6 h-6 text-[#ffffff]" />
+                          <Icon className="w-6 h-6 text-[#F2F2F3]" />
                         </div>
                       </div>
 
                       {/* Number */}
-                      <div className="text-4xl text-[#ffffff] mb-2 font-heading">
+                      <div className="text-4xl text-[#F2F2F3] mb-2 font-heading">
                         {stat.number}
                       </div>
 
                       {/* Label */}
-                      <div className="text-sm text-[#ffffff]/70 font-body">
+                      <div className="text-sm text-[#F2F2F3]/70 font-body">
                         {stat.label}
                       </div>
                     </div>

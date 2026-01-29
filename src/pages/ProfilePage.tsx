@@ -743,12 +743,12 @@ export function ProfilePage() {
         >
           {/* Avatar */}
           <div className="relative">
-            <Avatar className="w-32 h-32 border-4 border-[#ffcc33]">
+            <Avatar className="w-32 h-32 border-4 border-[#C59B48]">
               <AvatarImage
                 src={getProfileImageUrl(userData.profile_image)}
                 alt={userData.name}
               />
-              <AvatarFallback className="bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] text-[#0F021C] text-3xl">
+              <AvatarFallback className="bg-gradient-to-br from-[#C59B48] to-[#45e3d3] text-[#0B0B0D] text-3xl">
                 {userData.name
                   .split(" ")
                   .map((n) => n[0])
@@ -772,7 +772,7 @@ export function ProfilePage() {
                 <p className="text-[#808c99] mb-3">
                   {userData.username ? `@${userData.username}` : userData.email}
                 </p>
-                <Badge className="bg-gradient-to-r from-[#ffcc33] to-[#ffb54d] text-[#0F021C] border-0 flex items-center gap-1">
+                <Badge className="bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#0B0B0D] border-0 flex items-center gap-1">
                   <Crown className={`w-3 h-3 ${isRTL ? "ml-1" : "mr-1"}`} />
                   <span className="text-xs font-semibold opacity-80">{t.tier}: {currentTierName}</span>
                 </Badge>
@@ -796,26 +796,26 @@ export function ProfilePage() {
               className={`grid grid-cols-2 ${isAmbassador ? "md:grid-cols-4" : isCollector ? "md:grid-cols-6" : "md:grid-cols-5"} gap-4 ${isRTL ? "text-right" : "text-left"
                 }`}
             >
-              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
-                <p className="text-2xl text-[#ffcc33]">
+              <div className="bg-[#0B0B0D] border border-primary/20 rounded-lg p-3">
+                <p className="text-2xl text-[#C59B48]">
                   {userData.totalPoints}
                 </p>
                 <p className="text-xs text-[#808c99]">{t.totalPoints}</p>
               </div>
-              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
+              <div className="bg-[#0B0B0D] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">{userData.followers}</p>
                 <p className="text-xs text-[#808c99]">{t.followers}</p>
               </div>
-              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
+              <div className="bg-[#0B0B0D] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">{userData.following}</p>
                 <p className="text-xs text-[#808c99]">{t.following}</p>
               </div>
-              <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
+              <div className="bg-[#0B0B0D] border border-primary/20 rounded-lg p-3">
                 <p className="text-2xl text-[#ffffff]">{userData.referrals}</p>
                 <p className="text-xs text-[#808c99]">{t.referrals}</p>
               </div>
               {!isAmbassador && (
-                <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
+                <div className="bg-[#0B0B0D] border border-primary/20 rounded-lg p-3">
                   <p className="text-2xl text-[#ffffff]">
                     {userData.artworksSaved}
                   </p>
@@ -823,7 +823,7 @@ export function ProfilePage() {
                 </div>
               )}
               {isCollector && (
-                <div className="bg-[#0f021c] border border-primary/20 rounded-lg p-3">
+                <div className="bg-[#0B0B0D] border border-primary/20 rounded-lg p-3">
                   <p className="text-2xl text-[#ffffff]">
                     {userData.collections}
                   </p>
@@ -845,11 +845,11 @@ export function ProfilePage() {
                 <span className="text-sm text-[#808c99]">
                   {t.progressToNext} {nextTierName}
                 </span>
-                <span className="text-sm text-[#ffcc33]">
+                <span className="text-sm text-[#C59B48]">
                   {pointsNeeded} {t.pointsNeeded}
                 </span>
               </div>
-              <Progress value={progress} className="h-3 bg-[#0f021c]" />
+              <Progress value={progress} className="h-3 bg-[#0B0B0D]" />
             </>
           ) : (
             <>
@@ -862,9 +862,9 @@ export function ProfilePage() {
                     ? "Maximum tier reached!"
                     : "تم الوصول إلى أعلى مستوى!"}
                 </span>
-                <span className="text-sm text-[#ffcc33]">100%</span>
+                <span className="text-sm text-[#C59B48]">100%</span>
               </div>
-              <Progress value={100} className="h-3 bg-[#0f021c]" />
+              <Progress value={100} className="h-3 bg-[#0B0B0D]" />
             </>
           )}
         </div>
@@ -893,8 +893,8 @@ export function ProfilePage() {
                   className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                     }`}
                 >
-                  <div className="w-12 h-12 bg-[#1D112A] border border-[#ffcc33]/30 rounded-xl flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-[#ffcc33]" />
+                  <div className="w-12 h-12 bg-[#191922] border border-[#C59B48]/30 rounded-xl flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-[#C59B48]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
                     <p className="text-xs text-[#808c99]">{t.email}</p>
@@ -909,7 +909,7 @@ export function ProfilePage() {
                   className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                     }`}
                 >
-                  <div className="w-12 h-12 bg-[#1D112A] border border-[#45e3d3]/30 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#191922] border border-[#45e3d3]/30 rounded-xl flex items-center justify-center">
                     <Phone className="w-6 h-6 text-[#45e3d3]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
@@ -925,7 +925,7 @@ export function ProfilePage() {
                   className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                     }`}
                 >
-                  <div className="w-12 h-12 bg-[#1D112A] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#191922] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
                     <MapPin className="w-6 h-6 text-[#9375b5]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
@@ -939,7 +939,7 @@ export function ProfilePage() {
                 className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                   }`}
               >
-                <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#191922] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
                   <Globe className="w-6 h-6 text-[#0ea5e9]" />
                 </div>
                 <div className={isRTL ? "text-right" : "text-left"}>
@@ -952,8 +952,8 @@ export function ProfilePage() {
                 className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                   }`}
               >
-                <div className="w-12 h-12 bg-[#1D112A] border border-[#ffb54d]/30 rounded-xl flex items-center justify-center">
-                  <Briefcase className="w-6 h-6 text-[#ffb54d]" />
+                <div className="w-12 h-12 bg-[#191922] border border-[#D6AE5A]/30 rounded-xl flex items-center justify-center">
+                  <Briefcase className="w-6 h-6 text-[#D6AE5A]" />
                 </div>
                 <div className={isRTL ? "text-right" : "text-left"}>
                   <p className="text-xs text-[#808c99]">{t.role}</p>
@@ -965,7 +965,7 @@ export function ProfilePage() {
                 className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                   }`}
               >
-                <div className="w-12 h-12 bg-[#1D112A] border border-[#fface3]/30 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#191922] border border-[#fface3]/30 rounded-xl flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-[#fface3]" />
                 </div>
                 <div className={isRTL ? "text-right" : "text-left"}>
@@ -989,7 +989,7 @@ export function ProfilePage() {
                   className={`flex items-start gap-4 ${isRTL ? "flex-row-reverse" : ""
                     }`}
                 >
-                  <div className="w-12 h-12 bg-[#1D112A] border border-[#45e3d3]/30 rounded-xl flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 bg-[#191922] border border-[#45e3d3]/30 rounded-xl flex items-center justify-center shrink-0">
                     <Shield className="w-6 h-6 text-[#45e3d3]" />
                   </div>
                   <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
@@ -1017,7 +1017,7 @@ export function ProfilePage() {
 
               {!kycData ? (
                 /* Empty State - No KYC Data */
-                <div className="p-6 rounded-xl bg-[#0f021c] border border-[#4e4e4e78]">
+                <div className="p-6 rounded-xl bg-[#0B0B0D] border border-[#4e4e4e78]">
                   <div
                     className={`flex flex-col items-center justify-center text-center ${isRTL ? "text-right" : "text-left"
                       }`}
@@ -1078,8 +1078,8 @@ export function ProfilePage() {
                         className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                           }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] border border-[#ffcc33]/30 rounded-xl flex items-center justify-center">
-                          <Hash className="w-6 h-6 text-[#ffcc33]" />
+                        <div className="w-12 h-12 bg-[#191922] border border-[#C59B48]/30 rounded-xl flex items-center justify-center">
+                          <Hash className="w-6 h-6 text-[#C59B48]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
                           <p className="text-xs text-[#808c99]">{t.idNumber}</p>
@@ -1096,7 +1096,7 @@ export function ProfilePage() {
                         className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                           }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] border border-[#fface3]/30 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#191922] border border-[#fface3]/30 rounded-xl flex items-center justify-center">
                           <Calendar className="w-6 h-6 text-[#fface3]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -1133,7 +1133,7 @@ export function ProfilePage() {
                         className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                           }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#191922] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
                           <Globe className="w-6 h-6 text-[#0ea5e9]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -1153,7 +1153,7 @@ export function ProfilePage() {
                         className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                           }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#191922] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
                           <MapPin className="w-6 h-6 text-[#0ea5e9]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -1173,7 +1173,7 @@ export function ProfilePage() {
                         className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                           }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#191922] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
                           <MapPin className="w-6 h-6 text-[#0ea5e9]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -1193,7 +1193,7 @@ export function ProfilePage() {
                         className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                           }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#191922] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
                           <MapPin className="w-6 h-6 text-[#9375b5]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -1213,7 +1213,7 @@ export function ProfilePage() {
                         className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                           }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#191922] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
                           <MapPin className="w-6 h-6 text-[#9375b5]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -1233,8 +1233,8 @@ export function ProfilePage() {
                         className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                           }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] border border-[#ffcc33]/30 rounded-xl flex items-center justify-center">
-                          <IdCard className="w-6 h-6 text-[#ffcc33]" />
+                        <div className="w-12 h-12 bg-[#191922] border border-[#C59B48]/30 rounded-xl flex items-center justify-center">
+                          <IdCard className="w-6 h-6 text-[#C59B48]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
                           <p className="text-xs text-[#808c99]">
@@ -1253,7 +1253,7 @@ export function ProfilePage() {
                         className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                           }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#191922] border border-[#9375b5]/30 rounded-xl flex items-center justify-center">
                           <Link className="w-6 h-6 text-[#9375b5]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -1273,7 +1273,7 @@ export function ProfilePage() {
                         className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse" : ""
                           }`}
                       >
-                        <div className="w-12 h-12 bg-[#1D112A] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#191922] border border-[#0ea5e9]/30 rounded-xl flex items-center justify-center">
                           <Users className="w-6 h-6 text-[#0ea5e9]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
@@ -1328,8 +1328,8 @@ export function ProfilePage() {
                                 );
                               }
                               return (
-                                <div className={`flex items-center gap-3 p-4 bg-[#0f021c] rounded-lg ${isRTL ? "flex-row-reverse" : ""}`}>
-                                  <div className="w-10 h-10 bg-[#1D112A] border border-[#45e3d3]/30 rounded-lg flex items-center justify-center">
+                                <div className={`flex items-center gap-3 p-4 bg-[#0B0B0D] rounded-lg ${isRTL ? "flex-row-reverse" : ""}`}>
+                                  <div className="w-10 h-10 bg-[#191922] border border-[#45e3d3]/30 rounded-lg flex items-center justify-center">
                                     <FileText className="w-5 h-5 text-[#45e3d3]" />
                                   </div>
                                   <div className={isRTL ? "text-right" : "text-left"}>
@@ -1362,8 +1362,8 @@ export function ProfilePage() {
                                 }
                               }
                               return (
-                                <div className={`flex items-center gap-3 p-4 bg-[#0f021c] rounded-lg ${isRTL ? "flex-row-reverse" : ""}`}>
-                                  <div className="w-10 h-10 bg-[#1D112A] border border-[#45e3d3]/30 rounded-lg flex items-center justify-center">
+                                <div className={`flex items-center gap-3 p-4 bg-[#0B0B0D] rounded-lg ${isRTL ? "flex-row-reverse" : ""}`}>
+                                  <div className="w-10 h-10 bg-[#191922] border border-[#45e3d3]/30 rounded-lg flex items-center justify-center">
                                     <FileText className="w-5 h-5 text-[#45e3d3]" />
                                   </div>
                                   <div className={isRTL ? "text-right" : "text-left"}>
@@ -1397,15 +1397,15 @@ export function ProfilePage() {
                   initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`flex items-center justify-between p-4 bg-[#0f021c] rounded-lg border border-[#4e4e4e78] hover:border-[#ffcc33]/30 transition-all ${isRTL ? "flex-row-reverse" : ""
+                  className={`flex items-center justify-between p-4 bg-[#0B0B0D] rounded-lg border border-[#4e4e4e78] hover:border-[#C59B48]/30 transition-all ${isRTL ? "flex-row-reverse" : ""
                     }`}
                 >
                   <div
                     className={`flex items-center gap-4 ${isRTL ? "flex-row-reverse" : ""
                       }`}
                   >
-                    <div className="w-10 h-10 bg-gradient-to-br from-[#ffcc33] to-[#45e3d3] rounded-full flex items-center justify-center">
-                      <Star className="w-5 h-5 text-[#0F021C]" />
+                    <div className="w-10 h-10 bg-gradient-to-br from-[#C59B48] to-[#45e3d3] rounded-full flex items-center justify-center">
+                      <Star className="w-5 h-5 text-[#0B0B0D]" />
                     </div>
                     <div className={isRTL ? "text-right" : "text-left"}>
                       <p className="text-[#ffffff]">{activity.action}</p>
@@ -1438,8 +1438,8 @@ export function ProfilePage() {
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ scale: 1.05 }}
                     className={`p-6 rounded-xl border transition-all ${achievement.unlocked
-                      ? "bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 border-[#ffcc33]/30"
-                      : "bg-[#0f021c] border-[#4e4e4e78] opacity-60"
+                      ? "bg-gradient-to-br from-[#C59B48]/20 to-[#45e3d3]/20 border-[#C59B48]/30"
+                      : "bg-[#0B0B0D] border-[#4e4e4e78] opacity-60"
                       }`}
                   >
                     <div
@@ -1448,13 +1448,13 @@ export function ProfilePage() {
                     >
                       <div
                         className={`w-12 h-12 rounded-xl flex items-center justify-center ${achievement.unlocked
-                          ? "bg-gradient-to-br from-[#ffcc33] to-[#45e3d3]"
+                          ? "bg-gradient-to-br from-[#C59B48] to-[#45e3d3]"
                           : "bg-[#4e4e4e78]"
                           }`}
                       >
                         <Icon
                           className={`w-6 h-6 ${achievement.unlocked
-                            ? "text-[#0F021C]"
+                            ? "text-[#0B0B0D]"
                             : "text-[#808c99]"
                             }`}
                         />
@@ -1493,7 +1493,7 @@ export function ProfilePage() {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Point Distribution */}
-              <div className="bg-[#0f021c] border border-primary/20 rounded-xl p-6">
+              <div className="bg-[#0B0B0D] border border-primary/20 rounded-xl p-6">
                 <h3
                   className={`text-xl text-[#ffffff] mb-4 ${isRTL ? "text-right" : "text-left"
                     }`}
@@ -1523,7 +1523,7 @@ export function ProfilePage() {
                       value={
                         (userData.influencePoints / userData.totalPoints) * 100
                       }
-                      className="h-2 bg-[#0f021c]"
+                      className="h-2 bg-[#0B0B0D]"
                     />
                   </div>
                   <div>
@@ -1548,14 +1548,14 @@ export function ProfilePage() {
                       value={
                         (userData.provenancePoints / userData.totalPoints) * 100
                       }
-                      className="h-2 bg-[#0f021c]"
+                      className="h-2 bg-[#0B0B0D]"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Engagement Stats */}
-              <div className="bg-[#0f021c] border border-primary/20 rounded-xl p-6">
+              <div className="bg-[#0B0B0D] border border-primary/20 rounded-xl p-6">
                 <h3
                   className={`text-xl text-[#ffffff] mb-4 ${isRTL ? "text-right" : "text-left"
                     }`}
@@ -1568,7 +1568,7 @@ export function ProfilePage() {
                       }`}
                   >
                     <span className="text-[#808c99]">{t.referrals}</span>
-                    <span className="text-2xl text-[#ffcc33]">
+                    <span className="text-2xl text-[#C59B48]">
                       {userData.referrals}
                     </span>
                   </div>
