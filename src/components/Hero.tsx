@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
-import { ArrowRight, Sparkles, Hexagon, Users, Palette, Building2, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Sparkles, Hexagon, Users, Palette, Building2, CheckCircle2, Star } from 'lucide-react';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import bgImage from 'figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png';
+import heroBg from '@/assets/hero-section-bg.jpeg';
 
 interface HeroProps {
   language: 'en' | 'ar';
@@ -22,12 +22,19 @@ const content = {
       </>
     ),
     cta: "Start Your Journey",
-    watchDemo: "How Points & Tiers Work",
+    trustTitle: "Trust",
+    founderTitle: "Founder Perks",
     trustBullets: [
       "Verified participants",
       "Verified listings at launch",
       "Provenance-first records",
       "Resale royalties"
+    ],
+    founderPerks: [
+      "Founder terms (reduced commission during founding window)",
+      "Priority visibility (featured windows, curated spotlights)",
+      "Priority onboarding/support",
+      "Early access to drops / private previews"
     ],
     stats: [
       { number: "20K+", label: "Early Adopters", icon: Users, gradient: "from-[#C59B48] to-[#D6AE5A]" },
@@ -47,12 +54,19 @@ const content = {
       </>
     ),
     cta: "ابدأ رحلتك",
-    watchDemo: "كيف تعمل النقاط والمستويات",
+    trustTitle: "الثقة",
+    founderTitle: "مزايا المؤسس",
     trustBullets: [
       "مشاركون موثقون",
       "قوائم موثقة عند الإطلاق",
       "سجلات المصداقية أولاً",
       "إتاوات إعادة البيع"
+    ],
+    founderPerks: [
+      "شروط المؤسس (عمولة مخفضة خلال نافذة التأسيس)",
+      "الرؤية ذات الأولوية (نوافذ مميزة، أضواء منسقة)",
+      "الإعداد ذو الأولوية / الدعم",
+      "الوصول المبكر إلى الإصدارات / المعاينات الخاصة"
     ],
     stats: [
       { number: "+20K", label: "مستخدم مبكر", icon: Users, gradient: "from-[#C59B48] to-[#D6AE5A]" },
@@ -71,8 +85,8 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
-          src={bgImage}
-          alt="Abstract Art Pattern"
+          src={heroBg}
+          alt="Hero Background"
           className="w-full h-full object-cover opacity-90"
         />
         {/* Lighter Gradient Overlays */}
@@ -188,12 +202,12 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             {t.subheadline}
           </motion.p>
 
-          {/* Single CTA */}
+          {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex items-center justify-center mb-16"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-10"
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
               <Button
@@ -221,28 +235,55 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             </motion.div>
           </motion.div>
 
-          {/* Trust Bullets - Centered Single Row */}
+          {/* Trust & Founder Perks Cards - Compact 2-Column Layout */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="mb-16 max-w-6xl mx-auto"
+            className="mb-10 max-w-5xl mx-auto"
           >
-            <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 lg:gap-12">
-              {t.trustBullets.map((bullet, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
-                  className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}
-                >
-                  <CheckCircle2 className="w-5 h-5 text-[#ffcc33] shrink-0" />
-                  <span className="text-white/80 text-base font-body whitespace-nowrap">
-                    {bullet}
-                  </span>
-                </motion.div>
-              ))}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Trust Card - Compact */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.7 }}
+                className="backdrop-blur-xl bg-white/5 rounded-xl border border-white/10 p-4 hover:border-white/20 transition-colors"
+              >
+                <h3 className="text-lg font-bold text-white mb-3 font-heading">{t.trustTitle}</h3>
+                <ul className="space-y-2">
+                  {t.trustBullets.map((bullet, index) => (
+                    <li
+                      key={index}
+                      className={`flex items-center gap-2 text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-[#ffcc33] shrink-0" />
+                      <span className="text-white/80 font-body">{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+
+              {/* Founder Perks Card - Compact */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.8 }}
+                className="backdrop-blur-xl bg-white/5 rounded-xl border border-white/10 p-4 hover:border-white/20 transition-colors"
+              >
+                <h3 className="text-lg font-bold text-white mb-3 font-heading">{t.founderTitle}</h3>
+                <ul className="space-y-2">
+                  {t.founderPerks.map((perk, index) => (
+                    <li
+                      key={index}
+                      className={`flex items-center gap-2 text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
+                    >
+                      <Star className="w-4 h-4 text-[#ffcc33] shrink-0" />
+                      <span className="text-white/80 font-body">{perk}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
             </div>
           </motion.div>
 
