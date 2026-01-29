@@ -257,7 +257,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                       key={index}
                       className={`flex items-center gap-2 text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
                     >
-                      <CheckCircle2 className="w-4 h-4 text-[#ffcc33] shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#C59B48] shrink-0" />
                       <span className="text-white/80 font-body">{bullet}</span>
                     </li>
                   ))}
@@ -278,7 +278,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                       key={index}
                       className={`flex items-center gap-2 text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
                     >
-                      <Star className="w-4 h-4 text-[#ffcc33] shrink-0" />
+                      <Star className="w-4 h-4 text-[#C59B48] shrink-0" />
                       <span className="text-white/80 font-body">{perk}</span>
                     </li>
                   ))}
@@ -307,7 +307,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                   >
                     <div className="flex justify-center mb-3">
                       <div className="p-2 rounded-lg bg-white/10 border border-white/20">
-                        <Icon className="w-6 h-6 text-[#ffcc33]" />
+                        <Icon className="w-6 h-6 text-[#C59B48]" />
                       </div>
                     </div>
                     <div className="text-3xl text-white mb-1 font-heading">
@@ -361,7 +361,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                   <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                   <span className="text-white/70 text-sm">AR Experience Ready</span>
                 </div>
-                <div className="text-white/60 text-sm">Click to explore →</div>
+                <div className="text-[#F2F2F3] text-sm">Click to explore →</div>
               </div>
             </div>
           </motion.div>
