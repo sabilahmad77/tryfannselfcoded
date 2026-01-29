@@ -24,6 +24,8 @@ export const ROUTES = {
   LEADERBOARD: '/leaderboard',
   FEEDBACK: '/feedback',
   BUG_REPORT: '/bug-report',
+  CONTACT_US: '/contact-us',
+  PRIVACY_TERMS: '/privacy-terms',
 } as const;
 
 /**

@@ -56,6 +56,40 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
     navigate(ROUTES.SIGN_UP);
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const navbarHeight = 80; // h-20 = 80px
+    if (window.location.pathname === '/') {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    } else {
+      navigate(ROUTES.HOME);
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    }
+  };
+
+  const handleNavClick = (href: string, e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const sectionId = href.replace('#', '');
+    scrollToSection(sectionId);
+  };
+
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
@@ -94,8 +128,9 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
               <motion.a
                 key={index}
                 href={item.href}
+                onClick={(e) => handleNavClick(item.href, e)}
                 whileHover={{ scale: 1.05, y: -2 }}
-                className="text-white/70 hover:text-white transition-colors relative group font-body"
+                className="text-white/70 hover:text-white transition-colors relative group font-body cursor-pointer"
               >
                 {item.label}
                 <motion.div
@@ -171,9 +206,12 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
                 <motion.a
                   key={index}
                   href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={(e) => {
+                    handleNavClick(item.href, e);
+                    setMobileMenuOpen(false);
+                  }}
                   whileHover={{ x: 10 }}
-                  className="text-white/70 hover:text-white transition-colors py-2 font-body"
+                  className="text-white/70 hover:text-white transition-colors py-2 font-body cursor-pointer"
                 >
                   {item.label}
                 </motion.a>

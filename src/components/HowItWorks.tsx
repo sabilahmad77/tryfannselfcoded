@@ -16,36 +16,26 @@ const content = {
       {
         icon: UserPlus,
         title: "Sign Up & Verify",
-        description: (
-          <>
-            Create your account and complete KYC verification. This step secures your identity and ensures a trustworthy platform experience. Once verified, you&apos;re part of our <span className="font-bold text-white">exclusive early access</span> phase and can work towards unlocking whitelist status.
-          </>
-        )
+        subtitle: "Get verified access",
+        description: "Create your account and complete KYC verification. Unlock early access and join the trusted community."
       },
       {
         icon: Zap,
         title: "Engage & Participate",
-        description: "Join art challenges, share your vision, and earn Influence and Provenance Points. Each interaction helps you level up, gain visibility, and unlock rewards."
+        subtitle: "Start earning points",
+        description: "Join missions, share insights, and engage with the community. Each action earns points and builds your founder status."
       },
       {
         icon: Trophy,
         title: "Climb the Ranks",
-        description: (
-          <>
-            Earn points and climb from <span className="font-bold text-white">Explorer</span> to <span className="font-bold text-white">Founding Patron</span> by completing tasks and contributing to the community. Each milestone brings you closer to exclusive benefits.
-          </>
-        )
+        subtitle: "Level up your tier",
+        description: "Accumulate points to move up through the rank system. Higher tiers unlock stronger perks and priority benefits."
       },
       {
         icon: Award,
         title: "Unlock Rewards",
-        description: (
-          <>
-            Enjoy exclusive access to AR galleries, limited edition artworks, VIP support, and personalized features as you ascend through the ranks.
-            <br />
-            It&apos;s that simple. Start your journey today and unlock a world of art that is authenticated, immersive, and rewarding.
-          </>
-        )
+        subtitle: "Claim exclusive perks",
+        description: "Redeem rewards, access private drops, and founder advantages. Enjoy verified-only experiences as FANN expands."
       }
     ]
   },
@@ -56,36 +46,26 @@ const content = {
       {
         icon: UserPlus,
         title: "التسجيل والتحقق",
-        description: (
-          <>
-            أنشئ حسابك وأكمل التحقق من الهوية (KYC). هذه الخطوة تؤمن هويتك وتضمن تجربة منصة موثوقة. بمجرد التحقق، أنت جزء من مرحلة <span className="font-bold text-white">الوصول المبكر الحصري</span> ويمكنك العمل نحو فتح حالة القائمة البيضاء.
-          </>
-        )
+        subtitle: "احصل على وصول موثق",
+        description: "أنشئ حسابك وأكمل التحقق من الهوية (KYC). افتح الوصول المبكر وانضم إلى المجتمع الموثوق."
       },
       {
         icon: Zap,
         title: "شارك وكن نشطاً",
-        description: "انضم إلى تحديات الفن، شارك رؤيتك، واكسب نقاط التأثير والمصداقية. كل تفاعل يساعدك على الارتقاء، واكتساب الرؤية، وفتح المكافآت."
+        subtitle: "ابدأ في كسب النقاط",
+        description: "انضم إلى المهام، شارك رؤيتك، وتفاعل مع المجتمع. كل إجراء يكسب نقاطاً ويبني حالة المؤسس الخاصة بك."
       },
       {
         icon: Trophy,
         title: "تسلق الرتب",
-        description: (
-          <>
-            اكسب النقاط وتسلق من <span className="font-bold text-white">مستكشف</span> إلى <span className="font-bold text-white">راعي مؤسس</span> من خلال إكمال المهام والمساهمة في المجتمع. كل معلم يقربك من الفوائد الحصرية.
-          </>
-        )
+        subtitle: "ارتقِ بمستواك",
+        description: "اجمع النقاط للانتقال إلى أعلى في نظام الرتب. المستويات الأعلى تفتح مزايا أقوى وامتيازات ذات أولوية."
       },
       {
         icon: Award,
         title: "افتح المكافآت",
-        description: (
-          <>
-            استمتع بالوصول الحصري إلى معارض الواقع المعزز والأعمال الفنية المحدودة ودعم VIP والميزات المخصصة أثناء صعودك في الرتب.
-            <br />
-            الأمر بهذه البساطة. ابدأ رحلتك اليوم وافتح عالماً من الفن الأصيل والغامر والمجزِي.
-          </>
-        )
+        subtitle: "احصل على امتيازات حصرية",
+        description: "استبدل المكافآت، وصول إلى الإصدارات الخاصة، ومزايا المؤسس. استمتع بتجارب موثقة فقط مع توسع FANN."
       }
     ]
   }
@@ -115,7 +95,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
   const isRTL = language === 'ar';
 
   return (
-    <section className="relative py-32 overflow-hidden bg-[#0F021C]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="relative py-16 overflow-hidden bg-[#0F021C]" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -145,7 +125,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-[#ffffff]/60 max-w-2xl mx-auto text-lg font-body">
+          <p className="text-[#ffffff]/60 max-w-4xl mx-auto text-lg font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -307,7 +287,12 @@ export function HowItWorks({ language }: HowItWorksProps) {
 
                     {/* Content */}
                     <div className="text-center">
-                      <h3 className="text-white mb-3 text-xl font-heading">{step.title}</h3>
+                      <h3 className="text-white mb-2 text-xl font-heading">{step.title}</h3>
+                      {step.subtitle && (
+                        <p className="text-[#ffcc33] mb-3 text-sm font-medium font-body">
+                          {step.subtitle}
+                        </p>
+                      )}
                       <p className="text-white/60 text-sm leading-relaxed font-body">
                         {step.description}
                       </p>

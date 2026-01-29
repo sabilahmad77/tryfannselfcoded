@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Share2, Copy, Check, Users, Sparkles, Twitter, Send, MessageCircle, Award, Zap, Trophy, Target, ArrowUpRight } from 'lucide-react';
+import { Share2, Copy, Check, Users, Sparkles, Twitter, Instagram, Linkedin, Video, Award, Zap, Trophy, Target, ArrowUpRight } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
 // import fannLogo from 'figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png';
 import { ImageWithFallback } from './figma/ImageWithFallback';
@@ -60,7 +60,7 @@ const content = {
     },
     shareSection: {
       title: "Share Now",
-      platforms: ["Twitter", "Telegram", "WhatsApp"]
+      platforms: ["Twitter", "Instagram", "LinkedIn", "TikTok"]
     }
   },
   ar: {
@@ -111,7 +111,7 @@ const content = {
     },
     shareSection: {
       title: "شارك الآن",
-      platforms: ["تويتر", "تيليجرام", "واتساب"]
+      platforms: ["تويتر", "إنستغرام", "لينكد إن", "تيك توك"]
     }
   }
 };
@@ -137,14 +137,15 @@ export function ReferralModule({ language }: ReferralModuleProps) {
     const text = `Join FANN with code: ${referralCode}`;
     const urls: Record<string, string> = {
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
-      telegram: `https://t.me/share/url?text=${encodeURIComponent(text)}`,
-      whatsapp: `https://wa.me/?text=${encodeURIComponent(text)}`,
+      instagram: `https://www.instagram.com/`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}&summary=${encodeURIComponent(text)}`,
+      tiktok: `https://www.tiktok.com/`,
     };
     if (urls[platform]) window.open(urls[platform], '_blank');
   };
 
   return (
-    <section className="relative py-32 overflow-hidden bg-[#0F021C]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="relative py-16 overflow-hidden bg-[#0F021C]" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -163,12 +164,12 @@ export function ReferralModule({ language }: ReferralModuleProps) {
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
           {/* <motion.div
             className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass mb-6 border border-amber-500/30"
             animate={{
@@ -183,7 +184,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-lg font-body">{t.subtitle}</p>
+          <p className="text-white/60 max-w-4xl mx-auto text-lg font-body">{t.subtitle}</p>
         </motion.div>
 
         {/* Featured Code Card - Minimal Modern */}
@@ -191,7 +192,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-12"
+          className="mb-8"
         >
           <div className="p-8 md:p-12 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0F021C]/80 border-2 border-[#ffcc33]/50 relative overflow-hidden shadow-2xl shadow-[#ffcc33]/30">
             {/* Gradient top accent */}
@@ -222,21 +223,22 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                   </motion.button>
                 </div>
                 
-                {/* Share buttons */}
+                {/* Share buttons - Primary social media buttons */}
                 <div className="flex items-center justify-center gap-3">
                   {[
                     { icon: Twitter, platform: 'twitter', label: 'Twitter' },
-                    { icon: Send, platform: 'telegram', label: 'Telegram' },
-                    { icon: MessageCircle, platform: 'whatsapp', label: 'WhatsApp' }
+                    { icon: Instagram, platform: 'instagram', label: 'Instagram' },
+                    { icon: Linkedin, platform: 'linkedin', label: 'LinkedIn' },
+                    { icon: Video, platform: 'tiktok', label: 'TikTok' }
                   ].map((social) => {
                     const Icon = social.icon;
                     return (
                       <motion.button
                         key={social.platform}
-                        whileHover={{ y: -2 }}
+                        whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleShare(social.platform)}
-                        className="px-4 py-2 rounded-lg backdrop-blur-md bg-gradient-to-br from-[#1D112A]/40 to-[#0F021C]/40 border border-[#ffcc33]/30 hover:border-[#ffcc33]/70 flex items-center gap-2 transition-all text-sm text-white/60 hover:text-white shadow-md hover:shadow-[#ffcc33]/20 cursor-pointer"
+                        className="h-10 px-6 rounded-md backdrop-blur-md bg-gradient-to-br from-[#1D112A]/40 to-[#0F021C]/40 border border-[#ffcc33]/30 hover:border-[#ffcc33]/70 flex items-center gap-2 transition-all text-sm text-white/60 hover:text-white shadow-md hover:shadow-[#ffcc33]/20 cursor-pointer font-body"
                       >
                         <Icon className="w-4 h-4" />
                         <span className="hidden sm:inline">{social.label}</span>
@@ -276,7 +278,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
         </motion.div>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           
           {/* Process Card */}
           <motion.div
@@ -336,8 +338,8 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                 <h3 className="text-white text-lg font-heading">{t.earnings.title}</h3>
               </div>
 
-              {/* Current Rate Highlight */}
-              <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-[#ffcc33]/30 to-[#45e3d3]/30 border-2 border-[#ffcc33]/60 text-center shadow-xl shadow-[#ffcc33]/30 relative z-10 overflow-hidden">
+              {/* Current Rate Highlight - Reduced glow */}
+              <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-[#ffcc33]/20 to-[#45e3d3]/20 border-2 border-[#ffcc33]/40 text-center shadow-md shadow-[#ffcc33]/5 relative z-10 overflow-hidden">
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
                   animate={{ x: ['-100%', '100%'] }}

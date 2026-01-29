@@ -1,5 +1,4 @@
 import { motion } from "motion/react";
-import { useState } from "react";
 import {
   Palette,
   Building2,
@@ -10,7 +9,6 @@ import {
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import bgImage from "figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png";
-import { PersonaDetailsModal } from "./PersonaDetailsModal";
 
 interface PersonaPathsProps {
   language: "en" | "ar";
@@ -33,6 +31,15 @@ const content = {
           "Founder terms — reduced commission during the founding window",
           "Priority support — onboarding + handling that respects artists",
         ],
+        earnPointsBy: [
+          "verify profile",
+          "complete portfolio",
+          "add artwork details",
+          "refer collectors",
+          "missions/events",
+          "community participation",
+        ],
+        cta: "Start as a Founding Artist",
         gradient: "from-amber-500 via-yellow-500 to-amber-600",
         accentColor: "#ffcc33",
       },
@@ -47,6 +54,14 @@ const content = {
           "Early partner benefits — lower commissions, priority listings, dedicated onboarding",
           "Ranked visibility — reputation-based, not pay-to-play",
         ],
+        earnPointsBy: [
+          "verify gallery",
+          "upload catalog",
+          "invite artists",
+          "curation programs",
+          "maintain trust signals",
+        ],
+        cta: "Join as Founding Gallery / Museum",
         gradient: "from-yellow-500 via-amber-500 to-yellow-600",
         accentColor: "#eab308",
       },
@@ -61,6 +76,14 @@ const content = {
           "Protected logistics — insured shipping programs (phase rollout)",
           "Founder advantages — lower fees, priority access, bonus rewards",
         ],
+        earnPointsBy: [
+          "complete profile",
+          "preferences",
+          "referrals",
+          "previews/events",
+          "verified purchases (launch)",
+        ],
+        cta: "Become a Founding Collector",
         gradient: "from-amber-600 via-yellow-600 to-amber-700",
         accentColor: "#d97706",
       },
@@ -75,11 +98,18 @@ const content = {
           "Events & invitations — curated experiences for top ranks",
           "Real monetization — tier-based programs announced in phases",
         ],
+        earnPointsBy: [
+          "invite verified members",
+          "activate referrals",
+          "missions",
+          "community leadership",
+          "events",
+        ],
+        cta: "Become an Ambassador",
         gradient: "from-amber-400 via-yellow-400 to-amber-500",
         accentColor: "#fbbf24",
       },
     ],
-    cta: "Start Your Journey",
   },
   ar: {
     title: { white: "اختر مسارك", gold: " تجارب مخصصة لكل مشارك" },
@@ -96,6 +126,15 @@ const content = {
           "شروط المؤسس — عمولة مخفضة خلال النافذة المؤسسة",
           "دعم ذو أولوية — إعداد + معاملة تحترم الفنانين",
         ],
+        earnPointsBy: [
+          "التحقق من الملف الشخصي",
+          "إكمال المحفظة",
+          "إضافة تفاصيل العمل الفني",
+          "إحالة المقتنين",
+          "المهام/الأحداث",
+          "المشاركة المجتمعية",
+        ],
+        cta: "ابدأ كفنان مؤسس",
         gradient: "from-amber-500 via-yellow-500 to-amber-600",
         accentColor: "#ffcc33",
       },
@@ -110,6 +149,14 @@ const content = {
           "فوائد الشريك المبكر — عمولات أقل، قوائم أولوية، إعداد مخصص",
           "ظهور مصنف — قائم على السمعة، وليس الدفع مقابل اللعب",
         ],
+        earnPointsBy: [
+          "التحقق من المعرض",
+          "رفع الكتالوج",
+          "دعوة الفنانين",
+          "برامج التنسيق",
+          "الحفاظ على إشارات الثقة",
+        ],
+        cta: "انضم كمعرض/متحف مؤسس",
         gradient: "from-yellow-500 via-amber-500 to-yellow-600",
         accentColor: "#eab308",
       },
@@ -124,6 +171,14 @@ const content = {
           "لوجستيات محمية — برامج شحن مؤمنة (طرح تدريجي)",
           "مزايا المؤسس — رسوم أقل، وصول ذو أولوية، مكافآت إضافية",
         ],
+        earnPointsBy: [
+          "إكمال الملف الشخصي",
+          "التفضيلات",
+          "الإحالات",
+          "المعاينات/الأحداث",
+          "المشتريات الموثقة (الإطلاق)",
+        ],
+        cta: "كن مقتنياً مؤسساً",
         gradient: "from-amber-600 via-yellow-600 to-amber-700",
         accentColor: "#d97706",
       },
@@ -138,11 +193,18 @@ const content = {
           "الأحداث والدعوات — تجارب منسقة للرتب العليا",
           "تحقيق الربح الحقيقي — برامج قائمة على المستوى تُعلن على مراحل",
         ],
+        earnPointsBy: [
+          "دعوة أعضاء موثقين",
+          "تفعيل الإحالات",
+          "المهام",
+          "القيادة المجتمعية",
+          "الأحداث",
+        ],
+        cta: "كن سفيراً",
         gradient: "from-amber-400 via-yellow-400 to-amber-500",
         accentColor: "#fbbf24",
       },
     ],
-    cta: "ابدأ رحلتك",
   },
 };
 
@@ -171,11 +233,18 @@ export function PersonaPaths({
 }: PersonaPathsProps) {
   const t = content[language];
   const isRTL = language === "ar";
-  const [selectedPersona, setSelectedPersona] = useState<string | null>(null);
+  
+  // Order personas for 2x2 grid: Artist, Gallery (top row), Collector, Ambassador (bottom row)
+  const orderedPersonas = [
+    t.personas.find(p => p.id === "artist"),
+    t.personas.find(p => p.id === "gallery"),
+    t.personas.find(p => p.id === "collector"),
+    t.personas.find(p => p.id === "ambassador"),
+  ].filter(Boolean) as typeof t.personas;
 
   return (
     <section
-      className="relative py-16 sm:py-24 lg:py-32 overflow-hidden bg-[#0F021C]"
+      className="relative py-16 overflow-hidden bg-[#0F021C]"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -207,7 +276,7 @@ export function PersonaPaths({
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#ffcc33]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-base sm:text-lg px-4 font-body">
+          <p className="text-white/60 max-w-4xl mx-auto text-base sm:text-lg px-4 font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -217,20 +286,19 @@ export function PersonaPaths({
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 max-w-7xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-6xl mx-auto"
         >
-          {t.personas.map((persona, index) => {
+          {orderedPersonas.map((persona) => {
             const Icon = persona.icon;
             return (
               <motion.div
-                key={index}
+                key={persona.id}
                 variants={itemVariants}
                 whileHover={{
-                  y: -12,
+                  y: -8,
                   transition: { duration: 0.3, ease: "easeOut" },
                 }}
-                className="group relative cursor-pointer"
-                onClick={() => setSelectedPersona(persona.id)}
+                className="group relative"
               >
                 {/* Main Card Container */}
                 <div className="relative h-full rounded-3xl overflow-hidden">
@@ -276,11 +344,11 @@ export function PersonaPaths({
                     />
 
                     {/* Main Content */}
-                    <div className="relative z-10 p-6 sm:p-7 md:p-8 flex flex-col h-full">
-                      {/* Icon Section */}
-                      <div className="mb-5 sm:mb-6">
+                    <div className="relative z-10 p-6 sm:p-8 flex flex-col h-full">
+                      {/* Icon and Name - Center */}
+                      <div className="flex flex-col items-center mb-6">
                         <motion.div
-                          className="relative inline-block"
+                          className="relative inline-block mb-4"
                           whileHover={{ scale: 1.05 }}
                           transition={{ duration: 0.3 }}
                         >
@@ -300,59 +368,75 @@ export function PersonaPaths({
 
                           {/* Icon Container */}
                           <div
-                            className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br ${persona.gradient} flex items-center justify-center shadow-2xl border border-white/20`}
+                            className={`relative w-16 h-16 rounded-2xl bg-gradient-to-br ${persona.gradient} flex items-center justify-center shadow-2xl border border-white/20`}
                           >
-                            <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
-
-                            {/* Inner Shimmer */}
-                            <motion.div
-                              className="absolute inset-0 bg-white rounded-xl sm:rounded-2xl"
-                              animate={{
-                                opacity: [0, 0.3, 0],
-                              }}
-                              transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                              }}
-                            />
+                            <Icon className="w-8 h-8 text-white" />
                           </div>
                         </motion.div>
-                      </div>
 
-                      {/* Title Section */}
-                      <div className="mb-5 sm:mb-6">
-                        <h3 className="text-white text-xl sm:text-2xl mb-1.5 sm:mb-2 font-heading">
+                        {/* Name */}
+                        <h3 className="text-white text-xl sm:text-2xl font-heading text-center">
                           {persona.name}
                         </h3>
                       </div>
 
                       {/* Divider */}
-                      <div
-                        className={`h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mb-5 sm:mb-6`}
-                      />
+                      <div className="h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mb-6" />
 
-                      {/* Benefits List */}
-                      <div className="grow mb-5 sm:mb-6">
-                        <ul className="space-y-2.5 sm:space-y-3">
-                          {persona.benefits.map((benefit, idx) => (
-                            <motion.li
-                              key={idx}
-                              initial={{ opacity: 0, x: -10 }}
-                              whileInView={{ opacity: 1, x: 0 }}
-                              viewport={{ once: true }}
-                              transition={{ delay: idx * 0.1 }}
-                              className="flex items-start gap-2.5 sm:gap-3"
-                            >
-                              <CheckCircle2
-                                className={`w-4 h-4 sm:w-5 sm:h-5 shrink-0 mt-0.5`}
-                                style={{ color: persona.accentColor }}
-                              />
-                              <span className="text-white/70 text-sm leading-relaxed font-body">
-                                {benefit.split(" — ")[0]}
-                              </span>
-                            </motion.li>
-                          ))}
-                        </ul>
+                      {/* Two Column Layout: Benefits Left, Earn Points By Right */}
+                      <div className="grid grid-cols-2 gap-4 mb-6 flex-1">
+                        {/* Left Column - Founder Benefits */}
+                        <div>
+                          <h4 className="text-white/90 text-sm font-semibold mb-3 font-body">
+                            {language === "en" ? "Founder Benefits" : "فوائد المؤسس"}
+                          </h4>
+                          <ul className="space-y-2">
+                            {persona.benefits.map((benefit, idx) => {
+                              const benefitText = benefit.split(" — ")[0];
+                              const capitalizedText = benefitText.charAt(0).toUpperCase() + benefitText.slice(1);
+                              return (
+                                <li
+                                  key={idx}
+                                  className="flex items-start gap-2"
+                                >
+                                  <CheckCircle2
+                                    className="w-4 h-4 shrink-0 mt-0.5"
+                                    style={{ color: persona.accentColor }}
+                                  />
+                                  <span className="text-white/70 text-xs leading-relaxed font-body">
+                                    {capitalizedText}
+                                  </span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+
+                        {/* Right Column - How to Earn Points */}
+                        <div>
+                          <h4 className="text-white/90 text-sm font-semibold mb-3 font-body">
+                            {language === "en" ? "How to Earn Points" : "كيفية كسب النقاط"}
+                          </h4>
+                          <ul className="space-y-2">
+                            {persona.earnPointsBy.map((item, idx) => {
+                              const capitalizedText = item.charAt(0).toUpperCase() + item.slice(1);
+                              return (
+                                <li
+                                  key={idx}
+                                  className="flex items-start gap-2"
+                                >
+                                  <div
+                                    className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5"
+                                    style={{ backgroundColor: persona.accentColor }}
+                                  />
+                                  <span className="text-white/60 text-xs leading-relaxed font-body">
+                                    {capitalizedText}
+                                  </span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
                       </div>
 
                       {/* CTA Button */}
@@ -381,13 +465,13 @@ export function PersonaPaths({
                         {/* Button Content */}
                         <div className="relative px-5 py-3 sm:px-6 sm:py-3.5 flex items-center justify-center gap-2">
                           <span className="text-white text-sm sm:text-base font-body">
-                            {t.cta}
+                            {persona.cta}
                           </span>
                           <motion.div
                             animate={{ x: [0, 4, 0] }}
                             transition={{ duration: 1.5, repeat: Infinity }}
                           >
-                            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                            <ArrowRight className={`w-4 h-4 sm:w-5 sm:h-5 text-white ${isRTL ? 'rotate-180' : ''}`} />
                           </motion.div>
                         </div>
                       </motion.button>
@@ -413,15 +497,6 @@ export function PersonaPaths({
           })}
         </motion.div>
       </div>
-
-      {/* Persona Details Modal */}
-      <PersonaDetailsModal
-        isOpen={selectedPersona !== null}
-        onClose={() => setSelectedPersona(null)}
-        personaId={selectedPersona || undefined}
-        language={language}
-        onNavigateToSignUp={onNavigateToSignUp}
-      />
     </section>
   );
 }
