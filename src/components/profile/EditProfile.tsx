@@ -741,7 +741,7 @@ export function EditProfile({
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <p className="text-white/60">{content.subtitle}</p>
+          <p className="text-[#B9BBC6]">{content.subtitle}</p>
         </motion.div>
 
         {/* Form */}
@@ -785,7 +785,7 @@ export function EditProfile({
             {/* Show current profile image preview if exists and no new file selected */}
             {profileImagePreviews.length > 0 && !profileImage && (
               <div className="mt-4 space-y-2">
-                <p className="text-xs text-white/60">
+                <p className="text-xs text-[#B9BBC6]">
                   {language === "en"
                     ? "Current profile image"
                     : "صورة الملف الشخصي الحالية"}

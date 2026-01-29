@@ -90,7 +90,7 @@ export function ContactUsPage() {
               <h1 className="text-4xl md:text-5xl mb-4 font-heading">
                 <span className="text-white">{t.title}</span>
               </h1>
-              <p className="text-white/60 text-lg font-body">{t.subtitle}</p>
+              <p className="text-[#B9BBC6] text-lg font-body">{t.subtitle}</p>
             </motion.div>
 
             <div className="max-w-2xl mx-auto">
@@ -99,7 +99,7 @@ export function ContactUsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0B0B0D]/80 rounded-2xl border-2 border-[#ffcc33]/30 p-8 shadow-2xl"
+                className="backdrop-blur-xl bg-gradient-to-br from-[#191922]/80 via-[#191922]/70 to-[#0B0B0D]/80 rounded-2xl border-2 border-[#C59B48]/22 p-8 shadow-2xl"
               >
                 <div className="space-y-6">
                   <div>
@@ -109,7 +109,7 @@ export function ContactUsPage() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       required
-                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-[#ffcc33]/50 transition-colors font-body"
+                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-[#C59B48]/50 transition-colors font-body"
                       placeholder={t.form.name}
                     />
                   </div>
@@ -121,7 +121,7 @@ export function ContactUsPage() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       required
-                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-[#ffcc33]/50 transition-colors font-body"
+                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-[#C59B48]/50 transition-colors font-body"
                       placeholder={t.form.email}
                     />
                   </div>
@@ -133,7 +133,7 @@ export function ContactUsPage() {
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                       required
-                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-[#ffcc33]/50 transition-colors font-body"
+                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-[#C59B48]/50 transition-colors font-body"
                       placeholder={t.form.subject}
                     />
                   </div>
@@ -145,7 +145,7 @@ export function ContactUsPage() {
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       required
                       rows={6}
-                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-[#ffcc33]/50 transition-colors resize-none font-body"
+                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-[#C59B48]/50 transition-colors resize-none font-body"
                       placeholder={t.form.message}
                     />
                   </div>
@@ -155,7 +155,7 @@ export function ContactUsPage() {
                     disabled={isSubmitting}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full px-8 py-4 rounded-xl bg-gradient-to-r from-[#ffcc33] to-[] text-[#0B0B0D] shadow-xl shadow-[#ffcc33]/30 hover:shadow-2xl hover:shadow-[#ffcc33]/50 transition-all duration-300 inline-flex items-center justify-center gap-2 cursor-pointer font-body font-medium disabled:opacity-50"
+                    className="w-full px-8 py-4 rounded-xl bg-gradient-to-r from-[#C59B48] to-[] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center justify-center gap-2 cursor-pointer font-body font-medium disabled:bg-disabled disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>

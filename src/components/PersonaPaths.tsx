@@ -276,7 +276,7 @@ export function PersonaPaths({
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#C59B48]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-4xl mx-auto text-base sm:text-lg px-4 font-body">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-base sm:text-lg px-4 font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -429,7 +429,7 @@ export function PersonaPaths({
                                     className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5"
                                     style={{ backgroundColor: persona.accentColor }}
                                   />
-                                  <span className="text-white/60 text-xs leading-relaxed font-body">
+                                  <span className="text-[#B9BBC6] text-xs leading-relaxed font-body">
                                     {capitalizedText}
                                   </span>
                                 </li>

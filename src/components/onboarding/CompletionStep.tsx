@@ -296,7 +296,7 @@ export function CompletionStep({ language, data }: CompletionStepProps) {
                   className="p-6 rounded-xl glass border border-white/10 hover:border-amber-500/30 transition-all text-center"
                 >
                   <Icon className={`w-8 h-8 ${item.color} mx-auto mb-3`} />
-                  <div className="text-sm text-white/60 mb-2">{item.label}</div>
+                  <div className="text-sm text-[#B9BBC6] mb-2">{item.label}</div>
                   <div className="text-white">{item.value}</div>
                 </motion.div>
               );
@@ -363,7 +363,7 @@ export function CompletionStep({ language, data }: CompletionStepProps) {
                           {step.points}
                         </span>
                       </div>
-                      <p className="text-white/60 text-sm">{step.desc}</p>
+                      <p className="text-[#B9BBC6] text-sm">{step.desc}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -387,7 +387,7 @@ export function CompletionStep({ language, data }: CompletionStepProps) {
               <div className="text-2xl text-amber-400 mb-1">
                 {roleStats.stat1.split(" ")[0]}
               </div>
-              <div className="text-xs text-white/60">
+              <div className="text-xs text-[#B9BBC6]">
                 {roleStats.stat1.split(" ").slice(1).join(" ")}
               </div>
             </div>
@@ -395,7 +395,7 @@ export function CompletionStep({ language, data }: CompletionStepProps) {
               <div className="text-2xl text-amber-400 mb-1">
                 {roleStats.stat2.split(" ")[0]}
               </div>
-              <div className="text-xs text-white/60">
+              <div className="text-xs text-[#B9BBC6]">
                 {roleStats.stat2.split(" ").slice(1).join(" ")}
               </div>
             </div>
@@ -403,7 +403,7 @@ export function CompletionStep({ language, data }: CompletionStepProps) {
               <div className="text-2xl text-amber-400 mb-1">
                 {roleStats.stat3.split(" ")[0]}
               </div>
-              <div className="text-xs text-white/60">
+              <div className="text-xs text-[#B9BBC6]">
                 {roleStats.stat3.split(" ").slice(1).join(" ")}
               </div>
             </div>

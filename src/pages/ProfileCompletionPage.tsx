@@ -122,7 +122,7 @@ export function ProfileCompletionPage() {
             ariaLabel="loading"
             visible={true}
           />
-          <p className="text-white/60 mt-4">
+          <p className="text-[#B9BBC6] mt-4">
             {language === "en"
               ? "Loading your profile..."
               : "جارٍ تحميل ملفك الشخصي..."}

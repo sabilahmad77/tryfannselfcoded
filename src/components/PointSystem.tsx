@@ -99,7 +99,7 @@ const content = {
 const colorMap = {
   purple: { gradient: 'from-[#C59B48] to-[#D6AE5A]', glow: 'shadow-[#C59B48]/50', text: 'text-[#C59B48]' },
   cyan: { gradient: 'from-[#C59B48] to-[#D6AE5A]', glow: 'shadow-[#C59B48]/50', text: 'text-[#C59B48]' },
-  gray: { gradient: 'from-gray-600 to-gray-500', glow: 'shadow-gray-500/50', text: 'text-white/60' },
+  gray: { gradient: 'from-gray-600 to-gray-500', glow: 'shadow-gray-500/50', text: 'text-[#B9BBC6]' },
   blue: { gradient: 'from-[#C59B48] to-[#D6AE5A]', glow: 'shadow-[#C59B48]/50', text: 'text-[#C59B48]' },
   gold: { gradient: 'from-[#C59B48] to-[#D6AE5A]', glow: 'shadow-[#C59B48]/50', text: 'text-[#C59B48]' }
 };
@@ -149,7 +149,7 @@ export function PointSystem({ language }: PointSystemProps) {
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#C59B48]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-lg">
+          <p className="text-[#B9BBC6] max-w-2xl mx-auto text-lg">
             {t.subtitle}
           </p>
         </motion.div>
@@ -170,7 +170,7 @@ export function PointSystem({ language }: PointSystemProps) {
                 key={index}
                 whileHover={{ scale: 1.05, rotateY: 5 }}
                 style={{ transformStyle: 'preserve-3d' }}
-                className="relative p-8 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/70 via-[#1D112A]/60 to-[#0B0B0D]/70 border border-[#C59B48]/40 hover:border-[#C59B48]/80 transition-all duration-300 group overflow-hidden"
+                className="relative p-8 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/70 via-[#191922]/60 to-[#0B0B0D]/70 border border-[#C59B48]/40 hover:border-[#C59B48]/80 transition-all duration-300 group overflow-hidden"
               >
                 {/* Gradient Glow Effect */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#C59B48]/10 via-transparent to-[#45e3d3]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -198,7 +198,7 @@ export function PointSystem({ language }: PointSystemProps) {
                   </motion.div>
                   <div className="flex-1">
                     <h3 className="text-white mb-2">{type.name}</h3>
-                    <p className="text-white/60 text-sm leading-relaxed">
+                    <p className="text-[#B9BBC6] text-sm leading-relaxed">
                       {type.description}
                     </p>
                   </div>
@@ -216,7 +216,7 @@ export function PointSystem({ language }: PointSystemProps) {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="max-w-5xl mx-auto"
         >
-          <div className="p-10 rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 shadow-2xl shadow-[#C59B48]/20 relative overflow-hidden">
+          <div className="p-10 rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/80 via-[#191922]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 shadow-2xl shadow-[#C59B48]/20 relative overflow-hidden">
             {/* Gradient Border Pulse */}
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#C59B48]/20 via-[#45e3d3]/20 to-[#C59B48]/20 opacity-50" />
             

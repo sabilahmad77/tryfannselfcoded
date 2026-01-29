@@ -119,7 +119,7 @@ export function AddArtistModal({
         disabled={
           !formData.name.trim() || !formData.email.trim() || !formData.specialty.trim() || isLoading
         }
-        className="flex-1 bg-gradient-to-r from-[#C59B48] to-[] hover:from-[#C59B48]/90 hover:to-[]/90 hover:shadow-lg hover:shadow-[#C59B48]/50 text-[#0B0B0D] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
+        className="flex-1 bg-gradient-to-r from-[#C59B48] to-[] hover:from-[#C59B48]/90 hover:to-[]/90 hover:shadow-lg hover:shadow-[#C59B48]/50 text-[#0B0B0D] disabled:bg-disabled disabled:cursor-not-allowed disabled:hover:shadow-none cursor-pointer transition-all duration-200"
       >
         {isLoading ? (
           <>

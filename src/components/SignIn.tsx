@@ -399,9 +399,9 @@ export function SignIn({
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C59B48] to-[#D6AE5A] flex items-center justify-center glow-gold">
                 <Sparkles className="w-6 h-6 text-[#0B0B0D]" />
               </div>
-              <h1 className="text-3xl text-[#ffffff]">FANN</h1>
+              <h1 className="text-3xl text-[#F2F2F3]">FANN</h1>
             </div>
-            <p className="text-[#ffffff]/60 text-sm">{content.subtitle}</p>
+            <p className="text-[#F2F2F3]/60 text-sm">{content.subtitle}</p>
           </div>
 
           {/* Features Section */}
@@ -411,10 +411,10 @@ export function SignIn({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <h2 className="text-2xl text-[#ffffff] mb-3">
+              <h2 className="text-2xl text-[#F2F2F3] mb-3">
                 {content.leftPanel.title}
               </h2>
-              <p className="text-[#ffffff]/70 mb-8 leading-relaxed">
+              <p className="text-[#F2F2F3]/70 mb-8 leading-relaxed">
                 {content.leftPanel.desc}
               </p>
 
@@ -429,12 +429,12 @@ export function SignIn({
                       transition={{ delay: 0.1 * idx }}
                       className="flex gap-4"
                     >
-                      <div className="w-12 h-12 rounded-lg bg-[#ffffff]/5 border border-[#C59B48]/20 flex items-center justify-center shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-[#F2F2F3]/5 border border-[#C59B48]/20 flex items-center justify-center shrink-0">
                         <Icon className="w-6 h-6 text-[#C59B48]" />
                       </div>
                       <div>
-                        <h3 className="text-[#ffffff] mb-1">{feature.title}</h3>
-                        <p className="text-[#ffffff]/60 text-sm">
+                        <h3 className="text-[#F2F2F3] mb-1">{feature.title}</h3>
+                        <p className="text-[#F2F2F3]/60 text-sm">
                           {feature.desc}
                         </p>
                       </div>
@@ -458,7 +458,7 @@ export function SignIn({
                     >
                       {stat.value}
                     </div>
-                    <div className="text-[#ffffff]/50 text-xs">
+                    <div className="text-[#F2F2F3]/50 text-xs">
                       {stat.label}
                     </div>
                   </motion.div>
@@ -482,10 +482,10 @@ export function SignIn({
             >
               {/* Header */}
               <div className="mb-8">
-                <h2 className="text-3xl text-[#ffffff] mb-2">
+                <h2 className="text-3xl text-[#F2F2F3] mb-2">
                   {content.title}
                 </h2>
-                <p className="text-[#ffffff]/60">{content.subtitle}</p>
+                <p className="text-[#F2F2F3]/60">{content.subtitle}</p>
               </div>
 
               {/* Form */}
@@ -560,7 +560,7 @@ export function SignIn({
                       />
                       <Label
                         htmlFor="rememberMe"
-                        className="text-sm text-[#ffffff]/70 cursor-pointer hover:text-[#ffffff] transition-colors"
+                        className="text-sm text-[#F2F2F3]/70 cursor-pointer hover:text-[#F2F2F3] transition-colors"
                       >
                         {content.rememberMe}
                       </Label>
@@ -582,7 +582,7 @@ export function SignIn({
                       type="button"
                       onClick={handleFormSubmit(onSubmit)}
                       disabled={isLoading}
-                      className={`w-full h-12 shadow-lg shadow-primary/30 transition-all group glow-gold btn-glow ${isLoading
+                      className={`w-full h-12 shadow-lg shadow-primary/30 transition-all group glow-gold btn-glow disabled:bg-disabled disabled:cursor-not-allowed ${isLoading
                         ? "cursor-not-allowed opacity-50"
                         : "cursor-pointer"
                         }`}
@@ -615,7 +615,7 @@ export function SignIn({
 
                 {/* Sign Up Link */}
                 <div className="mt-6 text-center">
-                  <span className="text-[#ffffff]/60 text-sm">
+                  <span className="text-[#F2F2F3]/60 text-sm">
                     {content.noAccount}
                   </span>{" "}
                   <button

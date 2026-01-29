@@ -1150,8 +1150,8 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
             <Shield className="w-8 h-8 text-amber-400" />
           </div>
           <h2 className="text-3xl text-white mb-2">{content.title}</h2>
-          <p className="text-white/60 font-semibold mb-3">{content.subtitle}</p>
-          <p className="text-white/60 text-sm leading-relaxed max-w-2xl mx-auto">{content.description}</p>
+          <p className="text-[#B9BBC6] font-semibold mb-3">{content.subtitle}</p>
+          <p className="text-[#B9BBC6] text-sm leading-relaxed max-w-2xl mx-auto">{content.description}</p>
         </motion.div>
 
         {/* Notice */}
@@ -1169,14 +1169,14 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
             {content.notice.points.map((point, index) => (
               <li
                 key={index}
-                className="text-white/60 text-sm flex items-start gap-2"
+                className="text-[#B9BBC6] text-sm flex items-start gap-2"
               >
                 <CheckCircle className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
                 <span>{point}</span>
               </li>
             ))}
           </ul>
-          <p className="text-white/60 text-sm ml-8">{content.notice.conclusion}</p>
+          <p className="text-[#B9BBC6] text-sm ml-8">{content.notice.conclusion}</p>
         </motion.div>
 
         <div className="space-y-6">
@@ -1417,7 +1417,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 !idDocumentFront &&
                 !idDocumentBack && (
                   <div className="mt-4 space-y-2">
-                    <p className="text-xs text-white/60">
+                    <p className="text-xs text-[#B9BBC6]">
                       {language === "en"
                         ? "Current documents"
                         : "المستندات الحالية"}
@@ -1449,7 +1449,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
               {idDocumentPreviews.length > 0 &&
                 (idDocumentFront || idDocumentBack) && (
                   <div className="mt-4 space-y-2">
-                    <p className="text-xs text-white/60">
+                    <p className="text-xs text-[#B9BBC6]">
                       {language === "en"
                         ? "Selected documents"
                         : "المستندات المحددة"}
@@ -1521,7 +1521,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
               {/* Show current document preview if exists and no new file selected */}
               {proofOfAddressPreviews.length > 0 && !proofOfAddress && (
                 <div className="mt-4 space-y-2">
-                  <p className="text-xs text-white/60">
+                  <p className="text-xs text-[#B9BBC6]">
                     {language === "en" ? "Current document" : "المستند الحالي"}
                   </p>
                   <ImagePreviewList
@@ -1555,7 +1555,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
               {content.security.features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-400" />
-                  <span className="text-white/60 text-sm">{feature}</span>
+                  <span className="text-[#B9BBC6] text-sm">{feature}</span>
                 </div>
               ))}
             </div>
@@ -1584,7 +1584,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 >
                   {content.compliance.title}
                 </Label>
-                <p className="text-white/60 text-sm leading-relaxed">
+                <p className="text-[#B9BBC6] text-sm leading-relaxed">
                   {content.compliance.text}
                 </p>
               </div>
@@ -1605,7 +1605,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                   onClick={onBack}
                   variant="outline"
                   disabled={isLoading}
-                  className="flex-1 h-12 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="flex-1 h-12 disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
                 >
                   <ChevronLeft
                     className={`w-5 h-5 mr-2 ${isRTL ? "rotate-180" : ""}`}
@@ -1617,7 +1617,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
                 type="button"
                 onClick={handleSubmit(onSubmit)}
                 disabled={isLoading || !acceptedCompliance}
-                className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   {isLoading ? (
@@ -1650,7 +1650,7 @@ export function KYCStep({ language, onNext, onBack, data }: KYCStepProps) {
               onClick={handleSkip}
               variant="ghost"
               disabled={isLoading}
-              className="w-full disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="w-full disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
             >
               {content.skipForNow}
             </Button>

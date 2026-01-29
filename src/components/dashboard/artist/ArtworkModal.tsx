@@ -262,7 +262,7 @@ export function ArtworkModal({
         {/* Existing image preview for edit mode when no new file is selected */}
         {mode === "edit" && !values.imageFile && existingImageUrl && (
           <div className="space-y-2">
-            <p className={`text-xs text-[#808c99] ${isRTL ? "text-right" : "text-left"}`}>
+            <p className={`text-xs text-[#8A8EA0] ${isRTL ? "text-right" : "text-left"}`}>
               {language === "en"
                 ? "Current image (will be kept unless you upload a new one)"
                 : "الصورة الحالية (سيتم الاحتفاظ بها ما لم تقم بتحميل صورة جديدة)"}
@@ -400,7 +400,7 @@ export function ArtworkModal({
             onClick={onClose}
             variant="outline"
             disabled={isSubmitting}
-            className="flex-1 h-12 border-white/20 hover:border-primary/50 hover:bg-primary/10 text-white/70 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="flex-1 h-12 border-white/20 hover:border-primary/50 hover:bg-primary/10 text-white/70 hover:text-white disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
           >
             {t.cancel}
           </Button>
@@ -408,7 +408,7 @@ export function ArtworkModal({
             type="button"
             onClick={handleSubmit}
             disabled={isSubmitting || !isDirty}
-            className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
               {isSubmitting ? (

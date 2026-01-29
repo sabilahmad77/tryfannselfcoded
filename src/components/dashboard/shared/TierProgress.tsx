@@ -151,7 +151,7 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
       >
         <div className="flex flex-col items-center justify-center py-12 gap-4">
           <Loader2 className="w-8 h-8 text-[#C59B48] animate-spin" />
-          <p className="text-[#808c99]">
+          <p className="text-[#8A8EA0]">
             {language === "en"
               ? "Loading tier progress..."
               : "جاري تحميل تقدم المستوى..."}
@@ -174,7 +174,7 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
           <div className="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center">
             <Award className="w-6 h-6 text-red-500" />
           </div>
-          <p className="text-[#808c99]">
+          <p className="text-[#8A8EA0]">
             {language === "en"
               ? "Failed to load tier progress. Please try again."
               : "فشل تحميل تقدم المستوى. يرجى المحاولة مرة أخرى."}
@@ -197,7 +197,7 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
           isRTL ? "flex-row-reverse" : ""
         }`}
       >
-        <h2 className="text-2xl text-[#ffffff]">{t.tierProgress}</h2>
+        <h2 className="text-2xl text-[#F2F2F3]">{t.tierProgress}</h2>
         <div
           className={`flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r ${currentTierConfig.color}`}
         >
@@ -220,10 +220,10 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
               }`}
             >
               <CurrentTierIcon className="w-5 h-5 text-[#C59B48]" />
-              <span className="text-xs text-[#ffffff]/80">{t.currentTier}</span>
+              <span className="text-xs text-[#F2F2F3]/80">{t.currentTier}</span>
             </div>
-            <p className="text-xl text-[#ffffff]">{currentTierName}</p>
-            <p className="text-sm text-[#ffffff]/70 mt-1">{userPoints} pts</p>
+            <p className="text-xl text-[#F2F2F3]">{currentTierName}</p>
+            <p className="text-sm text-[#F2F2F3]/70 mt-1">{userPoints} pts</p>
           </div>
         </div>
 
@@ -235,14 +235,14 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
             }`}
           >
             <NextTierIcon className="w-5 h-5 text-[#C59B48]" />
-            <span className="text-xs text-[#808c99]">
+            <span className="text-xs text-[#8A8EA0]">
               {nextTierName ? t.nextTier : t.currentTier}
             </span>
           </div>
-          <p className="text-xl text-[#ffffff]">
+          <p className="text-xl text-[#F2F2F3]">
             {nextTierName || currentTierName}
           </p>
-          <p className="text-sm text-[#808c99] mt-1">
+          <p className="text-sm text-[#8A8EA0] mt-1">
             {nextTierName
               ? `${pointsNeeded} pts ${t.pointsToGo}`
               : language === "en"
@@ -265,7 +265,7 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
           />
         </div>
         <div
-          className={`flex items-center justify-between mt-2 text-xs text-[#808c99]/60 ${
+          className={`flex items-center justify-between mt-2 text-xs text-[#8A8EA0]/60 ${
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
@@ -308,13 +308,13 @@ export function TierProgress({ statsData, isLoadingStats = false }: TierProgress
                         ? "text-[#0B0B0D]"
                         : isUnlocked
                         ? "text-[#C59B48]"
-                        : "text-[#808c99]"
+                        : "text-[#8A8EA0]"
                     }`}
                   />
                 </motion.div>
                 <span
                   className={`text-xs text-center ${
-                    isUnlocked ? "text-[#808c99]" : "text-[#808c99]"
+                    isUnlocked ? "text-[#8A8EA0]" : "text-[#8A8EA0]"
                   }`}
                 >
                   {tier.name}

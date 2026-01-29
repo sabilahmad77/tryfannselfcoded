@@ -716,7 +716,7 @@ export function SignUp({
             <motion.button
               onClick={onNavigateToHome}
               whileHover={{ scale: 1.02 }}
-              className="flex items-center gap-2 text-[#ffffff]/70 hover:text-[#C59B48] transition-colors group mb-8 cursor-pointer"
+              className="flex items-center gap-2 text-[#F2F2F3]/70 hover:text-[#C59B48] transition-colors group mb-8 cursor-pointer"
             >
               <ChevronLeft
                 className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${isRTL ? "rotate-180" : ""
@@ -729,9 +729,9 @@ export function SignUp({
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C59B48] to-[#fbbf24] flex items-center justify-center glow-gold">
                 <Sparkles className="w-6 h-6 text-[#0B0B0D]" />
               </div>
-              <h1 className="text-3xl text-[#ffffff]">FANN</h1>
+              <h1 className="text-3xl text-[#F2F2F3]">FANN</h1>
             </div>
-            <p className="text-[#ffffff]/60 text-sm">{content.subtitle}</p>
+            <p className="text-[#F2F2F3]/60 text-sm">{content.subtitle}</p>
           </div>
 
           {/* Dynamic Content Based on Step */}
@@ -745,10 +745,10 @@ export function SignUp({
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <h2 className="text-2xl text-[#ffffff] mb-3">
+                  <h2 className="text-2xl text-[#F2F2F3] mb-3">
                     {content.leftPanel.welcomeTitle}
                   </h2>
-                  <p className="text-[#ffffff]/70 mb-8 leading-relaxed">
+                  <p className="text-[#F2F2F3]/70 mb-8 leading-relaxed">
                     {content.leftPanel.welcomeDesc}
                   </p>
 
@@ -763,14 +763,14 @@ export function SignUp({
                           transition={{ delay: 0.1 * idx }}
                           className="flex gap-4"
                         >
-                          <div className="w-12 h-12 rounded-lg bg-[#ffffff]/5 border border-[#C59B48]/20 flex items-center justify-center shrink-0">
+                          <div className="w-12 h-12 rounded-lg bg-[#F2F2F3]/5 border border-[#C59B48]/20 flex items-center justify-center shrink-0">
                             <Icon className="w-6 h-6 text-[#C59B48]" />
                           </div>
                           <div>
-                            <h3 className="text-[#ffffff] mb-1">
+                            <h3 className="text-[#F2F2F3] mb-1">
                               {feature.title}
                             </h3>
-                            <p className="text-[#ffffff]/60 text-sm">
+                            <p className="text-[#F2F2F3]/60 text-sm">
                               {feature.desc}
                             </p>
                           </div>
@@ -790,7 +790,7 @@ export function SignUp({
                   {/* Selected Persona Display */}
                   {selectedPersonaData && (
                     <div className="mb-8">
-                      <p className="text-[#ffffff]/60 text-sm mb-3">
+                      <p className="text-[#F2F2F3]/60 text-sm mb-3">
                         {content.leftPanel.selectedPersona}
                       </p>
                       <div className="p-6 rounded-2xl glass border border-[#C59B48]/30 bg-gradient-to-br from-[#C59B48]/10 to-[#45e3d3]/10">
@@ -806,10 +806,10 @@ export function SignUp({
                             );
                           })()}
                           <div>
-                            <h3 className="text-xl text-[#ffffff] mb-1">
+                            <h3 className="text-xl text-[#F2F2F3] mb-1">
                               {selectedPersonaData.name}
                             </h3>
-                            <p className="text-[#ffffff]/70 text-sm">
+                            <p className="text-[#F2F2F3]/70 text-sm">
                               {selectedPersonaData.desc}
                             </p>
                           </div>
@@ -826,7 +826,7 @@ export function SignUp({
 
                   {/* Benefits */}
                   <div>
-                    <p className="text-[#ffffff]/60 text-sm mb-3">
+                    <p className="text-[#F2F2F3]/60 text-sm mb-3">
                       {content.leftPanel.benefits}
                     </p>
                     <div className="space-y-2">
@@ -836,7 +836,7 @@ export function SignUp({
                           initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.1 * idx }}
-                          className="flex items-center gap-3 text-[#ffffff]/80"
+                          className="flex items-center gap-3 text-[#F2F2F3]/80"
                         >
                           <div className="w-5 h-5 rounded-full bg-[#C59B48]/20 border border-[#C59B48]/30 flex items-center justify-center shrink-0">
                             <Check className="w-3 h-3 text-[#C59B48]" />
@@ -860,16 +860,16 @@ export function SignUp({
           >
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl text-[#ffffff] mb-1">20K+</div>
-                <div className="text-[#ffffff]/50 text-xs">Early Members</div>
+                <div className="text-2xl text-[#F2F2F3] mb-1">20K+</div>
+                <div className="text-[#F2F2F3]/50 text-xs">Early Members</div>
               </div>
               <div>
-                <div className="text-2xl text-[#ffffff] mb-1">2K+</div>
-                <div className="text-[#ffffff]/50 text-xs">Artists</div>
+                <div className="text-2xl text-[#F2F2F3] mb-1">2K+</div>
+                <div className="text-[#F2F2F3]/50 text-xs">Artists</div>
               </div>
               <div>
-                <div className="text-2xl text-[#ffffff] mb-1">1K+</div>
-                <div className="text-[#ffffff]/50 text-xs">Galleries</div>
+                <div className="text-2xl text-[#F2F2F3] mb-1">1K+</div>
+                <div className="text-[#F2F2F3]/50 text-xs">Galleries</div>
               </div>
             </div>
           </motion.div>
@@ -893,7 +893,7 @@ export function SignUp({
                   <span className="text-[#C59B48] text-sm">
                     {content.step} {step} {content.of} 2
                   </span>
-                  <div className="flex-1 h-1 bg-[#ffffff]/10 rounded-full overflow-hidden">
+                  <div className="flex-1 h-1 bg-[#F2F2F3]/10 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full bg-gradient-to-r from-[#C59B48] to-[#45e3d3]"
                       initial={{ width: "0%" }}
@@ -902,10 +902,10 @@ export function SignUp({
                     />
                   </div>
                 </div>
-                <h2 className="text-3xl text-[#ffffff] mb-2">
+                <h2 className="text-3xl text-[#F2F2F3] mb-2">
                   {step === 1 ? content.step1Title : content.step2Title}
                 </h2>
-                <p className="text-[#ffffff]/60">
+                <p className="text-[#F2F2F3]/60">
                   {step === 1 ? content.step1Subtitle : content.step2Subtitle}
                 </p>
               </div>
@@ -949,8 +949,8 @@ export function SignUp({
                                 <div className="flex items-center justify-between gap-3 mb-1">
                                   <h3
                                     className={`${isSelected
-                                      ? "text-[#ffffff]"
-                                      : "text-[#ffffff]/90"
+                                      ? "text-[#F2F2F3]"
+                                      : "text-[#F2F2F3]/90"
                                       }`}
                                   >
                                     {persona.name}
@@ -972,7 +972,7 @@ export function SignUp({
                                     )}
                                   </div>
                                 </div>
-                                <p className="text-[#ffffff]/60 text-sm">
+                                <p className="text-[#F2F2F3]/60 text-sm">
                                   {persona.desc}
                                 </p>
                               </div>
@@ -986,7 +986,7 @@ export function SignUp({
                       onClick={handleContinueToStep2}
                       disabled={!selectedPersona}
                       className={`w-full h-12 shadow-lg shadow-primary/30 transition-all group ${!selectedPersona
-                        ? "disabled:opacity-50 disabled:cursor-not-allowed"
+                        ? "disabled:bg-disabled disabled:cursor-not-allowed"
                         : "cursor-pointer"
                         }`}
                     >
@@ -1000,7 +1000,7 @@ export function SignUp({
                     </Button>
 
                     <div className="text-center pt-6">
-                      <span className="text-white/60 text-sm">
+                      <span className="text-[#B9BBC6] text-sm">
                         {content.haveAccount}
                       </span>{" "}
                       <button
@@ -1232,7 +1232,7 @@ export function SignUp({
                           onClick={() => setStep(1)}
                           disabled={isLoading}
                           className={`h-12 px-6 transition-all ${isLoading
-                            ? "disabled:opacity-30 disabled:cursor-not-allowed"
+                            ? "disabled:bg-disabled disabled:cursor-not-allowed"
                             : "cursor-pointer"
                             }`}
                         >
@@ -1248,7 +1248,7 @@ export function SignUp({
                           type="submit"
                           disabled={isLoading || !acceptedTerms}
                           className={`flex-1 h-12 shadow-lg shadow-primary/30 transition-all group ${isLoading || !acceptedTerms
-                            ? "disabled:opacity-50 disabled:cursor-not-allowed"
+                            ? "disabled:bg-disabled disabled:cursor-not-allowed"
                             : "cursor-pointer"
                             }`}
                         >

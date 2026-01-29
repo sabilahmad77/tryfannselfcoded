@@ -109,7 +109,7 @@
   /* STATUS COLORS */
   --destructive: #ff6b6b;
   /* Error red */
-  --destructive-foreground: #ffffff;
+  --destructive-foreground: #F2F2F3;
   --success: #90f2a6;
   /* Success green */
   --success-foreground: #121217;
@@ -147,7 +147,7 @@
   /* Teal */
   --chart-3: #4de3ed;
   /* Cyan */
-  --chart-4: #ffb54d;
+  --chart-4: #D6AE5A;
   /* Light gold */
   --chart-5: #90f2a6;
   /* Success green */
@@ -195,7 +195,7 @@
   --shadow-button: 0 8px 25px rgba(197, 155, 72, 0.3);
 
   --radius: 0.625rem;
-  --switch-background: #808c99;
+  --switch-background: #8A8EA0;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
 }
@@ -253,7 +253,7 @@
 
   /* STATUS COLORS */
   --destructive: #ff6b6b;
-  --destructive-foreground: #ffffff;
+  --destructive-foreground: #F2F2F3;
   --success: #90f2a6;
   --success-foreground: #121217;
   --warning: #C59B48;
@@ -278,7 +278,7 @@
   --chart-1: #C59B48;
   --chart-2: #45e3d3;
   --chart-3: #4de3ed;
-  --chart-4: #ffb54d;
+  --chart-4: #D6AE5A;
   --chart-5: #90f2a6;
 
   /* SIDEBAR COLORS */
@@ -311,7 +311,7 @@
   --shadow-button: 0 8px 25px rgba(197, 155, 72, 0.3);
 
   --radius: 0.625rem;
-  --switch-background: #808c99;
+  --switch-background: #8A8EA0;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
 }
@@ -390,6 +390,7 @@
   --color-green-400: #90f2a6;
   --color-green-500: #90f2a6;
   --color-green-600: #7ae09a;
+  --color-disabled: var(--disabled-foreground); 
 }
 
 @layer base {
@@ -582,7 +583,7 @@ html {
 
 /* Glass morphism - Enhanced for better visibility against vibrant backgrounds */
 .glass {
-  background: #1D112A;
+  background: #191922;
   /* backdrop-filter: blur(16px) saturate(180%); */
   /* border: 1px solid rgba(255, 204, 51, 0.25); */
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
@@ -611,7 +612,7 @@ html {
 }
 
 .midnight-gradient {
-  background: linear-gradient(135deg, #0B0B0D 0%, #1D112A 50%, #4e4e4e 100%);
+  background: linear-gradient(135deg, #0B0B0D 0%, #191922 50%, #4e4e4e 100%);
 }
 
 /* Glowing buttons for gamification */

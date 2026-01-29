@@ -287,17 +287,17 @@ export function AmbassadorDashboard() {
         transition={{ delay: 0.1 }}
         className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
       >
-        <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#1D112A]/80 to-[#0B0B0D]/80">
+        <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#191922]/80 to-[#0B0B0D]/80">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center">
               <Users className="w-5 h-5 text-cyan-400" />
             </div>
             <div className="flex-1">
-              <p className="text-[#808c99] text-sm">{t.stats.totalReach}</p>
+              <p className="text-[#8A8EA0] text-sm">{t.stats.totalReach}</p>
               {isLoadingAmbassadorStats ? (
                 <Loader2 className="w-5 h-5 text-[#C59B48] animate-spin mt-1" />
               ) : (
-                <p className="text-2xl text-[#ffffff]">
+                <p className="text-2xl text-[#F2F2F3]">
                   {totalReach >= 1000
                     ? `${(totalReach / 1000).toFixed(1)}K`
                     : totalReach.toFixed(1)}
@@ -313,17 +313,17 @@ export function AmbassadorDashboard() {
           )}
         </Card>
 
-        <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#1D112A]/80 to-[#0B0B0D]/80">
+        <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#191922]/80 to-[#0B0B0D]/80">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
               <Heart className="w-5 h-5 text-purple-400" />
             </div>
             <div className="flex-1">
-              <p className="text-[#808c99] text-sm">{t.stats.engagement}</p>
+              <p className="text-[#8A8EA0] text-sm">{t.stats.engagement}</p>
               {isLoadingAmbassadorStats ? (
                 <Loader2 className="w-5 h-5 text-[#C59B48] animate-spin mt-1" />
               ) : (
-                <p className="text-2xl text-[#ffffff]">
+                <p className="text-2xl text-[#F2F2F3]">
                   {engagementRate > 0
                     ? `${engagementRate.toFixed(1)}%`
                     : "4.8%"}
@@ -339,17 +339,17 @@ export function AmbassadorDashboard() {
           )}
         </Card>
 
-        <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#1D112A]/80 to-[#0B0B0D]/80">
+        <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#191922]/80 to-[#0B0B0D]/80">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
               <Target className="w-5 h-5 text-green-400" />
             </div>
             <div className="flex-1">
-              <p className="text-[#808c99] text-sm">{t.stats.conversions}</p>
+              <p className="text-[#8A8EA0] text-sm">{t.stats.conversions}</p>
               {isLoadingAmbassadorStats ? (
                 <Loader2 className="w-5 h-5 text-[#C59B48] animate-spin mt-1" />
               ) : (
-                <p className="text-2xl text-[#ffffff]">{conversions || 0}</p>
+                <p className="text-2xl text-[#F2F2F3]">{conversions || 0}</p>
               )}
             </div>
           </div>
@@ -361,17 +361,17 @@ export function AmbassadorDashboard() {
           )}
         </Card>
 
-        <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#1D112A]/80 to-[#0B0B0D]/80">
+        <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#191922]/80 to-[#0B0B0D]/80">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
               <UserPlus className="w-5 h-5 text-amber-400" />
             </div>
             <div className="flex-1">
-              <p className="text-[#808c99] text-sm">{t.stats.totalReferrals}</p>
+              <p className="text-[#8A8EA0] text-sm">{t.stats.totalReferrals}</p>
               {isLoadingAmbassadorStats ? (
                 <Loader2 className="w-5 h-5 text-[#C59B48] animate-spin mt-1" />
               ) : (
-                <p className="text-2xl text-[#ffffff]">{totalReferrals}</p>
+                <p className="text-2xl text-[#F2F2F3]">{totalReferrals}</p>
               )}
             </div>
           </div>
@@ -428,11 +428,11 @@ export function AmbassadorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
         >
-          <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#1D112A]/80 to-[#0B0B0D]/80 h-full">
+          <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#191922]/80 to-[#0B0B0D]/80 h-full">
             <div className="flex items-center gap-2 mb-6">
               <BarChart3 className="w-6 h-6 text-cyan-400" />
-              <h3 className="text-2xl text-[#ffffff]">{t.socialMetrics.title}</h3>
-              <span className="ml-auto text-[#808c99] text-sm">
+              <h3 className="text-2xl text-[#F2F2F3]">{t.socialMetrics.title}</h3>
+              <span className="ml-auto text-[#8A8EA0] text-sm">
                 {t.socialMetrics.lastUpdated}
               </span>
             </div>
@@ -446,7 +446,7 @@ export function AmbassadorDashboard() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.4 + index * 0.05 }}
-                    className="p-5 rounded-lg glass border border-[#C59B48]/10 hover:border-[#C59B48]/30 transition-all bg-gradient-to-br from-[#0B0B0D]/50 to-[#1D112A]/50"
+                    className="p-5 rounded-lg glass border border-[#C59B48]/10 hover:border-[#C59B48]/30 transition-all bg-gradient-to-br from-[#0B0B0D]/50 to-[#191922]/50"
                   >
                     {/* Header Row */}
                     <div className="flex items-center gap-3 mb-4 pb-3 border-b border-[#C59B48]/10">
@@ -456,10 +456,10 @@ export function AmbassadorDashboard() {
                         <Icon className={`w-6 h-6 ${stat.iconColor}`} />
                       </div>
                       <div className="flex-1">
-                        <h4 className="text-[#ffffff] text-lg">
+                        <h4 className="text-[#F2F2F3] text-lg">
                           {stat.platform}
                         </h4>
-                        <p className="text-[#808c99] text-xs">
+                        <p className="text-[#8A8EA0] text-xs">
                           {stat.followers}
                         </p>
                       </div>
@@ -469,22 +469,22 @@ export function AmbassadorDashboard() {
                     {/* Metrics Grid - Tile Layout */}
                     <div className="grid grid-cols-3 gap-3">
                       <div className="p-3 rounded-lg bg-[#0B0B0D]/80 border border-[#C59B48]/10 text-center">
-                        <p className="text-[#808c99] text-xs mb-1">Followers</p>
-                        <p className="text-[#ffffff]">{stat.followers}</p>
+                        <p className="text-[#8A8EA0] text-xs mb-1">Followers</p>
+                        <p className="text-[#F2F2F3]">{stat.followers}</p>
                       </div>
 
                       <div className="p-3 rounded-lg bg-[#0B0B0D]/80 border border-[#C59B48]/10 text-center">
-                        <p className="text-[#808c99] text-xs mb-1">
+                        <p className="text-[#8A8EA0] text-xs mb-1">
                           {t.socialMetrics.engagement}
                         </p>
-                        <p className="text-[#ffffff]">{stat.engagement}</p>
+                        <p className="text-[#F2F2F3]">{stat.engagement}</p>
                       </div>
 
                       <div className="p-3 rounded-lg bg-[#0B0B0D]/80 border border-[#C59B48]/10 text-center">
-                        <p className="text-[#808c99] text-xs mb-1">
+                        <p className="text-[#8A8EA0] text-xs mb-1">
                           {t.socialMetrics.posts}
                         </p>
-                        <p className="text-[#ffffff]">{stat.posts}</p>
+                        <p className="text-[#F2F2F3]">{stat.posts}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -515,14 +515,14 @@ export function AmbassadorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45 }}
         >
-          <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#1D112A]/80 to-[#0B0B0D]/80 h-full">
+          <Card className="glass border-[#C59B48]/20 p-6 bg-gradient-to-br from-[#191922]/80 to-[#0B0B0D]/80 h-full">
             {/* Header */}
             <div
               className={`flex items-center gap-2 mb-6 ${isRTL ? "flex-row-reverse" : ""
                 }`}
             >
               <Share2 className="w-6 h-6 text-purple-400" />
-              <h2 className="text-2xl text-[#ffffff]">{t.referrals.title}</h2>
+              <h2 className="text-2xl text-[#F2F2F3]">{t.referrals.title}</h2>
             </div>
 
             <div className="space-y-4">
@@ -533,10 +533,10 @@ export function AmbassadorDashboard() {
               ) : (
                 <>
                   <div className="p-4 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30">
-                    <p className="text-[#808c99] text-sm mb-1">
+                    <p className="text-[#8A8EA0] text-sm mb-1">
                       {t.referrals.total}
                     </p>
-                    <p className="text-4xl text-[#ffffff] mb-2">
+                    <p className="text-4xl text-[#F2F2F3] mb-2">
                       {totalReferrals}
                     </p>
                     <div className="flex items-center gap-2 text-green-400 text-sm">
@@ -547,15 +547,15 @@ export function AmbassadorDashboard() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 rounded-lg bg-[#0B0B0D] border border-[#C59B48]/10">
-                      <p className="text-[#808c99] text-xs mb-1">
+                      <p className="text-[#8A8EA0] text-xs mb-1">
                         {t.referrals.active}
                       </p>
-                      <p className="text-2xl text-[#ffffff]">
+                      <p className="text-2xl text-[#F2F2F3]">
                         {activeReferrals || totalReferrals}
                       </p>
                     </div>
                     <div className="p-3 rounded-lg bg-[#0B0B0D] border border-[#C59B48]/10">
-                      <p className="text-[#808c99] text-xs mb-1">
+                      <p className="text-[#8A8EA0] text-xs mb-1">
                         {t.referrals.rewards}
                       </p>
                       <p className="text-2xl text-primary">
@@ -596,7 +596,7 @@ export function AmbassadorDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55 }}
         >
-          <Card className="glass border-[#C59B48]/30 p-6 bg-gradient-to-br from-[#C59B48]/10 via-amber-500/10 to-[#1D112A]/80 relative overflow-hidden">
+          <Card className="glass border-[#C59B48]/30 p-6 bg-gradient-to-br from-[#C59B48]/10 via-amber-500/10 to-[#191922]/80 relative overflow-hidden">
             {/* Decorative Background */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#C59B48]/10 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-500/10 rounded-full blur-3xl" />
@@ -607,10 +607,10 @@ export function AmbassadorDashboard() {
                   <Trophy className="w-5 h-5 text-[#C59B48]" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-sm text-[#ffffff]">
+                  <h3 className="text-sm text-[#F2F2F3]">
                     {t.leaderboard.title}
                   </h3>
-                  <p className="text-xs text-[#808c99]">
+                  <p className="text-xs text-[#8A8EA0]">
                     {language === "en"
                       ? `out of ${totalAmbassadors} ambassadors`
                       : `من أصل ${totalAmbassadors} سفير`}
@@ -625,7 +625,7 @@ export function AmbassadorDashboard() {
               ) : (
                 <>
                   <div className="text-center py-6 rounded-xl bg-gradient-to-br from-[#C59B48]/20 to-amber-500/20 border border-[#C59B48]/40 backdrop-blur-sm mb-4">
-                    <p className="text-[#808c99] text-xs mb-2">
+                    <p className="text-[#8A8EA0] text-xs mb-2">
                       {t.leaderboard.rank}
                     </p>
                     <motion.div

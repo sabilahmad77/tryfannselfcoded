@@ -74,9 +74,9 @@ export function ArtPreview({ language }: ArtPreviewProps) {
         >
           <h2 className="mb-4 text-4xl md:text-5xl font-heading">
             <span className="text-white">{t.title.white}</span>
-            <span className="text-[#ffcc33]">{t.title.gold}</span>
+            <span className="text-[#C59B48]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-4xl mx-auto text-lg font-body">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -111,7 +111,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
 
                   {/* Coming Soon Badge */}
                   <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[#ffcc33]/20 border border-[#ffcc33]/40 backdrop-blur-sm">
-                    <span className="text-[#ffcc33] text-xs font-medium">{t.placeholder.comingSoon}</span>
+                    <span className="text-[#C59B48] text-xs font-medium">{t.placeholder.comingSoon}</span>
                   </div>
                 </div>
 
@@ -123,7 +123,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
                   </h3>
 
                   {/* Estimated Value */}
-                  <div className="flex items-center gap-2 text-[#ffcc33] text-sm font-body">
+                  <div className="flex items-center gap-2 text-[#C59B48] text-sm font-body">
                     <DollarSign className="w-4 h-4" />
                     <span>{artwork.value}</span>
                   </div>
@@ -132,7 +132,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
                 {/* Hover Glow Effect */}
                 <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#ffcc33]/10 via-transparent to-transparent" />
-                  <div className="absolute inset-0 rounded-2xl border-2 border-[#ffcc33]/30" />
+                  <div className="absolute inset-0 rounded-2xl border-2 border-[#C59B48]/22" />
                 </div>
               </div>
             </motion.div>

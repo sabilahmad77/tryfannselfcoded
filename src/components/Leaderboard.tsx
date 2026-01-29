@@ -271,11 +271,11 @@ export function Leaderboard({
           </motion.div>
         );
       case 2:
-        return <Medal className="w-6 h-6 text-white/60" />;
+        return <Medal className="w-6 h-6 text-[#B9BBC6]" />;
       case 3:
         return <Medal className="w-6 h-6 text-orange-500" />;
       default:
-        return <span className="text-white/60">#{rank}</span>;
+        return <span className="text-[#B9BBC6]">#{rank}</span>;
     }
   };
 
@@ -286,7 +286,7 @@ export function Leaderboard({
       return "border-orange-500/50 text-orange-400 bg-orange-500/10";
     if (tier.includes("Curator") || tier.includes("منسق"))
       return "border-yellow-500/50 text-yellow-400 bg-yellow-500/10";
-    return "border-white/10 text-white/60 bg-white/5";
+    return "border-white/10 text-[#B9BBC6] bg-white/5";
   };
 
   const getPersonaIcon = (type: string) => {
@@ -310,7 +310,7 @@ export function Leaderboard({
       return "border-pink-500/50 text-pink-400 bg-pink-500/10";
     if (lowerType.includes("ambassador") || lowerType.includes("سفير"))
       return "border-orange-500/50 text-orange-400 bg-orange-500/10";
-    return "border-white/20 text-white/60 bg-white/5";
+    return "border-white/20 text-[#B9BBC6] bg-white/5";
   };
 
   return (
@@ -347,7 +347,7 @@ export function Leaderboard({
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#C59B48]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-4xl mx-auto text-lg font-body">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -377,7 +377,7 @@ export function Leaderboard({
                   whileTap={{ scale: 0.95 }}
                   className={`px-8 py-3 rounded-full transition-all duration-300 ${isActive
                       ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black shadow-lg shadow-amber-500/50"
-                      : "glass border border-white/10 text-white/60 hover:text-white hover:border-amber-500/50"
+                      : "glass border border-white/10 text-[#B9BBC6] hover:text-white hover:border-amber-500/50"
                     }`}
                 >
                   {tab}
@@ -393,7 +393,7 @@ export function Leaderboard({
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 relative overflow-hidden shadow-xl shadow-[#C59B48]/20"
+              className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/80 via-[#191922]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 relative overflow-hidden shadow-xl shadow-[#C59B48]/20"
             >
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-[#C59B48]/15 via-[#45e3d3]/15 to-[#C59B48]/15"
@@ -419,7 +419,7 @@ export function Leaderboard({
                       </span>
                       {yourPoints !== null && yourPoints !== undefined ? (
                         <>
-                          <span className="text-white/60">•</span>
+                          <span className="text-[#B9BBC6]">•</span>
                           <span className="text-white text-lg">
                             {(yourPoints as number).toLocaleString()} points
                           </span>
@@ -427,7 +427,7 @@ export function Leaderboard({
                       ) : null}
                     </>
                   ) : (
-                    <span className="text-white/60 text-lg">
+                    <span className="text-[#B9BBC6] text-lg">
                       {language === "en" ? "Not ranked yet" : "غير مصنف بعد"}
                     </span>
                   )}
@@ -442,7 +442,7 @@ export function Leaderboard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/75 via-[#1D112A]/65 to-[#0B0B0D]/75 border-2 border-[#C59B48]/40 overflow-hidden shadow-2xl shadow-[#C59B48]/20"
+            className="rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/75 via-[#191922]/65 to-[#0B0B0D]/75 border-2 border-[#C59B48]/40 overflow-hidden shadow-2xl shadow-[#C59B48]/20"
           >
             {/* Loading & Error States */}
             {isLoading && (
@@ -468,7 +468,7 @@ export function Leaderboard({
 
             {!isLoading && !leaders.length && (
               <div className="flex items-center justify-center py-10">
-                <span className="text-white/60 text-sm">
+                <span className="text-[#B9BBC6] text-sm">
                   {language === "en"
                     ? "No leaderboard data available yet."
                     : "لا توجد بيانات للوحة المتصدرين حتى الآن."}
@@ -506,12 +506,12 @@ export function Leaderboard({
 
                       <div className="flex-1 min-w-0">
                         <div className="text-white truncate">{leader.name}</div>
-                        <div className="text-white/60 text-sm flex items-center gap-2">
+                        <div className="text-[#B9BBC6] text-sm flex items-center gap-2">
                           {leader.username}
                           {isAuthenticated && (
                             <>
                               <span className="text-white/40">•</span>
-                              <span className="text-white/60">
+                              <span className="text-[#B9BBC6]">
                                 {getFollowerCount(leader.username)} followers
                               </span>
                             </>
@@ -572,13 +572,13 @@ export function Leaderboard({
                       {t.columns.map((column, index) => (
                         <th
                           key={index}
-                          className="px-8 py-5 text-left text-white/60 text-sm"
+                          className="px-8 py-5 text-left text-[#B9BBC6] text-sm"
                         >
                           {column}
                         </th>
                       ))}
                       {isAuthenticated && (
-                        <th className="px-8 py-5 text-left text-white/60 text-sm">
+                        <th className="px-8 py-5 text-left text-[#B9BBC6] text-sm">
                           {/* Follow column header - empty for now */}
                         </th>
                       )}
@@ -618,12 +618,12 @@ export function Leaderboard({
                             </Avatar>
                             <div>
                               <div className="text-white">{leader.name}</div>
-                              <div className="text-white/60 text-sm flex items-center gap-2">
+                              <div className="text-[#B9BBC6] text-sm flex items-center gap-2">
                                 {leader.username}
                                 {isAuthenticated && (
                                   <>
                                     <span className="text-white/40">•</span>
-                                    <span className="text-white/60">
+                                    <span className="text-[#B9BBC6]">
                                       {getFollowerCount(leader.username)}{" "}
                                       followers
                                     </span>

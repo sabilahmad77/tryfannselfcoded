@@ -285,7 +285,7 @@ export function PersonaDetailsModal({
           </div>
         </motion.div>
         <h2
-          className={`text-2xl text-[#ffffff] flex-1 ${
+          className={`text-2xl text-[#F2F2F3] flex-1 ${
             isRTL ? "text-right" : "text-left"
           }`}
         >
@@ -295,7 +295,7 @@ export function PersonaDetailsModal({
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className="text-[#808c99] hover:text-[#ffffff] hover:bg-[#1D112A] transition-colors cursor-pointer"
+          className="text-[#8A8EA0] hover:text-[#F2F2F3] hover:bg-[#191922] transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </Button>
@@ -344,7 +344,7 @@ export function PersonaDetailsModal({
       size="xl"
       maxHeight="max-h-[90vh]"
       showCloseButton={false}
-      contentClassName="p-6 bg-[#1D112A]"
+      contentClassName="p-6 bg-[#191922]"
       className="border border-[#4e4e4e78]"
     >
       <div className="space-y-6">
@@ -358,7 +358,7 @@ export function PersonaDetailsModal({
           <h3 className="text-3xl sm:text-4xl text-white font-bold mb-3">
             {personaData.headline}
           </h3>
-          <p className="text-white/60 text-base sm:text-lg">
+          <p className="text-[#B9BBC6] text-base sm:text-lg">
             {personaData.sub}
           </p>
         </motion.div>
@@ -424,7 +424,7 @@ export function PersonaDetailsModal({
                   className="w-1.5 h-1.5 rounded-full shrink-0"
                   style={{ backgroundColor: personaData.accentColor }}
                 />
-                <span className="text-white/60 text-sm">{item}</span>
+                <span className="text-[#B9BBC6] text-sm">{item}</span>
               </motion.li>
             ))}
           </ul>

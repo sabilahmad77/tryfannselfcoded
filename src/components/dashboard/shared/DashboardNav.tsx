@@ -245,7 +245,7 @@ export function DashboardNav({
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-[#ffffff] p-2 hover:text-[#C59B48] hover:bg-[#C59B48]/10 rounded-lg transition-all cursor-pointer"
+            className="text-[#F2F2F3] p-2 hover:text-[#C59B48] hover:bg-[#C59B48]/10 rounded-lg transition-all cursor-pointer"
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6" />
@@ -280,7 +280,7 @@ export function DashboardNav({
                         }}
                         className={`justify-start gap-3 transition-all duration-200 cursor-pointer ${isActive
                             ? "bg-[#C59B48]/20 text-[#C59B48] border border-[#C59B48]/30"
-                            : "text-[#808c99] hover:text-[#C59B48] hover:bg-[#C59B48]/20"
+                            : "text-[#8A8EA0] hover:text-[#C59B48] hover:bg-[#C59B48]/20"
                           }`}
                       >
                         <Icon className="w-5 h-5" />
@@ -307,7 +307,7 @@ export function DashboardNav({
                         }}
                         className={`justify-start gap-3 transition-all duration-200 cursor-pointer ${isActive
                             ? "bg-[#C59B48]/20 text-[#C59B48] border border-[#C59B48]/30"
-                            : "text-[#808c99] hover:text-[#C59B48] hover:bg-[#C59B48]/20"
+                            : "text-[#8A8EA0] hover:text-[#C59B48] hover:bg-[#C59B48]/20"
                           }`}
                       >
                         <Icon className="w-5 h-5" />
@@ -323,7 +323,7 @@ export function DashboardNav({
                     handleLogout();
                     setMobileMenuOpen(false);
                   }}
-                  className="justify-start gap-3 text-[#808c99] hover:text-destructive hover:bg-destructive/20 transition-all duration-200 cursor-pointer"
+                  className="justify-start gap-3 text-[#8A8EA0] hover:text-destructive hover:bg-destructive/20 transition-all duration-200 cursor-pointer"
                 >
                   <LogOut className="w-5 h-5" />
                   {t.logout}
@@ -367,7 +367,7 @@ export function DashboardNav({
               onClick={() => setIsCollapsed(!isCollapsed)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className={`${isCollapsed ? 'mx-auto' : ''} p-2 rounded-lg text-[#808c99]/60 hover:text-[#C59B48] hover:bg-[#C59B48]/10 transition-all cursor-pointer`}
+              className={`${isCollapsed ? 'mx-auto' : ''} p-2 rounded-lg text-[#8A8EA0]/60 hover:text-[#C59B48] hover:bg-[#C59B48]/10 transition-all cursor-pointer`}
               title={isCollapsed ? t.expand : t.collapse}
             >
               {isRTL ? (
@@ -405,8 +405,8 @@ export function DashboardNav({
                 exit={{ opacity: 0 }}
                 className="flex flex-col overflow-hidden"
               >
-                <span className="text-[#ffffff] truncate">{userName}</span>
-                <span className="text-[#808c99]/60 text-sm">
+                <span className="text-[#F2F2F3] truncate">{userName}</span>
+                <span className="text-[#8A8EA0]/60 text-sm">
                   {getUserRole()}
                 </span>
               </motion.div>
@@ -429,7 +429,7 @@ export function DashboardNav({
                   whileTap={{ scale: 0.98 }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer ${isActive
                       ? "bg-primary/20 text-primary border border-primary/30"
-                      : "text-[#808c99] hover:text-primary hover:bg-primary/10"
+                      : "text-[#8A8EA0] hover:text-primary hover:bg-primary/10"
                     } ${isCollapsed ? "justify-center" : ""}`}
                   style={{ pointerEvents: "auto" }}
                 >
@@ -469,7 +469,7 @@ export function DashboardNav({
                     whileTap={{ scale: isActive ? 1 : 0.98 }}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all cursor-pointer ${isActive
                         ? "bg-primary/20 text-primary border border-primary/30"
-                        : "text-[#808c99] hover:text-primary hover:bg-primary/10"
+                        : "text-[#8A8EA0] hover:text-primary hover:bg-primary/10"
                       } ${isCollapsed ? "justify-center" : ""}`}
                     style={{ pointerEvents: "auto" }}
                   >
@@ -496,7 +496,7 @@ export function DashboardNav({
             onClick={handleLogout}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#808c99] hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer ${isCollapsed ? "justify-center" : ""
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#8A8EA0] hover:text-destructive hover:bg-destructive/10 transition-all cursor-pointer ${isCollapsed ? "justify-center" : ""
               }`}
             style={{ pointerEvents: "auto" }}
           >

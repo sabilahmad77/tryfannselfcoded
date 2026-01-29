@@ -94,8 +94,8 @@ export function RecommendedArtworks() {
           <Sparkles className="w-5 h-5 text-[#0B0B0D]" />
         </div>
         <div className={isRTL ? "text-right" : "text-left"}>
-          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
-          <p className="text-sm text-[#808c99]/70">{t.subtitle}</p>
+          <h2 className="text-2xl text-[#F2F2F3]">{t.title}</h2>
+          <p className="text-sm text-[#8A8EA0]/70">{t.subtitle}</p>
         </div>
       </div>
 
@@ -110,7 +110,7 @@ export function RecommendedArtworks() {
             className="glass rounded-xl overflow-hidden border border-[#4e4e4e78] hover:border-[#C59B48]/30 transition-all group"
           >
             {/* Image */}
-            <div className="relative h-48 bg-gradient-to-br from-[#1D112A] to-[#0B0B0D]">
+            <div className="relative h-48 bg-gradient-to-br from-[#191922] to-[#0B0B0D]">
               <div className="absolute inset-0 bg-[#C59B48]/5 group-hover:bg-[#C59B48]/10 transition-colors" />
               <div className="absolute top-3 right-3 z-10">
                 <Badge className="bg-[#45e3d3] text-[#0B0B0D] border-0">
@@ -118,19 +118,19 @@ export function RecommendedArtworks() {
                 </Badge>
               </div>
               <button className="absolute top-3 left-3 z-10 w-8 h-8 rounded-full glass border border-[#4e4e4e78] flex items-center justify-center hover:border-[#C59B48]/50 hover:bg-[#C59B48]/20 hover:scale-110 transition-all duration-200 cursor-pointer">
-                <Heart className="w-4 h-4 text-[#ffffff]" />
+                <Heart className="w-4 h-4 text-[#F2F2F3]" />
               </button>
             </div>
 
             {/* Content */}
             <div className="p-4">
               <h3
-                className={`text-[#ffffff] mb-1 ${isRTL ? "text-right" : "text-left"}`}
+                className={`text-[#F2F2F3] mb-1 ${isRTL ? "text-right" : "text-left"}`}
               >
                 {artwork.title}
               </h3>
               <p
-                className={`text-sm text-[#808c99]/70 mb-3 ${
+                className={`text-sm text-[#8A8EA0]/70 mb-3 ${
                   isRTL ? "text-right" : "text-left"
                 }`}
               >
@@ -144,7 +144,7 @@ export function RecommendedArtworks() {
               >
                 <span className="text-[#C59B48]">{artwork.price}</span>
                 <div
-                  className={`flex items-center gap-3 text-xs text-[#808c99]/70 ${
+                  className={`flex items-center gap-3 text-xs text-[#8A8EA0]/70 ${
                     isRTL ? "flex-row-reverse" : ""
                   }`}
                 >
