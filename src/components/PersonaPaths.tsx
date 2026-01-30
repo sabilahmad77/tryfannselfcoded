@@ -7,8 +7,6 @@ import {
   ArrowRight,
   CheckCircle2,
 } from "lucide-react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
-import bgImage from "figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png";
 
 interface PersonaPathsProps {
   language: "en" | "ar";
@@ -244,24 +242,13 @@ export function PersonaPaths({
 
   return (
     <section
-      className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full"
+      className="relative py-16 overflow-hidden w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      {/* Abstract Art Background Pattern */}
-      <div className="absolute inset-0">
-        <ImageWithFallback
-          src={bgImage}
-          alt="Abstract Art Pattern"
-          className="w-full h-full object-cover opacity-80"
-          style={{ transform: "scaleY(-1)" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/40 via-transparent to-[#0B0B0D]/40" />
-      </div>
-
-      {/* Background gradient mesh */}
+      {/* Subtle background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#C59B48]/15 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#fbbf24]/15 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#C59B48]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-[#C59B48]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -272,11 +259,11 @@ export function PersonaPaths({
           transition={{ duration: 0.6 }}
           className="text-center mb-12 sm:mb-16 lg:mb-20"
         >
-          <h2 className="mb-3 sm:mb-4 text-3xl sm:text-4xl md:text-5xl font-heading">
-            <span className="text-white font-heading">{t.title.white}</span>
-            <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
+          <h2 className="mb-3 sm:mb-4 text-3xl sm:text-4xl md:text-5xl font-heading font-semibold">
+            <span className="text-[#F2F2F3] font-heading font-semibold">{t.title.white}</span>
+            <span className="text-[#C59B48] font-heading font-semibold">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-base sm:text-lg px-4 font-body">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-base sm:text-lg px-4 font-body font-normal">
             {t.subtitle}
           </p>
         </motion.div>
@@ -302,45 +289,18 @@ export function PersonaPaths({
               >
                 {/* Main Card Container */}
                 <div className="relative h-full rounded-3xl overflow-hidden">
-                  {/* Animated Border Gradient */}
-                  <motion.div
-                    className="absolute inset-0 rounded-3xl p-0.5"
-                    style={{
-                      background: `linear-gradient(135deg, ${persona.accentColor}40, transparent, ${persona.accentColor}40)`,
-                    }}
-                    animate={{
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      duration: 8,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  >
-                    <div className="w-full h-full rounded-3xl bg-[#0B0B0D]" />
-                  </motion.div>
 
                   {/* Card Content */}
-                  <div className="relative backdrop-blur-2xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 rounded-3xl overflow-hidden h-full">
-                    {/* Glass Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-transparent to-transparent" />
-
-                    {/* Scan Line Effect */}
-                    <motion.div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100"
-                      initial={{ backgroundPosition: "0% 0%" }}
-                      whileHover={{
-                        backgroundPosition: ["0% 0%", "0% 100%"],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                      style={{
-                        background: `linear-gradient(180deg, transparent 0%, ${persona.accentColor}15 50%, transparent 100%)`,
-                        backgroundSize: "100% 50px",
-                      }}
+                  <div 
+                    className="relative bg-[#191922] rounded-3xl overflow-hidden h-full border border-[#2A2A3A] group/card transition-all duration-300"
+                    style={{ 
+                      boxShadow: '0 0 0 1px rgba(197,155,72,0), 0 18px 60px rgba(0,0,0,0.55)'
+                    }}
+                  >
+                    {/* Hover Glow Effect */}
+                    <div 
+                      className="absolute inset-0 rounded-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none" 
+                      style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)' }} 
                     />
 
                     {/* Main Content */}
@@ -375,19 +335,19 @@ export function PersonaPaths({
                         </motion.div>
 
                         {/* Name */}
-                        <h3 className="text-white text-lg sm:text-xl md:text-2xl font-heading text-center">
+                        <h3 className="text-[#F2F2F3] text-lg sm:text-xl md:text-2xl font-heading font-semibold text-center">
                           {persona.name}
                         </h3>
                       </div>
 
                       {/* Divider */}
-                      <div className="h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mb-4 sm:mb-6" />
+                      <div className="h-px bg-[#2A2A3A] mb-4 sm:mb-6" />
 
                       {/* Two Column Layout: Benefits Left, Earn Points By Right */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6 flex-1">
                         {/* Left Column - Founder Benefits */}
                         <div className="min-w-0">
-                          <h4 className="text-white/90 text-xs sm:text-sm font-semibold mb-2 sm:mb-3 font-body">
+                          <h4 className="text-[#F2F2F3] text-xs sm:text-sm font-medium mb-2 sm:mb-3 font-body">
                             {language === "en" ? "Founder Benefits" : "فوائد المؤسس"}
                           </h4>
                           <ul className="space-y-1.5 sm:space-y-2">
@@ -400,10 +360,9 @@ export function PersonaPaths({
                                   className="flex items-start gap-1.5 sm:gap-2"
                                 >
                                   <CheckCircle2
-                                    className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 mt-0.5"
-                                    style={{ color: persona.accentColor }}
+                                    className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 mt-0.5 text-[#C59B48]"
                                   />
-                                  <span className="text-white/70 text-xs leading-relaxed font-body break-words">
+                                  <span className="text-[#B9BBC6] text-xs leading-relaxed font-body font-normal break-words">
                                     {capitalizedText}
                                   </span>
                                 </li>
@@ -414,7 +373,7 @@ export function PersonaPaths({
 
                         {/* Right Column - How to Earn Points */}
                         <div className="min-w-0">
-                          <h4 className="text-white/90 text-xs sm:text-sm font-semibold mb-2 sm:mb-3 font-body">
+                          <h4 className="text-[#F2F2F3] text-xs sm:text-sm font-medium mb-2 sm:mb-3 font-body">
                             {language === "en" ? "How to Earn Points" : "كيفية كسب النقاط"}
                           </h4>
                           <ul className="space-y-1.5 sm:space-y-2">
@@ -426,10 +385,9 @@ export function PersonaPaths({
                                   className="flex items-start gap-1.5 sm:gap-2"
                                 >
                                   <div
-                                    className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5"
-                                    style={{ backgroundColor: persona.accentColor }}
+                                    className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5 bg-[#C59B48]"
                                   />
-                                  <span className="text-[#B9BBC6] text-xs leading-relaxed font-body break-words">
+                                  <span className="text-[#B9BBC6] text-xs leading-relaxed font-body font-normal break-words">
                                     {capitalizedText}
                                   </span>
                                 </li>
@@ -451,7 +409,7 @@ export function PersonaPaths({
                       >
                         {/* Button Background */}
                         <div
-                          className={`absolute inset-0 bg-gradient-to-r ${persona.gradient} opacity-100 group-hover/btn:opacity-100 transition-opacity`}
+                          className="absolute inset-0 bg-[#C59B48] group-hover/btn:bg-[#D6AE5A] transition-colors"
                         />
 
                         {/* Shimmer Effect */}
@@ -464,31 +422,18 @@ export function PersonaPaths({
 
                         {/* Button Content */}
                         <div className="relative px-4 py-2.5 sm:px-5 sm:py-3 md:px-6 md:py-3.5 flex items-center justify-center gap-2">
-                          <span className="text-white text-xs sm:text-sm md:text-base font-body text-center">
+                          <span className="text-[#0B0B0D] text-xs sm:text-sm md:text-base font-body font-medium text-center">
                             {persona.cta}
                           </span>
                           <motion.div
                             animate={{ x: [0, 4, 0] }}
                             transition={{ duration: 1.5, repeat: Infinity }}
                           >
-                            <ArrowRight className={`w-4 h-4 sm:w-5 sm:h-5 text-white ${isRTL ? 'rotate-180' : ''}`} />
+                            <ArrowRight className={`w-4 h-4 sm:w-5 sm:h-5 text-[#0B0B0D] ${isRTL ? 'rotate-180' : ''}`} />
                           </motion.div>
                         </div>
                       </motion.button>
 
-                      {/* Bottom Corner Accent */}
-                      <motion.div
-                        className={`absolute -bottom-12 sm:-bottom-16 -right-12 sm:-right-16 w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br ${persona.gradient} opacity-15 blur-3xl`}
-                        animate={{
-                          scale: [1, 1.3, 1],
-                          rotate: [0, 90, 0],
-                        }}
-                        transition={{
-                          duration: 8,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        }}
-                      />
                     </div>
                   </div>
                 </div>

@@ -3,8 +3,6 @@ import { motion } from 'motion/react';
 import { Share2, Copy, Check, Users, Sparkles, Twitter, Instagram, Linkedin, Video, Award, Zap, Trophy, Target, ArrowUpRight } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
 // import fannLogo from 'figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import bgImage from 'figma:asset/18b1d776f4ce826bfa3453d71d5a597f3dc3dd2b.png';
 
 interface ReferralModuleProps {
   language: 'en' | 'ar';
@@ -145,21 +143,11 @@ export function ReferralModule({ language }: ReferralModuleProps) {
   };
 
   return (
-    <section className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Abstract Art Background Pattern */}
-      <div className="absolute inset-0">
-        <ImageWithFallback
-          src={bgImage}
-          alt="Abstract Art Pattern"
-          className="w-full h-full object-cover opacity-70"
-          style={{ transform: 'rotate(270deg) scale(1.1)' }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/45 via-transparent to-[#0B0B0D]/50" />
-      </div>
-      {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-amber-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-[600px] h-[600px] bg-yellow-500/20 rounded-full blur-3xl" />
+    <section className="relative py-16 overflow-hidden w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Subtle background effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-[#C59B48]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/3 w-[600px] h-[600px] bg-[#C59B48]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl w-full">
@@ -180,11 +168,11 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             <img src={fannLogo} alt="FANN" className="h-5 w-auto" />
             <span className="text-amber-300 text-sm">{t.badge}</span>
           </motion.div> */}
-          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-3xl mx-auto font-heading px-2 sm:px-0">
-            <span className="text-white font-heading">{t.title.white}</span>
-            <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
+          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-3xl mx-auto font-heading font-semibold px-2 sm:px-0">
+            <span className="text-[#F2F2F3] font-heading font-semibold">{t.title.white}</span>
+            <span className="text-[#C59B48] font-heading font-semibold">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body px-4 sm:px-0">{t.subtitle}</p>
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body font-normal px-4 sm:px-0">{t.subtitle}</p>
         </motion.div>
 
         {/* Featured Code Card - Minimal Modern */}
@@ -194,7 +182,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
           viewport={{ once: true }}
           className="mb-8"
         >
-          <div className="p-4 sm:p-6 md:p-8 lg:p-12 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/80 via-[#191922]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 relative overflow-hidden shadow-2xl shadow-[#C59B48]/30">
+          <div className="p-4 sm:p-6 md:p-8 lg:p-12 rounded-2xl bg-[#191922] border border-[rgba(197,155,72,0.22)] relative overflow-hidden shadow-2xl" style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)' }}>
             {/* Gradient top accent */}
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#C59B48] to-transparent" />
             
@@ -288,12 +276,21 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             transition={{ delay: 0.2 }}
             className="lg:col-span-1"
           >
-            <div className="p-4 sm:p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/70 via-[#191922]/60 to-[#0B0B0D]/70 border-2 border-[#C59B48]/40 h-full shadow-xl hover:shadow-[#C59B48]/30 transition-shadow duration-300 overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#C59B48]/5 via-transparent to-[#45e3d3]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div 
+              className="p-4 sm:p-6 rounded-2xl bg-[#191922] border border-[#2A2A3A] h-full group/card transition-all duration-300 overflow-hidden"
+              style={{ 
+                boxShadow: '0 0 0 1px rgba(197,155,72,0), 0 18px 60px rgba(0,0,0,0.55)'
+              }}
+            >
+              {/* Hover Glow Effect */}
+              <div 
+                className="absolute inset-0 rounded-2xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none" 
+                style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)' }} 
+              />
               
               <div className="flex items-center gap-2 mb-4 sm:mb-6 relative z-10">
                 <Target className="w-4 h-4 sm:w-5 sm:h-5 text-[#C59B48]" />
-                <h3 className="text-white text-base sm:text-lg font-heading">{t.process.title}</h3>
+                <h3 className="text-[#F2F2F3] text-base sm:text-lg font-heading font-semibold">{t.process.title}</h3>
               </div>
               <div className="space-y-3 sm:space-y-4 relative z-10">
                 {t.process.steps.map((step, index) => {
@@ -306,14 +303,14 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                       viewport={{ once: true }}
                       transition={{ delay: 0.3 + index * 0.1 }}
                       whileHover={{ scale: 1.02, x: 4 }}
-                      className="flex items-center gap-4 p-3 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#191922]/50 to-[#0B0B0D]/50 border border-[#C59B48]/20 hover:border-[#C59B48]/50 transition-all"
+                      className="flex items-center gap-4 p-3 rounded-xl bg-[#222231] border border-[#2A2A3A] hover:border-[rgba(197,155,72,0.22)] transition-all"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#C59B48]/40 to-[#45e3d3]/40 flex items-center justify-center shrink-0 shadow-lg border border-[#C59B48]/30">
+                      <div className="w-10 h-10 rounded-lg bg-[#191922] flex items-center justify-center shrink-0 border border-[#C59B48]/30">
                         <Icon className="w-5 h-5 text-[#C59B48]" />
                       </div>
                       <div>
-                        <div className="text-white text-sm mb-1 font-body">{step.title}</div>
-                        <div className="text-[#B9BBC6] text-xs font-body">{step.desc}</div>
+                        <div className="text-[#F2F2F3] text-sm mb-1 font-body font-medium">{step.title}</div>
+                        <div className="text-[#B9BBC6] text-xs font-body font-normal">{step.desc}</div>
                       </div>
                     </motion.div>
                   );
@@ -330,26 +327,30 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             transition={{ delay: 0.3 }}
             className="lg:col-span-1"
           >
-            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/70 via-[#191922]/60 to-[#0B0B0D]/70 border-2 border-[#C59B48]/40 h-full shadow-xl hover:shadow-[#C59B48]/30 transition-shadow duration-300 overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#C59B48]/5 via-transparent to-[#45e3d3]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div 
+              className="p-6 rounded-2xl bg-[#191922] border border-[#2A2A3A] h-full group/card transition-all duration-300 overflow-hidden"
+              style={{ 
+                boxShadow: '0 0 0 1px rgba(197,155,72,0), 0 18px 60px rgba(0,0,0,0.55)'
+              }}
+            >
+              {/* Hover Glow Effect */}
+              <div 
+                className="absolute inset-0 rounded-2xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none" 
+                style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)' }} 
+              />
               
               <div className="flex items-center gap-2 mb-6 relative z-10">
                 <Zap className="w-5 h-5 text-[#C59B48]" />
-                <h3 className="text-white text-lg font-heading">{t.earnings.title}</h3>
+                <h3 className="text-[#F2F2F3] text-lg font-heading font-semibold">{t.earnings.title}</h3>
               </div>
 
-              {/* Current Rate Highlight - Reduced glow */}
-              <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-[#C59B48]/20 to-[#45e3d3]/20 border-2 border-[#C59B48]/40 text-center shadow-md shadow-[#C59B48]/5 relative z-10 overflow-hidden">
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                  animate={{ x: ['-100%', '100%'] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                />
-                <div className="text-[#B9BBC6] text-xs mb-1">{t.earnings.current.label}</div>
-                <div className="text-4xl bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent mb-1">
+              {/* Current Rate Highlight */}
+              <div className="mb-6 p-4 rounded-xl bg-[#222231] border border-[rgba(197,155,72,0.22)] text-center relative z-10">
+                <div className="text-[#8A8EA0] text-xs mb-1 font-body font-medium">{t.earnings.current.label}</div>
+                <div className="text-4xl text-[#C59B48] mb-1 font-heading font-semibold">
                   {t.earnings.current.value}
                 </div>
-                <div className="text-amber-300 text-sm">{t.earnings.current.unit}</div>
+                <div className="text-[#B9BBC6] text-sm font-body font-normal">{t.earnings.current.unit}</div>
               </div>
 
               {/* Tiers */}
@@ -394,12 +395,21 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             transition={{ delay: 0.4 }}
             className="lg:col-span-1"
           >
-            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/70 via-[#191922]/60 to-[#0B0B0D]/70 border-2 border-[#45e3d3]/40 h-full shadow-xl hover:shadow-[#45e3d3]/30 transition-shadow duration-300 overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#45e3d3]/5 via-transparent to-[#C59B48]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div 
+              className="p-6 rounded-2xl bg-[#191922] border border-[#2A2A3A] h-full group/card transition-all duration-300 overflow-hidden"
+              style={{ 
+                boxShadow: '0 0 0 1px rgba(197,155,72,0), 0 18px 60px rgba(0,0,0,0.55)'
+              }}
+            >
+              {/* Hover Glow Effect */}
+              <div 
+                className="absolute inset-0 rounded-2xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none" 
+                style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)' }} 
+              />
               
               <div className="flex items-center gap-2 mb-6 relative z-10">
-                <Award className="w-5 h-5 text-[#45e3d3]" />
-                <h3 className="text-white text-lg font-heading">{t.milestones.title}</h3>
+                <Award className="w-5 h-5 text-[#C59B48]" />
+                <h3 className="text-[#F2F2F3] text-lg font-heading font-semibold">{t.milestones.title}</h3>
               </div>
 
               <div className="grid grid-cols-2 gap-3 relative z-10">

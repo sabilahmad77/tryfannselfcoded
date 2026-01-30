@@ -7,8 +7,6 @@ import {
   Crown,
   Award,
 } from "lucide-react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
-import bgImage from "figma:asset/3fa9b9de7e4b1421a708a7c88cd0672cee3504e2.png";
 import { useGetProgressionQuery } from "@/services/api/dashboardApi";
 
 interface RewardsTiersProps {
@@ -262,24 +260,13 @@ export function RewardsTiers({
 
   return (
     <section
-      className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full"
+      className="relative py-16 overflow-hidden w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      {/* Abstract Art Background Pattern */}
-      <div className="absolute inset-0">
-        <ImageWithFallback
-          src={bgImage}
-          alt="Abstract Art Pattern"
-          className="w-full h-full object-cover opacity-70"
-          style={{ transform: "scale(1.15)" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D] via-[#0B0B0D]/95 to-[#0B0B0D]" />
-      </div>
-
-      {/* Background effects */}
+      {/* Subtle background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-[#C59B48]/8 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-[#45e3d3]/8 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-[#C59B48]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-[#45e3d3]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -324,11 +311,11 @@ export function RewardsTiers({
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading px-2 sm:px-0">
-            <span className="text-white font-heading">{t.title.white}</span>
-            <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
+          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-semibold px-2 sm:px-0">
+            <span className="text-[#F2F2F3] font-heading font-semibold">{t.title.white}</span>
+            <span className="text-[#C59B48] font-heading font-semibold">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg lg:text-xl font-body px-4 sm:px-0">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg lg:text-xl font-body font-normal px-4 sm:px-0">
             {t.subtitle}
           </p>
         </motion.div>
@@ -421,12 +408,12 @@ export function RewardsTiers({
                             </div>
 
                             {/* Tier Name */}
-                            <h3 className="text-white text-center text-xl mb-2 font-heading">
+                            <h3 className="text-[#F2F2F3] text-center text-xl mb-2 font-heading font-semibold">
                               {tier.name}
                             </h3>
 
                             {/* Points */}
-                            <div className="text-center mb-6 text-sm text-white/80 font-semibold font-body">
+                            <div className="text-center mb-6 text-sm text-[#B9BBC6] font-medium font-body">
                               {tier.points} pts
                             </div>
 
@@ -438,7 +425,7 @@ export function RewardsTiers({
                                   className="flex items-start gap-2 text-[#B9BBC6] text-xs"
                                 >
                                   <Check className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#B9BBC6]" />
-                                  <span className="leading-tight font-body">
+                                  <span className="leading-tight font-body font-normal">
                                     {benefit}
                                   </span>
                                 </li>
@@ -730,7 +717,7 @@ export function RewardsTiers({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
             onClick={onNavigateToSignUp}
-            className="px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-xl bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer text-sm sm:text-base"
+            className="px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-xl bg-[#C59B48] hover:bg-[#D6AE5A] active:bg-[#A98237] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer text-sm sm:text-base font-body font-medium"
           >
             <span>{t.startJourney}</span>
             <ChevronRight className={`w-4 h-4 sm:w-5 sm:h-5 ${isRTL ? 'rotate-180' : ''}`} />

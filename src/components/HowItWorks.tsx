@@ -1,7 +1,5 @@
 import { motion } from 'motion/react';
 import { UserPlus, Trophy, Award, Zap } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import bgImage from 'figma:asset/3fa9b9de7e4b1421a708a7c88cd0672cee3504e2.png';
 
 interface HowItWorksProps {
   language: 'en' | 'ar';
@@ -95,22 +93,11 @@ export function HowItWorks({ language }: HowItWorksProps) {
   const isRTL = language === 'ar';
 
   return (
-    <section className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Abstract Art Background Pattern */}
-      <div className="absolute inset-0">
-        <ImageWithFallback
-          src={bgImage}
-          alt="Abstract Art Pattern"
-          className="w-full h-full object-cover opacity-80"
-          style={{ transform: 'scaleX(-1)' }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/35 via-transparent to-[#0B0B0D]/45" />
-      </div>
-
-      {/* Background effects */}
+    <section className="relative py-16 overflow-hidden w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Subtle background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#C59B48]/15 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#45e3d3]/15 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#C59B48]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#45e3d3]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -121,11 +108,11 @@ export function HowItWorks({ language }: HowItWorksProps) {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading px-2 sm:px-0">
-            <span className="text-white font-heading">{t.title.white}</span>
-            <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
+          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-semibold px-2 sm:px-0">
+            <span className="text-[#F2F2F3] font-heading font-semibold">{t.title.white}</span>
+            <span className="text-[#C59B48] font-heading font-semibold">{t.title.gold}</span>
           </h2>
-          <p className="text-[#F2F2F3]/60 max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body px-4 sm:px-0">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body font-normal px-4 sm:px-0">
             {t.subtitle}
           </p>
         </motion.div>
@@ -163,30 +150,20 @@ export function HowItWorks({ language }: HowItWorksProps) {
                   </div>
                 )}
 
-                <div className="relative backdrop-blur-2xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 rounded-3xl overflow-hidden h-full border border-[#C59B48]/20 hover:border-[#C59B48]/60 transition-all duration-500">
-                  {/* Glass Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent" />
-
-                  {/* Scan Line Effect */}
-                  <motion.div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100"
-                    initial={{ backgroundPosition: '0% 0%' }}
-                    whileHover={{
-                      backgroundPosition: ['0% 0%', '0% 100%'],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                    style={{
-                      background: 'linear-gradient(to bottom, transparent 0%, rgba(255, 204, 51, 0.1) 50%, transparent 100%)',
-                      backgroundSize: '100% 200%'
-                    }}
+                <div 
+                  className="relative bg-[#191922] rounded-3xl overflow-hidden h-full border border-[#2A2A3A] hover:border-[rgba(197,155,72,0.22)] transition-all duration-500 group/card"
+                  style={{ 
+                    boxShadow: '0 0 0 1px rgba(197,155,72,0), 0 18px 60px rgba(0,0,0,0.55)'
+                  }}
+                >
+                  {/* Hover Glow Effect */}
+                  <div 
+                    className="absolute inset-0 rounded-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none" 
+                    style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)' }} 
                   />
 
-                  {/* Top Gradient Bar */}
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#C59B48] to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  {/* Top Gradient Bar - Removed for cleaner design */}
 
                   {/* Step Number Badge */}
                   <motion.div
@@ -287,25 +264,18 @@ export function HowItWorks({ language }: HowItWorksProps) {
 
                     {/* Content */}
                     <div className="text-center">
-                      <h3 className="text-white mb-1 sm:mb-2 text-base sm:text-lg md:text-xl font-heading">{step.title}</h3>
+                      <h3 className="text-[#F2F2F3] mb-1 sm:mb-2 text-base sm:text-lg md:text-xl font-heading font-semibold">{step.title}</h3>
                       {step.subtitle && (
                         <p className="text-[#C59B48] mb-2 sm:mb-3 text-xs sm:text-sm font-medium font-body">
                           {step.subtitle}
                         </p>
                       )}
-                      <p className="text-[#B9BBC6] text-xs sm:text-sm leading-relaxed font-body">
+                      <p className="text-[#B9BBC6] text-xs sm:text-sm leading-relaxed font-body font-normal">
                         {step.description}
                       </p>
                     </div>
                   </div>
 
-                  {/* Bottom Glow Line */}
-                  <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#C59B48] to-transparent"
-                    initial={{ opacity: 0, scaleX: 0 }}
-                    whileHover={{ opacity: 1, scaleX: 1 }}
-                    transition={{ duration: 0.4 }}
-                  />
                 </div>
               </motion.div>
             );

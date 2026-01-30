@@ -192,8 +192,8 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-4 sm:mb-6 text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.1] font-heading px-2 sm:px-0"
           >
-            <span className="block text-[#F2F2F3] leading-[1.1] py-1 break-words font-heading">{t.headline}</span>
-            <span className="block bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent animate-gradient text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-[1.2] py-1 break-words font-heading">
+            <span className="block text-[#F2F2F3] leading-[1.1] py-1 break-words font-heading font-semibold">{t.headline}</span>
+            <span className="block bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent animate-gradient text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-[1.2] py-1 break-words font-heading font-semibold">
               {t.headlineAccent}
             </span>
           </motion.h1>
@@ -203,7 +203,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-6 sm:mb-8 text-[#F2F2F3]/60 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed font-body px-2 sm:px-0"
+            className="mb-6 sm:mb-8 text-[#B9BBC6] text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed font-body font-normal px-2 sm:px-0"
           >
             {t.subheadline}
           </motion.p>
@@ -219,7 +219,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
               <Button
                 size="lg"
                 onClick={onNavigateToSignUp}
-                className="relative w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-6 border-0 overflow-hidden group shadow-lg shadow-primary/30 hover:shadow-2xl hover:shadow-primary/60 transition-all duration-500 glow-gold btn-glow cursor-pointer text-sm sm:text-base"
+                className="relative w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-6 border-0 overflow-hidden group bg-[#C59B48] hover:bg-[#D6AE5A] active:bg-[#A98237] shadow-lg shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/60 transition-all duration-500 cursor-pointer text-sm sm:text-base font-body font-medium"
               >
                 <motion.div
                   className="absolute inset-0 bg-primary/20"
@@ -227,7 +227,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                   whileHover={{ x: '100%' }}
                   transition={{ duration: 0.6 }}
                 />
-                <span className="relative z-10 flex items-center gap-2">
+                <span className="relative z-10 flex items-center gap-2 text-[#0B0B0D]">
                   {t.cta}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </span>
@@ -256,7 +256,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                 transition={{ duration: 0.4, delay: 0.7 }}
                 className="backdrop-blur-xl bg-white/5 rounded-xl border border-white/10 p-3 sm:p-4 hover:border-white/20 transition-colors"
               >
-                <h3 className="text-base sm:text-lg font-bold text-white mb-2 sm:mb-3 font-heading">{t.trustTitle}</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-[#F2F2F3] mb-2 sm:mb-3 font-heading">{t.trustTitle}</h3>
                 <ul className="space-y-1.5 sm:space-y-2">
                   {t.trustBullets.map((bullet, index) => (
                     <li
@@ -264,7 +264,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                       className={`flex items-start gap-2 text-xs sm:text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
                     >
                       <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C59B48] shrink-0 mt-0.5" />
-                      <span className="text-white/80 font-body break-words">{bullet}</span>
+                      <span className="text-[#B9BBC6] font-body font-normal break-words">{bullet}</span>
                     </li>
                   ))}
                 </ul>
@@ -277,7 +277,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                 transition={{ duration: 0.4, delay: 0.8 }}
                 className="backdrop-blur-xl bg-white/5 rounded-xl border border-white/10 p-3 sm:p-4 hover:border-white/20 transition-colors"
               >
-                <h3 className="text-base sm:text-lg font-bold text-white mb-2 sm:mb-3 font-heading">{t.founderTitle}</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-[#F2F2F3] mb-2 sm:mb-3 font-heading">{t.founderTitle}</h3>
                 <ul className="space-y-1.5 sm:space-y-2">
                   {t.founderPerks.map((perk, index) => (
                     <li
@@ -285,7 +285,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                       className={`flex items-start gap-2 text-xs sm:text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
                     >
                       <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C59B48] shrink-0 mt-0.5" />
-                      <span className="text-white/80 font-body break-words text-left">{perk}</span>
+                      <span className="text-[#B9BBC6] font-body font-normal break-words text-left">{perk}</span>
                     </li>
                   ))}
                 </ul>

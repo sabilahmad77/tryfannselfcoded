@@ -5,8 +5,6 @@ import { Medal, Crown, Zap, Loader2, UserPlus, UserCheck, Palette, Building2, Us
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
-import bgImage from "figma:asset/c85d96c5ec679934a6c95c18a6db9da4a5b2bc2d.png";
 import {
   useGetLeaderboardQuery,
   type LeaderboardEntry,
@@ -315,24 +313,13 @@ export function Leaderboard({
 
   return (
     <section
-      className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full"
+      className="relative py-16 overflow-hidden w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      {/* Abstract Art Background Pattern */}
-      <div className="absolute inset-0">
-        <ImageWithFallback
-          src={bgImage}
-          alt="Abstract Art Pattern"
-          className="w-full h-full object-cover opacity-75"
-          style={{ transform: "rotate(90deg) scale(1.1)" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/50 via-transparent to-[#0B0B0D]/55" />
-      </div>
-
-      {/* Background effects */}
+      {/* Subtle background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/3 w-96 h-96 bg-[#C59B48]/15 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#45e3d3]/15 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/3 w-96 h-96 bg-[#C59B48]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#45e3d3]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -343,11 +330,11 @@ export function Leaderboard({
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-3 sm:mb-4 font-heading px-2 sm:px-0">
-            <span className="text-white font-heading">{t.title.white}</span>
-            <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-3 sm:mb-4 font-heading font-semibold px-2 sm:px-0">
+            <span className="text-[#F2F2F3] font-heading font-semibold">{t.title.white}</span>
+            <span className="text-[#C59B48] font-heading font-semibold">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body px-4 sm:px-0">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body font-normal px-4 sm:px-0">
             {t.subtitle}
           </p>
         </motion.div>
@@ -442,7 +429,7 @@ export function Leaderboard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/75 via-[#191922]/65 to-[#0B0B0D]/75 border-2 border-[#C59B48]/40 overflow-hidden shadow-2xl shadow-[#C59B48]/20 w-full"
+            className="rounded-3xl bg-[#191922] border border-[#2A2A3A] overflow-hidden shadow-2xl w-full"
           >
             {/* Loading & Error States */}
             {isLoading && (

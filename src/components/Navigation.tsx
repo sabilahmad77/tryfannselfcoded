@@ -95,7 +95,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10 w-full max-w-full overflow-x-hidden"
+      className="fixed top-0 left-0 right-0 z-50 bg-[#121217]/95 backdrop-blur-xl border-b border-[#2A2A3A] w-full max-w-full overflow-x-hidden"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -130,7 +130,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
                 href={item.href}
                 onClick={(e) => handleNavClick(item.href, e)}
                 whileHover={{ scale: 1.05, y: -2 }}
-                className="text-white/70 hover:text-white transition-colors relative group font-body cursor-pointer"
+                className="text-[#B9BBC6] hover:text-[#F2F2F3] transition-colors relative group font-body font-normal cursor-pointer"
               >
                 {item.label}
                 <motion.div

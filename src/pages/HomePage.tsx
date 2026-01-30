@@ -80,28 +80,32 @@ export function HomePage() {
           }}
         />
         
-        <ArtPreview language={language} />
+        <div className="bg-[#121217]">
+          <ArtPreview language={language} />
+        </div>
         
-        <div id="how" className="scroll-mt-20">
+        <div id="how" className="scroll-mt-20 bg-[#0B0B0D]">
           <HowItWorks 
             language={language}
             onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
           />
         </div>
         
-        <PersonaPaths 
-          language={language}
-          onNavigateToSignUp={(personaId) => navigate(ROUTES.SIGN_UP, { state: { personaId } })}
-        />
+        <div className="bg-[#121217]">
+          <PersonaPaths 
+            language={language}
+            onNavigateToSignUp={(personaId) => navigate(ROUTES.SIGN_UP, { state: { personaId } })}
+          />
+        </div>
         
-        <div id="rewards" className="scroll-mt-20">
+        <div id="rewards" className="scroll-mt-20 bg-[#0B0B0D]">
           <RewardsTiers 
             language={language}
             onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
           />
         </div>
         
-        <div id="leaderboard" className="scroll-mt-20">
+        <div id="leaderboard" className="scroll-mt-20 bg-[#121217]">
           <Leaderboard 
             language={language}
             onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
@@ -109,14 +113,14 @@ export function HomePage() {
           />
         </div>
         
-        <div id="referrals" className="scroll-mt-20">
+        <div id="referrals" className="scroll-mt-20 bg-[#0B0B0D]">
           <ReferralModule 
             language={language}
             onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}
           />
         </div>
         
-        <div id="faq" className="scroll-mt-20">
+        <div id="faq" className="scroll-mt-20 bg-[#121217]">
           <FAQ 
             language={language}
             onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}

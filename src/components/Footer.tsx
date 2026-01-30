@@ -1,10 +1,8 @@
 import { ROUTES } from '@/routes/paths';
 import fannLogo from 'figma:asset/3b0b3b085f063d168ed55b6b769b2fbf5143db61.png';
-import bgImage from 'figma:asset/c85d96c5ec679934a6c95c18a6db9da4a5b2bc2d.png';
 import { BookOpen, Facebook, FileText, Globe, Image as ImageIcon, Instagram, Layers, Linkedin, Palette, Twitter, Video, Youtube } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { ImageWithFallback } from './figma/ImageWithFallback';
 
 interface FooterProps {
   language: 'en' | 'ar';
@@ -155,21 +153,10 @@ export function Footer({ language }: FooterProps) {
   };
 
   return (
-    <footer className="relative bg-[#0B0B0D] border-t border-[#C59B48]/20 w-full overflow-x-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Abstract Art Background Pattern */}
-      <div className="absolute inset-0">
-        <ImageWithFallback
-          src={bgImage}
-          alt="Abstract Art Pattern"
-          className="w-full h-full object-cover opacity-60"
-          style={{ transform: 'scaleX(-1)' }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0D]/60 via-transparent to-[#0B0B0D]/50" />
-      </div>
-
-      {/* Background gradient */}
+    <footer className="relative bg-[#0B0B0D] border-t border-[#2A2A3A] w-full overflow-x-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Subtle background gradient */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C59B48]/8 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C59B48]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 w-full max-w-full">
@@ -194,11 +181,11 @@ export function Footer({ language }: FooterProps) {
                 transition={{ duration: 2, repeat: Infinity }}
               />
             </motion.div>
-            <p className="mb-2 sm:mb-3 font-heading text-base sm:text-lg">
-              <span className="text-white font-heading">{t.tagline.white}</span>
-              <span className="text-[#C59B48] font-heading">{t.tagline.gold}</span>
+            <p className="mb-2 sm:mb-3 font-heading text-base sm:text-lg font-semibold">
+              <span className="text-[#F2F2F3] font-heading font-semibold">{t.tagline.white}</span>
+              <span className="text-[#C59B48] font-heading font-semibold">{t.tagline.gold}</span>
             </p>
-            <p className="text-[#F2F2F3]/60 text-xs sm:text-sm mb-4 sm:mb-6 max-w-sm leading-relaxed font-body">
+            <p className="text-[#B9BBC6] text-xs sm:text-sm mb-4 sm:mb-6 max-w-sm leading-relaxed font-body font-normal">
               {t.description}
             </p>
 
@@ -235,7 +222,7 @@ export function Footer({ language }: FooterProps) {
           {/* Links */}
           {t.sections.map((section, index) => (
             <div key={index}>
-              <h4 className="text-[#F2F2F3] mb-4 sm:mb-6 text-sm sm:text-base font-heading">{section.title}</h4>
+              <h4 className="text-[#F2F2F3] mb-4 sm:mb-6 text-sm sm:text-base font-heading font-semibold">{section.title}</h4>
               <ul className="space-y-2 sm:space-y-3">
                 {section.links.map((link, linkIndex) => {
                   const isComingSoonLink = isComingSoon(link);
@@ -248,7 +235,7 @@ export function Footer({ language }: FooterProps) {
                         <motion.button
                           onClick={() => handleLinkClick(link)}
                           disabled={isComingSoonLink}
-                          className={`text-[#F2F2F3]/60 hover:text-[#C59B48] text-xs sm:text-sm disabled:bg-disabled transition-colors inline-block font-body ${isComingSoonLink ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                          className={`text-[#B9BBC6] hover:text-[#C59B48] text-xs sm:text-sm disabled:bg-disabled transition-colors inline-block font-body font-normal ${isComingSoonLink ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
                         >
                           {link}
                         </motion.button>
@@ -269,14 +256,14 @@ export function Footer({ language }: FooterProps) {
         {/* Bottom Bar */}
         <div className="pt-6 sm:pt-8 border-t border-[#C59B48]/10">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-            <p className="text-[#F2F2F3]/60 text-xs sm:text-sm font-body text-center sm:text-left">{t.copyright}</p>
+            <p className="text-[#8A8EA0] text-xs sm:text-sm font-body font-normal text-center sm:text-left">{t.copyright}</p>
             <div className="flex items-center gap-3 sm:gap-4">
               <motion.div
                 className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass border border-[#45e3d3]/30"
                 whileHover={{ scale: 1.05 }}
               >
                 <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#45e3d3] animate-pulse" />
-                <span className="text-[#F2F2F3]/60 text-xs font-body">GDPR Compliant</span>
+                <span className="text-[#8A8EA0] text-xs font-body font-normal">GDPR Compliant</span>
               </motion.div>
             </div>
           </div>

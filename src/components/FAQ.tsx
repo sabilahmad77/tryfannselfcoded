@@ -5,8 +5,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
-import bgImage from "figma:asset/3fa9b9de7e4b1421a708a7c88cd0672cee3504e2.png";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/routes/paths";
 
@@ -476,23 +474,12 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
 
   return (
     <section
-      className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full"
+      className="relative py-16 overflow-hidden w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      {/* Abstract Art Background Pattern */}
-      <div className="absolute inset-0">
-        <ImageWithFallback
-          src={bgImage}
-          alt="Abstract Art Pattern"
-          className="w-full h-full object-cover opacity-65"
-          style={{ transform: "rotate(180deg) scale(1.1)" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/50 via-transparent to-[#0B0B0D]/55" />
-      </div>
-
-      {/* Background effects */}
+      {/* Subtle background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#C59B48]/12 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#C59B48]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -503,11 +490,11 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-3 sm:mb-4 font-heading px-2 sm:px-0">
-            <span className="text-white font-heading">{t.title.white}</span>
-            <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-3 sm:mb-4 font-heading font-semibold px-2 sm:px-0">
+            <span className="text-[#F2F2F3] font-heading font-semibold">{t.title.white}</span>
+            <span className="text-[#C59B48] font-heading font-semibold">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-2xl mx-auto text-sm sm:text-base md:text-lg font-body px-4 sm:px-0">
+          <p className="text-[#B9BBC6] max-w-2xl mx-auto text-sm sm:text-base md:text-lg font-body font-normal px-4 sm:px-0">
             {t.subtitle}
           </p>
         </motion.div>
@@ -530,12 +517,12 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
               >
                 <AccordionItem
                   value={`item-${index}`}
-                  className="rounded-2xl glass border border-orange-500/30 px-4 sm:px-6 hover:border-orange-500/60 transition-all overflow-hidden group"
+                  className="rounded-2xl bg-[#191922] border border-[#2A2A3A] px-4 sm:px-6 hover:border-[rgba(197,155,72,0.22)] transition-all overflow-hidden group"
                 >
-                  <AccordionTrigger className="text-white hover:text-amber-400 text-left py-4 sm:py-5 md:py-6 no-underline font-body text-sm sm:text-base">
+                  <AccordionTrigger className="text-[#F2F2F3] hover:text-[#C59B48] text-left py-4 sm:py-5 md:py-6 no-underline font-body font-medium text-sm sm:text-base">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-[#B9BBC6] leading-relaxed pb-4 sm:pb-5 md:pb-6 font-body text-sm sm:text-base">
+                  <AccordionContent className="text-[#B9BBC6] leading-relaxed pb-4 sm:pb-5 md:pb-6 font-body font-normal text-sm sm:text-base">
                     {typeof faq.answer === "string" ? (
                       <p>{faq.answer}</p>
                     ) : faq.answer && typeof faq.answer === "object" && "intro" in faq.answer ? (
@@ -576,7 +563,7 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
                 onClick={() => navigate(ROUTES.CONTACT_US)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer font-body font-medium text-sm sm:text-base"
+                className="px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-[#C59B48] hover:bg-[#D6AE5A] active:bg-[#A98237] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer font-body font-medium text-sm sm:text-base"
               >
                 <span>{language === "en" ? "View All FAQs" : "عرض جميع الأسئلة الشائعة"}</span>
               </motion.button>

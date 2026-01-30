@@ -3,7 +3,6 @@ import artwork1 from '@/assets/artwork-1.jpeg';
 import artwork2 from '@/assets/artwork-2.jpeg';
 import artwork3 from '@/assets/artwork-3.jpeg';
 import artwork4 from '@/assets/artwork-4.jpeg';
-import bgImage from 'figma:asset/3fa9b9de7e4b1421a708a7c88cd0672cee3504e2.png';
 import { DollarSign } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
@@ -57,21 +56,11 @@ export function ArtPreview({ language }: ArtPreviewProps) {
   };
 
   return (
-    <section className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Abstract Art Background Pattern */}
-      <div className="absolute inset-0">
-        <ImageWithFallback
-          src={bgImage}
-          alt="Abstract Art Pattern"
-          className="w-full h-full object-cover opacity-50"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/60 via-transparent to-[#0B0B0D]/60" />
-      </div>
-
-      {/* Background effects */}
+    <section className="relative py-16 overflow-hidden w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Subtle background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#C59B48]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-[#45e3d3]/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#C59B48]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-[#45e3d3]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -83,11 +72,11 @@ export function ArtPreview({ language }: ArtPreviewProps) {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading px-2 sm:px-0">
-            <span className="text-white font-heading">{t.title.white}</span>
-            <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
+          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-semibold px-2 sm:px-0">
+            <span className="text-[#F2F2F3] font-heading font-semibold">{t.title.white}</span>
+            <span className="text-[#C59B48] font-heading font-semibold">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body px-4 sm:px-0">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body font-normal px-4 sm:px-0">
             {t.subtitle}
           </p>
         </motion.div>
@@ -122,67 +111,61 @@ export function ArtPreview({ language }: ArtPreviewProps) {
                 >
                   {/* Front Side - Image Only */}
                   <div
-                    className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 border transition-all duration-500 ${isFlipped ? 'border-[#C59B48]/40' : 'border-[#2A2A3A] lg:group-hover:border-[#C59B48]/40'
+                    className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#191922] border transition-all duration-500 ${isFlipped ? 'border-[rgba(197,155,72,0.22)]' : 'border-[#2A2A3A] lg:group-hover:border-[rgba(197,155,72,0.22)]'
                       }`}
-                    style={{ backfaceVisibility: 'hidden' }}
+                    style={{ 
+                      backfaceVisibility: 'hidden',
+                      boxShadow: isFlipped ? '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)' : '0 0 0 1px rgba(197,155,72,0), 0 18px 60px rgba(0,0,0,0.55)'
+                    }}
                   >
-                    {/* Glass Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent z-10" />
-
                     {/* Artwork Image */}
-                    <div className="relative h-full w-full bg-gradient-to-br from-[#191922] to-[#0B0B0D] flex items-center justify-center overflow-hidden">
+                    <div className="relative h-full w-full bg-[#191922] flex items-center justify-center overflow-hidden">
                       <ImageWithFallback
-                        src={artwork.image || bgImage}
+                        src={artwork.image}
                         alt={artwork.title || artwork.artist}
-                        className="w-full h-full object-cover opacity-80"
+                        className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0D]/80 via-transparent to-transparent" />
-
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#191922]/90 via-transparent to-transparent" />
                     </div>
                   </div>
 
                   {/* Back Side - Details */}
                   <div
-                    className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 border border-[#C59B48]/40"
+                    className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#191922] border border-[rgba(197,155,72,0.22)]"
                     style={{
                       backfaceVisibility: 'hidden',
-                      transform: 'rotateY(180deg)'
+                      transform: 'rotateY(180deg)',
+                      boxShadow: '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)'
                     }}
                   >
-                    {/* Glass Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent" />
-
                     {/* Content */}
                     <div className="relative h-full flex flex-col p-4 sm:p-6 z-10">
                       {/* Title */}
-                      <h3 className="text-white text-base sm:text-lg md:text-xl mb-2 sm:mb-3 font-heading line-clamp-2">
+                      <h3 className="text-[#F2F2F3] text-base sm:text-lg md:text-xl mb-2 sm:mb-3 font-heading font-semibold line-clamp-2">
                         {artwork.title || artwork.artist}
                       </h3>
 
                       {/* Artist Name */}
                       <div className="mb-3 sm:mb-4">
-                        <p className="text-[#F2F2F3] text-xs sm:text-sm mb-1 font-body">{t.placeholder.artist}</p>
-                        <p className="text-white text-sm sm:text-base font-body line-clamp-1">{artwork.artist}</p>
+                        <p className="text-[#8A8EA0] text-xs sm:text-sm mb-1 font-body font-medium">{t.placeholder.artist}</p>
+                        <p className="text-[#F2F2F3] text-sm sm:text-base font-body font-normal line-clamp-1">{artwork.artist}</p>
                       </div>
 
                       {/* Description */}
                       {artwork.description && (
-                        <p className="text-white/70 text-xs sm:text-sm mb-3 sm:mb-4 font-body leading-relaxed flex-1 line-clamp-3 sm:line-clamp-4">
+                        <p className="text-[#B9BBC6] text-xs sm:text-sm mb-3 sm:mb-4 font-body font-normal leading-relaxed flex-1 line-clamp-3 sm:line-clamp-4">
                           {artwork.description}
                         </p>
                       )}
 
                       {/* Estimated Value */}
-                      <div className="mt-auto pt-3 sm:pt-4 border-t border-white/10">
-                        <div className="flex items-center gap-2 text-[#C59B48] text-sm sm:text-base font-semibold font-body">
+                      <div className="mt-auto pt-3 sm:pt-4 border-t border-[#2A2A3A]">
+                        <div className="flex items-center gap-2 text-[#C59B48] text-sm sm:text-base font-medium font-body">
                           <DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />
                           <span className="break-words">{artwork.value}</span>
                         </div>
-                        <p className="text-white/50 text-xs mt-1 font-body">{t.placeholder.value}</p>
+                        <p className="text-[#8A8EA0] text-xs mt-1 font-body font-normal">{t.placeholder.value}</p>
                       </div>
-
-                      {/* Hover Glow Effect */}
-                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#C59B48]/10 via-transparent to-transparent pointer-events-none" />
                     </div>
                   </div>
                 </div>
