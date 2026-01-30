@@ -39,8 +39,8 @@ export function DashboardWelcome({
         <div className={isRTL ? "text-right" : "text-left"}>
           <div className="flex items-center gap-3 mb-2 flex-wrap">
             <h1 className="text-4xl md:text-5xl">
-              <span className="text-[#F2F2F3]">{t.welcome}, </span>
-              <span className="bg-gradient-to-r from-[#C59B48] via-[#fbbf24] to-[#C59B48] bg-clip-text text-transparent animate-gradient">
+              <span className="text-[#F2F2F3] font-family-heading">{t.welcome}, </span>
+              <span className="bg-gradient-to-r from-[#C59B48] font-family-heading  via-[#fbbf24] to-[#C59B48] bg-clip-text text-transparent animate-gradient">
                 {userName}
               </span>
             </h1>
