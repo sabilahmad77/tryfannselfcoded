@@ -344,11 +344,11 @@ export function PersonaPaths({
                     />
 
                     {/* Main Content */}
-                    <div className="relative z-10 p-6 sm:p-8 flex flex-col h-full">
+                    <div className="relative z-10 p-4 sm:p-6 md:p-8 flex flex-col h-full">
                       {/* Icon and Name - Center */}
-                      <div className="flex flex-col items-center mb-6">
+                      <div className="flex flex-col items-center mb-4 sm:mb-6">
                         <motion.div
-                          className="relative inline-block mb-4"
+                          className="relative inline-block mb-3 sm:mb-4"
                           whileHover={{ scale: 1.05 }}
                           transition={{ duration: 0.3 }}
                         >
@@ -368,39 +368,39 @@ export function PersonaPaths({
 
                           {/* Icon Container */}
                           <div
-                            className={`relative w-16 h-16 rounded-2xl bg-gradient-to-br ${persona.gradient} flex items-center justify-center shadow-2xl border border-white/20`}
+                            className={`relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br ${persona.gradient} flex items-center justify-center shadow-2xl border border-white/20`}
                           >
-                            <Icon className="w-8 h-8 text-white" />
+                            <Icon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                           </div>
                         </motion.div>
 
                         {/* Name */}
-                        <h3 className="text-white text-xl sm:text-2xl font-heading text-center">
+                        <h3 className="text-white text-lg sm:text-xl md:text-2xl font-heading text-center">
                           {persona.name}
                         </h3>
                       </div>
 
                       {/* Divider */}
-                      <div className="h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mb-6" />
+                      <div className="h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mb-4 sm:mb-6" />
 
                       {/* Two Column Layout: Benefits Left, Earn Points By Right */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 flex-1">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6 flex-1">
                         {/* Left Column - Founder Benefits */}
                         <div className="min-w-0">
-                          <h4 className="text-white/90 text-sm font-semibold mb-3 font-body">
+                          <h4 className="text-white/90 text-xs sm:text-sm font-semibold mb-2 sm:mb-3 font-body">
                             {language === "en" ? "Founder Benefits" : "فوائد المؤسس"}
                           </h4>
-                          <ul className="space-y-2">
+                          <ul className="space-y-1.5 sm:space-y-2">
                             {persona.benefits.map((benefit, idx) => {
                               const benefitText = benefit.split(" — ")[0];
                               const capitalizedText = benefitText.charAt(0).toUpperCase() + benefitText.slice(1);
                               return (
                                 <li
                                   key={idx}
-                                  className="flex items-start gap-2"
+                                  className="flex items-start gap-1.5 sm:gap-2"
                                 >
                                   <CheckCircle2
-                                    className="w-4 h-4 shrink-0 mt-0.5"
+                                    className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 mt-0.5"
                                     style={{ color: persona.accentColor }}
                                   />
                                   <span className="text-white/70 text-xs leading-relaxed font-body break-words">
@@ -414,16 +414,16 @@ export function PersonaPaths({
 
                         {/* Right Column - How to Earn Points */}
                         <div className="min-w-0">
-                          <h4 className="text-white/90 text-sm font-semibold mb-3 font-body">
+                          <h4 className="text-white/90 text-xs sm:text-sm font-semibold mb-2 sm:mb-3 font-body">
                             {language === "en" ? "How to Earn Points" : "كيفية كسب النقاط"}
                           </h4>
-                          <ul className="space-y-2">
+                          <ul className="space-y-1.5 sm:space-y-2">
                             {persona.earnPointsBy.map((item, idx) => {
                               const capitalizedText = item.charAt(0).toUpperCase() + item.slice(1);
                               return (
                                 <li
                                   key={idx}
-                                  className="flex items-start gap-2"
+                                  className="flex items-start gap-1.5 sm:gap-2"
                                 >
                                   <div
                                     className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5"
@@ -463,8 +463,8 @@ export function PersonaPaths({
                         />
 
                         {/* Button Content */}
-                        <div className="relative px-5 py-3 sm:px-6 sm:py-3.5 flex items-center justify-center gap-2">
-                          <span className="text-white text-sm sm:text-base font-body">
+                        <div className="relative px-4 py-2.5 sm:px-5 sm:py-3 md:px-6 md:py-3.5 flex items-center justify-center gap-2">
+                          <span className="text-white text-xs sm:text-sm md:text-base font-body text-center">
                             {persona.cta}
                           </span>
                           <motion.div

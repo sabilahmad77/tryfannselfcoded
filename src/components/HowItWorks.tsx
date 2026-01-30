@@ -121,11 +121,11 @@ export function HowItWorks({ language }: HowItWorksProps) {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <h2 className="mb-4 text-4xl md:text-5xl font-heading">
+          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading px-2 sm:px-0">
             <span className="text-white font-heading">{t.title.white}</span>
             <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
           </h2>
-          <p className="text-[#F2F2F3]/60 max-w-4xl mx-auto text-lg font-body">
+          <p className="text-[#F2F2F3]/60 max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body px-4 sm:px-0">
             {t.subtitle}
           </p>
         </motion.div>
@@ -253,11 +253,11 @@ export function HowItWorks({ language }: HowItWorksProps) {
                     </div>
                   </motion.div>
 
-                  <div className="relative z-10 p-8 pt-10">
+                  <div className="relative z-10 p-5 sm:p-6 md:p-8 pt-8 sm:pt-9 md:pt-10">
                     {/* Icon Container */}
-                    <div className="relative mb-6 flex justify-center">
+                    <div className="relative mb-4 sm:mb-6 flex justify-center">
                       <motion.div
-                        className="relative w-24 h-24"
+                        className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.3 }}
                       >
@@ -266,7 +266,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
 
                         {/* Main Circle */}
                         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#C59B48]/20 via-[#1a1a2e]/80 to-[#45e3d3]/20 border-2 border-[#C59B48]/40 group-hover:border-[#C59B48]/80 transition-all duration-500 flex items-center justify-center backdrop-blur-xl">
-                          <Icon className="w-12 h-12 text-[#C59B48] relative z-10 drop-shadow-[0_0_10px_rgba(255,204,51,0.5)]" />
+                          <Icon className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-[#C59B48] relative z-10 drop-shadow-[0_0_10px_rgba(255,204,51,0.5)]" />
                         </div>
 
                         {/* Animated Ring */}
@@ -287,13 +287,13 @@ export function HowItWorks({ language }: HowItWorksProps) {
 
                     {/* Content */}
                     <div className="text-center">
-                      <h3 className="text-white mb-2 text-xl font-heading">{step.title}</h3>
+                      <h3 className="text-white mb-1 sm:mb-2 text-base sm:text-lg md:text-xl font-heading">{step.title}</h3>
                       {step.subtitle && (
-                        <p className="text-[#C59B48] mb-3 text-sm font-medium font-body">
+                        <p className="text-[#C59B48] mb-2 sm:mb-3 text-xs sm:text-sm font-medium font-body">
                           {step.subtitle}
                         </p>
                       )}
-                      <p className="text-[#B9BBC6] text-sm leading-relaxed font-body">
+                      <p className="text-[#B9BBC6] text-xs sm:text-sm leading-relaxed font-body">
                         {step.description}
                       </p>
                     </div>

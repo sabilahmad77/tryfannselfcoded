@@ -172,7 +172,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full max-w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 w-full max-w-full" dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="max-w-6xl mx-auto text-center w-full">
           {/* Badge */}
           <motion.div
@@ -190,10 +190,10 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-6 text-4xl md:text-5xl leading-[1.1] md:leading-[1.1] font-heading px-2 sm:px-0"
+            className="mb-4 sm:mb-6 text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.1] font-heading px-2 sm:px-0"
           >
-            <span className="block text-[#F2F2F3] leading-[1.1] md:leading-[1.1] py-1 break-words font-heading">{t.headline}</span>
-            <span className="block bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent animate-gradient text-3xl md:text-4xl leading-[1.2] md:leading-[1.2] py-1 break-words font-heading">
+            <span className="block text-[#F2F2F3] leading-[1.1] py-1 break-words font-heading">{t.headline}</span>
+            <span className="block bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent animate-gradient text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-[1.2] py-1 break-words font-heading">
               {t.headlineAccent}
             </span>
           </motion.h1>
@@ -203,7 +203,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-8 text-[#F2F2F3]/60 text-lg md:text-xl leading-relaxed font-body"
+            className="mb-6 sm:mb-8 text-[#F2F2F3]/60 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed font-body px-2 sm:px-0"
           >
             {t.subheadline}
           </motion.p>
@@ -213,13 +213,13 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-10"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-10 px-2 sm:px-0"
           >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
               <Button
                 size="lg"
                 onClick={onNavigateToSignUp}
-                className="relative px-8 py-6 border-0 overflow-hidden group shadow-lg shadow-primary/30 hover:shadow-2xl hover:shadow-primary/60 transition-all duration-500 glow-gold btn-glow cursor-pointer"
+                className="relative w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-6 border-0 overflow-hidden group shadow-lg shadow-primary/30 hover:shadow-2xl hover:shadow-primary/60 transition-all duration-500 glow-gold btn-glow cursor-pointer text-sm sm:text-base"
               >
                 <motion.div
                   className="absolute inset-0 bg-primary/20"
@@ -254,17 +254,17 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.7 }}
-                className="backdrop-blur-xl bg-white/5 rounded-xl border border-white/10 p-4 hover:border-white/20 transition-colors"
+                className="backdrop-blur-xl bg-white/5 rounded-xl border border-white/10 p-3 sm:p-4 hover:border-white/20 transition-colors"
               >
-                <h3 className="text-lg font-bold text-white mb-3 font-heading">{t.trustTitle}</h3>
-                <ul className="space-y-2">
+                <h3 className="text-base sm:text-lg font-bold text-white mb-2 sm:mb-3 font-heading">{t.trustTitle}</h3>
+                <ul className="space-y-1.5 sm:space-y-2">
                   {t.trustBullets.map((bullet, index) => (
                     <li
                       key={index}
-                      className={`flex items-center gap-2 text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
+                      className={`flex items-start gap-2 text-xs sm:text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
                     >
-                      <CheckCircle2 className="w-4 h-4 text-[#C59B48] shrink-0" />
-                      <span className="text-white/80 font-body">{bullet}</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C59B48] shrink-0 mt-0.5" />
+                      <span className="text-white/80 font-body break-words">{bullet}</span>
                     </li>
                   ))}
                 </ul>
@@ -275,17 +275,17 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.8 }}
-                className="backdrop-blur-xl bg-white/5 rounded-xl border border-white/10 p-4 hover:border-white/20 transition-colors"
+                className="backdrop-blur-xl bg-white/5 rounded-xl border border-white/10 p-3 sm:p-4 hover:border-white/20 transition-colors"
               >
-                <h3 className="text-lg font-bold text-white mb-3 font-heading">{t.founderTitle}</h3>
-                <ul className="space-y-2">
+                <h3 className="text-base sm:text-lg font-bold text-white mb-2 sm:mb-3 font-heading">{t.founderTitle}</h3>
+                <ul className="space-y-1.5 sm:space-y-2">
                   {t.founderPerks.map((perk, index) => (
                     <li
                       key={index}
-                      className={`flex items-center gap-2 text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
+                      className={`flex items-start gap-2 text-xs sm:text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
                     >
-                      <Star className="w-4 h-4 text-[#C59B48] shrink-0" />
-                      <span className="text-white/80 font-body">{perk}</span>
+                      <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C59B48] shrink-0 mt-0.5" />
+                      <span className="text-white/80 font-body break-words text-left">{perk}</span>
                     </li>
                   ))}
                 </ul>
@@ -309,17 +309,17 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.9 + index * 0.1 }}
-                    className="relative backdrop-blur-md bg-white/5 rounded-xl border border-white/10 p-6 text-center"
+                    className="relative backdrop-blur-md bg-white/5 rounded-xl border border-white/10 p-4 sm:p-6 text-center"
                   >
-                    <div className="flex justify-center mb-3">
-                      <div className="p-2 rounded-lg bg-white/10 border border-white/20">
-                        <Icon className="w-6 h-6 text-[#C59B48]" />
+                    <div className="flex justify-center mb-2 sm:mb-3">
+                      <div className="p-1.5 sm:p-2 rounded-lg bg-white/10 border border-white/20">
+                        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#C59B48]" />
                       </div>
                     </div>
-                    <div className="text-3xl text-white mb-1 font-heading">
+                    <div className="text-2xl sm:text-3xl text-white mb-1 font-heading">
                       {stat.number}
                     </div>
-                    <div className="text-sm text-white/70 font-body">
+                    <div className="text-xs sm:text-sm text-white/70 font-body">
                       {stat.label}
                     </div>
                   </motion.div>

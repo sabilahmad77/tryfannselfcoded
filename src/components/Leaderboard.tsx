@@ -343,11 +343,11 @@ export function Leaderboard({
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl mb-4 font-heading">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-3 sm:mb-4 font-heading px-2 sm:px-0">
             <span className="text-white font-heading">{t.title.white}</span>
             <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg font-body">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body px-4 sm:px-0">
             {t.subtitle}
           </p>
         </motion.div>
@@ -359,7 +359,7 @@ export function Leaderboard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center justify-center gap-3 mb-10"
+            className="flex items-center justify-center gap-2 sm:gap-3 mb-8 sm:mb-10 flex-wrap px-2 sm:px-0"
           >
             {t.tabs.map((tab, index) => {
               const filterValue: TimeFilter =
@@ -375,7 +375,7 @@ export function Leaderboard({
                   onClick={() => setTimeFilter(filterValue)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`px-8 py-3 rounded-full transition-all duration-300 ${isActive
+                  className={`px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${isActive
                       ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black shadow-lg shadow-amber-500/50"
                       : "glass border border-white/10 text-[#B9BBC6] hover:text-white hover:border-amber-500/50"
                     }`}
@@ -490,24 +490,24 @@ export function Leaderboard({
                       backgroundColor: "rgba(255, 204, 51, 0.08)",
                       scale: 1.01,
                     }}
-                    className="p-6 border-b border-[#C59B48]/10 last:border-0 transition-all duration-200"
+                    className="p-4 sm:p-6 border-b border-[#C59B48]/10 last:border-0 transition-all duration-200"
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 sm:gap-3 md:gap-4 flex-wrap">
                       {/* Rank */}
-                      <div className="flex items-center justify-center w-12 shrink-0">
+                      <div className="flex items-center justify-center w-8 sm:w-10 md:w-12 shrink-0">
                         {getRankIcon(leader.rank ?? index + 1)}
                       </div>
 
                       {/* Avatar & Info */}
-                      <Avatar className="w-14 h-14 border-2 border-orange-500/50">
+                      <Avatar className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 border-2 border-orange-500/50 shrink-0">
                         <AvatarImage src={leader.avatar} alt={leader.name} />
                         <AvatarFallback>{leader.name.charAt(0)}</AvatarFallback>
                       </Avatar>
 
                       <div className="flex-1 min-w-0">
-                        <div className="text-white truncate">{leader.name}</div>
-                        <div className="text-[#B9BBC6] text-sm flex items-center gap-2">
-                          {leader.username}
+                        <div className="text-white truncate text-sm sm:text-base">{leader.name}</div>
+                        <div className="text-[#B9BBC6] text-xs sm:text-sm flex items-center gap-1 sm:gap-2 flex-wrap">
+                          <span className="truncate">{leader.username}</span>
                           {isAuthenticated && (
                             <>
                               <span className="text-white/40">•</span>
@@ -520,13 +520,13 @@ export function Leaderboard({
                       </div>
 
                       {/* Points */}
-                      <div className="text-right">
-                        <div className="text-transparent bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text">
+                      <div className="text-right shrink-0">
+                        <div className="text-transparent bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-sm sm:text-base">
                           {leader.points.toLocaleString()}
                         </div>
                         <Badge
                           variant="outline"
-                          className={`text-xs mt-2 ${getTierColor(
+                          className={`text-xs mt-1 sm:mt-2 ${getTierColor(
                             leader.tier
                           )}`}
                         >
@@ -539,20 +539,20 @@ export function Leaderboard({
                         <Button
                           size="sm"
                           onClick={() => toggleFollow(leader.username)}
-                          className={`shrink-0 ${isFollowing(leader.username)
+                          className={`shrink-0 text-xs sm:text-sm ${isFollowing(leader.username)
                               ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
                               : "bg-gradient-to-r from-[#45e3d3] to-[#4de3ed] hover:from-[#3bc4b5] hover:to-[#3bc4b5] text-white"
                             }`}
                         >
                           {isFollowing(leader.username) ? (
                             <>
-                              <UserCheck className="w-4 h-4 mr-1" />
-                              {language === "en" ? "Following" : "متابع"}
+                              <UserCheck className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                              <span className="hidden sm:inline">{language === "en" ? "Following" : "متابع"}</span>
                             </>
                           ) : (
                             <>
-                              <UserPlus className="w-4 h-4 mr-1" />
-                              {language === "en" ? "Follow" : "متابعة"}
+                              <UserPlus className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                              <span className="hidden sm:inline">{language === "en" ? "Follow" : "متابعة"}</span>
                             </>
                           )}
                         </Button>
@@ -565,7 +565,7 @@ export function Leaderboard({
 
             {/* Desktop View */}
             {!isLoading && leaders.length > 0 && (
-              <div className="hidden lg:block overflow-x-auto">
+              <div className="hidden lg:block overflow-x-auto -mx-4 sm:mx-0">
                 <table className="w-full min-w-[600px]">
                   <thead>
                     <tr className="border-b border-white/10 bg-white/5">

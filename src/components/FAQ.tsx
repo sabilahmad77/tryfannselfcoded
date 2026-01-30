@@ -503,11 +503,11 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl mb-4 font-heading">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-3 sm:mb-4 font-heading px-2 sm:px-0">
             <span className="text-white font-heading">{t.title.white}</span>
             <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-2xl mx-auto text-lg font-body">
+          <p className="text-[#B9BBC6] max-w-2xl mx-auto text-sm sm:text-base md:text-lg font-body px-4 sm:px-0">
             {t.subtitle}
           </p>
         </motion.div>
@@ -530,12 +530,12 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
               >
                 <AccordionItem
                   value={`item-${index}`}
-                  className="rounded-2xl glass border border-orange-500/30 px-6 hover:border-orange-500/60 transition-all overflow-hidden group"
+                  className="rounded-2xl glass border border-orange-500/30 px-4 sm:px-6 hover:border-orange-500/60 transition-all overflow-hidden group"
                 >
-                  <AccordionTrigger className="text-white hover:text-amber-400 text-left py-6 no-underline font-body">
+                  <AccordionTrigger className="text-white hover:text-amber-400 text-left py-4 sm:py-5 md:py-6 no-underline font-body text-sm sm:text-base">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-[#B9BBC6] leading-relaxed pb-6 font-body">
+                  <AccordionContent className="text-[#B9BBC6] leading-relaxed pb-4 sm:pb-5 md:pb-6 font-body text-sm sm:text-base">
                     {typeof faq.answer === "string" ? (
                       <p>{faq.answer}</p>
                     ) : faq.answer && typeof faq.answer === "object" && "intro" in faq.answer ? (
@@ -576,7 +576,7 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
                 onClick={() => navigate(ROUTES.CONTACT_US)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer font-body font-medium"
+                className="px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer font-body font-medium text-sm sm:text-base"
               >
                 <span>{language === "en" ? "View All FAQs" : "عرض جميع الأسئلة الشائعة"}</span>
               </motion.button>

@@ -180,11 +180,11 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             <img src={fannLogo} alt="FANN" className="h-5 w-auto" />
             <span className="text-amber-300 text-sm">{t.badge}</span>
           </motion.div> */}
-          <h2 className="mb-4 text-4xl md:text-5xl max-w-3xl mx-auto font-heading">
+          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-3xl mx-auto font-heading px-2 sm:px-0">
             <span className="text-white font-heading">{t.title.white}</span>
             <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg font-body">{t.subtitle}</p>
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body px-4 sm:px-0">{t.subtitle}</p>
         </motion.div>
 
         {/* Featured Code Card - Minimal Modern */}
@@ -194,7 +194,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
           viewport={{ once: true }}
           className="mb-8"
         >
-          <div className="p-8 md:p-12 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/80 via-[#191922]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 relative overflow-hidden shadow-2xl shadow-[#C59B48]/30">
+          <div className="p-4 sm:p-6 md:p-8 lg:p-12 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/80 via-[#191922]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 relative overflow-hidden shadow-2xl shadow-[#C59B48]/30">
             {/* Gradient top accent */}
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#C59B48] to-transparent" />
             
@@ -203,22 +203,22 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             
             <div className="relative z-10 max-w-5xl mx-auto">
               {/* Code Section */}
-              <div className="mb-8 text-center">
-                <div className="text-[#B9BBC6] text-sm mb-4 uppercase tracking-wider">{t.codeCard.label}</div>
-                <div className="inline-flex items-center gap-4 p-6 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#191922]/60 to-[#0B0B0D]/60 border-2 border-[#C59B48]/40 mb-6 shadow-lg hover:shadow-[#C59B48]/30 transition-shadow flex-wrap sm:flex-nowrap justify-center sm:justify-start">
-                  <div className="text-2xl sm:text-3xl md:text-4xl tracking-[0.3em] text-white font-mono break-all sm:break-normal">
+              <div className="mb-6 sm:mb-8 text-center">
+                <div className="text-[#B9BBC6] text-xs sm:text-sm mb-3 sm:mb-4 uppercase tracking-wider">{t.codeCard.label}</div>
+                <div className="inline-flex items-center gap-2 sm:gap-4 p-4 sm:p-6 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#191922]/60 to-[#0B0B0D]/60 border-2 border-[#C59B48]/40 mb-4 sm:mb-6 shadow-lg hover:shadow-[#C59B48]/30 transition-shadow flex-wrap sm:flex-nowrap justify-center sm:justify-start w-full sm:w-auto">
+                  <div className="text-lg sm:text-2xl md:text-3xl lg:text-4xl tracking-[0.2em] sm:tracking-[0.3em] text-white font-mono break-all sm:break-normal text-center sm:text-left">
                     {referralCode}
                   </div>
                   <motion.button
                     onClick={handleCopy}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#C59B48]/20 to-[#45e3d3]/20 border-2 border-[#C59B48]/40 hover:border-[#C59B48]/80 flex items-center justify-center transition-all shadow-md cursor-pointer"
+                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-[#C59B48]/20 to-[#45e3d3]/20 border-2 border-[#C59B48]/40 hover:border-[#C59B48]/80 flex items-center justify-center transition-all shadow-md cursor-pointer shrink-0"
                   >
                     {copied ? (
-                      <Check className="w-5 h-5 text-green-400" />
+                      <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
                     ) : (
-                      <Copy className="w-5 h-5 text-[#B9BBC6] hover:text-amber-400 transition-colors" />
+                      <Copy className="w-4 h-4 sm:w-5 sm:h-5 text-[#B9BBC6] hover:text-amber-400 transition-colors" />
                     )}
                   </motion.button>
                 </div>
@@ -238,9 +238,9 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleShare(social.platform)}
-                        className="h-10 px-4 sm:px-6 rounded-md backdrop-blur-md bg-gradient-to-br from-[#191922]/40 to-[#0B0B0D]/40 border border-[#C59B48]/30 hover:border-[#C59B48]/70 flex items-center gap-2 transition-all text-sm text-[#B9BBC6] hover:text-white shadow-md hover:shadow-[#C59B48]/20 cursor-pointer font-body shrink-0"
+                        className="h-9 sm:h-10 px-3 sm:px-4 md:px-6 rounded-md backdrop-blur-md bg-gradient-to-br from-[#191922]/40 to-[#0B0B0D]/40 border border-[#C59B48]/30 hover:border-[#C59B48]/70 flex items-center gap-1.5 sm:gap-2 transition-all text-xs sm:text-sm text-[#B9BBC6] hover:text-white shadow-md hover:shadow-[#C59B48]/20 cursor-pointer font-body shrink-0"
                       >
-                        <Icon className="w-4 h-4" />
+                        <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         <span className="hidden sm:inline">{social.label}</span>
                       </motion.button>
                     );
@@ -249,10 +249,10 @@ export function ReferralModule({ language }: ReferralModuleProps) {
               </div>
 
               {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-white/8 to-transparent mb-8" />
+              <div className="h-px bg-gradient-to-r from-transparent via-white/8 to-transparent mb-6 sm:mb-8" />
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                 {t.stats.map((stat, index) => {
                   const Icon = stat.icon;
                   return (
@@ -263,11 +263,11 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                       viewport={{ once: true }}
                       transition={{ delay: 0.1 + index * 0.1 }}
                       whileHover={{ y: -3, scale: 1.02 }}
-                      className="text-center p-5 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#191922]/40 via-[#191922]/30 to-[#0B0B0D]/40 border border-[#C59B48]/20 hover:border-[#C59B48]/50 transition-all shadow-lg hover:shadow-[#C59B48]/20"
+                      className="text-center p-4 sm:p-5 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#191922]/40 via-[#191922]/30 to-[#0B0B0D]/40 border border-[#C59B48]/20 hover:border-[#C59B48]/50 transition-all shadow-lg hover:shadow-[#C59B48]/20"
                     >
-                      <Icon className="w-5 h-5 text-amber-500/60 mx-auto mb-3" />
-                      <div className="text-3xl text-white mb-2">{stat.value}</div>
-                      <div className="text-[#B9BBC6] text-sm mb-1">{stat.label}</div>
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500/60 mx-auto mb-2 sm:mb-3" />
+                      <div className="text-2xl sm:text-3xl text-white mb-1 sm:mb-2">{stat.value}</div>
+                      <div className="text-[#B9BBC6] text-xs sm:text-sm mb-1">{stat.label}</div>
                       <div className="text-xs text-white/50">{stat.sublabel}</div>
                     </motion.div>
                   );
@@ -288,14 +288,14 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             transition={{ delay: 0.2 }}
             className="lg:col-span-1"
           >
-            <div className="p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/70 via-[#191922]/60 to-[#0B0B0D]/70 border-2 border-[#C59B48]/40 h-full shadow-xl hover:shadow-[#C59B48]/30 transition-shadow duration-300 overflow-hidden group">
+            <div className="p-4 sm:p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/70 via-[#191922]/60 to-[#0B0B0D]/70 border-2 border-[#C59B48]/40 h-full shadow-xl hover:shadow-[#C59B48]/30 transition-shadow duration-300 overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-[#C59B48]/5 via-transparent to-[#45e3d3]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
-              <div className="flex items-center gap-2 mb-6 relative z-10">
-                <Target className="w-5 h-5 text-[#C59B48]" />
-                <h3 className="text-white text-lg font-heading">{t.process.title}</h3>
+              <div className="flex items-center gap-2 mb-4 sm:mb-6 relative z-10">
+                <Target className="w-4 h-4 sm:w-5 sm:h-5 text-[#C59B48]" />
+                <h3 className="text-white text-base sm:text-lg font-heading">{t.process.title}</h3>
               </div>
-              <div className="space-y-4 relative z-10">
+              <div className="space-y-3 sm:space-y-4 relative z-10">
                 {t.process.steps.map((step, index) => {
                   const Icon = step.icon;
                   return (

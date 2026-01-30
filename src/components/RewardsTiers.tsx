@@ -324,11 +324,11 @@ export function RewardsTiers({
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="mb-4 text-4xl md:text-5xl font-heading">
+          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading px-2 sm:px-0">
             <span className="text-white font-heading">{t.title.white}</span>
             <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg md:text-xl font-body">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg lg:text-xl font-body px-4 sm:px-0">
             {t.subtitle}
           </p>
         </motion.div>
@@ -730,10 +730,10 @@ export function RewardsTiers({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
             onClick={onNavigateToSignUp}
-            className="px-10 py-4 rounded-xl bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer"
+            className="px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-xl bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center gap-2 cursor-pointer text-sm sm:text-base"
           >
             <span>{t.startJourney}</span>
-            <ChevronRight className={`w-5 h-5 ${isRTL ? 'rotate-180' : ''}`} />
+            <ChevronRight className={`w-4 h-4 sm:w-5 sm:h-5 ${isRTL ? 'rotate-180' : ''}`} />
           </motion.button>
         </motion.div>
       </div>

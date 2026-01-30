@@ -83,11 +83,11 @@ export function ArtPreview({ language }: ArtPreviewProps) {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="mb-4 text-4xl md:text-5xl font-heading">
+          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading px-2 sm:px-0">
             <span className="text-white font-heading">{t.title.white}</span>
             <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg font-body">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-sm sm:text-base md:text-lg font-body px-4 sm:px-0">
             {t.subtitle}
           </p>
         </motion.div>
@@ -109,7 +109,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative h-[400px] cursor-pointer touch-manipulation"
+                className="group relative h-[300px] sm:h-[350px] md:h-[400px] cursor-pointer touch-manipulation"
                 style={{ perspective: '1000px' }}
                 onClick={() => handleCardFlip(artwork.id)}
                 whileTap={{ scale: 0.98 }}
@@ -153,30 +153,30 @@ export function ArtPreview({ language }: ArtPreviewProps) {
                     <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent" />
 
                     {/* Content */}
-                    <div className="relative h-full flex flex-col p-6 z-10">
+                    <div className="relative h-full flex flex-col p-4 sm:p-6 z-10">
                       {/* Title */}
-                      <h3 className="text-white text-xl mb-3 font-heading">
+                      <h3 className="text-white text-base sm:text-lg md:text-xl mb-2 sm:mb-3 font-heading line-clamp-2">
                         {artwork.title || artwork.artist}
                       </h3>
 
                       {/* Artist Name */}
-                      <div className="mb-4">
-                        <p className="text-[#F2F2F3] text-sm mb-1 font-body">{t.placeholder.artist}</p>
-                        <p className="text-white text-base font-body">{artwork.artist}</p>
+                      <div className="mb-3 sm:mb-4">
+                        <p className="text-[#F2F2F3] text-xs sm:text-sm mb-1 font-body">{t.placeholder.artist}</p>
+                        <p className="text-white text-sm sm:text-base font-body line-clamp-1">{artwork.artist}</p>
                       </div>
 
                       {/* Description */}
                       {artwork.description && (
-                        <p className="text-white/70 text-sm mb-4 font-body leading-relaxed flex-1">
+                        <p className="text-white/70 text-xs sm:text-sm mb-3 sm:mb-4 font-body leading-relaxed flex-1 line-clamp-3 sm:line-clamp-4">
                           {artwork.description}
                         </p>
                       )}
 
                       {/* Estimated Value */}
-                      <div className="mt-auto pt-4 border-t border-white/10">
-                        <div className="flex items-center gap-2 text-[#C59B48] text-base font-semibold font-body">
-                          <DollarSign className="w-5 h-5" />
-                          <span>{artwork.value}</span>
+                      <div className="mt-auto pt-3 sm:pt-4 border-t border-white/10">
+                        <div className="flex items-center gap-2 text-[#C59B48] text-sm sm:text-base font-semibold font-body">
+                          <DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span className="break-words">{artwork.value}</span>
                         </div>
                         <p className="text-white/50 text-xs mt-1 font-body">{t.placeholder.value}</p>
                       </div>

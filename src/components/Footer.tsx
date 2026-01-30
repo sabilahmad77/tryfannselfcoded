@@ -172,18 +172,18 @@ export function Footer({ language }: FooterProps) {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C59B48]/8 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full max-w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-12 mb-12 w-full">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 w-full max-w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8 md:gap-12 mb-8 sm:mb-12 w-full">
           {/* Brand */}
-          <div className="lg:col-span-2">
+          <div className="sm:col-span-2 lg:col-span-2">
             <motion.div
-              className="flex items-center gap-3 mb-6"
+              className="flex items-center gap-3 mb-4 sm:mb-6"
               whileHover={{ scale: 1.05 }}
             >
               <motion.img
                 src={fannLogo}
                 alt="FANN"
-                className="h-8 w-auto"
+                className="h-7 sm:h-8 w-auto"
                 animate={{
                   filter: [
                     'drop-shadow(0 0 8px rgba(197, 155, 72, 0.22))',
@@ -194,11 +194,11 @@ export function Footer({ language }: FooterProps) {
                 transition={{ duration: 2, repeat: Infinity }}
               />
             </motion.div>
-            <p className="mb-3 font-heading text-lg">
+            <p className="mb-2 sm:mb-3 font-heading text-base sm:text-lg">
               <span className="text-white font-heading">{t.tagline.white}</span>
               <span className="text-[#C59B48] font-heading">{t.tagline.gold}</span>
             </p>
-            <p className="text-[#F2F2F3]/60 text-sm mb-6 max-w-sm leading-relaxed font-body">
+            <p className="text-[#F2F2F3]/60 text-xs sm:text-sm mb-4 sm:mb-6 max-w-sm leading-relaxed font-body">
               {t.description}
             </p>
 
@@ -214,10 +214,10 @@ export function Footer({ language }: FooterProps) {
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.9 }}
-                      className="w-11 h-11 rounded-full glass border border-[#C59B48]/30 hover:border-[#C59B48] flex items-center justify-center transition-all group"
+                      className="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full glass border border-[#C59B48]/30 hover:border-[#C59B48] flex items-center justify-center transition-all group"
                       aria-label={social.label}
                     >
-                      <Icon className="w-5 h-5 text-[#F2F2F3]/60 group-hover:text-[#C59B48] transition-colors" />
+                      <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-[#F2F2F3]/60 group-hover:text-[#C59B48] transition-colors" />
                     </motion.a>
                     {/* Tooltip */}
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded-lg bg-[#191922] border border-[#C59B48]/30 text-white text-xs font-body whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity duration-200 z-50 shadow-lg">
@@ -235,8 +235,8 @@ export function Footer({ language }: FooterProps) {
           {/* Links */}
           {t.sections.map((section, index) => (
             <div key={index}>
-              <h4 className="text-[#F2F2F3] mb-6 font-heading">{section.title}</h4>
-              <ul className="space-y-3">
+              <h4 className="text-[#F2F2F3] mb-4 sm:mb-6 text-sm sm:text-base font-heading">{section.title}</h4>
+              <ul className="space-y-2 sm:space-y-3">
                 {section.links.map((link, linkIndex) => {
                   const isComingSoonLink = isComingSoon(link);
                   return (
@@ -248,12 +248,12 @@ export function Footer({ language }: FooterProps) {
                         <motion.button
                           onClick={() => handleLinkClick(link)}
                           disabled={isComingSoonLink}
-                          className={`text-[#F2F2F3]/60 hover:text-[#C59B48] text-sm disabled:bg-disabled transition-colors inline-block font-body ${isComingSoonLink ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                          className={`text-[#F2F2F3]/60 hover:text-[#C59B48] text-xs sm:text-sm disabled:bg-disabled transition-colors inline-block font-body ${isComingSoonLink ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
                         >
                           {link}
                         </motion.button>
                         {isComingSoonLink && (
-                          <span className="text-[#C59B48] text-xs font-body px-2 py-0.5 rounded-full border border-[#C59B48]/30">
+                          <span className="text-[#C59B48] text-xs font-body px-1.5 sm:px-2 py-0.5 rounded-full border border-[#C59B48]/30">
                             {t.comingSoon}
                           </span>
                         )}
@@ -267,15 +267,15 @@ export function Footer({ language }: FooterProps) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-[#C59B48]/10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-[#F2F2F3]/60 text-sm font-body">{t.copyright}</p>
-            <div className="flex items-center gap-4">
+        <div className="pt-6 sm:pt-8 border-t border-[#C59B48]/10">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+            <p className="text-[#F2F2F3]/60 text-xs sm:text-sm font-body text-center sm:text-left">{t.copyright}</p>
+            <div className="flex items-center gap-3 sm:gap-4">
               <motion.div
-                className="flex items-center gap-2 px-4 py-2 rounded-full glass border border-[#45e3d3]/30"
+                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass border border-[#45e3d3]/30"
                 whileHover={{ scale: 1.05 }}
               >
-                <div className="w-2 h-2 rounded-full bg-[#45e3d3] animate-pulse" />
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#45e3d3] animate-pulse" />
                 <span className="text-[#F2F2F3]/60 text-xs font-body">GDPR Compliant</span>
               </motion.div>
             </div>
