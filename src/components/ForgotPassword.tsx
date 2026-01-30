@@ -106,7 +106,7 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
             <motion.button
               onClick={onNavigateToHome}
               whileHover={{ scale: 1.02 }}
-              className="flex items-center gap-2 text-[#808c99] hover:text-[#C59B48] transition-colors group mb-8"
+              className="flex items-center gap-2 text-[#8A8EA0] hover:text-[#C59B48] transition-colors group mb-8"
             >
               <ChevronLeft className={`w-5 h-5 group-hover:-translate-x-1 transition-transform ${isRTL ? 'rotate-180' : ''}`} />
               <span className="text-sm">{content.backToHome}</span>
@@ -116,9 +116,9 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C59B48] to-[#D6AE5A] flex items-center justify-center">
                 <Sparkles className="w-6 h-6 text-[#121217]" />
               </div>
-              <h1 className="text-3xl text-[#ffffff]">FANN</h1>
+              <h1 className="text-3xl text-[#F2F2F3]">FANN</h1>
             </div>
-            <p className="text-[#808c99] text-sm">{content.subtitle}</p>
+            <p className="text-[#8A8EA0] text-sm">{content.subtitle}</p>
           </div>
 
           {/* Features Section */}
@@ -133,16 +133,16 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                   <Shield className="w-6 h-6 text-[#C59B48]" />
                 </div>
                 <div>
-                  <h2 className="text-xl text-[#ffffff] mb-1">
+                  <h2 className="text-xl text-[#F2F2F3] mb-1">
                     {language === 'en' ? 'Secure Reset Process' : 'عملية إعادة تعيين آمنة'}
                   </h2>
-                  <p className="text-[#808c99] text-sm">
+                  <p className="text-[#8A8EA0] text-sm">
                     {language === 'en' ? 'Your security is our priority' : 'أمانك هو أولويتنا'}
                   </p>
                 </div>
               </div>
 
-              <div className="space-y-4 p-6 rounded-xl bg-[#1D112A]/50 border border-[#C59B48]/20">
+              <div className="space-y-4 p-6 rounded-xl bg-[#191922]/50 border border-[#C59B48]/20">
                 {content.instructions.map((instruction, idx) => (
                   <motion.div
                     key={idx}
@@ -154,7 +154,7 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                     <div className="w-6 h-6 rounded-full bg-[#C59B48]/20 border border-[#C59B48]/40 flex items-center justify-center shrink-0 mt-0.5">
                       <span className="text-[#C59B48] text-xs">{idx + 1}</span>
                     </div>
-                    <p className="text-[#808c99] text-sm">{instruction}</p>
+                    <p className="text-[#8A8EA0] text-sm">{instruction}</p>
                   </motion.div>
                 ))}
               </div>
@@ -178,8 +178,8 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                 <>
                   {/* Header */}
                   <div className="mb-8">
-                    <h2 className="text-3xl text-[#ffffff] mb-2">{content.title}</h2>
-                    <p className="text-[#808c99]">{content.subtitle}</p>
+                    <h2 className="text-3xl text-[#F2F2F3] mb-2">{content.title}</h2>
+                    <p className="text-[#8A8EA0]">{content.subtitle}</p>
                   </div>
 
                   {/* Form */}
@@ -191,16 +191,16 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                     <form onSubmit={handleSubmit} className="space-y-5">
                       {/* Email */}
                       <div className="space-y-2">
-                        <Label htmlFor="email" className="text-[#ffffff]/80">{content.email}</Label>
+                        <Label htmlFor="email" className="text-[#F2F2F3]/80">{content.email}</Label>
                         <div className="relative">
-                          <Mail className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#808c99] ${isRTL ? 'right-3' : 'left-3'}`} />
+                          <Mail className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 text-[#8A8EA0] ${isRTL ? 'right-3' : 'left-3'}`} />
                           <Input
                             id="email"
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder={content.emailPlaceholder}
-                            className={`bg-[#0B0B0D] border border-[#C59B48]/20 text-[#ffffff] placeholder:text-[#808c99] h-11 focus:border-[#C59B48]/50 focus:ring-[#C59B48]/20 ${isRTL ? 'pr-10' : 'pl-10'}`}
+                            className={`bg-[#0B0B0D] border border-[#C59B48]/20 text-[#F2F2F3] placeholder:text-[#8A8EA0] h-11 focus:border-[#C59B48]/50 focus:ring-[#C59B48]/20 ${isRTL ? 'pr-10' : 'pl-10'}`}
                             required
                           />
                         </div>
@@ -211,7 +211,7 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                         <Button
                           type="submit"
                           disabled={isLoading}
-                          className="w-full h-12 bg-gradient-to-r from-[#C59B48] to-[#45e3d3] text-[#121217] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-full h-12 bg-gradient-to-r from-[#C59B48] to-[#45e3d3] text-[#121217] hover:opacity-90 transition-opacity disabled:bg-disabled disabled:cursor-not-allowed"
                         >
                           <span className="relative z-10 flex items-center justify-center gap-2">
                             {isLoading ? content.sending : content.sendButton}
@@ -254,19 +254,19 @@ export function ForgotPassword({ onNavigateToSignIn, onNavigateToHome }: ForgotP
                     </motion.div>
 
                     {/* Success Message */}
-                    <h2 className="text-3xl text-[#ffffff] mb-3">{content.successTitle}</h2>
-                    <p className="text-[#808c99] mb-2">{content.successSubtitle}</p>
+                    <h2 className="text-3xl text-[#F2F2F3] mb-3">{content.successTitle}</h2>
+                    <p className="text-[#8A8EA0] mb-2">{content.successSubtitle}</p>
                     <p className="text-[#C59B48] mb-8">{email}</p>
 
                     {/* Info Box */}
-                    <div className="p-6 rounded-xl bg-[#1D112A]/50 border border-[#C59B48]/20 mb-6">
-                      <p className="text-[#808c99] text-sm mb-4">{content.checkSpam}</p>
+                    <div className="p-6 rounded-xl bg-[#191922]/50 border border-[#C59B48]/20 mb-6">
+                      <p className="text-[#8A8EA0] text-sm mb-4">{content.checkSpam}</p>
                       <div className="flex items-center justify-center gap-2 text-sm">
-                        <span className="text-[#808c99]">{content.resendLink}</span>
+                        <span className="text-[#8A8EA0]">{content.resendLink}</span>
                         <button
                           onClick={handleResend}
                           disabled={isLoading}
-                          className="text-[#C59B48] hover:text-[#D6AE5A] transition-colors disabled:opacity-50"
+                          className="text-[#C59B48] hover:text-[#D6AE5A] transition-colors disabled:opacity-50 disabled:bg-disabled disabled:cursor-not-allowed"
                         >
                           {content.resend}
                         </button>

@@ -57,7 +57,7 @@ export function ProfileCompletionPrompt({
       title={t.title}
       headerIcon={AlertCircle}
       size="md"
-      contentClassName="p-6 space-y-6 bg-[#1D112A]"
+      contentClassName="p-6 space-y-6 bg-[#191922]"
       className="border border-[#d4af37]/30"
       zIndex={10000}
     >

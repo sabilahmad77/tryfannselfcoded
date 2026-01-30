@@ -722,8 +722,8 @@ export function EditKYC({
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <p className="text-white/60 font-semibold mb-3">{content.subtitle}</p>
-          <p className="text-white/60 text-sm leading-relaxed max-w-2xl mx-auto">{content.description}</p>
+          <p className="text-[#B9BBC6] font-semibold mb-3">{content.subtitle}</p>
+          <p className="text-[#B9BBC6] text-sm leading-relaxed max-w-2xl mx-auto">{content.description}</p>
         </motion.div>
 
         {/* Notice */}
@@ -741,14 +741,14 @@ export function EditKYC({
             {content.notice.points.map((point, index) => (
               <li
                 key={index}
-                className="text-white/60 text-sm flex items-start gap-2"
+                className="text-[#B9BBC6] text-sm flex items-start gap-2"
               >
                 <CheckCircle className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
                 <span>{point}</span>
               </li>
             ))}
           </ul>
-          <p className="text-white/60 text-sm ml-8">{content.notice.conclusion}</p>
+          <p className="text-[#B9BBC6] text-sm ml-8">{content.notice.conclusion}</p>
         </motion.div>
 
         {/* Form */}
@@ -983,7 +983,7 @@ export function EditKYC({
               {/* Show current document previews if exist and no new files selected */}
               {idDocumentPreviews.length > 0 && !idDocumentFront && !idDocumentBack && (
                 <div className="mt-4 space-y-2">
-                  <p className="text-xs text-white/60">
+                  <p className="text-xs text-[#B9BBC6]">
                     {language === "en"
                       ? "Current documents"
                       : "المستندات الحالية"}
@@ -1012,7 +1012,7 @@ export function EditKYC({
               {/* Show previews for newly selected files */}
               {idDocumentPreviews.length > 0 && (idDocumentFront || idDocumentBack) && (
                 <div className="mt-4 space-y-2">
-                  <p className="text-xs text-white/60">
+                  <p className="text-xs text-[#B9BBC6]">
                     {language === "en"
                       ? "Selected documents"
                       : "المستندات المحددة"}
@@ -1080,7 +1080,7 @@ export function EditKYC({
               {/* Show current document preview if exists and no new file selected */}
               {proofOfAddressPreviews.length > 0 && !proofOfAddress && (
                 <div className="mt-4 space-y-2">
-                  <p className="text-xs text-white/60">
+                  <p className="text-xs text-[#B9BBC6]">
                     {language === "en"
                       ? "Current document"
                       : "المستند الحالي"}
@@ -1116,7 +1116,7 @@ export function EditKYC({
               {content.security.features.map((feature, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-400" />
-                  <span className="text-white/60 text-sm">{feature}</span>
+                  <span className="text-[#B9BBC6] text-sm">{feature}</span>
                 </div>
               ))}
             </div>
@@ -1145,7 +1145,7 @@ export function EditKYC({
                 >
                   {content.compliance.title}
                 </Label>
-                <p className="text-white/60 text-sm leading-relaxed">
+                <p className="text-[#B9BBC6] text-sm leading-relaxed">
                   {content.compliance.text}
                 </p>
               </div>
@@ -1164,14 +1164,14 @@ export function EditKYC({
               onClick={onClose}
               variant="outline"
               disabled={isLoading}
-              className="flex-1 h-12 border-white/20 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex-1 h-12 border-white/20 hover:border-amber-500/50 hover:bg-amber-500/10 text-white/70 hover:text-white disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
             >
               {content.cancel}
             </Button>
             <Button
               type="submit"
               disabled={isLoading || !acceptedCompliance}
-              className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {isLoading ? (

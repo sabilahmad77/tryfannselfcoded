@@ -267,10 +267,10 @@ export function FeedbackPage() {
         transition={{ duration: 0.6 }}
         className={`mb-6 ${isRTL ? 'text-right' : 'text-left'}`}
       >
-        <h1 className="text-4xl md:text-5xl mb-2 text-[#ffffff]">
+        <h1 className="text-4xl md:text-5xl mb-2 text-[#F2F2F3]">
           {t.title}
         </h1>
-        <p className="text-[#808c99] text-lg">{t.subtitle}</p>
+        <p className="text-[#8A8EA0] text-lg">{t.subtitle}</p>
       </motion.div>
 
       {/* Tabs */}
@@ -285,7 +285,7 @@ export function FeedbackPage() {
               className={`flex-1 px-4 py-3 rounded-xl text-sm md:text-base transition-all ${
                 isActive
                   ? 'bg-gradient-to-r from-[#C59B48] via-[#fbbf24] to-[#C59B48] text-[#0B0B0D] shadow-lg shadow-[#fbbf24]/30'
-                  : 'text-[#808c99] hover:text-[#ffffff]'
+                  : 'text-[#8A8EA0] hover:text-[#F2F2F3]'
               }`}
             >
               {t.tabs[tab]}
@@ -307,7 +307,7 @@ export function FeedbackPage() {
               <>
                 {/* Satisfaction Rating */}
                 <div>
-                  <label className={`block text-[#ffffff] mb-4 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <label className={`block text-[#F2F2F3] mb-4 ${isRTL ? 'text-right' : 'text-left'}`}>
                     {t.satisfactionLabel} <span className="text-[#ef4444]">*</span>
                   </label>
                   <div className={`grid grid-cols-5 gap-3`}>
@@ -328,9 +328,9 @@ export function FeedbackPage() {
                         >
                           <Icon
                             className={`w-8 h-8 mx-auto mb-2 transition-colors`}
-                            style={{ color: isSelected ? level.color : '#808c99' }}
+                            style={{ color: isSelected ? level.color : '#8A8EA0' }}
                           />
-                          <p className={`text-xs text-center ${isSelected ? 'text-[#ffffff]' : 'text-[#808c99]'
+                          <p className={`text-xs text-center ${isSelected ? 'text-[#F2F2F3]' : 'text-[#8A8EA0]'
                             }`}>
                             {level.label}
                           </p>
@@ -342,7 +342,7 @@ export function FeedbackPage() {
 
               {/* Feedback About */}
               <div>
-                <label className={`block text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+                <label className={`block text-[#F2F2F3] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
                   {t.ideasFeedback.categoryLabel} <span className="text-[#ef4444]">*</span>
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -357,8 +357,8 @@ export function FeedbackPage() {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         className={`p-3 rounded-lg transition-all cursor-pointer ${isSelected
-                          ? 'border-2 border-[#C59B48] bg-[#C59B48]/10 text-[#ffffff]'
-                          : 'bg-[#0B0B0D] border border-[#4e4e4e78] text-[#808c99] hover:border-[#C59B48]/30'
+                          ? 'border-2 border-[#C59B48] bg-[#C59B48]/10 text-[#F2F2F3]'
+                          : 'bg-[#0B0B0D] border border-[#4e4e4e78] text-[#8A8EA0] hover:border-[#C59B48]/30'
                           } ${isRTL ? 'text-right' : 'text-left'}`}
                       >
                         <span className="text-sm">{label}</span>
@@ -394,7 +394,7 @@ export function FeedbackPage() {
 
                 {/* Idea Category */}
                 <div>
-                  <label className={`block text-[#ffffff] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+                  <label className={`block text-[#F2F2F3] mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
                     {t.categoryLabel} <span className="text-[#ef4444]">*</span>
                   </label>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -409,8 +409,8 @@ export function FeedbackPage() {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           className={`p-3 rounded-lg transition-all cursor-pointer ${isSelected
-                            ? 'border-2 border-[#C59B48] bg-[#C59B48]/10 text-[#ffffff]'
-                            : 'bg-[#0B0B0D] border border-[#4e4e4e78] text-[#808c99] hover:border-[#C59B48]/30'
+                            ? 'border-2 border-[#C59B48] bg-[#C59B48]/10 text-[#F2F2F3]'
+                            : 'bg-[#0B0B0D] border border-[#4e4e4e78] text-[#8A8EA0] hover:border-[#C59B48]/30'
                             } ${isRTL ? 'text-right' : 'text-left'}`}
                         >
                           <span className="text-sm">{label}</span>
@@ -437,7 +437,7 @@ export function FeedbackPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting || isSendingFeedback}
-                className={`w-full h-12 shadow-lg shadow-primary/30 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${isRTL ? 'flex-row-reverse' : ''
+                className={`w-full h-12 shadow-lg shadow-primary/30 transition-all cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed ${isRTL ? 'flex-row-reverse' : ''
                   }`}
               >
                 {isSubmitting || isSendingFeedback ? (
@@ -466,10 +466,10 @@ export function FeedbackPage() {
                 <Star className="w-5 h-5 text-[#45e3d3]" />
               </div>
               <div>
-                <h3 className="text-[#ffffff] mb-1">
+                <h3 className="text-[#F2F2F3] mb-1">
                   {language === 'en' ? 'Your Voice Matters' : 'صوتك مهم'}
                 </h3>
-                <p className="text-sm text-[#808c99]">
+                <p className="text-sm text-[#8A8EA0]">
                   {language === 'en'
                     ? 'Every piece of feedback helps us build a better platform for the art community.'
                     : 'كل ملاحظة تساعدنا في بناء منصة أفضل لمجتمع الفن.'}
@@ -481,10 +481,10 @@ export function FeedbackPage() {
                 <MessageSquare className="w-5 h-5 text-[#C59B48]" />
               </div>
               <div>
-                <h3 className="text-[#ffffff] mb-1">
+                <h3 className="text-[#F2F2F3] mb-1">
                   {language === 'en' ? 'We Read Everything' : 'نقرأ كل شيء'}
                 </h3>
-                <p className="text-sm text-[#808c99]">
+                <p className="text-sm text-[#8A8EA0]">
                   {language === 'en'
                     ? 'Our team reviews every submission to understand your needs better.'
                     : 'يراجع فريقنا كل رسالة لفهم احتياجاتك بشكل أفضل.'}
@@ -496,10 +496,10 @@ export function FeedbackPage() {
                 <Smile className="w-5 h-5 text-[#8b5cf6]" />
               </div>
               <div>
-                <h3 className="text-[#ffffff] mb-1">
+                <h3 className="text-[#F2F2F3] mb-1">
                   {language === 'en' ? 'Continuous Improvement' : 'تحسين مستمر'}
                 </h3>
-                <p className="text-sm text-[#808c99]">
+                <p className="text-sm text-[#8A8EA0]">
                   {language === 'en'
                     ? "We're constantly evolving based on your valuable insights."
                     : 'نحن نتطور باستمرار بناءً على رؤاكم القيمة.'}

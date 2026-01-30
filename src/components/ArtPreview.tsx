@@ -54,7 +54,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
 
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#ffcc33]/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#C59B48]/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-[#45e3d3]/10 rounded-full blur-3xl" />
       </div>
 
@@ -69,9 +69,9 @@ export function ArtPreview({ language }: ArtPreviewProps) {
         >
           <h2 className="mb-4 text-4xl md:text-5xl font-heading">
             <span className="text-white">{t.title.white}</span>
-            <span className="text-[#ffcc33]">{t.title.gold}</span>
+            <span className="text-[#C59B48]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-4xl mx-auto text-lg font-body">
+          <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -101,7 +101,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
               >
                 {/* Front Side - Image Only */}
                 <div 
-                  className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 border border-[#2A2A3A] group-hover:border-[#ffcc33]/40 transition-all duration-500"
+                  className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 border border-[#2A2A3A] group-hover:border-[#C59B48]/40 transition-all duration-500"
                   style={{ backfaceVisibility: 'hidden' }}
                 >
                   {/* Glass Overlay */}
@@ -117,15 +117,15 @@ export function ArtPreview({ language }: ArtPreviewProps) {
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0D]/80 via-transparent to-transparent" />
 
                     {/* Coming Soon Badge */}
-                    <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[#ffcc33]/20 border border-[#ffcc33]/40 backdrop-blur-sm z-20">
-                      <span className="text-[#ffcc33] text-xs font-medium">{t.placeholder.comingSoon}</span>
+                    <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[#C59B48]/20 border border-[#C59B48]/40 backdrop-blur-sm z-20">
+                      <span className="text-[#C59B48] text-xs font-medium">{t.placeholder.comingSoon}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Back Side - Details */}
                 <div 
-                  className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 border border-[#ffcc33]/40"
+                  className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 border border-[#C59B48]/40"
                   style={{ 
                     backfaceVisibility: 'hidden',
                     transform: 'rotateY(180deg)'
@@ -143,7 +143,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
 
                     {/* Artist Name */}
                     <div className="mb-4">
-                      <p className="text-white/60 text-sm mb-1 font-body">{t.placeholder.artist}</p>
+                      <p className="text-[#F2F2F3] text-sm mb-1 font-body">{t.placeholder.artist}</p>
                       <p className="text-white text-base font-body">{artwork.artist}</p>
                     </div>
 
@@ -156,7 +156,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
 
                     {/* Estimated Value */}
                     <div className="mt-auto pt-4 border-t border-white/10">
-                      <div className="flex items-center gap-2 text-[#ffcc33] text-base font-semibold font-body">
+                      <div className="flex items-center gap-2 text-[#C59B48] text-base font-semibold font-body">
                         <DollarSign className="w-5 h-5" />
                         <span>{artwork.value}</span>
                       </div>
@@ -164,7 +164,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
                     </div>
 
                     {/* Hover Glow Effect */}
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#ffcc33]/10 via-transparent to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#C59B48]/10 via-transparent to-transparent pointer-events-none" />
                   </div>
                 </div>
               </div>

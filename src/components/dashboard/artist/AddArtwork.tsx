@@ -286,8 +286,8 @@ export function AddArtwork({
               )}
             </div>
             <div className={isRTL ? "text-right" : "text-left"}>
-              <h3 className="text-lg text-[#ffffff]">{t.myArtworks}</h3>
-              <p className="text-sm text-[#808c99]">
+              <h3 className="text-lg text-[#F2F2F3]">{t.myArtworks}</h3>
+              <p className="text-sm text-[#8A8EA0]">
                 {artworks?.length ?? 0}{" "}
                 {language === "en" ? "artworks" : "أعمال فنية"}
               </p>
@@ -299,7 +299,7 @@ export function AddArtwork({
             type="button"
             onClick={handleAddClick}
             disabled={!profileCompleted}
-            className="relative overflow-hidden bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#121217] px-4 py-2 rounded-xl hover:opacity-90 transition-all group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="relative overflow-hidden bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#121217] px-4 py-2 rounded-xl hover:opacity-90 transition-all group cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed"
           >
             <span
               className={`relative flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""
@@ -327,7 +327,7 @@ export function AddArtwork({
             />
           ) : isLoading ? (
             <div className="h-full flex items-center justify-center">
-              <p className="text-sm text-[#808c99]">{t.loading}</p>
+              <p className="text-sm text-[#8A8EA0]">{t.loading}</p>
             </div>
           ) : isError ? (
             <div className="h-full flex flex-col items-center justify-center gap-3 text-center">
@@ -348,8 +348,8 @@ export function AddArtwork({
                 <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-[#C59B48]/10 to-[#45e3d3]/10 border border-[#C59B48]/30 rounded-2xl flex items-center justify-center">
                   <Upload className="w-10 h-10 text-[#C59B48]/70" />
                 </div>
-                <p className="text-[#ffffff] mb-2">{t.noArtworks}</p>
-                <p className="text-sm text-[#808c99] mb-4">{t.startAdding}</p>
+                <p className="text-[#F2F2F3] mb-2">{t.noArtworks}</p>
+                <p className="text-sm text-[#8A8EA0] mb-4">{t.startAdding}</p>
                 <div className="flex items-center justify-center gap-4 pt-2">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-[#45e3d3]" />
@@ -358,7 +358,7 @@ export function AddArtwork({
                   <div className="w-px h-4 bg-[#C59B48]/30" />
                   <div className="flex items-center gap-2">
                     <ImageIcon className="w-4 h-4 text-[#C59B48]" />
-                    <span className="text-sm text-[#808c99]">JPG, PNG</span>
+                    <span className="text-sm text-[#8A8EA0]">JPG, PNG</span>
                   </div>
                 </div>
               </div>
@@ -445,7 +445,7 @@ export function AddArtwork({
                     {/* Info Section */}
                     <div className="p-3 space-y-2">
                       <h4
-                        className={`text-sm text-[#ffffff] mb-2 truncate ${isRTL ? "text-right" : "text-left"
+                        className={`text-sm text-[#F2F2F3] mb-2 truncate ${isRTL ? "text-right" : "text-left"
                           }`}
                       >
                         {artwork.title}

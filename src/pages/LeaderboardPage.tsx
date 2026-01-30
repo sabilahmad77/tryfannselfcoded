@@ -493,7 +493,7 @@ export function LeaderboardPage() {
       case 3:
         return <Medal className="w-6 h-6 text-orange-500" />;
       default:
-        return <span className="text-white/60">#{rank}</span>;
+        return <span className="text-[#B9BBC6]">#{rank}</span>;
     }
   };
 
@@ -528,7 +528,7 @@ export function LeaderboardPage() {
       return "border-pink-500/50 text-pink-400 bg-pink-500/10";
     if (lowerType.includes("ambassador") || lowerType.includes("سفير"))
       return "border-orange-500/50 text-orange-400 bg-orange-500/10";
-    return "border-white/20 text-white/60 bg-white/5";
+    return "border-white/20 text-[#B9BBC6] bg-white/5";
   };
 
   // Handle user click to open profile modal
@@ -614,9 +614,9 @@ export function LeaderboardPage() {
           </div>
           <div>
             <h1 className="text-4xl md:text-5xl">
-              <span className="text-[#ffffff]">{t.title}</span>
+              <span className="text-[#F2F2F3]">{t.title}</span>
             </h1>
-            <p className="text-[#808c99] text-lg mt-1">{subtitle}</p>
+            <p className="text-[#8A8EA0] text-lg mt-1">{subtitle}</p>
           </div>
         </div>
       </motion.div>
@@ -646,7 +646,7 @@ export function LeaderboardPage() {
           >
             {totalCount}
           </motion.div>
-          <div className="text-[#808c99]">{t.stats.totalParticipants}</div>
+          <div className="text-[#8A8EA0]">{t.stats.totalParticipants}</div>
         </div>
 
         {/* Top Tier */}
@@ -667,7 +667,7 @@ export function LeaderboardPage() {
           >
             {topTierCount}
           </motion.div>
-          <div className="text-[#808c99]">{t.stats.topTier}</div>
+          <div className="text-[#8A8EA0]">{t.stats.topTier}</div>
         </div>
 
         {/* Average Points */}
@@ -688,7 +688,7 @@ export function LeaderboardPage() {
           >
             {avgPoints.toLocaleString()}
           </motion.div>
-          <div className="text-[#808c99]">{t.stats.avgPoints}</div>
+          <div className="text-[#8A8EA0]">{t.stats.avgPoints}</div>
         </div>
       </motion.div>
 
@@ -698,7 +698,7 @@ export function LeaderboardPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#1D112A]/80 via-[#1D112A]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 relative overflow-hidden shadow-xl shadow-[#C59B48]/20"
+          className="mb-8 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/80 via-[#191922]/70 to-[#0B0B0D]/80 border-2 border-[#C59B48]/50 relative overflow-hidden shadow-xl shadow-[#C59B48]/20"
         >
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-[#C59B48]/15 via-[#45e3d3]/15 to-[#C59B48]/15"
@@ -720,7 +720,7 @@ export function LeaderboardPage() {
               <span className="text-orange-400 text-xl">#{yourRank}</span>
               {yourPoints !== null && (
                 <>
-                  <span className="text-white/60">•</span>
+                  <span className="text-[#B9BBC6]">•</span>
                   <span className="text-white text-lg">
                     {yourPoints.toLocaleString()} points
                   </span>
@@ -784,7 +784,7 @@ export function LeaderboardPage() {
               >
                 {t.timePeriods.allTime}
               </div>
-              <div className="text-sm text-white/60">
+              <div className="text-sm text-[#B9BBC6]">
                 {language === "en" ? "Complete Rankings" : "التصنيف الكامل"}
               </div>
             </div>
@@ -848,7 +848,7 @@ export function LeaderboardPage() {
               >
                 {t.timePeriods.thisMonth}
               </div>
-              <div className="text-sm text-white/60">
+              <div className="text-sm text-[#B9BBC6]">
                 {language === "en" ? "Monthly Leaders" : "قادة الشهر"}
               </div>
             </div>
@@ -910,7 +910,7 @@ export function LeaderboardPage() {
               >
                 {t.timePeriods.thisWeek}
               </div>
-              <div className="text-sm text-white/60">
+              <div className="text-sm text-[#B9BBC6]">
                 {language === "en" ? "Hot This Week" : "الأكثر نشاطاً"}
               </div>
             </div>
@@ -940,7 +940,7 @@ export function LeaderboardPage() {
             className={`flex flex-wrap items-center gap-3 ${isRTL ? "flex-row-reverse justify-end" : "justify-start"
               }`}
           >
-            <span className="text-[#808c99] text-sm">{t.userType}:</span>
+            <span className="text-[#8A8EA0] text-sm">{t.userType}:</span>
             {(Object.keys(t.personas) as PersonaFilter[]).map((persona) => (
               <motion.button
                 key={persona}
@@ -949,7 +949,7 @@ export function LeaderboardPage() {
                 onClick={() => setPersonaFilter(persona)}
                 className={`px-4 py-1.5 rounded-full text-sm transition-all duration-300 cursor-pointer ${personaFilter === persona
                   ? "bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black"
-                  : "bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-amber-500/50"
+                  : "bg-white/5 border border-white/10 text-[#B9BBC6] hover:text-white hover:border-amber-500/50"
                   }`}
               >
                 {t.personas[persona]}
@@ -974,7 +974,7 @@ export function LeaderboardPage() {
 
         {!isLoading && !isError && personaFilteredLeaders.length === 0 && (
           <div className="flex items-center justify-center py-10">
-            <span className="text-white/60 text-sm">{t.noData}</span>
+            <span className="text-[#B9BBC6] text-sm">{t.noData}</span>
           </div>
         )}
 
@@ -1006,12 +1006,12 @@ export function LeaderboardPage() {
                     className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}
                   >
                     <div className="text-white">{leader.name}</div>
-                    <div className="text-white/60 text-sm flex items-center gap-2">
+                    <div className="text-[#B9BBC6] text-sm flex items-center gap-2">
                       {leader.username}
                       {isAuthenticated && (
                         <>
                           <span className="text-white/40">•</span>
-                          <span className="text-white/60">
+                          <span className="text-[#B9BBC6]">
                             {leader.followers ?? 0} followers
                           </span>
                         </>
@@ -1028,7 +1028,7 @@ export function LeaderboardPage() {
                       }}
                       disabled={loadingUserId === leader.id}
                       variant={isFollowing(leader.username) || leader.is_follow ? "outline" : "default"}
-                      className={`shrink-0 cursor-pointer ${isFollowing(leader.username) || leader.is_follow
+                      className={`shrink-0 cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed ${isFollowing(leader.username) || leader.is_follow
                         ? "border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500"
                         : ""
                         }`}
@@ -1089,12 +1089,12 @@ export function LeaderboardPage() {
         {!isLoading && !isError && personaFilteredLeaders.length > 0 && (
           <div className="hidden lg:block">
             <table className="w-full">
-              <thead className="sticky top-0 z-10 bg-gradient-to-br from-[#1D112A]/95 via-[#1D112A]/95 to-[#0B0B0D]/95 backdrop-blur-sm">
+              <thead className="sticky top-0 z-10 bg-gradient-to-br from-[#191922]/95 via-[#191922]/95 to-[#0B0B0D]/95 backdrop-blur-sm">
                 <tr className="bg-white/5 border-b border-white/10">
                   {t.columns.map((column, index) => (
                     <th
                       key={index}
-                      className={`px-6 py-4 text-[#808c99] ${isRTL ? "text-right" : "text-left"
+                      className={`px-6 py-4 text-[#8A8EA0] ${isRTL ? "text-right" : "text-left"
                         }`}
                     >
                       {column}
@@ -1102,7 +1102,7 @@ export function LeaderboardPage() {
                   ))}
                   {isAuthenticated && (
                     <th
-                      className={`px-6 py-4 text-[#808c99] ${isRTL ? "text-right" : "text-left"
+                      className={`px-6 py-4 text-[#8A8EA0] ${isRTL ? "text-right" : "text-left"
                         }`}
                     >
                       {/* Follow column header - empty */}
@@ -1143,13 +1143,13 @@ export function LeaderboardPage() {
                           </AvatarFallback>
                         </Avatar>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <div className="text-[#ffffff]">{leader.name}</div>
-                          <div className="text-[#808c99] text-sm flex items-center gap-2">
+                          <div className="text-[#F2F2F3]">{leader.name}</div>
+                          <div className="text-[#8A8EA0] text-sm flex items-center gap-2">
                             {leader.username}
                             {isAuthenticated && (
                               <>
                                 <span className="text-white/40">•</span>
-                                <span className="text-white/60">
+                                <span className="text-[#B9BBC6]">
                                   {leader.followers ?? 0} followers
                                 </span>
                               </>
@@ -1204,7 +1204,7 @@ export function LeaderboardPage() {
                           }
                           disabled={loadingUserId === leader.id}
                           variant={isFollowing(leader.username) || leader.is_follow ? "outline" : "default"}
-                          className={`cursor-pointer ${isFollowing(leader.username) || leader.is_follow
+                          className={`cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed ${isFollowing(leader.username) || leader.is_follow
                             ? "border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500"
                             : ""
                             }`}
@@ -1252,13 +1252,13 @@ export function LeaderboardPage() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-4 py-2 rounded-full border border-[#C59B48]/50 text-white/60 hover:text-white hover:border-[#C59B48]/30 transition-all ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+            className={`px-4 py-2 rounded-full border border-[#C59B48]/50 text-[#B9BBC6] hover:text-white hover:border-[#C59B48]/30 transition-all disabled:bg-disabled disabled:cursor-not-allowed ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
               } ${isRTL ? "flex-row-reverse" : ""}`}
           >
             <ChevronLeft className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />
           </motion.button>
           <div
-            className={`mx-4 text-[#808c99] ${isRTL ? "text-right" : "text-left"
+            className={`mx-4 text-[#8A8EA0] ${isRTL ? "text-right" : "text-left"
               }`}
           >
             {t.pagination.showing}{" "}
@@ -1271,7 +1271,7 @@ export function LeaderboardPage() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded-full border border-[#C59B48]/50 text-white/60 hover:text-white hover:border-[#C59B48]/30 transition-all ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
+            className={`px-4 py-2 rounded-full border border-[#C59B48]/50 text-[#B9BBC6] hover:text-white hover:border-[#C59B48]/30 transition-all disabled:bg-disabled disabled:cursor-not-allowed ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
               } ${isRTL ? "flex-row-reverse" : ""}`}
           >
             <ChevronRight className={`w-5 h-5 ${isRTL ? "rotate-180" : ""}`} />

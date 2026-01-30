@@ -305,8 +305,8 @@ export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
           <Film className="w-6 h-6 text-white" />
         </div>
         <div className={isRTL ? "text-right" : "text-left"}>
-          <h2 className="text-2xl text-[#ffffff]">{t.title}</h2>
-          <p className="text-sm text-[#808c99]">{t.description}</p>
+          <h2 className="text-2xl text-[#F2F2F3]">{t.title}</h2>
+          <p className="text-sm text-[#8A8EA0]">{t.description}</p>
         </div>
       </div>
 
@@ -322,9 +322,9 @@ export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
             }`}
           >
             <Award className="w-5 h-5 text-[#C59B48]" />
-            <span className="text-xs text-[#808c99]">{t.totalEarned}</span>
+            <span className="text-xs text-[#8A8EA0]">{t.totalEarned}</span>
           </div>
-          <p className="text-2xl text-[#ffffff]">{totalPointsEarned}</p>
+          <p className="text-2xl text-[#F2F2F3]">{totalPointsEarned}</p>
         </motion.div>
 
         <motion.div
@@ -337,9 +337,9 @@ export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
             }`}
           >
             <CheckCircle className="w-5 h-5 text-[#45e3d3]" />
-            <span className="text-xs text-[#808c99]">{t.videosCompleted}</span>
+            <span className="text-xs text-[#8A8EA0]">{t.videosCompleted}</span>
           </div>
-          <p className="text-2xl text-[#ffffff]">
+          <p className="text-2xl text-[#F2F2F3]">
             {completedCount}/{totalVideos}
           </p>
         </motion.div>
@@ -352,7 +352,7 @@ export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
             isRTL ? "flex-row-reverse" : ""
           }`}
         >
-          <span className="text-sm text-[#808c99]">{t.progress}</span>
+          <span className="text-sm text-[#8A8EA0]">{t.progress}</span>
           <span className="text-sm text-[#C59B48]">
             {Math.round(progressPercent)}%
           </span>
@@ -367,7 +367,7 @@ export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
             <Loader2 className="w-6 h-6 text-[#0ea5e9] animate-spin" />
           </div>
         ) : isVideosError ? (
-          <div className="flex flex-col items-center justify-center py-8 text-[#808c99]">
+          <div className="flex flex-col items-center justify-center py-8 text-[#8A8EA0]">
             <AlertCircle className="w-12 h-12 mb-2 text-[#ef4444]" />
             <p className="text-sm mb-4">{t.loadingError}</p>
             <Button
@@ -379,7 +379,7 @@ export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
             </Button>
           </div>
         ) : videos.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-[#808c99]">
+          <div className="flex flex-col items-center justify-center py-8 text-[#8A8EA0]">
             <Film className="w-12 h-12 mb-2" />
             <p className="text-sm">{t.noVideos}</p>
           </div>
@@ -436,7 +436,7 @@ export function WatchVideos({ onRefetchStats }: WatchVideosProps = {}) {
                     }`}
                   >
                     <div>
-                      <h4 className="text-[#ffffff] mb-1">{video.title}</h4>
+                      <h4 className="text-[#F2F2F3] mb-1">{video.title}</h4>
                       <Badge
                         variant="outline"
                         className={`${

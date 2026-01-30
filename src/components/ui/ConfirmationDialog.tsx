@@ -101,7 +101,7 @@ export function ConfirmationDialog({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-gradient-to-br from-[#1D112A] to-[#0B0B0D] rounded-2xl p-6 max-w-md w-full border border-[#4e4e4e78] shadow-2xl"
+        className="bg-gradient-to-br from-[#191922] to-[#0B0B0D] rounded-2xl p-6 max-w-md w-full border border-[#4e4e4e78] shadow-2xl"
       >
         {/* Header */}
         <div
@@ -115,8 +115,8 @@ export function ConfirmationDialog({
             <AlertTriangle className={`w-6 h-6 ${styles.iconColor}`} />
           </div>
           <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
-            <h3 className="text-xl text-[#ffffff] mb-2">{finalTitle}</h3>
-            <p className="text-sm text-[#808c99]">{finalMessage}</p>
+            <h3 className="text-xl text-[#F2F2F3] mb-2">{finalTitle}</h3>
+            <p className="text-sm text-[#8A8EA0]">{finalMessage}</p>
           </div>
         </div>
 
@@ -128,14 +128,14 @@ export function ConfirmationDialog({
             onClick={onClose}
             variant="outline"
             disabled={isLoading}
-            className="flex-1 transition-all duration-200 cursor-pointer"
+            className="flex-1 transition-all duration-200 cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed"
           >
             {finalCancelText}
           </Button>
           <Button
             onClick={onConfirm}
             disabled={isLoading}
-            className={`flex-1 ${styles.buttonColor} disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`flex-1 ${styles.buttonColor} disabled:bg-disabled disabled:cursor-not-allowed`}
           >
             {isLoading
               ? language === "en"

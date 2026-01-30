@@ -137,7 +137,7 @@ export function ProfileCompletion({
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           onClick={onCancel}
-          className={`fixed top-6 ${isRTL ? "right-6" : "left-6"} z-50 flex items-center gap-2 px-4 py-2 bg-[#1D112A]/80 backdrop-blur-sm border border-amber-500/30 rounded-xl text-white hover:bg-[#1D112A] hover:border-amber-500/50 transition-all duration-200 group cursor-pointer`}
+          className={`fixed top-6 ${isRTL ? "right-6" : "left-6"} z-50 flex items-center gap-2 px-4 py-2 bg-[#191922]/80 backdrop-blur-sm border border-amber-500/30 rounded-xl text-white hover:bg-[#191922] hover:border-amber-500/50 transition-all duration-200 group cursor-pointer`}
         >
           {isRTL ? (
             <>
@@ -163,7 +163,7 @@ export function ProfileCompletion({
           >
             {/* Progress Text */}
             <div className="text-center mb-6">
-              <p className="text-white/60 text-sm">
+              <p className="text-[#B9BBC6] text-sm">
                 {content.stepOf
                   .replace("{current}", (currentStep + 1).toString())
                   .replace("{total}", steps.length.toString())}
@@ -204,7 +204,7 @@ export function ProfileCompletion({
                           </motion.div>
                         ) : (
                           <span
-                            className={`text-sm ${isCurrent ? "text-black" : "text-white/60"
+                            className={`text-sm ${isCurrent ? "text-black" : "text-[#B9BBC6]"
                               }`}
                           >
                             {index + 1}
@@ -223,7 +223,7 @@ export function ProfileCompletion({
 
                       {/* Step Label */}
                       <p
-                        className={`text-xs mt-2 text-center absolute top-14 whitespace-nowrap ${isCurrent ? "text-amber-400" : "text-white/60"
+                        className={`text-xs mt-2 text-center absolute top-14 whitespace-nowrap ${isCurrent ? "text-amber-400" : "text-[#B9BBC6]"
                           }`}
                       >
                         {step}

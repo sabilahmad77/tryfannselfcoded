@@ -118,7 +118,7 @@ export function ImagePreviewList({
                 <div className="flex flex-col items-center justify-center p-2">
                   <FileText className="w-8 h-8 text-white/40" />
                   {showNames && (
-                    <span className="text-xs text-white/60 mt-1 truncate max-w-full">
+                    <span className="text-xs text-[#B9BBC6] mt-1 truncate max-w-full">
                       {item.name}
                     </span>
                   )}

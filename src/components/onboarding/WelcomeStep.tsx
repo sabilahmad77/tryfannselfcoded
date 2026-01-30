@@ -154,7 +154,7 @@ export function WelcomeStep({ language, onNext, data }: WelcomeStepProps) {
                     </div>
                     <div className="flex-1">
                       <h3 className="text-white mb-2">{feature.title}</h3>
-                      <p className="text-white/60 text-sm">{feature.desc}</p>
+                      <p className="text-[#B9BBC6] text-sm">{feature.desc}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -171,7 +171,7 @@ export function WelcomeStep({ language, onNext, data }: WelcomeStepProps) {
           className="text-center mb-8 p-8 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30"
         >
           <h3 className="text-xl text-white mb-2">{content.welcome.title}</h3>
-          <p className="text-white/60">{content.welcome.desc}</p>
+          <p className="text-[#B9BBC6]">{content.welcome.desc}</p>
         </motion.div>
 
         {/* CTA Button */}

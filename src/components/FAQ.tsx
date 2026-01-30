@@ -507,7 +507,7 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
             <span className="text-white">{t.title.white}</span>
             <span className="text-[#C59B48]">{t.title.gold}</span>
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-lg font-body">
+          <p className="text-[#B9BBC6] max-w-2xl mx-auto text-lg font-body">
             {t.subtitle}
           </p>
         </motion.div>
@@ -535,7 +535,7 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
                   <AccordionTrigger className="text-white hover:text-amber-400 text-left py-6 no-underline font-body">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-white/60 leading-relaxed pb-6 font-body">
+                  <AccordionContent className="text-[#B9BBC6] leading-relaxed pb-6 font-body">
                     {typeof faq.answer === "string" ? (
                       <p>{faq.answer}</p>
                     ) : faq.answer && typeof faq.answer === "object" && "intro" in faq.answer ? (
@@ -547,7 +547,7 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
                               <span className="font-semibold text-white/90">
                                 {benefit.title}
                               </span>
-                              <span className="text-white/60 pl-4">
+                              <span className="text-[#B9BBC6] pl-4">
                                 {benefit.description}
                               </span>
                             </li>

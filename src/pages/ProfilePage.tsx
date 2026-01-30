@@ -766,10 +766,10 @@ export function ProfilePage() {
                 }`}
             >
               <div>
-                <h1 className="text-3xl text-[#ffffff] mb-1">
+                <h1 className="text-3xl text-[#F2F2F3] mb-1">
                   {userData.name}
                 </h1>
-                <p className="text-[#808c99] mb-3">
+                <p className="text-[#8A8EA0] mb-3">
                   {userData.username ? `@${userData.username}` : userData.email}
                 </p>
                 <Badge className="bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#0B0B0D] border-0 flex items-center gap-1">
@@ -789,7 +789,7 @@ export function ProfilePage() {
               </div>
             </div>
 
-            <p className="text-[#808c99] mb-4">{userData.bio}</p>
+            <p className="text-[#8A8EA0] mb-4">{userData.bio}</p>
 
             {/* Quick Stats */}
             <div
@@ -800,34 +800,34 @@ export function ProfilePage() {
                 <p className="text-2xl text-[#C59B48]">
                   {userData.totalPoints}
                 </p>
-                <p className="text-xs text-[#808c99]">{t.totalPoints}</p>
+                <p className="text-xs text-[#8A8EA0]">{t.totalPoints}</p>
               </div>
               <div className="bg-[#0B0B0D] border border-primary/20 rounded-lg p-3">
-                <p className="text-2xl text-[#ffffff]">{userData.followers}</p>
-                <p className="text-xs text-[#808c99]">{t.followers}</p>
+                <p className="text-2xl text-[#F2F2F3]">{userData.followers}</p>
+                <p className="text-xs text-[#8A8EA0]">{t.followers}</p>
               </div>
               <div className="bg-[#0B0B0D] border border-primary/20 rounded-lg p-3">
-                <p className="text-2xl text-[#ffffff]">{userData.following}</p>
-                <p className="text-xs text-[#808c99]">{t.following}</p>
+                <p className="text-2xl text-[#F2F2F3]">{userData.following}</p>
+                <p className="text-xs text-[#8A8EA0]">{t.following}</p>
               </div>
               <div className="bg-[#0B0B0D] border border-primary/20 rounded-lg p-3">
-                <p className="text-2xl text-[#ffffff]">{userData.referrals}</p>
-                <p className="text-xs text-[#808c99]">{t.referrals}</p>
+                <p className="text-2xl text-[#F2F2F3]">{userData.referrals}</p>
+                <p className="text-xs text-[#8A8EA0]">{t.referrals}</p>
               </div>
               {!isAmbassador && (
                 <div className="bg-[#0B0B0D] border border-primary/20 rounded-lg p-3">
-                  <p className="text-2xl text-[#ffffff]">
+                  <p className="text-2xl text-[#F2F2F3]">
                     {userData.artworksSaved}
                   </p>
-                  <p className="text-xs text-[#808c99]">{t.artworksSaved}</p>
+                  <p className="text-xs text-[#8A8EA0]">{t.artworksSaved}</p>
                 </div>
               )}
               {isCollector && (
                 <div className="bg-[#0B0B0D] border border-primary/20 rounded-lg p-3">
-                  <p className="text-2xl text-[#ffffff]">
+                  <p className="text-2xl text-[#F2F2F3]">
                     {userData.collections}
                   </p>
-                  <p className="text-xs text-[#808c99]">{t.collectionsCreated}</p>
+                  <p className="text-xs text-[#8A8EA0]">{t.collectionsCreated}</p>
                 </div>
               )}
             </div>
@@ -842,7 +842,7 @@ export function ProfilePage() {
                 className={`flex items-center justify-between mb-2 ${isRTL ? "flex-row-reverse" : ""
                   }`}
               >
-                <span className="text-sm text-[#808c99]">
+                <span className="text-sm text-[#8A8EA0]">
                   {t.progressToNext} {nextTierName}
                 </span>
                 <span className="text-sm text-[#C59B48]">
@@ -857,7 +857,7 @@ export function ProfilePage() {
                 className={`flex items-center justify-between mb-2 ${isRTL ? "flex-row-reverse" : ""
                   }`}
               >
-                <span className="text-sm text-[#808c99]">
+                <span className="text-sm text-[#8A8EA0]">
                   {language === "en"
                     ? "Maximum tier reached!"
                     : "تم الوصول إلى أعلى مستوى!"}
@@ -897,8 +897,8 @@ export function ProfilePage() {
                     <Mail className="w-6 h-6 text-[#C59B48]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
-                    <p className="text-xs text-[#808c99]">{t.email}</p>
-                    <p className="text-[#ffffff]">{userData.email}</p>
+                    <p className="text-xs text-[#8A8EA0]">{t.email}</p>
+                    <p className="text-[#F2F2F3]">{userData.email}</p>
                   </div>
                 </div>
               )}
@@ -913,8 +913,8 @@ export function ProfilePage() {
                     <Phone className="w-6 h-6 text-[#45e3d3]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
-                    <p className="text-xs text-[#808c99]">{t.phone}</p>
-                    <p className="text-[#ffffff]">{userData.phone}</p>
+                    <p className="text-xs text-[#8A8EA0]">{t.phone}</p>
+                    <p className="text-[#F2F2F3]">{userData.phone}</p>
                   </div>
                 </div>
               )}
@@ -929,8 +929,8 @@ export function ProfilePage() {
                     <MapPin className="w-6 h-6 text-[#9375b5]" />
                   </div>
                   <div className={isRTL ? "text-right" : "text-left"}>
-                    <p className="text-xs text-[#808c99]">{t.location}</p>
-                    <p className="text-[#ffffff]">{userData.location}</p>
+                    <p className="text-xs text-[#8A8EA0]">{t.location}</p>
+                    <p className="text-[#F2F2F3]">{userData.location}</p>
                   </div>
                 </div>
               )}
@@ -943,8 +943,8 @@ export function ProfilePage() {
                   <Globe className="w-6 h-6 text-[#0ea5e9]" />
                 </div>
                 <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-xs text-[#808c99]">{t.website}</p>
-                  <p className="text-[#ffffff]">{userData.website}</p>
+                  <p className="text-xs text-[#8A8EA0]">{t.website}</p>
+                  <p className="text-[#F2F2F3]">{userData.website}</p>
                 </div>
               </div>
 
@@ -956,8 +956,8 @@ export function ProfilePage() {
                   <Briefcase className="w-6 h-6 text-[#D6AE5A]" />
                 </div>
                 <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-xs text-[#808c99]">{t.role}</p>
-                  <p className="text-[#ffffff]">{userData.role}</p>
+                  <p className="text-xs text-[#8A8EA0]">{t.role}</p>
+                  <p className="text-[#F2F2F3]">{userData.role}</p>
                 </div>
               </div>
 
@@ -969,8 +969,8 @@ export function ProfilePage() {
                   <Calendar className="w-6 h-6 text-[#fface3]" />
                 </div>
                 <div className={isRTL ? "text-right" : "text-left"}>
-                  <p className="text-xs text-[#808c99]">{t.memberSince}</p>
-                  <p className="text-[#ffffff]">{userData.memberSince}</p>
+                  <p className="text-xs text-[#8A8EA0]">{t.memberSince}</p>
+                  <p className="text-[#F2F2F3]">{userData.memberSince}</p>
                 </div>
               </div>
             </div>
@@ -993,13 +993,13 @@ export function ProfilePage() {
                     <Shield className="w-6 h-6 text-[#45e3d3]" />
                   </div>
                   <div className={`flex-1 ${isRTL ? "text-right" : "text-left"}`}>
-                    <h3 className="text-lg text-[#ffffff] mb-2">{t.kyc}</h3>
+                    <h3 className="text-lg text-[#F2F2F3] mb-2">{t.kyc}</h3>
                     {kycData && 'status' in kycData && kycData.status ? (
                       <div className={`flex flex-col gap-2 ${isRTL ? "items-end" : "items-start"}`}>
                         {getKYCStatusBadge(kycData.status)}
                       </div>
                     ) : (
-                      <p className="text-xs text-[#808c99]">
+                      <p className="text-xs text-[#8A8EA0]">
                         {t.kycNotSubmitted}
                       </p>
                     )}
@@ -1025,10 +1025,10 @@ export function ProfilePage() {
                     <div className="w-16 h-16 mb-4 rounded-full bg-[#45e3d3]/10 flex items-center justify-center">
                       <Shield className="w-8 h-8 text-[#45e3d3]" />
                     </div>
-                    <h4 className="text-lg text-[#ffffff] mb-2">
+                    <h4 className="text-lg text-[#F2F2F3] mb-2">
                       {t.kycNotSubmitted}
                     </h4>
-                    <p className="text-sm text-[#808c99] mb-4 max-w-md">
+                    <p className="text-sm text-[#8A8EA0] mb-4 max-w-md">
                       {t.kycNotSubmittedDesc}
                     </p>
                     <Button
@@ -1050,10 +1050,10 @@ export function ProfilePage() {
                     <div className="w-16 h-16 mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
                       <Shield className="w-8 h-8 text-red-400" />
                     </div>
-                    <h4 className="text-lg text-[#ffffff] mb-2">
+                    <h4 className="text-lg text-[#F2F2F3] mb-2">
                       {language === "en" ? "Verification Rejected" : "تم رفض التحقق"}
                     </h4>
-                    <p className="text-sm text-[#808c99] mb-4 max-w-md">
+                    <p className="text-sm text-[#8A8EA0] mb-4 max-w-md">
                       {language === "en"
                         ? "Your KYC verification was rejected. Please review your information and resubmit."
                         : "تم رفض التحقق من هويتك. يرجى مراجعة معلوماتك وإعادة الإرسال."}
@@ -1082,8 +1082,8 @@ export function ProfilePage() {
                           <Hash className="w-6 h-6 text-[#C59B48]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <p className="text-xs text-[#808c99]">{t.idNumber}</p>
-                          <p className="text-[#ffffff]">
+                          <p className="text-xs text-[#8A8EA0]">{t.idNumber}</p>
+                          <p className="text-[#F2F2F3]">
                             {kycData.id_number.substring(0, 4)}****
                           </p>
                         </div>
@@ -1100,10 +1100,10 @@ export function ProfilePage() {
                           <Calendar className="w-6 h-6 text-[#fface3]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <p className="text-xs text-[#808c99]">
+                          <p className="text-xs text-[#8A8EA0]">
                             {t.dateOfBirth}
                           </p>
-                          <p className="text-[#ffffff]">
+                          <p className="text-[#F2F2F3]">
                             {(() => {
                               try {
                                 const date = new Date(kycData.dob);
@@ -1137,10 +1137,10 @@ export function ProfilePage() {
                           <Globe className="w-6 h-6 text-[#0ea5e9]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <p className="text-xs text-[#808c99]">
+                          <p className="text-xs text-[#8A8EA0]">
                             {t.kycCountry}
                           </p>
-                          <p className="text-[#ffffff]">
+                          <p className="text-[#F2F2F3]">
                             {getCountryName(kycData.country)}
                           </p>
                         </div>
@@ -1157,10 +1157,10 @@ export function ProfilePage() {
                           <MapPin className="w-6 h-6 text-[#0ea5e9]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <p className="text-xs text-[#808c99]">
+                          <p className="text-xs text-[#8A8EA0]">
                             {t.kycState}
                           </p>
-                          <p className="text-[#ffffff]">
+                          <p className="text-[#F2F2F3]">
                             {getStateName(kycData.state, kycData.country)}
                           </p>
                         </div>
@@ -1177,10 +1177,10 @@ export function ProfilePage() {
                           <MapPin className="w-6 h-6 text-[#0ea5e9]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <p className="text-xs text-[#808c99]">
+                          <p className="text-xs text-[#8A8EA0]">
                             {t.kycCity}
                           </p>
-                          <p className="text-[#ffffff]">
+                          <p className="text-[#F2F2F3]">
                             {kycData.city}
                           </p>
                         </div>
@@ -1197,10 +1197,10 @@ export function ProfilePage() {
                           <MapPin className="w-6 h-6 text-[#9375b5]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <p className="text-xs text-[#808c99]">
+                          <p className="text-xs text-[#8A8EA0]">
                             {t.postalCode}
                           </p>
-                          <p className="text-[#ffffff]">
+                          <p className="text-[#F2F2F3]">
                             {kycData.postal_code}
                           </p>
                         </div>
@@ -1217,10 +1217,10 @@ export function ProfilePage() {
                           <MapPin className="w-6 h-6 text-[#9375b5]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <p className="text-xs text-[#808c99]">
+                          <p className="text-xs text-[#8A8EA0]">
                             {t.kycStreetAddress}
                           </p>
-                          <p className="text-[#ffffff]">
+                          <p className="text-[#F2F2F3]">
                             {kycData.street_address}
                           </p>
                         </div>
@@ -1237,10 +1237,10 @@ export function ProfilePage() {
                           <IdCard className="w-6 h-6 text-[#C59B48]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <p className="text-xs text-[#808c99]">
+                          <p className="text-xs text-[#8A8EA0]">
                             {t.kycIdType}
                           </p>
-                          <p className="text-[#ffffff]">
+                          <p className="text-[#F2F2F3]">
                             {kycData.id_type}
                           </p>
                         </div>
@@ -1257,10 +1257,10 @@ export function ProfilePage() {
                           <Link className="w-6 h-6 text-[#9375b5]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <p className="text-xs text-[#808c99]">
+                          <p className="text-xs text-[#8A8EA0]">
                             {t.socialLinkHandler}
                           </p>
-                          <p className="text-[#ffffff]">
+                          <p className="text-[#F2F2F3]">
                             {kycData.social_link_handler}
                           </p>
                         </div>
@@ -1277,10 +1277,10 @@ export function ProfilePage() {
                           <Users className="w-6 h-6 text-[#0ea5e9]" />
                         </div>
                         <div className={isRTL ? "text-right" : "text-left"}>
-                          <p className="text-xs text-[#808c99]">
+                          <p className="text-xs text-[#8A8EA0]">
                             {t.socialLinkFollowers}
                           </p>
-                          <p className="text-[#ffffff]">
+                          <p className="text-[#F2F2F3]">
                             {kycData.social_link_followers}
                           </p>
                         </div>
@@ -1292,7 +1292,7 @@ export function ProfilePage() {
                   {(kycData.gov_issued_id || kycData.proof_address) && (
                     <div className="mt-6 pt-6 border-t border-[#4e4e4e78]">
                       <h4
-                        className={`text-sm text-[#808c99] mb-4 ${isRTL ? "text-right" : "text-left"
+                        className={`text-sm text-[#8A8EA0] mb-4 ${isRTL ? "text-right" : "text-left"
                           }`}
                       >
                         {t.documents}
@@ -1301,7 +1301,7 @@ export function ProfilePage() {
                         {/* Government ID Documents */}
                         {kycData.gov_issued_id && (
                           <div>
-                            <p className={`text-xs text-[#808c99] mb-2 ${isRTL ? "text-right" : "text-left"}`}>
+                            <p className={`text-xs text-[#8A8EA0] mb-2 ${isRTL ? "text-right" : "text-left"}`}>
                               {t.idDocument}
                             </p>
                             {(() => {
@@ -1333,7 +1333,7 @@ export function ProfilePage() {
                                     <FileText className="w-5 h-5 text-[#45e3d3]" />
                                   </div>
                                   <div className={isRTL ? "text-right" : "text-left"}>
-                                    <p className="text-sm text-[#ffffff]">{t.verified}</p>
+                                    <p className="text-sm text-[#F2F2F3]">{t.verified}</p>
                                   </div>
                                 </div>
                               );
@@ -1343,7 +1343,7 @@ export function ProfilePage() {
                         {/* Proof of Address */}
                         {kycData.proof_address && (
                           <div>
-                            <p className={`text-xs text-[#808c99] mb-2 ${isRTL ? "text-right" : "text-left"}`}>
+                            <p className={`text-xs text-[#8A8EA0] mb-2 ${isRTL ? "text-right" : "text-left"}`}>
                               {t.proofOfAddress}
                             </p>
                             {(() => {
@@ -1367,7 +1367,7 @@ export function ProfilePage() {
                                     <FileText className="w-5 h-5 text-[#45e3d3]" />
                                   </div>
                                   <div className={isRTL ? "text-right" : "text-left"}>
-                                    <p className="text-sm text-[#ffffff]">{t.verified}</p>
+                                    <p className="text-sm text-[#F2F2F3]">{t.verified}</p>
                                   </div>
                                 </div>
                               );
@@ -1408,7 +1408,7 @@ export function ProfilePage() {
                       <Star className="w-5 h-5 text-[#0B0B0D]" />
                     </div>
                     <div className={isRTL ? "text-right" : "text-left"}>
-                      <p className="text-[#ffffff]">{activity.action}</p>
+                      <p className="text-[#F2F2F3]">{activity.action}</p>
                     </div>
                   </div>
                   <Badge className="bg-[#45e3d3]/20 text-[#45e3d3] border-[#45e3d3]/30">
@@ -1455,7 +1455,7 @@ export function ProfilePage() {
                         <Icon
                           className={`w-6 h-6 ${achievement.unlocked
                             ? "text-[#0B0B0D]"
-                            : "text-[#808c99]"
+                            : "text-[#8A8EA0]"
                             }`}
                         />
                       </div>
@@ -1466,13 +1466,13 @@ export function ProfilePage() {
                       )}
                     </div>
                     <h3
-                      className={`text-[#ffffff] mb-1 ${isRTL ? "text-right" : "text-left"
+                      className={`text-[#F2F2F3] mb-1 ${isRTL ? "text-right" : "text-left"
                         }`}
                     >
                       {achievement.name}
                     </h3>
                     <p
-                      className={`text-sm text-[#808c99] ${isRTL ? "text-right" : "text-left"
+                      className={`text-sm text-[#8A8EA0] ${isRTL ? "text-right" : "text-left"
                         }`}
                     >
                       {achievement.desc}
@@ -1495,7 +1495,7 @@ export function ProfilePage() {
               {/* Point Distribution */}
               <div className="bg-[#0B0B0D] border border-primary/20 rounded-xl p-6">
                 <h3
-                  className={`text-xl text-[#ffffff] mb-4 ${isRTL ? "text-right" : "text-left"
+                  className={`text-xl text-[#F2F2F3] mb-4 ${isRTL ? "text-right" : "text-left"
                     }`}
                 >
                   {language === "en" ? "Point Distribution" : "توزيع النقاط"}
@@ -1511,11 +1511,11 @@ export function ProfilePage() {
                           }`}
                       >
                         <Flame className="w-5 h-5 text-[#9375b5]" />
-                        <span className="text-[#808c99]">
+                        <span className="text-[#8A8EA0]">
                           {t.influencePoints}
                         </span>
                       </div>
-                      <span className="text-[#ffffff]">
+                      <span className="text-[#F2F2F3]">
                         {userData.influencePoints}
                       </span>
                     </div>
@@ -1536,11 +1536,11 @@ export function ProfilePage() {
                           }`}
                       >
                         <Shield className="w-5 h-5 text-[#0ea5e9]" />
-                        <span className="text-[#808c99]">
+                        <span className="text-[#8A8EA0]">
                           {t.provenancePoints}
                         </span>
                       </div>
-                      <span className="text-[#ffffff]">
+                      <span className="text-[#F2F2F3]">
                         {userData.provenancePoints}
                       </span>
                     </div>
@@ -1557,7 +1557,7 @@ export function ProfilePage() {
               {/* Engagement Stats */}
               <div className="bg-[#0B0B0D] border border-primary/20 rounded-xl p-6">
                 <h3
-                  className={`text-xl text-[#ffffff] mb-4 ${isRTL ? "text-right" : "text-left"
+                  className={`text-xl text-[#F2F2F3] mb-4 ${isRTL ? "text-right" : "text-left"
                     }`}
                 >
                   {language === "en" ? "Engagement" : "التفاعل"}
@@ -1567,7 +1567,7 @@ export function ProfilePage() {
                     className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""
                       }`}
                   >
-                    <span className="text-[#808c99]">{t.referrals}</span>
+                    <span className="text-[#8A8EA0]">{t.referrals}</span>
                     <span className="text-2xl text-[#C59B48]">
                       {userData.referrals}
                     </span>
@@ -1577,7 +1577,7 @@ export function ProfilePage() {
                       className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""
                         }`}
                     >
-                      <span className="text-[#808c99]">{t.artworksSaved}</span>
+                      <span className="text-[#8A8EA0]">{t.artworksSaved}</span>
                       <span className="text-2xl text-[#45e3d3]">
                         {userData.artworksSaved}
                       </span>
@@ -1588,7 +1588,7 @@ export function ProfilePage() {
                       className={`flex items-center justify-between ${isRTL ? "flex-row-reverse" : ""
                         }`}
                     >
-                      <span className="text-[#808c99]">
+                      <span className="text-[#8A8EA0]">
                         {t.collectionsCreated}
                       </span>
                       <span className="text-2xl text-[#0ea5e9]">

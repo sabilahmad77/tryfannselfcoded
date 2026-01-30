@@ -459,7 +459,7 @@ export function InterestsStep({
             <Heart className="w-8 h-8 text-amber-400" />
           </div>
           <h2 className="text-3xl text-white mb-2">{content.title}</h2>
-          <p className="text-white/60">{content.subtitle}</p>
+          <p className="text-[#B9BBC6]">{content.subtitle}</p>
         </motion.div>
 
         {/* Pro Tip */}
@@ -474,7 +474,7 @@ export function InterestsStep({
               <p className="text-amber-400 text-sm mb-1">
                 {content.tips.title}
               </p>
-              <p className="text-white/60 text-sm">{content.tips.message}</p>
+              <p className="text-[#B9BBC6] text-sm">{content.tips.message}</p>
             </div>
           </motion.div>
         )}
@@ -490,7 +490,7 @@ export function InterestsStep({
               <h3 className="text-xl text-white mb-1">
                 {content.styles.title}
               </h3>
-              <p className="text-white/60 text-sm">{content.styles.subtitle}</p>
+              <p className="text-[#B9BBC6] text-sm">{content.styles.subtitle}</p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {content.styles.options.map((style, index) => {
@@ -508,7 +508,7 @@ export function InterestsStep({
                     className={`p-4 rounded-xl border transition-all ${isSelected
                         ? "bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-amber-500/50 text-white"
                         : "glass border-white/10 text-white/70 hover:border-amber-500/30"
-                      } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                      } cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed`}
                   >
                     <div className="flex flex-col items-center gap-2">
                       {isSelected && (
@@ -538,7 +538,7 @@ export function InterestsStep({
               <MapPin className="w-5 h-5 text-amber-400" />
               <div>
                 <h3 className="text-xl text-white">{content.regions.title}</h3>
-                <p className="text-white/60 text-sm">
+                <p className="text-[#B9BBC6] text-sm">
                   {content.regions.subtitle}
                 </p>
               </div>
@@ -563,7 +563,7 @@ export function InterestsStep({
                     className={`p-4 rounded-xl border transition-all ${isSelected
                         ? "bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-amber-500/50 text-white"
                         : "glass border-white/10 text-white/70 hover:border-amber-500/30"
-                      } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                      } cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed`}
                   >
                     <div className="flex flex-col items-center gap-2">
                       {isSelected && (
@@ -595,7 +595,7 @@ export function InterestsStep({
                 <h3 className="text-xl text-white">
                   {content.priceRange.title}
                 </h3>
-                <p className="text-white/60 text-sm">
+                <p className="text-[#B9BBC6] text-sm">
                   {content.priceRange.subtitle}
                 </p>
               </div>
@@ -614,7 +614,7 @@ export function InterestsStep({
                     className={`p-5 rounded-xl border transition-all text-left ${isSelected
                         ? "bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-amber-500/50"
                         : "glass border-white/10 hover:border-amber-500/30"
-                      } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                      } cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed`}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div
@@ -650,7 +650,7 @@ export function InterestsStep({
               <Calendar className="w-5 h-5 text-amber-400" />
               <div>
                 <h3 className="text-xl text-white">{content.periods.title}</h3>
-                <p className="text-white/60 text-sm">
+                <p className="text-[#B9BBC6] text-sm">
                   {content.periods.subtitle}
                 </p>
               </div>
@@ -675,7 +675,7 @@ export function InterestsStep({
                     className={`p-4 rounded-xl border transition-all ${isSelected
                         ? "bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-amber-500/50 text-white"
                         : "glass border-white/10 text-white/70 hover:border-amber-500/30"
-                      } cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                      } cursor-pointer disabled:bg-disabled disabled:cursor-not-allowed`}
                   >
                     <div className="flex flex-col items-center gap-2">
                       {isSelected && (
@@ -709,7 +709,7 @@ export function InterestsStep({
               onClick={onBack}
               variant="outline"
               disabled={isLoading}
-              className="flex-1 h-12 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="flex-1 h-12 disabled:opacity-50 disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
             >
               <ChevronLeft
                 className={`w-5 h-5 mr-2 ${isRTL ? "rotate-180" : ""}`}
@@ -721,7 +721,7 @@ export function InterestsStep({
             type="button"
             onClick={handleSubmit}
             disabled={isLoading || totalSelections < 1}
-            className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="flex-1 h-12 shadow-lg shadow-primary/50 group relative overflow-hidden disabled:bg-disabled disabled:cursor-not-allowed cursor-pointer"
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
               {isLoading ? (

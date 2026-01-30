@@ -58,7 +58,7 @@ export function CompleteProfile({
       >
         <div className={`flex items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
           <AlertCircle className={`w-5 h-5 text-[#C59B48] flex-shrink-0 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-          <p className={`text-[#808c99] text-sm flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+          <p className={`text-[#8A8EA0] text-sm flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
             {t.profileIncomplete}
           </p>
           <button
