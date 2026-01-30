@@ -595,8 +595,8 @@ function formatTextWithBold(text: string): React.ReactNode {
     if (boldTerms.some(term => beforeColon.includes(term) || beforeColon === term)) {
       return (
         <>
-          <span className="font-bold text-white/90">{beforeColon}:</span>
-          {afterColon && <span> {afterColon}</span>}
+          <span className="font-bold text-white/90 font-body">{beforeColon}:</span>
+          {afterColon && <span className="font-body"> {afterColon}</span>}
         </>
       );
     }
@@ -609,9 +609,9 @@ function formatTextWithBold(text: string): React.ReactNode {
       <>
         {parts.map((part, idx) => 
           part === 'TryFANN' || part === 'FANN.art' ? (
-            <span key={idx} className="font-bold text-white/90">{part}</span>
+            <span key={idx} className="font-bold text-white/90 font-body">{part}</span>
           ) : (
-            <span key={idx}>{part}</span>
+            <span key={idx} className="font-body">{part}</span>
           )
         )}
       </>
@@ -661,7 +661,7 @@ export function PrivacyTermsPage() {
               className="text-center mb-16"
             >
               <h1 className="text-4xl md:text-5xl mb-4 font-heading">
-                <span className="text-white">{t.title}</span>
+                <span className="text-white font-heading">{t.title}</span>
               </h1>
               <p className="text-[#B9BBC6] text-sm font-body">{t.lastUpdated}</p>
             </motion.div>
@@ -676,7 +676,7 @@ export function PrivacyTermsPage() {
               >
                 <div className="flex items-center gap-3 mb-6">
                   <Shield className="w-6 h-6 text-[#C59B48]" />
-                  <h2 className="text-3xl font-bold text-white">{t.privacy.title}</h2>
+                  <h2 className="text-3xl font-bold text-white font-heading">{t.privacy.title}</h2>
                 </div>
                 
                 {t.privacy.intro && (
@@ -689,7 +689,7 @@ export function PrivacyTermsPage() {
                   {/* Who We Are */}
                   {t.privacy.whoWeAre && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.whoWeAre.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.whoWeAre.title}</h3>
                       <ul className="space-y-2">
                         {t.privacy.whoWeAre.content.map((item: string, idx: number) => (
                           <ListItem key={idx}>{item}</ListItem>
@@ -701,12 +701,12 @@ export function PrivacyTermsPage() {
                   {/* Information We Collect */}
                   {t.privacy.informationWeCollect && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.informationWeCollect.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.informationWeCollect.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body mb-4">{t.privacy.informationWeCollect.content}</p>
                       <div className="space-y-4">
                         {t.privacy.informationWeCollect.categories.map((category: InformationCategory, idx: number) => (
                           <div key={idx} className="bg-white/5 rounded-lg p-4">
-                            <h4 className="text-lg font-bold text-white mb-2">{category.title}</h4>
+                            <h4 className="text-lg font-bold text-white mb-2 font-heading">{category.title}</h4>
                             <ul className="space-y-1.5">
                               {category.items.map((item: string, itemIdx: number) => (
                                 <ListItem key={itemIdx} className="text-sm">{item}</ListItem>
@@ -721,13 +721,13 @@ export function PrivacyTermsPage() {
                   {/* How We Use */}
                   {t.privacy.howWeUse && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.howWeUse.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.howWeUse.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body mb-3">{t.privacy.howWeUse.content}</p>
                       <ol className="space-y-2 ml-4">
                         {t.privacy.howWeUse.items.map((item: string, idx: number) => (
                           <li key={idx} className="flex items-start gap-2 text-white/70 leading-relaxed font-body">
-                            <span className="text-[#C59B48] font-bold mt-0.5">{idx + 1}.</span>
-                            <span className="flex-1">{typeof item === 'string' ? formatTextWithBold(item) : item}</span>
+                            <span className="text-[#C59B48] font-bold mt-0.5 font-body">{idx + 1}.</span>
+                            <span className="flex-1 font-body">{typeof item === 'string' ? formatTextWithBold(item) : item}</span>
                           </li>
                         ))}
                       </ol>
@@ -737,7 +737,7 @@ export function PrivacyTermsPage() {
                   {/* AI & Model Training */}
                   {t.privacy.aiModelTraining && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.aiModelTraining.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.aiModelTraining.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body mb-3">{t.privacy.aiModelTraining.content}</p>
                       <ul className="space-y-2 mb-4">
                         {t.privacy.aiModelTraining.uses.map((item: string, idx: number) => (
@@ -745,7 +745,7 @@ export function PrivacyTermsPage() {
                         ))}
                       </ul>
                       <div className="bg-white/5 rounded-lg p-4">
-                        <h4 className="text-lg font-bold text-white mb-2">{t.privacy.aiModelTraining.trainingData.title}</h4>
+                        <h4 className="text-lg font-bold text-white mb-2 font-heading">{t.privacy.aiModelTraining.trainingData.title}</h4>
                         <ul className="space-y-1.5">
                           {t.privacy.aiModelTraining.trainingData.items.map((item: string, idx: number) => (
                             <ListItem key={idx} className="text-sm">{item}</ListItem>
@@ -761,7 +761,7 @@ export function PrivacyTermsPage() {
                   {/* How We Share */}
                   {t.privacy.howWeShare && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.howWeShare.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.howWeShare.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body mb-3">{t.privacy.howWeShare.content}</p>
                       <ul className="space-y-2 mb-3">
                         {t.privacy.howWeShare.items.map((item: string, idx: number) => (
@@ -769,7 +769,7 @@ export function PrivacyTermsPage() {
                         ))}
                       </ul>
                       {t.privacy.howWeShare.note && (
-                        <p className="text-white/80 font-semibold mt-4">{t.privacy.howWeShare.note}</p>
+                        <p className="text-white/80 font-semibold mt-4 font-body">{t.privacy.howWeShare.note}</p>
                       )}
                     </div>
                   )}
@@ -777,7 +777,7 @@ export function PrivacyTermsPage() {
                   {/* Cookies */}
                   {t.privacy.cookies && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.cookies.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.cookies.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.privacy.cookies.content}</p>
                     </div>
                   )}
@@ -785,7 +785,7 @@ export function PrivacyTermsPage() {
                   {/* Data Retention */}
                   {t.privacy.dataRetention && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.dataRetention.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.dataRetention.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body mb-3">{t.privacy.dataRetention.content}</p>
                       <ul className="space-y-2 mb-3">
                         {t.privacy.dataRetention.items.map((item: string, idx: number) => (
@@ -793,7 +793,7 @@ export function PrivacyTermsPage() {
                         ))}
                       </ul>
                       {t.privacy.dataRetention.note && (
-                        <p className="text-[#B9BBC6] text-sm italic mt-2">{t.privacy.dataRetention.note}</p>
+                        <p className="text-[#B9BBC6] text-sm italic mt-2 font-body">{t.privacy.dataRetention.note}</p>
                       )}
                     </div>
                   )}
@@ -801,7 +801,7 @@ export function PrivacyTermsPage() {
                   {/* Security */}
                   {t.privacy.security && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.security.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.security.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.privacy.security.content}</p>
                     </div>
                   )}
@@ -809,7 +809,7 @@ export function PrivacyTermsPage() {
                   {/* Your Rights */}
                   {t.privacy.yourRights && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.yourRights.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.yourRights.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body mb-3">{t.privacy.yourRights.content}</p>
                       <ul className="space-y-2 mb-3">
                         {t.privacy.yourRights.items.map((item: string, idx: number) => (
@@ -817,7 +817,7 @@ export function PrivacyTermsPage() {
                         ))}
                       </ul>
                       {t.privacy.yourRights.contact && (
-                        <p className="text-white/80 mt-4">{t.privacy.yourRights.contact}</p>
+                        <p className="text-white/80 mt-4 font-body">{t.privacy.yourRights.contact}</p>
                       )}
                     </div>
                   )}
@@ -825,7 +825,7 @@ export function PrivacyTermsPage() {
                   {/* International Transfers */}
                   {t.privacy.internationalTransfers && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.internationalTransfers.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.internationalTransfers.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.privacy.internationalTransfers.content}</p>
                     </div>
                   )}
@@ -833,7 +833,7 @@ export function PrivacyTermsPage() {
                   {/* Children */}
                   {t.privacy.children && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.children.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.children.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.privacy.children.content}</p>
                     </div>
                   )}
@@ -841,7 +841,7 @@ export function PrivacyTermsPage() {
                   {/* Changes */}
                   {t.privacy.changes && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.changes.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.changes.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.privacy.changes.content}</p>
                     </div>
                   )}
@@ -849,7 +849,7 @@ export function PrivacyTermsPage() {
                   {/* Contact */}
                   {t.privacy.contact && (
                     <div className="pb-6">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.privacy.contact.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.privacy.contact.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.privacy.contact.email}</p>
                       <p className="text-white/70 leading-relaxed font-body">{t.privacy.contact.address}</p>
                     </div>
@@ -866,7 +866,7 @@ export function PrivacyTermsPage() {
               >
                 <div className="flex items-center gap-3 mb-6">
                   <FileText className="w-6 h-6 text-[#C59B48]" />
-                  <h2 className="text-3xl font-bold text-white">{t.terms.title}</h2>
+                  <h2 className="text-3xl font-bold text-white font-heading">{t.terms.title}</h2>
                 </div>
 
                 {t.terms.intro && (
@@ -879,7 +879,7 @@ export function PrivacyTermsPage() {
                   {/* Definitions */}
                   {t.terms.definitions && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.definitions.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.definitions.title}</h3>
                       <ul className="space-y-2">
                         {t.terms.definitions.items.map((item: string, idx: number) => (
                           <ListItem key={idx}>{item}</ListItem>
@@ -891,7 +891,7 @@ export function PrivacyTermsPage() {
                   {/* Eligibility */}
                   {t.terms.eligibility && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.eligibility.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.eligibility.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.eligibility.content}</p>
                     </div>
                   )}
@@ -899,7 +899,7 @@ export function PrivacyTermsPage() {
                   {/* Verification */}
                   {t.terms.verification && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.verification.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.verification.title}</h3>
                       <div className="space-y-2">
                         {t.terms.verification.content.map((item: string, idx: number) => (
                           <p key={idx} className="text-white/70 leading-relaxed font-body">{item}</p>
@@ -911,7 +911,7 @@ export function PrivacyTermsPage() {
                   {/* Listings */}
                   {t.terms.listings && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.listings.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.listings.title}</h3>
                       <div className="space-y-2">
                         {t.terms.listings.content.map((item: string, idx: number) => (
                           <p key={idx} className="text-white/70 leading-relaxed font-body">{item}</p>
@@ -923,19 +923,19 @@ export function PrivacyTermsPage() {
                   {/* Authentication */}
                   {t.terms.authentication && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.authentication.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.authentication.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body mb-3">{t.terms.authentication.content}</p>
                       <ol className="space-y-2 mb-4 ml-4">
                         {t.terms.authentication.methods.map((item: string, idx: number) => (
                           <li key={idx} className="flex items-start gap-2 text-white/70 leading-relaxed font-body">
-                            <span className="text-[#C59B48] font-bold mt-0.5">{idx + 1}.</span>
-                            <span className="flex-1">{typeof item === 'string' ? formatTextWithBold(item) : item}</span>
+                            <span className="text-[#C59B48] font-bold mt-0.5 font-body">{idx + 1}.</span>
+                            <span className="flex-1 font-body">{typeof item === 'string' ? formatTextWithBold(item) : item}</span>
                           </li>
                         ))}
                       </ol>
                       {t.terms.authentication.important && (
                         <div className="bg-yellow-500/10 border-2 border-yellow-500/40 rounded-lg p-4 mt-4">
-                          <p className="text-yellow-400 font-bold leading-relaxed">{t.terms.authentication.important}</p>
+                          <p className="text-yellow-400 font-bold leading-relaxed font-body">{t.terms.authentication.important}</p>
                         </div>
                       )}
                     </div>
@@ -944,7 +944,7 @@ export function PrivacyTermsPage() {
                   {/* Custody */}
                   {t.terms.custody && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.custody.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.custody.title}</h3>
                       <div className="space-y-3">
                         {t.terms.custody.content.map((item: string, idx: number) => {
                           if (item.startsWith('•')) {
@@ -979,7 +979,7 @@ export function PrivacyTermsPage() {
                   {/* Fees */}
                   {t.terms.fees && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.fees.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.fees.title}</h3>
                       <div className="space-y-2">
                         {t.terms.fees.content.map((item: string, idx: number) => (
                           <p key={idx} className="text-white/70 leading-relaxed font-body">{item}</p>
@@ -991,7 +991,7 @@ export function PrivacyTermsPage() {
                   {/* Resale */}
                   {t.terms.resale && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.resale.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.resale.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.resale.content}</p>
                     </div>
                   )}
@@ -999,7 +999,7 @@ export function PrivacyTermsPage() {
                   {/* Rewards */}
                   {t.terms.rewards && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.rewards.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.rewards.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body mb-3">{t.terms.rewards.content}</p>
                       <ul className="space-y-2">
                         {t.terms.rewards.items.map((item: string, idx: number) => (
@@ -1012,7 +1012,7 @@ export function PrivacyTermsPage() {
                   {/* Prohibited */}
                   {t.terms.prohibited && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.prohibited.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.prohibited.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body mb-3">{t.terms.prohibited.content}</p>
                       <ul className="space-y-2 mb-3">
                         {t.terms.prohibited.items.map((item: string, idx: number) => (
@@ -1020,7 +1020,7 @@ export function PrivacyTermsPage() {
                         ))}
                       </ul>
                       {t.terms.prohibited.note && (
-                        <p className="text-white/80 font-semibold mt-2">{t.terms.prohibited.note}</p>
+                        <p className="text-white/80 font-semibold mt-2 font-body">{t.terms.prohibited.note}</p>
                       )}
                     </div>
                   )}
@@ -1028,7 +1028,7 @@ export function PrivacyTermsPage() {
                   {/* Intellectual Property */}
                   {t.terms.intellectualProperty && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.intellectualProperty.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.intellectualProperty.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.intellectualProperty.content}</p>
                     </div>
                   )}
@@ -1036,7 +1036,7 @@ export function PrivacyTermsPage() {
                   {/* User Content */}
                   {t.terms.userContent && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.userContent.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.userContent.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.userContent.content}</p>
                     </div>
                   )}
@@ -1044,7 +1044,7 @@ export function PrivacyTermsPage() {
                   {/* Disclaimers */}
                   {t.terms.disclaimers && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.disclaimers.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.disclaimers.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.disclaimers.content}</p>
                     </div>
                   )}
@@ -1052,7 +1052,7 @@ export function PrivacyTermsPage() {
                   {/* Liability */}
                   {t.terms.liability && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.liability.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.liability.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.liability.content}</p>
                     </div>
                   )}
@@ -1060,7 +1060,7 @@ export function PrivacyTermsPage() {
                   {/* Termination */}
                   {t.terms.termination && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.termination.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.termination.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.termination.content}</p>
                     </div>
                   )}
@@ -1068,7 +1068,7 @@ export function PrivacyTermsPage() {
                   {/* Continuity */}
                   {t.terms.continuity && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.continuity.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.continuity.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body mb-3">{t.terms.continuity.content}</p>
                       <ul className="space-y-2">
                         {t.terms.continuity.items.map((item: string, idx: number) => (
@@ -1081,7 +1081,7 @@ export function PrivacyTermsPage() {
                   {/* Regulatory */}
                   {t.terms.regulatory && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.regulatory.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.regulatory.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.regulatory.content}</p>
                     </div>
                   )}
@@ -1089,7 +1089,7 @@ export function PrivacyTermsPage() {
                   {/* Changes */}
                   {t.terms.changes && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.changes.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.changes.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.changes.content}</p>
                     </div>
                   )}
@@ -1097,7 +1097,7 @@ export function PrivacyTermsPage() {
                   {/* Governing Law */}
                   {t.terms.governingLaw && (
                     <div className="border-b border-white/10 pb-6 last:border-0">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.governingLaw.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.governingLaw.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.governingLaw.content}</p>
                     </div>
                   )}
@@ -1105,7 +1105,7 @@ export function PrivacyTermsPage() {
                   {/* Contact */}
                   {t.terms.contact && (
                     <div className="pb-6">
-                      <h3 className="text-xl font-bold text-[#C59B48] mb-3">{t.terms.contact.title}</h3>
+                      <h3 className="text-xl font-bold text-[#C59B48] mb-3 font-heading">{t.terms.contact.title}</h3>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.contact.email}</p>
                       <p className="text-white/70 leading-relaxed font-body">{t.terms.contact.address}</p>
                     </div>

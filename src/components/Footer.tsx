@@ -195,8 +195,8 @@ export function Footer({ language }: FooterProps) {
               />
             </motion.div>
             <p className="mb-3 font-heading text-lg">
-              <span className="text-white">{t.tagline.white}</span>
-              <span className="text-[#C59B48]">{t.tagline.gold}</span>
+              <span className="text-white font-heading">{t.tagline.white}</span>
+              <span className="text-[#C59B48] font-heading">{t.tagline.gold}</span>
             </p>
             <p className="text-[#F2F2F3]/60 text-sm mb-6 max-w-sm leading-relaxed font-body">
               {t.description}

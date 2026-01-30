@@ -145,11 +145,11 @@ export function PointSystem({ language }: PointSystemProps) {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <h2 className="mb-4 text-4xl md:text-5xl">
-            <span className="text-white">{t.title.white}</span>
-            <span className="text-[#C59B48]">{t.title.gold}</span>
+          <h2 className="mb-4 text-4xl md:text-5xl font-heading">
+            <span className="text-white font-heading">{t.title.white}</span>
+            <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
           </h2>
-          <p className="text-[#B9BBC6] max-w-2xl mx-auto text-lg">
+          <p className="text-[#B9BBC6] max-w-2xl mx-auto text-lg font-body">
             {t.subtitle}
           </p>
         </motion.div>

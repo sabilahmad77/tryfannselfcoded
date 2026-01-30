@@ -88,7 +88,7 @@ export function ContactUsPage() {
               className="text-center mb-12"
             >
               <h1 className="text-4xl md:text-5xl mb-4 font-heading">
-                <span className="text-white">{t.title}</span>
+                <span className="text-white font-heading">{t.title}</span>
               </h1>
               <p className="text-[#B9BBC6] text-lg font-body">{t.subtitle}</p>
             </motion.div>
@@ -155,7 +155,7 @@ export function ContactUsPage() {
                     disabled={isSubmitting}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full px-8 py-4 rounded-xl bg-gradient-to-r from-[#C59B48] to-[] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center justify-center gap-2 cursor-pointer font-body font-medium disabled:bg-disabled disabled:cursor-not-allowed"
+                    className="w-full px-8 py-4 rounded-xl bg-gradient-to-r from-[#C59B48] to-[#D6AE5A] text-[#0B0B0D] shadow-xl shadow-[#C59B48]/30 hover:shadow-2xl hover:shadow-[#C59B48]/50 transition-all duration-300 inline-flex items-center justify-center gap-2 cursor-pointer font-body font-medium disabled:bg-disabled disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>

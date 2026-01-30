@@ -181,8 +181,8 @@ export function ReferralModule({ language }: ReferralModuleProps) {
             <span className="text-amber-300 text-sm">{t.badge}</span>
           </motion.div> */}
           <h2 className="mb-4 text-4xl md:text-5xl max-w-3xl mx-auto font-heading">
-            <span className="text-white">{t.title.white}</span>
-            <span className="text-[#C59B48]">{t.title.gold}</span>
+            <span className="text-white font-heading">{t.title.white}</span>
+            <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
           </h2>
           <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg font-body">{t.subtitle}</p>
         </motion.div>

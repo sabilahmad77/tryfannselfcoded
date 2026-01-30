@@ -27,8 +27,8 @@ const content = {
         name: "Explorer",
         icon: Compass,
         points: "0-500",
-        color: "from-gray-600 to-gray-500",
-        glowColor: "shadow-gray-500/50",
+        color: "from-[#C59B48] to-[#D6AE5A]",
+        glowColor: "shadow-[#C59B48]/50",
         benefits: [
           "Platform access at launch",
           "Community membership",
@@ -71,8 +71,8 @@ const content = {
         name: "مستكشف",
         icon: Compass,
         points: "0-500",
-        color: "from-gray-600 to-gray-500",
-        glowColor: "shadow-gray-500/50",
+        color: "from-[#C59B48] to-[#D6AE5A]",
+        glowColor: "shadow-[#C59B48]/50",
         benefits: [
           "الوصول إلى المنصة عند إطلاقها",
           "عضوية في المجتمع",
@@ -128,8 +128,8 @@ export function RewardsTiers({
   > = {
     Explorer: {
       icon: Compass,
-      color: "from-gray-600 to-gray-500",
-      glowColor: "shadow-gray-500/50",
+      color: "from-[#C59B48] to-[#D6AE5A]",
+      glowColor: "shadow-[#C59B48]/50",
       iconColor: "text-[#C59B48]",
       iconBg: "border-[#C59B48]/60",
       benefits:
@@ -147,8 +147,8 @@ export function RewardsTiers({
     },
     Curator: {
       icon: Crown,
-      color: "from-gray-600 to-gray-500",
-      glowColor: "shadow-gray-500/50",
+      color: "from-[#C59B48] to-[#D6AE5A]",
+      glowColor: "shadow-[#C59B48]/50",
       iconColor: "text-[#C59B48]",
       iconBg: "border-[#C59B48]/40",
       iconAccent: "text-[#45e3d3]",
@@ -167,8 +167,8 @@ export function RewardsTiers({
     },
     Patron: {
       icon: Crown,
-      color: "from-gray-600 to-gray-500",
-      glowColor: "shadow-gray-500/50",
+      color: "from-[#C59B48] to-[#D6AE5A]",
+      glowColor: "shadow-[#C59B48]/50",
       iconColor: "text-[#C59B48]",
       iconBg: "border-[#C59B48]/40",
       iconAccent: "text-[#9375b5]",
@@ -187,8 +187,8 @@ export function RewardsTiers({
     },
     Ambassador: {
       icon: Crown,
-      color: "from-orange-600 to-amber-600",
-      glowColor: "shadow-orange-500/50",
+      color: "from-[#C59B48] to-[#D6AE5A]",
+      glowColor: "shadow-[#C59B48]/50",
       benefits:
         language === "en"
           ? [
@@ -200,8 +200,8 @@ export function RewardsTiers({
     },
     "Founding Patron": {
       icon: Award,
-      color: "from-amber-600 to-yellow-600",
-      glowColor: "shadow-amber-500/50",
+      color: "from-[#C59B48] to-[#D6AE5A]",
+      glowColor: "shadow-[#C59B48]/50",
       benefits:
         language === "en"
           ? ["Lifetime benefits", "Executive access", "Special recognition"]
@@ -287,7 +287,7 @@ export function RewardsTiers({
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <Loader2 className="w-10 h-10 text-[#C59B48] animate-spin" />
-            <p className="text-white/70 text-sm md:text-base">
+            <p className="text-white/70 text-sm md:text-base font-body">
               {language === "en"
                 ? "Loading your progression tiers..."
                 : "جاري تحميل نظام التقدم الخاص بك..."}
@@ -298,7 +298,7 @@ export function RewardsTiers({
         {/* Error State */}
         {!isLoading && isError && (
           <div className="mb-6 text-center">
-            <p className="text-xs md:text-sm text-red-400">
+            <p className="text-xs md:text-sm text-red-400 font-body">
               {language === "en"
                 ? "Unable to fetch progression data."
                 : "تعذر جلب بيانات التقدم."}
@@ -309,7 +309,7 @@ export function RewardsTiers({
         {/* Empty State - No tiers from API */}
         {!isLoading && !isError && tiers.length === 0 && (
           <div className="text-center py-24">
-            <p className="text-[#B9BBC6] text-lg">
+            <p className="text-[#B9BBC6] text-lg font-body">
               {language === "en"
                 ? "No progression tiers available."
                 : "لا توجد مراحل تقدم متاحة."}
@@ -325,8 +325,8 @@ export function RewardsTiers({
           className="text-center mb-12"
         >
           <h2 className="mb-4 text-4xl md:text-5xl font-heading">
-            <span className="text-white">{t.title.white}</span>
-            <span className="text-[#C59B48]">{t.title.gold}</span>
+            <span className="text-white font-heading">{t.title.white}</span>
+            <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
           </h2>
           <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg md:text-xl font-body">
             {t.subtitle}
@@ -343,7 +343,7 @@ export function RewardsTiers({
 
               {/* Animated Progress Line */}
               <motion.div
-                className="absolute top-20 left-0 h-1 bg-gradient-to-r from-blue-400 via-orange-400 to-[#C59B48]"
+                className="absolute top-20 left-0 h-1 bg-gradient-to-r from-[#C59B48] to-[#D6AE5A]"
                 initial={{ width: "0%" }}
                 whileInView={{ width: "100%" }}
                 viewport={{ once: true }}
@@ -381,13 +381,11 @@ export function RewardsTiers({
                         whileHover={{ y: -8 }}
                         className="relative group"
                       >
-                        {/* Glow Effect */}
-                        <div
-                          className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500`}
-                        />
 
                         {/* Main Card */}
-                        <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+                        <div className="relative bg-[#191922] backdrop-blur-xl rounded-2xl border border-[#2A2A3A] overflow-hidden transition-all duration-300 group-hover:bg-[#222231] group-hover:border-[rgba(197,155,72,0.20)]" style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0), 0 18px 60px rgba(0,0,0,0.55)' }}>
+                          {/* Hover Glow Effect */}
+                          <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)' }} />
                           {/* Top Gradient Bar */}
                           <div
                             className={`h-1.5 bg-gradient-to-r ${tier.color}`}
@@ -449,7 +447,7 @@ export function RewardsTiers({
 
                             {/* View More */}
                             {tier.benefits.length > 4 && (
-                              <button className="mt-4 w-full text-xs text-white/40 hover:text-[#B9BBC6] transition-colors flex items-center justify-center gap-1">
+                              <button className="mt-4 w-full text-xs text-white/40 hover:text-[#B9BBC6] transition-colors flex items-center justify-center gap-1 font-body">
                                 +{tier.benefits.length - 4} more
                                 <ChevronRight className="w-3 h-3" />
                               </button>
@@ -509,13 +507,11 @@ export function RewardsTiers({
                           whileHover={{ y: -8 }}
                           className="relative group"
                         >
-                          {/* Glow Effect */}
-                          <div
-                            className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500`}
-                          />
 
                           {/* Main Card */}
-                          <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+                          <div className="relative bg-[#191922] backdrop-blur-xl rounded-2xl border border-[#2A2A3A] overflow-hidden transition-all duration-300 group-hover:bg-[#222231] group-hover:border-[rgba(197,155,72,0.20)]" style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0), 0 18px 60px rgba(0,0,0,0.55)' }}>
+                            {/* Hover Glow Effect */}
+                            <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)' }} />
                             {/* Top Gradient Bar */}
                             <div
                               className={`h-1.5 bg-gradient-to-r ${tier.color}`}
@@ -577,7 +573,7 @@ export function RewardsTiers({
 
                               {/* View More */}
                               {tier.benefits.length > 4 && (
-                                <button className="mt-4 w-full text-xs text-white/40 hover:text-[#B9BBC6] transition-colors flex items-center justify-center gap-1">
+                                <button className="mt-4 w-full text-xs text-white/40 hover:text-[#B9BBC6] transition-colors flex items-center justify-center gap-1 font-body">
                                   +{tier.benefits.length - 4} more
                                   <ChevronRight className="w-3 h-3" />
                                 </button>
@@ -614,7 +610,7 @@ export function RewardsTiers({
               {/* Vertical Line */}
               <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-white/10" />
               <motion.div
-                className="absolute left-8 top-0 w-0.5 bg-gradient-to-b from-blue-400 via-orange-400 to-[#C59B48]"
+                className="absolute left-8 top-0 w-0.5 bg-gradient-to-b from-[#C59B48] to-[#D6AE5A]"
                 initial={{ height: "0%" }}
                 whileInView={{ height: "100%" }}
                 viewport={{ once: true }}
@@ -647,14 +643,12 @@ export function RewardsTiers({
                       />
 
                       {/* Card */}
-                      <div className="flex-1 pb-4">
-                        {/* Glow Effect */}
-                        <div
-                          className={`absolute -inset-0.5 bg-gradient-to-br ${tier.color} rounded-2xl opacity-20 blur-lg`}
-                        />
+                      <div className="flex-1 pb-4 group">
 
                         {/* Main Card */}
-                        <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+                        <div className="relative bg-[#191922] backdrop-blur-xl rounded-2xl border border-[#2A2A3A] overflow-hidden transition-all duration-300 group-hover:bg-[#222231] group-hover:border-[rgba(197,155,72,0.20)]" style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0), 0 18px 60px rgba(0,0,0,0.55)' }}>
+                          {/* Hover Glow Effect */}
+                          <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{ boxShadow: '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)' }} />
                           {/* Top Gradient Bar */}
                           <div
                             className={`h-1 bg-gradient-to-r ${tier.color}`}

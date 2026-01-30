@@ -84,8 +84,8 @@ export function ArtPreview({ language }: ArtPreviewProps) {
           className="text-center mb-16"
         >
           <h2 className="mb-4 text-4xl md:text-5xl font-heading">
-            <span className="text-white">{t.title.white}</span>
-            <span className="text-[#C59B48]">{t.title.gold}</span>
+            <span className="text-white font-heading">{t.title.white}</span>
+            <span className="text-[#C59B48] font-heading">{t.title.gold}</span>
           </h2>
           <p className="text-[#B9BBC6] max-w-4xl mx-auto text-lg font-body">
             {t.subtitle}

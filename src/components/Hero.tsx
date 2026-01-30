@@ -182,7 +182,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 mt-12 border border-[#C59B48]/30"
           >
             <Sparkles className="w-4 h-4 text-[#C59B48]" />
-            <span className="text-[#C59B48] tracking-wider text-sm">{t.badge}</span>
+            <span className="text-[#C59B48] tracking-wider text-sm font-body">{t.badge}</span>
           </motion.div>
 
           {/* Headline */}
@@ -192,8 +192,8 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-6 text-4xl md:text-5xl leading-[1.1] md:leading-[1.1] font-heading px-2 sm:px-0"
           >
-            <span className="block text-[#F2F2F3] leading-[1.1] md:leading-[1.1] py-1 break-words">{t.headline}</span>
-            <span className="block bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent animate-gradient text-3xl md:text-4xl leading-[1.2] md:leading-[1.2] py-1 break-words">
+            <span className="block text-[#F2F2F3] leading-[1.1] md:leading-[1.1] py-1 break-words font-heading">{t.headline}</span>
+            <span className="block bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent animate-gradient text-3xl md:text-4xl leading-[1.2] md:leading-[1.2] py-1 break-words font-heading">
               {t.headlineAccent}
             </span>
           </motion.h1>
@@ -365,7 +365,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-white/70 text-sm">AR Experience Ready</span>
+                  <span className="text-white/70 text-sm font-body">AR Experience Ready</span>
                 </div>
                 <div className="text-[#F2F2F3] text-sm">Click to explore →</div>
               </div>
