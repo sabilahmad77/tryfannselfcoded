@@ -614,7 +614,7 @@ export function LeaderboardPage() {
           </div>
           <div>
             <h1 className="text-4xl md:text-5xl">
-              <span className="text-[#F2F2F3]">{t.title}</span>
+              <span className="text-[#F2F2F3] font-family-heading">{t.title}</span>
             </h1>
             <p className="text-[#8A8EA0] text-lg mt-1">{subtitle}</p>
           </div>
