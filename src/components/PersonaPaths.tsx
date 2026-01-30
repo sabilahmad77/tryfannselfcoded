@@ -244,7 +244,7 @@ export function PersonaPaths({
 
   return (
     <section
-      className="relative py-16 overflow-hidden bg-[#0B0B0D]"
+      className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -384,9 +384,9 @@ export function PersonaPaths({
                       <div className="h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mb-6" />
 
                       {/* Two Column Layout: Benefits Left, Earn Points By Right */}
-                      <div className="grid grid-cols-2 gap-4 mb-6 flex-1">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 flex-1">
                         {/* Left Column - Founder Benefits */}
-                        <div>
+                        <div className="min-w-0">
                           <h4 className="text-white/90 text-sm font-semibold mb-3 font-body">
                             {language === "en" ? "Founder Benefits" : "فوائد المؤسس"}
                           </h4>
@@ -403,7 +403,7 @@ export function PersonaPaths({
                                     className="w-4 h-4 shrink-0 mt-0.5"
                                     style={{ color: persona.accentColor }}
                                   />
-                                  <span className="text-white/70 text-xs leading-relaxed font-body">
+                                  <span className="text-white/70 text-xs leading-relaxed font-body break-words">
                                     {capitalizedText}
                                   </span>
                                 </li>
@@ -413,7 +413,7 @@ export function PersonaPaths({
                         </div>
 
                         {/* Right Column - How to Earn Points */}
-                        <div>
+                        <div className="min-w-0">
                           <h4 className="text-white/90 text-sm font-semibold mb-3 font-body">
                             {language === "en" ? "How to Earn Points" : "كيفية كسب النقاط"}
                           </h4>
@@ -429,7 +429,7 @@ export function PersonaPaths({
                                     className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5"
                                     style={{ backgroundColor: persona.accentColor }}
                                   />
-                                  <span className="text-[#B9BBC6] text-xs leading-relaxed font-body">
+                                  <span className="text-[#B9BBC6] text-xs leading-relaxed font-body break-words">
                                     {capitalizedText}
                                   </span>
                                 </li>

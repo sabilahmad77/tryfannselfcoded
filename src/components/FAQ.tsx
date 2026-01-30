@@ -476,7 +476,7 @@ export function FAQ({ language, showAll = false, showViewAllCTA = true }: FAQPro
 
   return (
     <section
-      className="relative py-16 overflow-hidden bg-[#0B0B0D]"
+      className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}

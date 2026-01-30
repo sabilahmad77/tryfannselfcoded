@@ -95,7 +95,7 @@ export function Navigation({ onNavigateToSignIn }: NavigationProps) {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10"
+      className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10 w-full max-w-full overflow-x-hidden"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

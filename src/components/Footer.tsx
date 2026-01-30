@@ -155,7 +155,7 @@ export function Footer({ language }: FooterProps) {
   };
 
   return (
-    <footer className="relative bg-[#0B0B0D] border-t border-[#C59B48]/20" dir={isRTL ? 'rtl' : 'ltr'}>
+    <footer className="relative bg-[#0B0B0D] border-t border-[#C59B48]/20 w-full overflow-x-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -172,8 +172,8 @@ export function Footer({ language }: FooterProps) {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C59B48]/8 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full max-w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-12 mb-12 w-full">
           {/* Brand */}
           <div className="lg:col-span-2">
             <motion.div
@@ -203,7 +203,7 @@ export function Footer({ language }: FooterProps) {
             </p>
 
             {/* Social Links - All 14 icons with tooltips */}
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
                 return (

@@ -1,7 +1,12 @@
-import { motion } from 'motion/react';
-import { DollarSign } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import { useState } from 'react';
+import artwork1 from '@/assets/artwork-1.jpeg';
+import artwork2 from '@/assets/artwork-2.jpeg';
+import artwork3 from '@/assets/artwork-3.jpeg';
+import artwork4 from '@/assets/artwork-4.jpeg';
 import bgImage from 'figma:asset/3fa9b9de7e4b1421a708a7c88cd0672cee3504e2.png';
+import { DollarSign } from 'lucide-react';
+import { motion } from 'motion/react';
+import { ImageWithFallback } from './figma/ImageWithFallback';
 
 interface ArtPreviewProps {
   language: 'en' | 'ar';
@@ -14,7 +19,6 @@ const content = {
     placeholder: {
       artist: "Featured Artist",
       value: "Est. Value: $5,000 - $15,000",
-      comingSoon: "Available at Launch"
     }
   },
   ar: {
@@ -23,25 +27,37 @@ const content = {
     placeholder: {
       artist: "فنان مميز",
       value: "القيمة المقدرة: 5,000 - 15,000 دولار",
-      comingSoon: "متاح عند الإطلاق"
     }
   }
 };
 
 // Placeholder artwork data - ready for real artwork integration
 const placeholderArtworks = [
-  { id: 1, artist: "Contemporary Master", value: "$5,000 - $15,000", title: "Abstract Expressionism", description: "A stunning piece showcasing modern artistic vision" },
-  { id: 2, artist: "Emerging Talent", value: "$2,000 - $8,000", title: "Digital Renaissance", description: "Bridging traditional and contemporary art forms" },
-  { id: 3, artist: "Established Artist", value: "$10,000 - $25,000", title: "Classical Revival", description: "Timeless beauty with contemporary interpretation" },
-  { id: 4, artist: "Gallery Collection", value: "$8,000 - $20,000", title: "Curated Excellence", description: "Handpicked masterpiece from our partner galleries" }
+  { id: 1, artist: "Contemporary Master", value: "$5,000 - $15,000", title: "Abstract Expressionism", description: "A stunning piece showcasing modern artistic vision", image: artwork1 },
+  { id: 2, artist: "Emerging Talent", value: "$2,000 - $8,000", title: "Digital Renaissance", description: "Bridging traditional and contemporary art forms", image: artwork2 },
+  { id: 3, artist: "Established Artist", value: "$10,000 - $25,000", title: "Classical Revival", description: "Timeless beauty with contemporary interpretation", image: artwork3 },
+  { id: 4, artist: "Gallery Collection", value: "$8,000 - $20,000", title: "Curated Excellence", description: "Handpicked masterpiece from our partner galleries", image: artwork4 }
 ];
 
 export function ArtPreview({ language }: ArtPreviewProps) {
   const t = content[language];
   const isRTL = language === 'ar';
+  const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
+
+  const handleCardFlip = (cardId: number) => {
+    setFlippedCards((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(cardId)) {
+        newSet.delete(cardId);
+      } else {
+        newSet.add(cardId);
+      }
+      return newSet;
+    });
+  };
 
   return (
-    <section className="relative py-16 overflow-hidden bg-[#0B0B0D]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -82,94 +98,97 @@ export function ArtPreview({ language }: ArtPreviewProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-7xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-7xl mx-auto w-full px-4 sm:px-0"
         >
-          {placeholderArtworks.map((artwork, index) => (
-            <motion.div
-              key={artwork.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative h-[400px]"
-              style={{ perspective: '1000px' }}
-            >
-              {/* Flip Card Container */}
-              <div 
-                className="relative w-full h-full transition-transform duration-700 group-hover:[transform:rotateY(180deg)]"
-                style={{ transformStyle: 'preserve-3d' }}
+          {placeholderArtworks.map((artwork, index) => {
+            const isFlipped = flippedCards.has(artwork.id);
+            return (
+              <motion.div
+                key={artwork.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="group relative h-[400px] cursor-pointer touch-manipulation"
+                style={{ perspective: '1000px' }}
+                onClick={() => handleCardFlip(artwork.id)}
+                whileTap={{ scale: 0.98 }}
               >
-                {/* Front Side - Image Only */}
-                <div 
-                  className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 border border-[#2A2A3A] group-hover:border-[#C59B48]/40 transition-all duration-500"
-                  style={{ backfaceVisibility: 'hidden' }}
+                {/* Flip Card Container */}
+                <div
+                  className={`relative w-full h-full transition-transform duration-700 ${isFlipped ? '[transform:rotateY(180deg)]' : ''
+                    } lg:group-hover:[transform:rotateY(180deg)]`}
+                  style={{ transformStyle: 'preserve-3d' }}
                 >
-                  {/* Glass Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent z-10" />
+                  {/* Front Side - Image Only */}
+                  <div
+                    className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 border transition-all duration-500 ${isFlipped ? 'border-[#C59B48]/40' : 'border-[#2A2A3A] lg:group-hover:border-[#C59B48]/40'
+                      }`}
+                    style={{ backfaceVisibility: 'hidden' }}
+                  >
+                    {/* Glass Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent z-10" />
 
-                  {/* Artwork Image - Default Image */}
-                  <div className="relative h-full w-full bg-gradient-to-br from-[#191922] to-[#0B0B0D] flex items-center justify-center overflow-hidden">
-                    <ImageWithFallback
-                      src={bgImage}
-                      alt={artwork.title || artwork.artist}
-                      className="w-full h-full object-cover opacity-80"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0D]/80 via-transparent to-transparent" />
+                    {/* Artwork Image */}
+                    <div className="relative h-full w-full bg-gradient-to-br from-[#191922] to-[#0B0B0D] flex items-center justify-center overflow-hidden">
+                      <ImageWithFallback
+                        src={artwork.image || bgImage}
+                        alt={artwork.title || artwork.artist}
+                        className="w-full h-full object-cover opacity-80"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0D]/80 via-transparent to-transparent" />
 
-                    {/* Coming Soon Badge */}
-                    <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[#C59B48]/20 border border-[#C59B48]/40 backdrop-blur-sm z-20">
-                      <span className="text-[#C59B48] text-xs font-medium">{t.placeholder.comingSoon}</span>
                     </div>
                   </div>
-                </div>
 
-                {/* Back Side - Details */}
-                <div 
-                  className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 border border-[#C59B48]/40"
-                  style={{ 
-                    backfaceVisibility: 'hidden',
-                    transform: 'rotateY(180deg)'
-                  }}
-                >
-                  {/* Glass Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent" />
+                  {/* Back Side - Details */}
+                  <div
+                    className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-[#1a1a2e]/95 via-[#16213e]/90 to-[#0f1624]/95 border border-[#C59B48]/40"
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)'
+                    }}
+                  >
+                    {/* Glass Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent" />
 
-                  {/* Content */}
-                  <div className="relative h-full flex flex-col p-6 z-10">
-                    {/* Title */}
-                    <h3 className="text-white text-xl mb-3 font-heading">
-                      {artwork.title || artwork.artist}
-                    </h3>
+                    {/* Content */}
+                    <div className="relative h-full flex flex-col p-6 z-10">
+                      {/* Title */}
+                      <h3 className="text-white text-xl mb-3 font-heading">
+                        {artwork.title || artwork.artist}
+                      </h3>
 
-                    {/* Artist Name */}
-                    <div className="mb-4">
-                      <p className="text-[#F2F2F3] text-sm mb-1 font-body">{t.placeholder.artist}</p>
-                      <p className="text-white text-base font-body">{artwork.artist}</p>
-                    </div>
-
-                    {/* Description */}
-                    {artwork.description && (
-                      <p className="text-white/70 text-sm mb-4 font-body leading-relaxed flex-1">
-                        {artwork.description}
-                      </p>
-                    )}
-
-                    {/* Estimated Value */}
-                    <div className="mt-auto pt-4 border-t border-white/10">
-                      <div className="flex items-center gap-2 text-[#C59B48] text-base font-semibold font-body">
-                        <DollarSign className="w-5 h-5" />
-                        <span>{artwork.value}</span>
+                      {/* Artist Name */}
+                      <div className="mb-4">
+                        <p className="text-[#F2F2F3] text-sm mb-1 font-body">{t.placeholder.artist}</p>
+                        <p className="text-white text-base font-body">{artwork.artist}</p>
                       </div>
-                      <p className="text-white/50 text-xs mt-1 font-body">{t.placeholder.value}</p>
-                    </div>
 
-                    {/* Hover Glow Effect */}
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#C59B48]/10 via-transparent to-transparent pointer-events-none" />
+                      {/* Description */}
+                      {artwork.description && (
+                        <p className="text-white/70 text-sm mb-4 font-body leading-relaxed flex-1">
+                          {artwork.description}
+                        </p>
+                      )}
+
+                      {/* Estimated Value */}
+                      <div className="mt-auto pt-4 border-t border-white/10">
+                        <div className="flex items-center gap-2 text-[#C59B48] text-base font-semibold font-body">
+                          <DollarSign className="w-5 h-5" />
+                          <span>{artwork.value}</span>
+                        </div>
+                        <p className="text-white/50 text-xs mt-1 font-body">{t.placeholder.value}</p>
+                      </div>
+
+                      {/* Hover Glow Effect */}
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#C59B48]/10 via-transparent to-transparent pointer-events-none" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </motion.div>
 
       </div>

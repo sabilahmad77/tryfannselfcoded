@@ -145,7 +145,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
   };
 
   return (
-    <section className="relative py-16 overflow-hidden bg-[#0B0B0D]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -162,7 +162,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
         <div className="absolute bottom-1/4 right-1/3 w-[600px] h-[600px] bg-yellow-500/20 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl w-full">
         {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -205,8 +205,8 @@ export function ReferralModule({ language }: ReferralModuleProps) {
               {/* Code Section */}
               <div className="mb-8 text-center">
                 <div className="text-[#B9BBC6] text-sm mb-4 uppercase tracking-wider">{t.codeCard.label}</div>
-                <div className="inline-flex items-center gap-4 p-6 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#191922]/60 to-[#0B0B0D]/60 border-2 border-[#C59B48]/40 mb-6 shadow-lg hover:shadow-[#C59B48]/30 transition-shadow">
-                  <div className="text-3xl md:text-4xl tracking-[0.3em] text-white font-mono">
+                <div className="inline-flex items-center gap-4 p-6 rounded-xl backdrop-blur-md bg-gradient-to-br from-[#191922]/60 to-[#0B0B0D]/60 border-2 border-[#C59B48]/40 mb-6 shadow-lg hover:shadow-[#C59B48]/30 transition-shadow flex-wrap sm:flex-nowrap justify-center sm:justify-start">
+                  <div className="text-2xl sm:text-3xl md:text-4xl tracking-[0.3em] text-white font-mono break-all sm:break-normal">
                     {referralCode}
                   </div>
                   <motion.button
@@ -224,7 +224,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                 </div>
                 
                 {/* Share buttons - Primary social media buttons */}
-                <div className="flex items-center justify-center gap-3">
+                <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
                   {[
                     { icon: Twitter, platform: 'twitter', label: 'Twitter' },
                     { icon: Instagram, platform: 'instagram', label: 'Instagram' },
@@ -238,7 +238,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleShare(social.platform)}
-                        className="h-10 px-6 rounded-md backdrop-blur-md bg-gradient-to-br from-[#191922]/40 to-[#0B0B0D]/40 border border-[#C59B48]/30 hover:border-[#C59B48]/70 flex items-center gap-2 transition-all text-sm text-[#B9BBC6] hover:text-white shadow-md hover:shadow-[#C59B48]/20 cursor-pointer font-body"
+                        className="h-10 px-4 sm:px-6 rounded-md backdrop-blur-md bg-gradient-to-br from-[#191922]/40 to-[#0B0B0D]/40 border border-[#C59B48]/30 hover:border-[#C59B48]/70 flex items-center gap-2 transition-all text-sm text-[#B9BBC6] hover:text-white shadow-md hover:shadow-[#C59B48]/20 cursor-pointer font-body shrink-0"
                       >
                         <Icon className="w-4 h-4" />
                         <span className="hidden sm:inline">{social.label}</span>
@@ -278,7 +278,7 @@ export function ReferralModule({ language }: ReferralModuleProps) {
         </motion.div>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 w-full">
           
           {/* Process Card */}
           <motion.div

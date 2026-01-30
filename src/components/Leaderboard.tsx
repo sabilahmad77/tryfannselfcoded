@@ -315,7 +315,7 @@ export function Leaderboard({
 
   return (
     <section
-      className="relative py-16 overflow-hidden bg-[#0B0B0D]"
+      className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -442,7 +442,7 @@ export function Leaderboard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/75 via-[#191922]/65 to-[#0B0B0D]/75 border-2 border-[#C59B48]/40 overflow-hidden shadow-2xl shadow-[#C59B48]/20"
+            className="rounded-3xl backdrop-blur-xl bg-gradient-to-br from-[#191922]/75 via-[#191922]/65 to-[#0B0B0D]/75 border-2 border-[#C59B48]/40 overflow-hidden shadow-2xl shadow-[#C59B48]/20 w-full"
           >
             {/* Loading & Error States */}
             {isLoading && (
@@ -565,8 +565,8 @@ export function Leaderboard({
 
             {/* Desktop View */}
             {!isLoading && leaders.length > 0 && (
-              <div className="hidden lg:block">
-                <table className="w-full">
+              <div className="hidden lg:block overflow-x-auto">
+                <table className="w-full min-w-[600px]">
                   <thead>
                     <tr className="border-b border-white/10 bg-white/5">
                       {t.columns.map((column, index) => (

@@ -95,7 +95,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
   const isRTL = language === 'ar';
 
   return (
-    <section className="relative py-16 overflow-hidden bg-[#0B0B0D]" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0">
         <ImageWithFallback
@@ -135,7 +135,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-7xl mx-auto px-4 sm:px-0"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-7xl mx-auto w-full px-4 sm:px-0"
         >
           {t.steps.map((step, index) => {
             const Icon = step.icon;

@@ -55,14 +55,14 @@ export function HomePage() {
   }, [language]);
 
   return (
-    <div className="min-h-screen bg-[#0B0B0D]">
+    <div className="min-h-screen bg-[#0B0B0D] overflow-x-hidden">
       <SEOHead />
       <SchemaMarkup faqData={faqData} />
       <Navigation 
         onNavigateToSignIn={() => navigate(ROUTES.SIGN_IN)}
       />
       
-      <main>
+      <main className="overflow-x-hidden">
         <Hero 
           language={language}
           onNavigateToSignUp={() => navigate(ROUTES.SIGN_UP)}

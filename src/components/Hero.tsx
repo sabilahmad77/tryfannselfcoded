@@ -81,23 +81,29 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
   const isRTL = language === 'ar';
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0B0B0D]">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0B0B0D] w-full">
       {/* Abstract Art Background Pattern */}
-      <div className="absolute inset-0">
-        <ImageWithFallback
-          src={heroBg}
-          alt="Hero Background"
-          className="w-full h-full object-cover opacity-90"
-        />
-        {/* Lighter Gradient Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/40 via-transparent to-[#0B0B0D]/50" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B0D]/30 via-transparent to-[#0B0B0D]/30" />
+      <div className="absolute inset-0 overflow-hidden z-0">
+        <div className="absolute inset-0 w-full h-full">
+          <ImageWithFallback
+            src={heroBg}
+            alt="Hero Background"
+            className="w-full h-full object-cover object-center opacity-90 md:opacity-90"
+            style={{
+              minHeight: '100vh',
+              minWidth: '100%',
+            }}
+          />
+        </div>
+        {/* Lighter Gradient Overlays - Reduced opacity on mobile for better image visibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0D]/25 via-transparent to-[#0B0B0D]/35 md:from-[#0B0B0D]/40 md:to-[#0B0B0D]/50" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B0D]/15 via-transparent to-[#0B0B0D]/15 md:from-[#0B0B0D]/30 md:to-[#0B0B0D]/30" />
       </div>
 
       {/* Animated gradient orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none max-w-full z-0">
         <motion.div
-          className="absolute -top-40 -right-40 w-96 h-96 bg-[#C59B48]/20 rounded-full blur-3xl"
+          className="absolute -top-40 -right-40 w-96 h-96 bg-[#C59B48]/20 rounded-full blur-3xl max-w-[calc(100vw+10rem)]"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.5, 0.3],
@@ -109,7 +115,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
           }}
         />
         <motion.div
-          className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#45e3d3]/20 rounded-full blur-3xl"
+          className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#45e3d3]/20 rounded-full blur-3xl max-w-[calc(100vw+10rem)]"
           animate={{
             scale: [1.2, 1, 1.2],
             opacity: [0.2, 0.4, 0.2],
@@ -122,7 +128,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
           }}
         />
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#4de3ed]/15 rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#4de3ed]/15 rounded-full blur-3xl max-w-[min(600px,100vw)] max-h-[min(600px,100vh)]"
           animate={{
             scale: [1, 1.3, 1],
             rotate: [0, 180, 360],
@@ -136,10 +142,10 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
       </div>
 
       {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)] z-0" />
 
       {/* Floating hexagons */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
@@ -166,8 +172,8 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20" dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="max-w-6xl mx-auto text-center">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full max-w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="max-w-6xl mx-auto text-center w-full">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -184,10 +190,10 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-6 text-4xl md:text-5xl leading-[1.1] md:leading-[1.1] overflow-visible font-heading"
+            className="mb-6 text-4xl md:text-5xl leading-[1.1] md:leading-[1.1] font-heading px-2 sm:px-0"
           >
-            <span className="block text-[#F2F2F3] leading-[1.1] md:leading-[1.1] py-1">{t.headline}</span>
-            <span className="block bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent animate-gradient text-3xl md:text-4xl leading-[1.2] md:leading-[1.2] py-1">
+            <span className="block text-[#F2F2F3] leading-[1.1] md:leading-[1.1] py-1 break-words">{t.headline}</span>
+            <span className="block bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent animate-gradient text-3xl md:text-4xl leading-[1.2] md:leading-[1.2] py-1 break-words">
               {t.headlineAccent}
             </span>
           </motion.h1>

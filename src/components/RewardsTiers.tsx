@@ -262,7 +262,7 @@ export function RewardsTiers({
 
   return (
     <section
-      className="relative py-16 overflow-hidden bg-[#0B0B0D]"
+      className="relative py-16 overflow-hidden bg-[#0B0B0D] w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Abstract Art Background Pattern */}
@@ -335,7 +335,7 @@ export function RewardsTiers({
 
         {/* Horizontal Timeline - Desktop */}
         {tiers.length > 0 && (
-          <div className="hidden lg:block max-w-7xl mx-auto">
+          <div className="hidden lg:block max-w-7xl mx-auto w-full overflow-x-hidden">
             {/* Progress Bar Container */}
             <div className="relative mb-12">
               {/* Background Track */}
@@ -609,7 +609,7 @@ export function RewardsTiers({
 
         {/* Vertical Timeline - Mobile/Tablet */}
         {tiers.length > 0 && (
-          <div className="lg:hidden max-w-2xl mx-auto">
+          <div className="lg:hidden max-w-2xl mx-auto w-full px-4 sm:px-0">
             <div className="relative">
               {/* Vertical Line */}
               <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-white/10" />
