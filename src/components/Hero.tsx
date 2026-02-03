@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles, Hexagon, Users, Palette, Building2, CheckCircle2,
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import heroBg from '@/assets/hero-section-bg.jpeg';
+import heroMobileBg from '@/assets/hero-section-mobile-bg.jpeg';
 
 interface HeroProps {
   language: 'en' | 'ar';
@@ -85,10 +86,21 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0 overflow-hidden z-0">
         <div className="absolute inset-0 w-full h-full">
+          {/* Desktop Background Image */}
           <ImageWithFallback
             src={heroBg}
             alt="Hero Background"
-            className="w-full h-full object-cover object-center opacity-90 md:opacity-90"
+            className="hidden md:block w-full h-full object-cover object-center opacity-90 md:opacity-90"
+            style={{
+              minHeight: '100vh',
+              minWidth: '100%',
+            }}
+          />
+          {/* Mobile Background Image */}
+          <ImageWithFallback
+            src={heroMobileBg}
+            alt="Hero Mobile Background"
+            className="block md:hidden w-full h-full object-cover object-center opacity-90"
             style={{
               minHeight: '100vh',
               minWidth: '100%',

@@ -17,7 +17,7 @@ const content = {
     subtitle: "Discover verified artworks from partner galleries and featured artists. Each piece is authenticated, documented, and ready for collection.",
     placeholder: {
       artist: "Featured Artist",
-      value: "Est. Value: $5,000 - $15,000",
+      value: "Est. Value",
     }
   },
   ar: {
@@ -25,17 +25,73 @@ const content = {
     subtitle: "اكتشف الأعمال الفنية الموثقة من المعارض الشريكة والفنانين المميزين. كل قطعة موثقة وموثقة وجاهزة للاقتناء.",
     placeholder: {
       artist: "فنان مميز",
-      value: "القيمة المقدرة: 5,000 - 15,000 دولار",
+      value: "القيمة المقدرة",
     }
   }
 };
 
 // Placeholder artwork data - ready for real artwork integration
 const placeholderArtworks = [
-  { id: 1, artist: "Contemporary Master", value: "$5,000 - $15,000", title: "Abstract Expressionism", description: "A stunning piece showcasing modern artistic vision", image: artwork1 },
-  { id: 2, artist: "Emerging Talent", value: "$2,000 - $8,000", title: "Digital Renaissance", description: "Bridging traditional and contemporary art forms", image: artwork2 },
-  { id: 3, artist: "Established Artist", value: "$10,000 - $25,000", title: "Classical Revival", description: "Timeless beauty with contemporary interpretation", image: artwork3 },
-  { id: 4, artist: "Gallery Collection", value: "$8,000 - $20,000", title: "Curated Excellence", description: "Handpicked masterpiece from our partner galleries", image: artwork4 }
+  {
+    id: 1,
+    image: artwork1,
+    value: "$350 - $700",
+    en: {
+      title: "Chromatic Silence",
+      artist: "Emerging Contemporary Abstract Artist",
+      description: "Emotion-driven abstract work focusing on layered textures and expressive color balance. Designed to evoke mood rather than narrative."
+    },
+    ar: {
+      title: "الصمت اللوني",
+      artist: "فنان تجريدي معاصر ناشئ",
+      description: "عمل تجريدي مدفوع بالعاطفة يركز على الطبقات النسيجية والتوازن اللوني التعبيري. مصمم لإثارة المزاج بدلاً من السرد."
+    }
+  },
+  {
+    id: 2,
+    image: artwork2,
+    value: "$450 - $900",
+    en: {
+      title: "The Watcher of Roots",
+      artist: "Emerging Surreal Artist",
+      description: "A symbolic visual narrative blending organic forms and imagination, reflecting growth, protection, and subconscious themes."
+    },
+    ar: {
+      title: "حارس الجذور",
+      artist: "فنان سريالي ناشئ",
+      description: "سرد بصري رمزي يدمج الأشكال العضوية والخيال، يعكس مواضيع النمو والحماية واللاوعي."
+    }
+  },
+  {
+    id: 3,
+    image: artwork3,
+    value: "$300 - $650",
+    en: {
+      title: "Echoes of the Workshop",
+      artist: "Emerging Classical Still Life Painter",
+      description: "A calm, studio-style still life inspired by traditional European painting techniques with focus on material texture and aging."
+    },
+    ar: {
+      title: "أصداء الورشة",
+      artist: "رسام طبيعة صامتة كلاسيكي ناشئ",
+      description: "طبيعة صامتة هادئة بأسلوب الاستوديو مستوحاة من تقنيات الرسم الأوروبية التقليدية مع التركيز على نسيج المواد والشيخوخة."
+    }
+  },
+  {
+    id: 4,
+    image: artwork4,
+    value: "$600 - $1,200",
+    en: {
+      title: "Unspoken Gaze",
+      artist: "Emerging Realist Portrait Artist",
+      description: "A detailed portrait capturing subtle emotional depth and natural light, emphasizing realism and human expression."
+    },
+    ar: {
+      title: "نظرة غير مكشوفة",
+      artist: "فنان بورتريه واقعي ناشئ",
+      description: "بورتريه مفصل يلتقط عمقًا عاطفيًا خفيًا وضوءًا طبيعيًا، مؤكدًا على الواقعية والتعبير الإنساني."
+    }
+  }
 ];
 
 export function ArtPreview({ language }: ArtPreviewProps) {
@@ -91,6 +147,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
         >
           {placeholderArtworks.map((artwork, index) => {
             const isFlipped = flippedCards.has(artwork.id);
+            const artworkContent = artwork[language];
             return (
               <motion.div
                 key={artwork.id}
@@ -113,7 +170,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
                   <div
                     className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden bg-[#191922] border transition-all duration-500 ${isFlipped ? 'border-[rgba(197,155,72,0.22)]' : 'border-[#2A2A3A] lg:group-hover:border-[rgba(197,155,72,0.22)]'
                       }`}
-                    style={{ 
+                    style={{
                       backfaceVisibility: 'hidden',
                       boxShadow: isFlipped ? '0 0 0 1px rgba(197,155,72,0.20), 0 18px 60px rgba(0,0,0,0.55)' : '0 0 0 1px rgba(197,155,72,0), 0 18px 60px rgba(0,0,0,0.55)'
                     }}
@@ -122,7 +179,7 @@ export function ArtPreview({ language }: ArtPreviewProps) {
                     <div className="relative h-full w-full bg-[#191922] flex items-center justify-center overflow-hidden">
                       <ImageWithFallback
                         src={artwork.image}
-                        alt={artwork.title || artwork.artist}
+                        alt={artworkContent.title || artworkContent.artist}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#191922]/90 via-transparent to-transparent" />
@@ -142,19 +199,19 @@ export function ArtPreview({ language }: ArtPreviewProps) {
                     <div className="relative h-full flex flex-col p-4 sm:p-6 z-10">
                       {/* Title */}
                       <h3 className="text-[#F2F2F3] text-base sm:text-lg md:text-xl mb-2 sm:mb-3 font-heading font-semibold line-clamp-2">
-                        {artwork.title || artwork.artist}
+                        {artworkContent.title || artworkContent.artist}
                       </h3>
 
                       {/* Artist Name */}
                       <div className="mb-3 sm:mb-4">
                         <p className="text-[#8A8EA0] text-xs sm:text-sm mb-1 font-body font-medium">{t.placeholder.artist}</p>
-                        <p className="text-[#F2F2F3] text-sm sm:text-base font-body font-normal line-clamp-1">{artwork.artist}</p>
+                        <p className="text-[#F2F2F3] text-sm sm:text-base font-body font-normal line-clamp-1">{artworkContent.artist}</p>
                       </div>
 
                       {/* Description */}
-                      {artwork.description && (
+                      {artworkContent.description && (
                         <p className="text-[#B9BBC6] text-xs sm:text-sm mb-3 sm:mb-4 font-body font-normal leading-relaxed flex-1 line-clamp-3 sm:line-clamp-4">
-                          {artwork.description}
+                          {artworkContent.description}
                         </p>
                       )}
 
