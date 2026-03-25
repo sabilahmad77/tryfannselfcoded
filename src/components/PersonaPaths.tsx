@@ -242,7 +242,7 @@ export function PersonaPaths({
 
   return (
     <section
-      className="relative py-16 overflow-hidden w-full"
+      className="relative py-12 overflow-hidden w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Subtle background effects */}
@@ -257,7 +257,7 @@ export function PersonaPaths({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 sm:mb-16 lg:mb-20"
+          className="text-center mb-8 sm:mb-10 lg:mb-12"
         >
           <h2 className="mb-3 sm:mb-4 text-3xl sm:text-4xl md:text-5xl font-heading font-semibold">
             <span className="text-[#F2F2F3] font-heading font-semibold">{t.title.white}</span>
@@ -304,9 +304,9 @@ export function PersonaPaths({
                     />
 
                     {/* Main Content */}
-                    <div className="relative z-10 p-4 sm:p-6 md:p-8 flex flex-col h-full">
+                    <div className="relative z-10 p-4 sm:p-5 md:p-6 flex flex-col h-full">
                       {/* Icon and Name - Center */}
-                      <div className="flex flex-col items-center mb-4 sm:mb-6">
+                      <div className="flex flex-col items-center mb-3 sm:mb-4">
                         <motion.div
                           className="relative inline-block mb-3 sm:mb-4"
                           whileHover={{ scale: 1.05 }}
@@ -341,7 +341,7 @@ export function PersonaPaths({
                       </div>
 
                       {/* Divider */}
-                      <div className="h-px bg-[#2A2A3A] mb-4 sm:mb-6" />
+                      <div className="h-px bg-[#2A2A3A] mb-3 sm:mb-4" />
 
                       {/* Two Column Layout: Benefits Left, Earn Points By Right */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6 flex-1">

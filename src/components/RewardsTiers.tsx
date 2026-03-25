@@ -260,7 +260,7 @@ export function RewardsTiers({
 
   return (
     <section
-      className="relative py-16 overflow-hidden w-full"
+      className="relative py-12 overflow-hidden w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Subtle background effects */}
@@ -309,7 +309,7 @@ export function RewardsTiers({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
           <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-semibold px-2 sm:px-0">
             <span className="text-[#F2F2F3] font-heading font-semibold">{t.title.white}</span>
@@ -324,7 +324,7 @@ export function RewardsTiers({
         {tiers.length > 0 && (
           <div className="hidden lg:block max-w-7xl mx-auto w-full overflow-x-hidden">
             {/* Progress Bar Container */}
-            <div className="relative mb-12">
+            <div className="relative mb-8">
               {/* Background Track */}
               <div className="absolute top-20 left-0 right-0 h-1 bg-white/10" />
 
@@ -711,7 +711,7 @@ export function RewardsTiers({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center"
+          className="text-center mt-10"
         >
           <motion.button
             whileHover={{ scale: 1.05 }}

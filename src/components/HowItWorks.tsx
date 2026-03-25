@@ -93,7 +93,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
   const isRTL = language === 'ar';
 
   return (
-    <section className="relative py-16 overflow-hidden w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="relative py-12 overflow-hidden w-full" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Subtle background effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#C59B48]/5 rounded-full blur-3xl" />
@@ -106,7 +106,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          className="text-center mb-10"
         >
           <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-semibold px-2 sm:px-0">
             <span className="text-[#F2F2F3] font-heading font-semibold">{t.title.white}</span>
@@ -232,9 +232,9 @@ export function HowItWorks({ language }: HowItWorksProps) {
 
                   <div className="relative z-10 p-5 sm:p-6 md:p-8 pt-8 sm:pt-9 md:pt-10">
                     {/* Icon Container */}
-                    <div className="relative mb-4 sm:mb-6 flex justify-center">
+                    <div className="relative mb-3 sm:mb-4 flex justify-center">
                       <motion.div
-                        className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
+                        className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20"
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.3 }}
                       >
@@ -243,7 +243,7 @@ export function HowItWorks({ language }: HowItWorksProps) {
 
                         {/* Main Circle */}
                         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#C59B48]/20 via-[#1a1a2e]/80 to-[#45e3d3]/20 border-2 border-[#C59B48]/40 group-hover:border-[#C59B48]/80 transition-all duration-500 flex items-center justify-center backdrop-blur-xl">
-                          <Icon className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-[#C59B48] relative z-10 drop-shadow-[0_0_10px_rgba(255,204,51,0.5)]" />
+                          <Icon className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-[#C59B48] relative z-10 drop-shadow-[0_0_10px_rgba(255,204,51,0.5)]" />
                         </div>
 
                         {/* Animated Ring */}

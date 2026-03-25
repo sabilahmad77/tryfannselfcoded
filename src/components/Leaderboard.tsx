@@ -313,7 +313,7 @@ export function Leaderboard({
 
   return (
     <section
-      className="relative py-16 overflow-hidden w-full"
+      className="relative py-12 overflow-hidden w-full"
       dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Subtle background effects */}
@@ -328,7 +328,7 @@ export function Leaderboard({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-3 sm:mb-4 font-heading font-semibold px-2 sm:px-0">
             <span className="text-[#F2F2F3] font-family-heading font-semibold">{t.title.white}</span>
@@ -346,7 +346,7 @@ export function Leaderboard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center justify-center gap-2 sm:gap-3 mb-8 sm:mb-10 flex-wrap px-2 sm:px-0"
+            className="flex items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-7 flex-wrap px-2 sm:px-0"
           >
             {t.tabs.map((tab, index) => {
               const filterValue: TimeFilter =
@@ -559,7 +559,7 @@ export function Leaderboard({
                       {t.columns.map((column, index) => (
                         <th
                           key={index}
-                          className="px-8 py-5 text-left text-[#B9BBC6] text-sm"
+                          className="px-6 py-4 text-left text-[#B9BBC6] text-sm"
                         >
                           {column}
                         </th>
@@ -585,14 +585,14 @@ export function Leaderboard({
                         className="border-b border-white/10 last:border-0 transition-colors"
                       >
                         {/* Rank */}
-                        <td className="px-8 py-5">
+                        <td className="px-6 py-4">
                           <div className="flex items-center justify-center w-12">
                             {getRankIcon(leader.rank ?? index + 1)}
                           </div>
                         </td>
 
                         {/* User */}
-                        <td className="px-8 py-5">
+                        <td className="px-6 py-4">
                           <div className="flex items-center gap-4">
                             <Avatar className="w-12 h-12 border-2 border-orange-500/50">
                               <AvatarImage
@@ -622,7 +622,7 @@ export function Leaderboard({
                         </td>
 
                         {/* Role */}
-                        <td className="px-8 py-5">
+                        <td className="px-6 py-4">
                           <Badge
                             variant="outline"
                             className={`${getPersonaBadgeColor(
@@ -637,7 +637,7 @@ export function Leaderboard({
                         </td>
 
                         {/* Tier */}
-                        <td className="px-8 py-5">
+                        <td className="px-6 py-4">
                           <Badge
                             variant="outline"
                             className={getTierColor(leader.tier)}
@@ -647,7 +647,7 @@ export function Leaderboard({
                         </td>
 
                         {/* Points */}
-                        <td className="px-8 py-5">
+                        <td className="px-6 py-4">
                           <span className="text-transparent bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-lg">
                             {leader.points.toLocaleString()}
                           </span>
@@ -655,7 +655,7 @@ export function Leaderboard({
 
                         {/* Follow Button - Only show when authenticated */}
                         {isAuthenticated && (
-                          <td className="px-8 py-5">
+                          <td className="px-6 py-4">
                             <Button
                               size="sm"
                               onClick={() => toggleFollow(leader.username)}

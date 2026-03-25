@@ -82,7 +82,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
   const isRTL = language === 'ar';
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0B0B0D] w-full">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0B0B0D] w-full pt-20">
       {/* Abstract Art Background Pattern */}
       <div className="absolute inset-0 overflow-hidden z-0">
         <div className="absolute inset-0 w-full h-full">
@@ -184,14 +184,14 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 w-full max-w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10 w-full max-w-full" dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="max-w-6xl mx-auto text-center w-full">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 mt-12 border border-[#C59B48]/30"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-4 mt-2 border border-[#C59B48]/30"
           >
             <Sparkles className="w-4 h-4 text-[#C59B48]" />
             <span className="text-[#C59B48] tracking-wider text-sm font-body">{t.badge}</span>
@@ -202,7 +202,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-4 sm:mb-6 text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.1] font-heading px-2 sm:px-0"
+            className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.1] font-heading px-2 sm:px-0"
           >
             <span className="block text-[#F2F2F3] leading-[1.1] py-1 break-words font-heading font-semibold">{t.headline}</span>
             <span className="block bg-gradient-to-r from-[#C59B48] via-[#D6AE5A] to-[#C59B48] bg-clip-text text-transparent animate-gradient text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-[1.2] py-1 break-words font-heading font-semibold">
@@ -215,7 +215,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-6 sm:mb-8 text-[#B9BBC6] text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed font-body font-normal px-2 sm:px-0"
+            className="mb-4 sm:mb-5 text-[#B9BBC6] text-sm sm:text-base md:text-lg leading-relaxed font-body font-normal px-2 sm:px-0 max-w-3xl mx-auto"
           >
             {t.subheadline}
           </motion.p>
@@ -225,7 +225,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-10 px-2 sm:px-0"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-5 sm:mb-6 px-2 sm:px-0"
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
               <Button
@@ -258,7 +258,7 @@ export function Hero({ language, onNavigateToSignUp }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="mb-10 max-w-5xl mx-auto"
+            className="mb-5 max-w-5xl mx-auto"
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Trust Card - Compact */}
